@@ -269,10 +269,12 @@ class Option:
         -1 if o2 is at least as precise as o1, and
         1 is o1 is at least as precise as o2.
         """
-        return Option.__compare_helper(self, self.precision, o1, o2)
+        return Option.__compare_helper(self, self.precision, int(o1) if o1.isdigit() else o1,
+                                       int(o2) if o2.isdigit() else o2)
 
     def soundness_compare(self, o1, o2):
-        return Option.__compare_helper(self, self.soundness, o1, o2)
+        return Option.__compare_helper(self, self.soundness, int(o1) if o1.isdigit() else o1,
+                                       int(o2) if o2.isdigit() else o2)
 
     def __eq__(self, other):
         return isinstance(other, Option) and\

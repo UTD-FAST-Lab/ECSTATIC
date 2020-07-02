@@ -3,6 +3,7 @@ import argparse
 import logging
 import subprocess
 import coloredlogs
+from PyInquirer import prompt
 from termcolor import colored
 from checkmate.models.Option import Option
 from checkmate.models.Tool import Tool
@@ -223,13 +224,13 @@ def interpret_call(call):
         with open(f'{HOME}/data/flowdroid.model', 'b') as f:
             fd = pickle.load(f)
 
-        return parse_call(call, fd, skip)
+        return parse_call(call, fd)
                     
 
-def parse_call(call, model, skip):
+def parse_call(call, model):
     toks = call.split()
     for i in range(len(toks)):
-        if toks[i].startswith('-') and toks[i] not in skip:
+        if toks[i].startswith('-'):
             logging.warning(f'checkmate only understands options supplied in '
                             'long form (e.g., --aplength rather than -a). '
                             'Skipping {toks[i]}')
