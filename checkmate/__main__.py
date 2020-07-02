@@ -24,7 +24,7 @@ parser.add_argument('--soundness', action='store_true')
 parser.add_argument('--tags')
 args = parser.parse_args()
 
-HOME="/Users/austin/git/checkmate"
+HOME="/Users/austin/PycharmProjects/checkmate"
 
 def main():
     title = text2art("checkmate")
@@ -376,7 +376,7 @@ def create_models():
     o.is_as_sound('k+1', 'k')
     fd.add_option(o)
 
-    o = Option('maxcallbackdepth')
+    o = Option('maxcallbacksdepth')
     for k in ['k', 'k+1', -1]:
         o.add_level(k)
     o.add_tag(Tag.ANDROID_LIFECYCLE)
@@ -399,7 +399,14 @@ def create_models():
     o.is_as_precise('CONTEXTINSENSITIVE', 'SOURCESONLY')
     fd.add_option(o)
 
-    o = Option('noexception')
+    o = Option('pathspecificresults')
+    for k in ['TRUE', 'FALSE']:
+        o.add_level(k)
+    o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
+    o.is_as_precise('TRUE', 'FALSE')
+    fd.add_option(o)
+
+    o = Option('noexceptions')
     for k in ['TRUE', 'FALSE']:
         o.add_level(k)
     o.add_tag(Tag.EXCEPTION)
@@ -589,7 +596,7 @@ def create_models():
     ds.add_dominates(o1, 'PADDLE', o)
     ds.add_dominates(o1, 'GEOM', o)
 
-    o = Option('maxapidepth')
+    o = Option('apicalldepth')
     for k in ['k', 'k+1', -1]:
         o.add_level(k)
     o.is_as_sound(-1, 'k+1')
@@ -598,6 +605,42 @@ def create_models():
     ds.add_option(o)
     ds.add_dominates(o1, 'PADDLE', o)
     ds.add_dominates(o1, 'GEOM', o)
+
+    o = Option('implicitflow')
+    for k in ['TRUE', 'FALSE']:
+        o.add_level(k)
+    o.is_as_sound('TRUE', 'FALSE')
+    o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
+    ds.add_option(o)
+
+    o = Option('noarrayindex')
+    for k in ['TRUE', 'FALSE']:
+        o.add_level(k)
+    o.is_as_sound('FALSE','TRUE')
+    o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
+    ds.add_option(o)
+
+    o = Option('nofallback')
+    for k in ['TRUE', 'FALSE']:
+        o.add_level(k)
+    o.is_as_sound('FALSE', 'TRUE')
+    o.is_as_precise('TRUE', 'FALSE')
+    o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
+    ds.add_option(o)
+
+    o = Option('noscalaropts')
+    for k in ['TRUE', 'FALSE']:
+        o.add_level(k)
+    o.is_as_precise('FALSE', 'TRUE')
+    o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
+    ds.add_option(o)
+
+    o = Option('transfertaintfield')
+    for k in ['TRUE', 'FALSE']:
+        o.add_level(k)
+    o.is_as_precise('FALSE', 'TRUE')
+    o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
+    ds.add_option(o)
 
     with open(f'{HOME}/data/droidsafe.model', 'wb') as f:
         pickle.dump(ds, f, protocol=0)
