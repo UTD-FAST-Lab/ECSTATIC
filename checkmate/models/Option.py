@@ -208,7 +208,8 @@ class Option:
                             a.add(o1)
                             l[loc+1] = a
                     else:
-                        l.append(o1)
+                        if l[-1] != o1:
+                            l.append(o1)
                 except ValueError as ve:
                     raise ve
 
