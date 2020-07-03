@@ -262,19 +262,33 @@ class Option:
             return 0
         if loco1 > loco2:
             return 1
-        
+
+    def __convert_to_int(self, i : str):
+        """
+        Converts string to int if possible.
+        :param i: the string to try to convert.
+        :return: the int representation if possible, otherwise the string.
+        """
+        if i.isdigit():
+            return int(i)
+        if i[0] == '-' and i[1:].isdigit():
+            return int(i)
+        else:
+            return i
+
     def precision_compare(self, o1, o2):
         """
         Returns 0 if o1 and o2 are at the same level in terms of precision,
         -1 if o2 is at least as precise as o1, and
         1 is o1 is at least as precise as o2.
         """
-        return Option.__compare_helper(self, self.precision, int(o1) if o1.isdigit() else o1,
-                                       int(o2) if o2.isdigit() else o2)
+
+        return Option.__compare_helper(self, self.precision, Option.__convert_to_int(self, o1),
+                                       Option.__convert_to_int(self, o2))
 
     def soundness_compare(self, o1, o2):
-        return Option.__compare_helper(self, self.soundness, int(o1) if o1.isdigit() else o1,
-                                       int(o2) if o2.isdigit() else o2)
+        return Option.__compare_helper(self, self.soundness, Option.__convert_to_int(self, o1),
+                                       Option.__convert_to_int(self, o2))
 
     def __eq__(self, other):
         return isinstance(other, Option) and\

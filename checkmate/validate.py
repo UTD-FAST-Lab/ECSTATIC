@@ -18,7 +18,7 @@ p.add_argument('-j', '--jobs', default=8, type=int)
 p.add_argument("file")
 args = p.parse_args()
 
-timeouts: {'droidbench': 600000,
+timeouts = {'droidbench': 600000,
            'fossdroid': 7200000}
 def main():
 
@@ -45,15 +45,16 @@ def compute_violations(records, o):
              (o.soundness, o.soundness_compare, lambda x, y: x['fn'] <= y['fn'])]:
         if len(model_list) > 0:
             for r1 in records:
+                if int(r1['time']) > timeouts[args.benchmark]:
+                    continue
                 for r2 in [r for r in records if r['generating_script'] != r1['generating_script']]:
+                    if int(r2['time']) > timeouts[args.benchmark]:
+                        continue
                     try:
                         if compare_levels(r1[o.name], r2[o.name]) > 0:
                             if not compare_tp_fp_fn(get_tp_fp_fn(r1, records), get_tp_fp_fn(r2, records)):
                                 # Make sure it wasn't because of a timeout.
-                                if int(r1['time']) > timeouts[args.tool] or int(r2['time']) > timeouts[args.tool]:
-                                    print(f'Time Violation: {o.name} values {r1[o.name]} {r2[o.name]} on {r1} and {r2}')
-                                else:
-                                    print(f'Violation: {o.name} values {r1[o.name]} {r2[o.name]} on {r1} and {r2}')
+                                print(f'Violation: {o.name} values {r1[o.name]} {r2[o.name]} on {r1} and {r2}')
                             else:
                                 logging.debug(f'Satisfied: {r1} and {r2} on {o.name} values {r1[o.name]}, {r2[o.name]}')
                     except ValueError as ve:
