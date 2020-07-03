@@ -1,4 +1,3 @@
-from tqdm import tqdm
 from functools import partial
 from multiprocessing import Pool
 from checkmate.models.Constraint import Constraint
@@ -15,6 +14,7 @@ import argparse
 p = argparse.ArgumentParser('Tool to check whether partial orders were violated.')
 p.add_argument("tool", choices=['flowdroid','droidsafe','amandroid'])
 p.add_argument("benchmark", choices=['droidbench', 'fossdroid'])
+p.add_argument('-j', '--jobs', default=8, type=int)
 p.add_argument("file")
 args = p.parse_args()
 
@@ -30,11 +30,11 @@ def main():
         [records.append(r) for r in d]
     logging.debug(f"Done reading in file. {len(records)} records found.")
 
-    with open(f'/Users/austin/PycharmProjects/checkmate/data/{args.tool}.model', 'rb') as f:
+    with open(f'data/{args.tool}.model', 'rb') as f:
         model : Tool = pickle.load(f)
     logging.debug("Checking model constraints now.")
     p = partial(compute_violations, records)
-    with Pool(8) as pool:
+    with Pool(args.jobs) as pool:
         pool.map(p, model.options)
 
 
@@ -44,15 +44,16 @@ def compute_violations(records, o):
             [(o.precision, o.precision_compare, lambda x, y: x['fp'] <= y['fp']),
              (o.soundness, o.soundness_compare, lambda x, y: x['fn'] <= y['fn'])]:
         if len(model_list) > 0:
-            for r1 in tqdm(records):
+            for r1 in records:
                 for r2 in [r for r in records if r['generating_script'] != r1['generating_script']]:
                     try:
                         if compare_levels(r1[o.name], r2[o.name]) > 0:
                             if not compare_tp_fp_fn(get_tp_fp_fn(r1, records), get_tp_fp_fn(r2, records)):
                                 # Make sure it wasn't because of a timeout.
                                 if int(r1['time']) > timeouts[args.tool] or int(r2['time']) > timeouts[args.tool]:
-                                       continue
-                                print(f'Violation: {o.name} values {r1[o.name]} {r2[o.name]} on {r1} and {r2}')
+                                    print(f'Time Violation: {o.name} values {r1[o.name]} {r2[o.name]} on {r1} and {r2}')
+                                else:
+                                    print(f'Violation: {o.name} values {r1[o.name]} {r2[o.name]} on {r1} and {r2}')
                             else:
                                 logging.debug(f'Satisfied: {r1} and {r2} on {o.name} values {r1[o.name]}, {r2[o.name]}')
                     except ValueError as ve:
