@@ -20,6 +20,7 @@ args = p.parse_args()
 
 timeouts = {'droidbench': 600000,
            'fossdroid': 7200000}
+defaults = {'flowdroid': 'config_FlowDroid_aplength5.xml'}
 def main():
 
     # First, read in the csv file that was passed in.
@@ -49,7 +50,8 @@ def compute_violations(records, o):
                     continue
                 for r2 in [r for r in records if r['generating_script'] != r1['generating_script'] and
                            r['apk'] == r1['apk'] and
-                           r['option_under_investigation'] == r1['option_under_investigation']]:
+                           (r['option_under_investigation'] == r1['option_under_investigation'] or
+                           defaults[args.tool] in r['generating_script'])]:
                     if int(r2['time']) > timeouts[args.benchmark]:
                         continue
                     try:
