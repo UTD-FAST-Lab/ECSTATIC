@@ -346,10 +346,10 @@ def create_models():
 
     o1 = Option('implicit')
     for k in ['NONE', 'ARRAYONLY', 'ALL']:
-        o.add_level(k)
-    o.is_as_sound('ALL', 'ARRAYONLY')
-    o.is_as_sound('ARRAYONLY', 'NONE')
-    o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
+        o1.add_level(k)
+    o1.is_as_sound('ALL', 'ARRAYONLY')
+    o1.is_as_sound('ARRAYONLY', 'NONE')
+    o1.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     fd.add_option(o1)
     fd.add_constraint(Constraint(o1, 'ALL', o, 'REMOVECODE'))
 
