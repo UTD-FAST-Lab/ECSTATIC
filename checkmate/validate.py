@@ -48,7 +48,8 @@ def compute_violations(records, o):
                 if int(r1['time']) > timeouts[args.benchmark]:
                     continue
                 for r2 in [r for r in records if r['generating_script'] != r1['generating_script'] and
-                           r['apk'] == r1['apk']]:
+                           r['apk'] == r1['apk'] and
+                           r['option_under_investigation'] == r1['option_under_investigation']]:
                     if int(r2['time']) > timeouts[args.benchmark]:
                         continue
                     try:
