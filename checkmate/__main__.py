@@ -429,9 +429,9 @@ def create_models():
     for k in ['DEFAULT', 'DEFAULTFALLBACK', 'EASY', 'NONE']:
         o.add_level(k)
     o.is_as_sound('DEFAULTFALLBACK', 'NONE')
-    o.is_as_sound('DEFAULTFALLBACK', 'NONE')
+    o.is_as_sound('DEFAULTFALLBACK', 'DEFAULT')
     o.is_as_sound('EASY', 'NONE')
-    o.is_as_sound('DEFAULT', 'EASY')
+    o.is_as_sound('DEFAULT', 'NONE')
     o.is_as_precise('DEFAULT', 'EASY')
     o.add_tag(Tag.LIBRARY)
     fd.add_option(o)
