@@ -21,7 +21,8 @@ args = p.parse_args()
 timeouts = {'droidbench': 600000,
            'fossdroid': 7200000}
 defaults = {'flowdroid': 'config_FlowDroid_aplength5.xml',
-            'droidsafe': 'config_DroidSafe_kobjsens3.xml'}
+            'droidsafe': 'config_DroidSafe_kobjsens3.xml',
+            'amandroid': 'config_Amandroid_default.xml'}
 def main():
 
     # First, read in the csv file that was passed in.
