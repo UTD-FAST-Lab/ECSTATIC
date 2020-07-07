@@ -242,7 +242,18 @@ def parse_call(call, model):
 
 def create_models():
     """Creates the models"""
-    
+
+    am = Tool("Amandroid")
+    o = Option("kcontext")
+    for k in ["k", "k+1"]:
+        o.add_level(k)
+    o.is_as_precise("k+1", "k")
+    o.add_tag(Tag.OBJECT)
+    am.add_option(o)
+
+    with open(f'{HOME}/data/amandroid.model', 'wb') as f:
+        pickle.dump(am, f, protocol=0)
+
     fd = Tool("FlowDroid")
 
     o = Option("aplength")
