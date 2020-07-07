@@ -47,13 +47,14 @@ def compute_violations(records, o):
              (o.soundness, o.soundness_compare, lambda x, y: x['fn'] <= y['fn'])]:
         if len(model_list) > 0:
             for r1 in records:
-                if int(r1['time']) > timeouts[args.benchmark]:
+                if num_timeouts(r1, records, args.benchmark) > 0:
                     continue
                 for r2 in [r for r in records if r['generating_script'] != r1['generating_script'] and
                            r['apk'] == r1['apk'] and
                            (r['option_under_investigation'] == r1['option_under_investigation'] or
-                           defaults[args.tool] in r['generating_script'])]:
-                    if int(r2['time']) > timeouts[args.benchmark]:
+                            defaults[args.tool] in r['generating_script']) and
+                           r['true_positive'] == r1['true_positive']]:
+                    if num_timeouts(r2, records, args.benchmark) > 0:
                         continue
                     try:
                         if compare_levels(r1[o.name], r2[o.name]) > 0:
@@ -61,7 +62,7 @@ def compute_violations(records, o):
                                 # Make sure it wasn't because of a timeout.
                                 print(f'Violation: {o.name} values {r1[o.name]} {r2[o.name]} on {r1} and {r2}')
                             else:
-                                logging.debug(f'Satisfied: {r1} and {r2} on {o.name} values {r1[o.name]}, {r2[o.name]}')
+                                logging.debug(f'Satisfied: {o.name} values {r1[o.name]} {r2[o.name]} on {r1} and {r2}')
                     except ValueError as ve:
                         logging.warning(ve)
                         continue
@@ -69,6 +70,16 @@ def compute_violations(records, o):
                         logging.debug(f'Option {o.name} is not in this result set.')
                         continue
 
+def num_timeouts(r1: Dict, records: list, benchmark: str) -> int:
+    if 'num_timeouts' not in r1:
+        r1['num_timeouts'] = len([r for r in records if equals(r, r1) and int(r['time']) > timeouts[benchmark]])
+    return r1['num_timeouts']
+                
+def equals(r1: Dict, r2: Dict) -> bool:
+    return r1['replication'] == r2['replication'] and \
+                r1['generating_script'] == r2['generating_script'] and \
+                r1['apk'] == r2['apk'] and \
+                r1['true_positive'] == r2['true_positive']
 
 def get_tp_fp_fn(record: Dict, records: List[Dict]) -> Dict:
     """
@@ -79,9 +90,7 @@ def get_tp_fp_fn(record: Dict, records: List[Dict]) -> Dict:
         record['fp'] = 0
         record['fn'] = 0
         for r in records:
-            if r['replication'] == record['replication'] and \
-                r['generating_script'] == record['generating_script'] and \
-                r['apk'] == record['apk']:
+            if equals(r, record):
                 f = lambda x : True if x.lower() == 'true' else False
                 record['tp'] += f(r['true_positive']) and f(r['successful'])
                 record['fp'] += not (f(r['true_positive']) or f(r['successful']))

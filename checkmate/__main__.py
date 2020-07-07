@@ -519,13 +519,6 @@ def create_models():
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     ds.add_option(o)
 
-    o = Option('scalaropts')
-    for k in ['FALSE', 'TRUE']:
-        o.add_level(k)
-    o.is_as_precise('TRUE', 'FALSE')
-    o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
-    ds.add_option(o)
-
     o = Option('multipassfb')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
