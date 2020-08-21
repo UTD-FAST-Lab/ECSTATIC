@@ -16,6 +16,7 @@ p.add_argument("tool", choices=['flowdroid','droidsafe','amandroid'])
 p.add_argument("benchmark", choices=['droidbench', 'fossdroid'])
 p.add_argument('-j', '--jobs', default=8, type=int)
 p.add_argument("file")
+p.add_argument("output")
 args = p.parse_args()
 
 timeouts = {'droidbench': 600000,
@@ -38,38 +39,85 @@ def main():
     logging.debug("Checking model constraints now.")
     p = partial(compute_violations, records)
     with Pool(args.jobs) as pool:
-        pool.map(p, model.options)
+        results = pool.map(p, model.options)
+    all_results = list()
+    [all_results.extend(r) for r in results]
+    logging.debug(f"all_results: {all_results}")
+    # all results is a list of tuples
+    with open(args.output, 'w') as o:
+        dw = DictWriter(o, fieldnames=all_results[0][0].keys())
+        dw.writeheader()
+        blank = {k: "" for k, v in all_results[0][0].items()}
+        for a in all_results:
+            dw.writerow(a[0])
+            dw.writerow(a[1])
+            dw.writerow(blank)
+            
 
 
-def compute_violations(records, o):
+def compute_violations(records, o) -> List:
     logging.info(f'Checking violations for {o.name}')
+    results = list()
     for model_list, compare_levels, compare_tp_fp_fn in \
             [(o.precision, o.precision_compare, lambda x, y: x['fp'] <= y['fp']),
              (o.soundness, o.soundness_compare, lambda x, y: x['fn'] <= y['fn'])]:
         if len(model_list) > 0:
-            for r1 in records:
-                if num_timeouts(r1, records, args.benchmark) > 0:
-                    continue
+            if args.benchmark == 'droidbench':
+                for r1 in records:
+                    if num_timeouts(r1, records, args.benchmark) > 0:
+                        continue
+                    # If r1 is the default cobfig
+                    for r2 in [r for r in records if r['generating_script'] != r1['generating_script'] and
+                               r['apk'] == r1['apk'] and
+                               (r['option_under_investigation'] == r1['option_under_investigation'] or
+                                defaults[args.tool] in r['generating_script'] or
+                                (True if defaults[args.tool] in r1['generating_script'] else False)) and
+                               r['true_positive'] == r1['true_positive']]:
+                        if num_timeouts(r2, records, args.benchmark) > 0:
+                            continue
+                        try:
+                            if compare_levels(r1[o.name], r2[o.name]) > 0:
+                                if not compare_tp_fp_fn(get_tp_fp_fn(r1, records), get_tp_fp_fn(r2, records)):
+                                    # Make sure it wasn't because of a timeout.
+                                    results.append((r2, r1))
+                                    print(f'Violation: {o.name} values {r1[o.name]} {r2[o.name]} on {r1} and {r2}')
+                                else:
+                                    logging.debug(f'Satisfied: {o.name} values {r1[o.name]} {r2[o.name]} on {r1} and {r2}')
+                        except ValueError as ve:
+                            logging.warning(ve)
+                            continue
+                        except KeyError as ke:
+                            logging.debug(f'Option {o.name} is not in this result set.')
+                            continue
+            else: # fossdroid
+                if r1['time'] > timeouts['fossdroid']:
+                    continue # timed out
                 for r2 in [r for r in records if r['generating_script'] != r1['generating_script'] and
-                           r['apk'] == r1['apk'] and
-                           (r['option_under_investigation'] == r1['option_under_investigation'] or
-                            defaults[args.tool] in r['generating_script']) and
-                           r['true_positive'] == r1['true_positive']]:
-                    if num_timeouts(r2, records, args.benchmark) > 0:
-                        continue
-                    try:
-                        if compare_levels(r1[o.name], r2[o.name]) > 0:
-                            if not compare_tp_fp_fn(get_tp_fp_fn(r1, records), get_tp_fp_fn(r2, records)):
-                                # Make sure it wasn't because of a timeout.
-                                print(f'Violation: {o.name} values {r1[o.name]} {r2[o.name]} on {r1} and {r2}')
-                            else:
-                                logging.debug(f'Satisfied: {o.name} values {r1[o.name]} {r2[o.name]} on {r1} and {r2}')
-                    except ValueError as ve:
-                        logging.warning(ve)
-                        continue
-                    except KeyError as ke:
-                        logging.debug(f'Option {o.name} is not in this result set.')
-                        continue
+                               r['apk'] == r1['apk'] and
+                               (r['option_under_investigation'] == r1['option_under_investigation'] or
+                                defaults[args.tool] in r['generating_script'] or
+                                (True if defaults[args.tool] in r1['generating_script'] else False)) and
+                                r['time'] < timeouts['fossdroid']]:
+                        try:
+                           if compare_levels(r1[o.name], r2[o.name]) > 0:
+                               r1_dict = {'tp': r1['detected_TP'], 'fp': r1['detected_FP'], 'fn': r1['total_TP'] - r1['detected_TP']}
+                               r2_dict = {'tp': r2['detected_TP'], 'fp': r2['detected_FP'], 'fn': r2['total_TP'] - r2['detected_TP']}
+                               if not compare_tp_fp_fn(r1_dict, r2_dict):
+                                    # Make sure it wasn't because of a timeout.
+                                    results.append((r2, r1))
+                                    print(f'Violation: {o.name} values {r1[o.name]} {r2[o.name]} on {r1} and {r2}')
+                               else:
+                                    logging.debug(f'Satisfied: {o.name} values {r1[o.name]} {r2[o.name]} on {r1} and {r2}')
+                        except ValueError as ve:
+                            logging.warning(ve)
+                            continue
+                        except KeyError as ke:
+                            logging.debug(f'Option {o.name} is not in this result set.')
+                            continue
+
+                           
+                
+    return results
 
 def num_timeouts(r1: Dict, records: list, benchmark: str) -> int:
     if 'num_timeouts' not in r1:
