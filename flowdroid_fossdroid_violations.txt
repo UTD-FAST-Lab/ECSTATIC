@@ -1,0 +1,17 @@
+Violation precision: aliasalgo values FLOWSENSITIVE LAZY
+Violation precision: aliasalgo values FLOWSENSITIVE PTSBASED
+Violation precision: aplength values 7 5
+Violation precision: cgalgo values RTA CHA
+Violation precision: codeelimination values REMOVECODE PROPAGATECONSTS
+Violation precision: pathalgo values CONTEXTSENSITIVE CONTEXTINSENSITIVE
+Violation precision: pathalgo values CONTEXTSENSITIVE SOURCESONLY
+Violation precision: pathspecificresults values TRUE FALSE
+Violation precision: taintwrapper values DEFAULT EASY
+Violation soundness: aliasalgo values LAZY FLOWSENSITIVE
+Violation soundness: aliasalgo values LAZY NONE
+Violation soundness: aliasalgo values PTSBASED NONE
+Violation soundness: analyzeframeworks values TRUE FALSE
+Violation soundness: aplength values 7 1
+Violation soundness: cgalgo values VTA RTA
+Violation soundness: taintwrapper values DEFAULT DEFAULTFALLBACK
+Violation soundness: taintwrapper values EASY DEFAULTFALLBACK

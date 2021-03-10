@@ -24,6 +24,9 @@ logging.basicConfig(level=logging.DEBUG)
 
 class Option:
     """ A single configuration option. """
+    soundness = 0
+    precision = 0
+    
     def __init__(self, name):
         self.name = name
         self.precision = list()
@@ -57,14 +60,22 @@ class Option:
         o2. Either o1 or o2 can be a level, a list of levels, or a
         "*", indicating all.
         """
+        Option.precision += 1
+        Option.soundness += 2
         Option.__add_partial_order(self, self.precision, o1, o2)
+        Option.__add_partial_order(self, self.soundness, o1, o2)
+        Option.__add_partial_order(self, self.soundness, o2, o1)
+        logging.debug(f'{self.name} Soundness constraint: {self.soundness}')
+        logging.debug(f'{self.name} Precision constraint: {self.precision}')
 
     def is_as_sound(self, o1, o2):
         """
         Add a soundness relationship, that o1 is at least as sound as 
         o2.
         """
+        Option.soundness += 1
         Option.__add_partial_order(self, self.soundness, o1, o2)
+        logging.debug(f'{self.name} Soundness constraint: {self.soundness}')
 
     def __get_index(self, l, o):
         """
@@ -232,6 +243,9 @@ class Option:
                         o1 = 'k'
                         o2 = 'k'
                     else:
+                        # band-aid to fix issue where o2 could be default
+                        if o2 == 'DEFAULT':
+                            o2 = 5
                         o1 = "k" if o1 < o2 else "k+1"
                         o2 = "k+1" if o1 == "k" else "k"
                 else:

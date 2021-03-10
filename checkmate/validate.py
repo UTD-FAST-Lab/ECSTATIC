@@ -9,16 +9,24 @@ import pickle
 import logging
 from typing import Dict, Tuple, List
 
-logging.basicConfig(level=logging.INFO)
 import argparse
 p = argparse.ArgumentParser('Tool to check whether partial orders were violated.')
 p.add_argument("tool", choices=['flowdroid','droidsafe','amandroid'])
 p.add_argument("benchmark", choices=['droidbench', 'fossdroid'])
 p.add_argument('-j', '--jobs', default=8, type=int)
+p.add_argument('--verbosity', '-v', action='count', default=0)
 p.add_argument("file")
 p.add_argument("output")
 args = p.parse_args()
 
+if args.verbosity < 1:
+    logging.basicConfig(level=logging.CRITICAL)
+elif args.verbosity == 1:
+    logging.basicConfig(level=logging.WARNING)
+elif args.verbosity == 2:
+    logging.basicConfig(level=logging.INFO)
+else:
+    logging.basicConig(level=logging.DEBUG)
 timeouts = {'droidbench': 600000,
            'fossdroid': 7200000}
 defaults = {'flowdroid': 'config_FlowDroid_aplength5.xml',
@@ -58,9 +66,9 @@ def main():
 def compute_violations(records, o) -> List:
     logging.info(f'Checking violations for {o.name}')
     results = list()
-    for model_list, compare_levels, compare_tp_fp_fn in \
-            [(o.precision, o.precision_compare, lambda x, y: x['fp'] <= y['fp']),
-             (o.soundness, o.soundness_compare, lambda x, y: x['fn'] <= y['fn'])]:
+    for model_list, compare_levels, compare_tp_fp_fn, relation_name in \
+            [(o.precision, o.precision_compare, lambda x, y: x['fp'] <= y['fp'], 'precision'),
+             (o.soundness, o.soundness_compare, lambda x, y: x['fn'] <= y['fn'], 'soundness')]:
         if len(model_list) > 0:
             if args.benchmark == 'droidbench':
                 for r1 in records:
@@ -73,6 +81,9 @@ def compute_violations(records, o) -> List:
                                 defaults[args.tool] in r['generating_script'] or
                                 (True if defaults[args.tool] in r1['generating_script'] else False)) and
                                r['true_positive'] == r1['true_positive']]:
+                        r1_option = r1['option_under_investigation']
+                        r2_option = r2['option_under_investigation']
+                        logging.debug(f'Comparing {r1_option}:{r1[r1_option]} to {r2_option}:{r2[r2_option]}')
                         if num_timeouts(r2, records, args.benchmark) > 0:
                             continue
                         try:
@@ -80,9 +91,11 @@ def compute_violations(records, o) -> List:
                                 if not compare_tp_fp_fn(get_tp_fp_fn(r1, records), get_tp_fp_fn(r2, records)):
                                     # Make sure it wasn't because of a timeout.
                                     results.append((r2, r1))
-                                    print(f'Violation: {o.name} values {r1[o.name]} {r2[o.name]} on {r1} and {r2}')
+                                    print(f'Violation {relation_name}: {o.name} values {r1[o.name]} {r2[o.name]} on {r1} and {r2}')
                                 else:
                                     logging.debug(f'Satisfied: {o.name} values {r1[o.name]} {r2[o.name]} on {r1} and {r2}')
+                            else:
+                                logging.debug(f'No {relation_name} relation between {o.name} values {r1[o.name]} {r2[o.name]}')
                         except ValueError as ve:
                             logging.warning(ve)
                             continue
@@ -90,22 +103,25 @@ def compute_violations(records, o) -> List:
                             logging.debug(f'Option {o.name} is not in this result set.')
                             continue
             else: # fossdroid
-                if r1['time'] > timeouts['fossdroid']:
-                    continue # timed out
-                for r2 in [r for r in records if r['generating_script'] != r1['generating_script'] and
+                for r1 in records:
+                    if float(r1['time']) > timeouts['fossdroid']:
+                        continue # timed out
+                    for r2 in [r for r in records if r['generating_script'] != r1['generating_script'] and
                                r['apk'] == r1['apk'] and
                                (r['option_under_investigation'] == r1['option_under_investigation'] or
                                 defaults[args.tool] in r['generating_script'] or
                                 (True if defaults[args.tool] in r1['generating_script'] else False)) and
-                                r['time'] < timeouts['fossdroid']]:
+                               float(r['time']) < timeouts['fossdroid']]:
                         try:
                            if compare_levels(r1[o.name], r2[o.name]) > 0:
-                               r1_dict = {'tp': r1['detected_TP'], 'fp': r1['detected_FP'], 'fn': r1['total_TP'] - r1['detected_TP']}
-                               r2_dict = {'tp': r2['detected_TP'], 'fp': r2['detected_FP'], 'fn': r2['total_TP'] - r2['detected_TP']}
+                               r1_dict = {'tp': int(r1['detected_TP']), 'fp': int(r1['detected_FP']),
+                                          'fn': int(r1['total_TP']) - int(r1['detected_TP'])}
+                               r2_dict = {'tp': int(r2['detected_TP']), 'fp': int(r2['detected_FP']),
+                                          'fn': int(r2['total_TP']) - int(r2['detected_TP'])}
                                if not compare_tp_fp_fn(r1_dict, r2_dict):
                                     # Make sure it wasn't because of a timeout.
                                     results.append((r2, r1))
-                                    print(f'Violation: {o.name} values {r1[o.name]} {r2[o.name]} on {r1} and {r2}')
+                                    print(f'Violation {relation_name}: {o.name} values {r1[o.name]} {r2[o.name]} on {r1} and {r2}')
                                else:
                                     logging.debug(f'Satisfied: {o.name} values {r1[o.name]} {r2[o.name]} on {r1} and {r2}')
                         except ValueError as ve:

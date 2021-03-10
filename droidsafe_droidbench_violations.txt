@@ -1,0 +1,6 @@
+Violation precision: kobjsens values 2 1
+Violation precision: kobjsens values 4 3
+Violation precision: nofallback values TRUE FALSE
+Violation precision: preciseinfoflow values TRUE FALSE
+Violation soundness: kobjsens values 18 6
+Violation soundness: multipassfb values FALSE TRUE

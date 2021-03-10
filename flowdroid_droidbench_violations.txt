@@ -1,0 +1,25 @@
+1. Violation precision: callbackanalyzer values DEFAULT FAST
+2. Violation precision: taintwrapper values DEFAULT EASY
+3. Violation soundness: aliasalgo values LAZY NONE
+4. Violation soundness: aliasalgo values PTSBASED NONE
+5. Violation soundness: aliasflowins values FALSE TRUE
+6. Violation soundness: analyzeframeworks values TRUE FALSE
+7. Violation soundness: cgalgo values RTA CHA
+8. Violation soundness: codeelimination values REMOVECODE NONE
+9. Violation soundness: taintwrapper values DEFAULT DEFAULTFALLBACK
+10. Violation soundness: taintwrapper values DEFAULTFALLBACK NONE
+11. Violation soundness: taintwrapper values DEFAULT NONE
+// maybe should not include the underlying soundness violation 12. Violation soundness: taintwrapper values EASY DEFAULT
+13. Violation soundness: taintwrapper values EASY NONE
+
+Known root cause:
+1, 6, 8
+
+Cannot replicate:
+2, 9, 12
+
+Root cause unknown:
+3*, 4*, 5, 7, 10, 11, 13 
+
+
+
