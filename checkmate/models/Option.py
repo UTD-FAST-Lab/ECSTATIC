@@ -92,7 +92,9 @@ class Option:
         # if we've matched, return 0 (treat o as the first
         #  element in the singleton list l
         if not earliest:
-            l = l.reverse()
+            l1 = l.copy()
+            l1.reverse()
+            l = l1
             
         if l == o:
             return 0
@@ -123,7 +125,7 @@ class Option:
                     return results.index(True) if True in results else -1
         
 
-                def __add_partial_order(self, l, o1, o2):
+    def __add_partial_order(self, l, o1, o2):
         """Helper function to add to any of the partial order lists"""
         
         # Inner functions
