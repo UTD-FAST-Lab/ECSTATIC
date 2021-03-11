@@ -77,7 +77,7 @@ class Option:
         Option.__add_partial_order(self, self.soundness, o1, o2)
         logging.debug(f'{self.name} Soundness constraint: {self.soundness}')
 
-    def __get_index(self, l, o):
+    def __get_index(self, l, o, earliest=True):
         """
         recursively find the index of l in o
 
@@ -85,9 +85,15 @@ class Option:
         1. a list with nested sets
         2. a set
         3. a level, either an int or string.
+
+        By default, return the earliest match. However, in some cases we want
+        to return the latest match.
         """
         # if we've matched, return 0 (treat o as the first
         #  element in the singleton list l
+        if not earliest:
+            l = l.reverse()
+            
         if l == o:
             return 0
         else:
@@ -116,7 +122,8 @@ class Option:
                                i in l]
                     return results.index(True) if True in results else -1
         
-    def __add_partial_order(self, l, o1, o2):
+
+                def __add_partial_order(self, l, o1, o2):
         """Helper function to add to any of the partial order lists"""
         
         # Inner functions
@@ -136,6 +143,9 @@ class Option:
                 if l not in self.all:
                     raise_value_error(l)
 
+        if self.name == 'aliasalgo':
+            print(f'O1: {o1}, O2: {o2}')
+            import pdb; pdb.set_trace()
         # '*' means all, so we check those first.
         if o1 == "*":
             if o2 == "*":
@@ -226,7 +236,7 @@ class Option:
 
     def __compare_helper(self, l, o1, o2):
         loco1 = Option.__get_index(self, l, o1)
-        loco2 = Option.__get_index(self, l, o2)
+        loco2 = Option.__get_index(self, l, o2, False)
         if loco1 < 0:
             if isinstance(o1, int):
                 # try wildcard matching:
