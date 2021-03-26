@@ -41,9 +41,11 @@ def create_models():
     fd = Tool("FlowDroid")
 
     o = Option("aplength")
-    for k in ["k", "k+1"]:
+    ops = ['1', '2', '3', '4', '5', '7', '10', '20']
+    for k in ops:
         o.add_level(k)
-    o.is_as_precise("k+1", "k")
+    for i in range(len(ops) - 1):
+        o.is_as_sound(ops[i+1], ops[i])
     o.add_tag(Tag.OBJECT)
     fd.add_option(o)
     
@@ -165,18 +167,21 @@ def create_models():
     fd.add_dominates(o, 'TRUE', o1)
 
     o = Option('maxcallbackspercomponent')
-    for k in ['k', 'k+1']:
+    ops = ['1', '50', '80', '90', '100', '110', '120', '150', '600']
+    for k in ops:
         o.add_level(k)
     o.add_tag(Tag.ANDROID_LIFECYCLE)
-    o.is_as_sound('k+1', 'k')
+    for i in range(len(ops)-1):
+        o.is_as_sound(ops[i+1], ops[1])
     fd.add_option(o)
 
     o = Option('maxcallbacksdepth')
-    for k in ['k', 'k+1', -1]:
+    ops.append('-1')
+    for k in ops:
         o.add_level(k)
     o.add_tag(Tag.ANDROID_LIFECYCLE)
-    o.is_as_sound(-1, 'k+1')
-    o.is_as_sound('k+1', 'k')
+    for i in range(len(ops) - 1):
+        o.is_as_sound(ops[i+1], ops[i])
     fd.add_option(o)
 
     o = Option('enablereflection')

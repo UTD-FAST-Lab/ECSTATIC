@@ -95,7 +95,7 @@ def compute_violations(records, o) -> List:
                                 else:
                                     logging.debug(f'Satisfied: {o.name} values {r1[o.name]} {r2[o.name]} on {r1} and {r2}')
                             else:
-                                logging.debug(f'No {relation_name} relation between {o.name} values {r1[o.name]} {r2[o.name]}')
+                                logging.debug(f'{o.name}:{r1[o.name]} is not more precise/sound than {r2[o.name]}')
                         except ValueError as ve:
                             logging.warning(ve)
                             continue
