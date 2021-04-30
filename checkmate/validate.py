@@ -1,15 +1,5 @@
-from functools import partial
-from multiprocessing import Pool
-from checkmate.models.Constraint import Constraint
-from checkmate.models.Option import Option
-from checkmate.models.Level import Level
-from checkmate.models.Tool import Tool
-from csv import DictReader, DictWriter
-import pickle
-import logging
-from typing import Dict, Tuple, List
-
 import argparse
+import logging
 p = argparse.ArgumentParser('Tool to check whether partial orders were violated.')
 p.add_argument("tool", choices=['flowdroid','droidsafe','amandroid'])
 p.add_argument("benchmark", choices=['droidbench', 'fossdroid'])
@@ -26,7 +16,19 @@ elif args.verbosity == 1:
 elif args.verbosity == 2:
     logging.basicConfig(level=logging.INFO)
 else:
-    logging.basicConig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.DEBUG)
+
+from functools import partial
+from multiprocessing import Pool
+from checkmate.models.Constraint import Constraint
+from checkmate.models.Option import Option
+from checkmate.models.Level import Level
+from checkmate.models.Tool import Tool
+from csv import DictReader, DictWriter
+import pickle
+from typing import Dict, Tuple, List
+
+
 timeouts = {'droidbench': 600000,
            'fossdroid': 7200000}
 defaults = {'flowdroid': 'config_FlowDroid_aplength5.xml',
@@ -53,13 +55,16 @@ def main():
     logging.debug(f"all_results: {all_results}")
     # all results is a list of tuples
     with open(args.output, 'w') as o:
-        dw = DictWriter(o, fieldnames=all_results[0][0].keys())
-        dw.writeheader()
-        blank = {k: "" for k, v in all_results[0][0].items()}
-        for a in all_results:
-            dw.writerow(a[0])
-            dw.writerow(a[1])
-            dw.writerow(blank)
+        try:
+            dw = DictWriter(o, fieldnames=all_results[0][0].keys())
+            dw.writeheader()
+            blank = {k: "" for k, v in all_results[0][0].items()}
+            for a in all_results:
+                dw.writerow(a[0])
+                dw.writerow(a[1])
+                dw.writerow(blank)
+        except IndexError:
+            print('No results to print.')
             
 
 
@@ -69,18 +74,21 @@ def compute_violations(records, o) -> List:
     for model_list, compare_levels, compare_tp_fp_fn, relation_name in \
             [(o.precision, o.precision_compare, lambda x, y: x['fp'] <= y['fp'], 'precision'),
              (o.soundness, o.soundness_compare, lambda x, y: x['fn'] <= y['fn'], 'soundness')]:
+        logging.debug(f'model_list = {model_list}')
         if len(model_list) > 0:
             if args.benchmark == 'droidbench':
                 for r1 in records:
                     if num_timeouts(r1, records, args.benchmark) > 0:
                         continue
-                    # If r1 is the default cobfig
-                    for r2 in [r for r in records if r['generating_script'] != r1['generating_script'] and
-                               r['apk'] == r1['apk'] and
-                               (r['option_under_investigation'] == r1['option_under_investigation'] or
-                                defaults[args.tool] in r['generating_script'] or
-                                (True if defaults[args.tool] in r1['generating_script'] else False)) and
-                               r['true_positive'] == r1['true_positive']]:
+                    # If r1 is the default config
+                    candidates = [r for r in records if r['generating_script'] != r1['generating_script'] and
+                                  r['apk'] == r1['apk'] and
+                                  (r['option_under_investigation'] == r1['option_under_investigation'] or
+                                   defaults[args.tool] in r['generating_script'] or
+                                   (True if defaults[args.tool] in r1['generating_script'] else False)) and
+                                  r['true_positive'] == r1['true_positive']]
+                    logging.debug(f'r1 = {r1}, candidates = {candidates}')
+                    for r2 in candidates:
                         r1_option = r1['option_under_investigation']
                         r2_option = r2['option_under_investigation']
                         logging.debug(f'Comparing {r1_option}:{r1[r1_option]} to {r2_option}:{r2[r2_option]}')
@@ -88,7 +96,8 @@ def compute_violations(records, o) -> List:
                             continue
                         try:
                             if compare_levels(r1[o.name], r2[o.name]) > 0:
-                                if not compare_tp_fp_fn(get_tp_fp_fn(r1, records), get_tp_fp_fn(r2, records)):
+                                logging.debug(f'comparing on {relation_name} {r1} {r2} {compare_tp_fp_fn(r1, r2)}')
+                                if compare_tp_fp_fn(r1, r2) == False:
                                     # Make sure it wasn't because of a timeout.
                                     results.append((r2, r1))
                                     print(f'Violation {relation_name}: {o.name} values {r1[o.name]} {r2[o.name]} on {r1} and {r2}')
@@ -160,9 +169,11 @@ def get_tp_fp_fn(record: Dict, records: List[Dict]) -> Dict:
                 record['tp'] += f(r['true_positive']) and f(r['successful'])
                 record['fp'] += not (f(r['true_positive']) or f(r['successful']))
                 record['fn'] += f(r['true_positive']) and not(f(r['successful']))
-    return {'tp': record['tp'],
-            'fp': record['fp'],
-            'fn': record['fn']}
+    rval = {'tp': int(record['tp']),
+            'fp': int(record['fp']),
+            'fn': int(record['fn'])}
+    logging.debug(f'rval = {rval}')
+    return rval
 
 
 if __name__ == '__main__':
