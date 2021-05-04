@@ -99,7 +99,6 @@ def create_models():
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
     o.is_as_sound('FALSE', 'TRUE')
-    o.is_as_precise('TRUE', 'FALSE')
     o.add_tag(Tag.ANDROID_LIFECYCLE)
     fd.add_option(o)
     
