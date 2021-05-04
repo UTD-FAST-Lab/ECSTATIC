@@ -23,7 +23,7 @@ parser.add_argument('--soundness', action='store_true')
 parser.add_argument('--tags')
 args = parser.parse_args()
 
-HOME="/home/asm140830/AndroidTA/checkmate"
+HOME="."
 def create_models():
     """Creates the models"""
 
@@ -136,8 +136,8 @@ def create_models():
     for k in ['PROPAGATECONSTS', 'NONE', 'REMOVECODE']:
         o.add_level(k)
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
-    o.is_as_precise('REMOVECODE', 'PROPAGATECONSTS')
-    o.is_as_precise('PROPAGATECONSTS', 'NONE')
+    o.is_as_precise('REMOVECODE', 'DEFAULT')
+    o.is_as_precise('DEFAULT', 'NONE')
     fd.add_option(o)
 
     o1 = Option('implicit')
