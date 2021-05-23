@@ -112,7 +112,8 @@ def create_models():
     o1.is_as_precise('CONTEXTFLOWSENSITIVE', 'CONTEXTFLOWINSENSITIVE')
     o1.is_as_sound('CONTEXTFLOWSENSITIVE', 'NONE')
     o1.is_as_sound('CONTEXTFLOWINSENSITIVE', 'NONE')
-
+    fd.add_option(o1)
+    
     o = Option('nostatic')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
