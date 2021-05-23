@@ -21,7 +21,11 @@ p.add_argument('groundtruths',
 p.add_argument('config_file',
                help="""The CSV file mapping configuration
                names to their configurations.""")
-p.add_argument('files_list', help='A file containing the files to check')
+p.add_argument('files_list', nargs='+',
+               help="""A file containing the list of files to check. The script \
+               can accept multiple files here, each of which is analyzed separately. \
+               Violations will not be checked between files. \
+               This is useful for checking multiple replications at once. """)
 p.add_argument('--write_files', action='store_true',
                help="""If enabled, we will overwrite result files \
                with the classifications.""")
@@ -275,13 +279,14 @@ def add_configurations(files_to_flows: Dict[str, List[Flow]],
             k : str
             v : Dict[str, Dict]
             for k, v in candidates.items(): # only one
-                c = Configuration(get_option_under_investigation(k), v, k)
+                c = Configuration(get_option_under_investigation(k), v, k, file)
                 configurations_to_flows[c] = flows
 
     return configurations_to_flows
 
 def check_for_violations(configurations_to_flows: Dict[Configuration, List[Flow]],
-                         tool: str, data_directory: str, violation_directory: str):
+                         tool: str, data_directory: str, violation_directory: str,
+                         suffix: str):
     """
     Opens the model file and checks for any violations.
     """
@@ -292,8 +297,6 @@ def check_for_violations(configurations_to_flows: Dict[Configuration, List[Flow]
     listflows1: List[Flow]
     for config1, listflows1 in configurations_to_flows.items():
         for config2, listflows2 in configurations_to_flows.items():
-#            if set(['analyzeframeworks', 'aplength5']) == set([config1.config_file, config2.config_file]):
-#                import pdb; pdb.set_trace()
             if config1 == config2:
                 continue
             elif config1.config_file != config2.config_file and\
@@ -349,9 +352,10 @@ def check_for_violations(configurations_to_flows: Dict[Configuration, List[Flow]
                                 violation.append(f.element)
                             if not os.path.exists(violation_directory):
                                 os.makedirs(violation_directory)
-                            fname = f'violation_{t}_{config1.config_file}_'\
-                                    f'{config1.configuration[oui]}_{config2.config_file}_'\
-                                    f'{config2.configuration[oui]}.xml'
+                            fname = f'violation_{t}_{config1.apk}'\
+                                    f'_{config1.option_under_investigation}_'\
+                                    f'{config1.configuration[oui]}_{config2.option_under_investigation}_'\
+                                    f'{config2.configuration[oui]}_{suffix}.xml'
                             # Output to file.
                             tree = ET.ElementTree(violation)
                             tree.write(os.path.join(violation_directory, fname))
@@ -361,16 +365,16 @@ def main():
     check_args()
     logging.info('Argument sanity check passed.')
 
-    with open(args.files_list) as f:
-        files_list = [l.strip() for l in f.readlines()]
-        
-    files_to_flows: Dict[str, List[Flow]] = add_classifications(args.groundtruths, files_list,
+    for i, single_file in enumerate(args.files_list):
+        with open(single_file) as f:
+            files_list = [l.strip() for l in f.readlines()]
+        files_to_flows: Dict[str, List[Flow]] = add_classifications(args.groundtruths, files_list,
                                                                 args.verify_classifications,
                                                                 args.write_files,
                                                                 args.dataset)
-    configurations_to_flows: Dict[Configuration, List[Flow]] = add_configurations(files_to_flows,
+        configurations_to_flows: Dict[Configuration, List[Flow]] = add_configurations(files_to_flows,
                                                                                   args.config_file)
-    check_for_violations(configurations_to_flows, args.tool, args.data_directory, args.violation_location)
+        check_for_violations(configurations_to_flows, args.tool, args.data_directory, args.violation_location, str(i))
         
 
 if __name__ == '__main__':
