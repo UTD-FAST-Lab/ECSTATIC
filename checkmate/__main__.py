@@ -50,7 +50,7 @@ def create_models():
     fd.add_option(o)
     
     o = Option("cgalgo")
-    for k in ['CHA', 'RTA', 'VTA', 'GEOM', 'SPARK']:
+    for k in ['CHA', 'RTA', 'VTA', 'GEOM', 'DEFAULT']:
         o.add_level(k)
     o.is_as_precise('RTA', 'CHA')
     o.is_as_precise('VTA', 'RTA')
@@ -73,9 +73,9 @@ def create_models():
     fd.add_option(o)
 
     o = Option('dataflowsolver')
-    for k in ['CONTEXTFLOWSENSITIVE', 'FLOWINSENSITIVE']:
+    for k in ['DEFAULT', 'FLOWINSENSITIVE']:
         o.add_level(k)
-    o.is_as_precise('CONTEXTFLOWSENSITIVE',
+    o.is_as_precise('DEFAULT',
                     'FLOWINSENSITIVE')
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     fd.add_option(o)
@@ -104,13 +104,13 @@ def create_models():
     fd.add_option(o)
     
     o1 = Option('staticmode')
-    for k in ['CONTEXTFLOWSENSITIVE',
+    for k in ['DEFAULT',
               'CONTEXTFLOWINSENSITIVE',
               'NONE']:
         o1.add_level(k)
     o1.add_tag(Tag.STATIC)
-    o1.is_as_precise('CONTEXTFLOWSENSITIVE', 'CONTEXTFLOWINSENSITIVE')
-    o1.is_as_sound('CONTEXTFLOWSENSITIVE', 'NONE')
+    o1.is_as_precise('DEFAULT', 'CONTEXTFLOWINSENSITIVE')
+    o1.is_as_sound('DEFAULT', 'NONE')
     o1.is_as_sound('CONTEXTFLOWINSENSITIVE', 'NONE')
     fd.add_option(o1)
     
@@ -124,18 +124,18 @@ def create_models():
     fd.add_subsumes(o1, o)
 
     o = Option('aliasalgo')
-    for k in ['NONE', 'LAZY', 'FLOWSENSITIVE', 'PTSBASED']:
+    for k in ['NONE', 'LAZY', 'DEFAULT', 'PTSBASED']:
         o.add_level(k)
     o.add_tag(Tag.OBJECT)
     o.is_as_sound('LAZY', 'NONE')
-    o.is_as_sound('FLOWSENSITIVE', 'NONE')
+    o.is_as_sound('DEFAULT', 'NONE')
     o.is_as_sound('PTSBASED', 'NONE')
-    o.is_as_precise('FLOWSENSITIVE', 'LAZY')
-    o.is_as_precise('FLOWSENSITIVE', 'PTSBASED')
+    o.is_as_precise('DEFAULT', 'LAZY')
+    o.is_as_precise('DEFAULT', 'PTSBASED')
     fd.add_option(o)
     
     o = Option('codeelimination')
-    for k in ['PROPAGATECONSTS', 'NONE', 'REMOVECODE']:
+    for k in ['DEFAULT', 'NONE', 'REMOVECODE']:
         o.add_level(k)
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     o.is_as_precise('REMOVECODE', 'DEFAULT')
@@ -143,10 +143,10 @@ def create_models():
     fd.add_option(o)
 
     o1 = Option('implicit')
-    for k in ['NONE', 'ARRAYONLY', 'ALL']:
+    for k in ['DEFAULT', 'ARRAYONLY', 'ALL']:
         o1.add_level(k)
     o1.is_as_sound('ALL', 'ARRAYONLY')
-    o1.is_as_sound('ARRAYONLY', 'NONE')
+    o1.is_as_sound('ARRAYONLY', 'DEFAULT')
     o1.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     fd.add_option(o1)
     fd.add_constraint(Constraint(o1, 'ALL', o, 'REMOVECODE'))
@@ -193,11 +193,11 @@ def create_models():
     fd.add_option(o)
 
     o = Option('pathalgo')
-    for k in ['CONTEXTSENSITIVE', 'CONTEXTINSENSITIVE', 'SOURCESONLY']:
+    for k in ['DEFAULT', 'CONTEXTINSENSITIVE', 'SOURCESONLY']:
         o.add_level(k)
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
-    o.is_as_precise('CONTEXTSENSITIVE', 'CONTEXTINSENSITIVE')
-    o.is_as_precise('CONTEXTSENSITIVE', 'SOURCESONLY')
+    o.is_as_precise('DEFAULT', 'CONTEXTINSENSITIVE')
+    o.is_as_precise('DEFAULT', 'SOURCESONLY')
     fd.add_option(o)
 
     o = Option('pathspecificresults')

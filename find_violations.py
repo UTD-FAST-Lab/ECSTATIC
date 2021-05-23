@@ -1,5 +1,5 @@
 import logging
-logging.basicConfig(level = logging.DEBUG)
+logging.basicConfig(level = logging.WARN)
 
 import xml.etree.ElementTree as ET
 from Flow import Flow
@@ -42,7 +42,7 @@ p.add_argument('--violation_location', default='./violations',
                help="""Where to store violations.""")
 args = p.parse_args()
 
-DEFAULT_CONFIG = {'flowdroid': 'config_FlowDroid_aplength5.xml'}
+DEFAULT_CONFIG = {'flowdroid': 'aplength5'}
 TIMEOUTS = {'fossdroid': 7200000}
 
 def check_args():
@@ -110,9 +110,10 @@ def add_classifications(groundtruths: str, files_list: List[str],
                                            'classification. That really stinks.')
                 else:
                     g.add_classification(classifications[0].text)
-        logging.warn(f'Now removing {len(to_remove)} flows that could not be classified.')
-        for t in to_remove:
-            files_to_flows[f].remove(t)
+        if len(to_remove) > 0:
+            logging.warn(f'Now removing {len(to_remove)} flows that could not be classified.')
+            for t in to_remove:
+                files_to_flows[f].remove(t)
 
 
     logging.info('Added all classifications.')
@@ -291,66 +292,68 @@ def check_for_violations(configurations_to_flows: Dict[Configuration, List[Flow]
     listflows1: List[Flow]
     for config1, listflows1 in configurations_to_flows.items():
         for config2, listflows2 in configurations_to_flows.items():
-                if config1 == config2:
-                    continue
-                elif config1.config_file != config2.config_file and\
-                     (config1.option_under_investigation == config2.option_under_investigation or\
-                     (config1.config_file == DEFAULT_CONFIG[tool] or\
-                      config2.config_file == DEFAULT_CONFIG[tool])):
-                    # Either the two options are the same or one is default.
-                    # First, we need to detect the different settings.
-                    oui : str
-                    if config1.config_file == DEFAULT_CONFIG[tool]:
-                        oui = config2.option_under_investigation
-                    else:
-                        oui = config1.option_under_investigation
-                    try:
-                        option : Option = [o for o in model.get_options() if o.name == oui][0]
-                    except IndexError:
-                        raise RuntimeError(f'{oui} is not in the model.')
-                    for t in ['precision', 'soundness']:
-                        fnc = option.precision_compare if t == 'precision' else option.soundness_compare
-                        if fnc(config1.configuration[oui],
-                               config2.configuration[oui]) > 0:
-                            logging.info(f'{config1.configuration[oui]} has more {t} than '
-                                         f'{config2.configuration[oui]}')
-                            if t == 'soundness':
-                                tp1 : Set[Flow] = set([f for f in listflows1 if \
-                                                      f.get_classification().upper() == 'TRUE'])
-                                logging.debug(f'Length of tp1 is {len(tp1)}.')
-                                tp2 : Set[Flow] = set([f for f in listflows2 if \
-                                                      f.get_classification().upper() == 'TRUE'])
-                                logging.debug(f'Length of tp2 is {len(tp2)}.')
-                                comparison_set : Set[Flow] = tp2.difference(tp1)
-                            elif t == 'precision':
-                                fp1 : Set[Flow] = set([f for f in listflows1 if \
-                                                      f.get_classification().upper() == 'FALSE'])
-                                logging.debug(f'Length of fp1 is {len(fp1)}.')
-                                fp2 : Set[Flow] = set([f for f in listflows2 if \
-                                                      f.get_classification().upper() == 'FALSE'])
-                                logging.debug(f'Length of fp2 is {len(fp2)}.')
-                                comparison_set : Set[Flow] = fp1.difference(fp2)
-
-                            if len(comparison_set) > 0:
-                                print(f'Violation ({t}) found between {oui} settings '
-                                      f'{config1.configuration[oui]} and '
-                                      f'{config2.configuration[oui]} for flow set '
-                                      f'{comparison_set}')
-                                violation : ET.Element = ET.Element('violation')
-                                violation.set('type', t)
-                                violation.set('config1', config1.config_file)
-                                violation.set('config2', config2.config_file)
-                                f: Flow
-                                for f in comparison_set:
-                                    violation.append(f.element)
-                                if not os.path.exists(violation_directory):
-                                    os.makedirs(violation_directory)
-                                fname = f'violation_{t}_{config1.config_file}_'\
-                                        f'{config1.configuration[oui]}_{config2.config_file}_'\
-                                        f'{config2.configuration[oui]}.xml'
-                                # Output to file.
-                                tree = ET.ElementTree(violation)
-                                tree.write(os.path.join(violation_directory, fname))
+#            if set(['analyzeframeworks', 'aplength5']) == set([config1.config_file, config2.config_file]):
+#                import pdb; pdb.set_trace()
+            if config1 == config2:
+                continue
+            elif config1.config_file != config2.config_file and\
+                 (config1.option_under_investigation == config2.option_under_investigation or\
+                  (config1.config_file == DEFAULT_CONFIG[tool] or\
+                 config2.config_file == DEFAULT_CONFIG[tool])):
+#                import pdb; pdb.set_trace()
+                # Either the two options are the same or one is default.
+                # First, we need to detect the different settings.
+                oui : str
+                if config1.config_file == DEFAULT_CONFIG[tool]:
+                    oui = config2.option_under_investigation
+                else:
+                    oui = config1.option_under_investigation
+                try:
+                    option : Option = [o for o in model.get_options() if o.name == oui][0]
+                except IndexError:
+                    raise RuntimeError(f'{oui} is not in the model.')
+                for t in ['precision', 'soundness']:
+                    fnc = option.precision_compare if t == 'precision' else option.soundness_compare
+                    if fnc(config1.configuration[oui],config2.configuration[oui]) > 0:
+                        logging.info(f'{config1.configuration[oui]} has more {t} than '
+                                     f'{config2.configuration[oui]}')
+                        if t == 'soundness':
+                            tp1 : Set[Flow] = set([f for f in listflows1 if \
+                                                   f.get_classification().upper() == 'TRUE'])
+                            logging.debug(f'Length of tp1 is {len(tp1)}.')
+                            tp2 : Set[Flow] = set([f for f in listflows2 if \
+                                                   f.get_classification().upper() == 'TRUE'])
+                            logging.debug(f'Length of tp2 is {len(tp2)}.')
+                            comparison_set : Set[Flow] = tp2.difference(tp1)
+                        elif t == 'precision':
+                            fp1 : Set[Flow] = set([f for f in listflows1 if \
+                                                   f.get_classification().upper() == 'FALSE'])
+                            logging.debug(f'Length of fp1 is {len(fp1)}.')
+                            fp2 : Set[Flow] = set([f for f in listflows2 if \
+                                                   f.get_classification().upper() == 'FALSE'])
+                            logging.debug(f'Length of fp2 is {len(fp2)}.')
+                            comparison_set : Set[Flow] = fp1.difference(fp2)
+                            
+                        if len(comparison_set) > 0:
+                            print(f'Violation ({t}) found between {oui} settings '
+                                  f'{config1.configuration[oui]} and '
+                                  f'{config2.configuration[oui]} in '
+                                  f'{comparison_set}')
+                            violation : ET.Element = ET.Element('violation')
+                            violation.set('type', t)
+                            violation.set('config1', config1.config_file)
+                            violation.set('config2', config2.config_file)
+                            f: Flow
+                            for f in comparison_set:
+                                violation.append(f.element)
+                            if not os.path.exists(violation_directory):
+                                os.makedirs(violation_directory)
+                            fname = f'violation_{t}_{config1.config_file}_'\
+                                    f'{config1.configuration[oui]}_{config2.config_file}_'\
+                                    f'{config2.configuration[oui]}.xml'
+                            # Output to file.
+                            tree = ET.ElementTree(violation)
+                            tree.write(os.path.join(violation_directory, fname))
                                       
 def main():
     # Check that the arguments are correct.

@@ -1,0 +1,20 @@
+Violation (soundness) found between aliasalgo settings LAZY and DEFAULT in {<Flow.Flow object at 0x7f374dd37320>, <Flow.Flow object at 0x7f374dd917f0>}
+Violation (soundness) found between analyzeframeworks settings TRUE and FALSE in {<Flow.Flow object at 0x7f374dd37320>, <Flow.Flow object at 0x7f374dd917f0>}
+Violation (soundness) found between aliasalgo settings PTSBASED and DEFAULT in {<Flow.Flow object at 0x7f374dd37320>, <Flow.Flow object at 0x7f374dd917f0>}
+Violation (soundness) found between aplength settings 10 and 7 in {<Flow.Flow object at 0x7f374dc9f5f8>, <Flow.Flow object at 0x7f374dc9f5c0>}
+Violation (precision) found between aliasalgo settings DEFAULT and LAZY in {<Flow.Flow object at 0x7f374dd93d30>, <Flow.Flow object at 0x7f374dd91710>, <Flow.Flow object at 0x7f374dd54d30>}
+Violation (precision) found between aliasalgo settings DEFAULT and PTSBASED in {<Flow.Flow object at 0x7f374dd93d30>, <Flow.Flow object at 0x7f374dd91710>, <Flow.Flow object at 0x7f374dd54d30>}
+Violation (precision) found between callbackanalyzer settings DEFAULT and FAST in {<Flow.Flow object at 0x7f374dd93d30>, <Flow.Flow object at 0x7f374dd91710>, <Flow.Flow object at 0x7f374dd54d30>}
+Violation (precision) found between dataflowsolver settings DEFAULT and FLOWINSENSITIVE in {<Flow.Flow object at 0x7f374dd93d30>, <Flow.Flow object at 0x7f374dd91710>, <Flow.Flow object at 0x7f374dd54d30>}
+Violation (precision) found between pathalgo settings DEFAULT and SOURCESONLY in {<Flow.Flow object at 0x7f374dd93d30>, <Flow.Flow object at 0x7f374dd91710>, <Flow.Flow object at 0x7f374dd54d30>}
+Violation (precision) found between staticmode settings DEFAULT and CONTEXTFLOWINSENSITIVE in {<Flow.Flow object at 0x7f374dd93d30>, <Flow.Flow object at 0x7f374dd91710>, <Flow.Flow object at 0x7f374dd54d30>}
+Violation (soundness) found between callbackanalyzer settings FAST and DEFAULT in {<Flow.Flow object at 0x7f374dd37320>, <Flow.Flow object at 0x7f374dd917f0>}
+Violation (soundness) found between cgalgo settings RTA and CHA in {<Flow.Flow object at 0x7f374d9e5128>, <Flow.Flow object at 0x7f374d9c4c50>}
+Violation (soundness) found between codeelimination settings REMOVECODE and DEFAULT in {<Flow.Flow object at 0x7f374dd37320>, <Flow.Flow object at 0x7f374dd917f0>}
+Violation (soundness) found between dataflowsolver settings FLOWINSENSITIVE and DEFAULT in {<Flow.Flow object at 0x7f374dd37320>, <Flow.Flow object at 0x7f374dd917f0>}
+Violation (soundness) found between onecomponentatatime settings TRUE and FALSE in {<Flow.Flow object at 0x7f374dd37320>, <Flow.Flow object at 0x7f374dd917f0>}
+Violation (soundness) found between pathalgo settings CONTEXTINSENSITIVE and DEFAULT in {<Flow.Flow object at 0x7f374dd37320>, <Flow.Flow object at 0x7f374dd917f0>}
+Violation (soundness) found between pathalgo settings SOURCESONLY and DEFAULT in {<Flow.Flow object at 0x7f374dd37320>, <Flow.Flow object at 0x7f374dd917f0>}
+Violation (soundness) found between staticmode settings CONTEXTFLOWINSENSITIVE and DEFAULT in {<Flow.Flow object at 0x7f374dd37320>, <Flow.Flow object at 0x7f374dd917f0>}
+Violation (soundness) found between staticmode settings CONTEXTFLOWINSENSITIVE and NONE in {<Flow.Flow object at 0x7f374cd1e2b0>, <Flow.Flow object at 0x7f374cd1e1d0>}
+Violation (soundness) found between maxcallbackspercomponent settings 600 and 50 in {<Flow.Flow object at 0x7f374e648dd8>, <Flow.Flow object at 0x7f374e648470>}
