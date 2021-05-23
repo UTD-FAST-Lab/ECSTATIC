@@ -335,10 +335,11 @@ def check_for_violations(configurations_to_flows: Dict[Configuration, List[Flow]
                             comparison_set : Set[Flow] = fp1.difference(fp2)
                             
                         if len(comparison_set) > 0:
+
                             print(f'Violation ({t}) found between {oui} settings '
                                   f'{config1.configuration[oui]} and '
                                   f'{config2.configuration[oui]} in '
-                                  f'{comparison_set}')
+                                  f'{" ".join([str(f) for f in comparison_set])}')
                             violation : ET.Element = ET.Element('violation')
                             violation.set('type', t)
                             violation.set('config1', config1.config_file)
