@@ -18,13 +18,14 @@ p = argparse.ArgumentParser()
 p.add_argument('groundtruths',
                help="""The file in AQL-Answer format that stores \
                the ground truths embedded as <classification> tags.""")
-p.add_argument('config_file',
+p.add_argument('--config_file',
+               default='../../../tools/config/FlowDroid/flowdroid_1way.csv',
                help="""The CSV file mapping configuration
-               names to their configurations.""")
+               names to their configurations. (See default value for an example.)""")
 p.add_argument('files_list', nargs='+',
-               help="""A file containing the list of files to check. The script \
+               help="""A file containing the list of raw data files to check. The script \
                can accept multiple files here, each of which is analyzed separately. \
-               Violations will not be checked between files. \
+               Violations will only be detected between two files that are in the same input list. \
                This is useful for checking multiple replications at once. """)
 p.add_argument('--write_files', action='store_true',
                help="""If enabled, we will overwrite result files \
@@ -300,10 +301,10 @@ def check_for_violations(configurations_to_flows: Dict[Configuration, List[Flow]
             if config1 == config2:
                 continue
             elif config1.config_file != config2.config_file and\
+                 config1.apk == config2.apk and\
                  (config1.option_under_investigation == config2.option_under_investigation or\
                   (config1.config_file == DEFAULT_CONFIG[tool] or\
                  config2.config_file == DEFAULT_CONFIG[tool])):
-#                import pdb; pdb.set_trace()
                 # Either the two options are the same or one is default.
                 # First, we need to detect the different settings.
                 oui : str
@@ -336,9 +337,8 @@ def check_for_violations(configurations_to_flows: Dict[Configuration, List[Flow]
                                                    f.get_classification().upper() == 'FALSE'])
                             logging.debug(f'Length of fp2 is {len(fp2)}.')
                             comparison_set : Set[Flow] = fp1.difference(fp2)
-                            
+                        
                         if len(comparison_set) > 0:
-
                             print(f'Violation ({t}) found between {oui} settings '
                                   f'{config1.configuration[oui]} and '
                                   f'{config2.configuration[oui]} in '

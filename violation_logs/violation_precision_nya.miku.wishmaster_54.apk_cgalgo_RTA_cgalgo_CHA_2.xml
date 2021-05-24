@@ -1,0 +1,93 @@
+<violation config1="cgalgorta" config2="cgalgocha" type="precision"><flow>
+            <reference type="to">
+                <statement>
+                    <statementfull>virtualinvoke $r0.&lt;nya.miku.wishmaster.ui.gallery.GalleryActivity: android.content.ComponentName startService(android.content.Intent)&gt;($r1)</statementfull>
+                    <statementgeneric>nya.miku.wishmaster.ui.gallery.GalleryActivity: android.content.ComponentName startService(android.content.Intent)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>android.content.Intent</type>
+                            <value>$r1</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;nya.miku.wishmaster.ui.gallery.GalleryActivity: void downloadAttachment()&gt;</method>
+                <classname>nya.miku.wishmaster.ui.gallery.GalleryActivity</classname>
+                <app>
+                    <file>nya.miku.wishmaster_54.apk</file>
+                    <hashes>
+                        <hash type="MD5">26539ed041ef0cf14738568d1c5e0071</hash>
+                        <hash type="SHA-1">74b0579c891c5ae38891d941b02b1c740f140c1f</hash>
+                        <hash type="SHA-256">8b16dbd2d4951bdab16f2aa9aabcbc8bee91264dab78f2bcafd3ee317b84e27c</hash>
+                    </hashes>
+                </app>
+            </reference>
+            <reference type="from">
+                <statement>
+                    <statementfull>$r7 = interfaceinvoke $r8.&lt;android.database.Cursor: java.lang.String getString(int)&gt;($i0)</statementfull>
+                    <statementgeneric>android.database.Cursor: java.lang.String getString(int)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>int</type>
+                            <value>$i0</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;nya.miku.wishmaster.ui.Database: nya.miku.wishmaster.ui.Database$IsHiddenDelegate getCachedIsHiddenDelegate(java.lang.String,java.lang.String,java.lang.String)&gt;</method>
+                <classname>nya.miku.wishmaster.ui.Database</classname>
+                <app>
+                    <file>nya.miku.wishmaster_54.apk</file>
+                    <hashes>
+                        <hash type="MD5">26539ed041ef0cf14738568d1c5e0071</hash>
+                        <hash type="SHA-1">74b0579c891c5ae38891d941b02b1c740f140c1f</hash>
+                        <hash type="SHA-256">8b16dbd2d4951bdab16f2aa9aabcbc8bee91264dab78f2bcafd3ee317b84e27c</hash>
+                    </hashes>
+                </app>
+            </reference>
+        <classification>FALSE</classification></flow>
+    <flow>
+            <reference type="to">
+                <statement>
+                    <statementfull>virtualinvoke $r0.&lt;nya.miku.wishmaster.ui.gallery.GalleryActivity: android.content.ComponentName startService(android.content.Intent)&gt;($r1)</statementfull>
+                    <statementgeneric>nya.miku.wishmaster.ui.gallery.GalleryActivity: android.content.ComponentName startService(android.content.Intent)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>android.content.Intent</type>
+                            <value>$r1</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;nya.miku.wishmaster.ui.gallery.GalleryActivity: void downloadAttachment()&gt;</method>
+                <classname>nya.miku.wishmaster.ui.gallery.GalleryActivity</classname>
+                <app>
+                    <file>nya.miku.wishmaster_54.apk</file>
+                    <hashes>
+                        <hash type="MD5">26539ed041ef0cf14738568d1c5e0071</hash>
+                        <hash type="SHA-1">74b0579c891c5ae38891d941b02b1c740f140c1f</hash>
+                        <hash type="SHA-256">8b16dbd2d4951bdab16f2aa9aabcbc8bee91264dab78f2bcafd3ee317b84e27c</hash>
+                    </hashes>
+                </app>
+            </reference>
+            <reference type="from">
+                <statement>
+                    <statementfull>$r1 = interfaceinvoke $r7.&lt;android.database.Cursor: java.lang.String getString(int)&gt;($i1)</statementfull>
+                    <statementgeneric>android.database.Cursor: java.lang.String getString(int)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>int</type>
+                            <value>$i1</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;nya.miku.wishmaster.ui.presentation.Subscriptions$SubscriptionsDB: java.lang.String[] getSubscriptions(java.lang.String,java.lang.String,java.lang.String)&gt;</method>
+                <classname>nya.miku.wishmaster.ui.presentation.Subscriptions$SubscriptionsDB</classname>
+                <app>
+                    <file>nya.miku.wishmaster_54.apk</file>
+                    <hashes>
+                        <hash type="MD5">26539ed041ef0cf14738568d1c5e0071</hash>
+                        <hash type="SHA-1">74b0579c891c5ae38891d941b02b1c740f140c1f</hash>
+                        <hash type="SHA-256">8b16dbd2d4951bdab16f2aa9aabcbc8bee91264dab78f2bcafd3ee317b84e27c</hash>
+                    </hashes>
+                </app>
+            </reference>
+        <classification>FALSE</classification></flow>
+        </violation>
