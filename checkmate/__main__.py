@@ -222,7 +222,6 @@ def create_models():
     o.is_as_sound('DEFAULTFALLBACK', 'DEFAULT')
     o.is_as_sound('EASY', 'NONE')
     o.is_as_sound('DEFAULT', 'NONE')
-    o.is_as_precise('DEFAULT', 'EASY')
     o.add_tag(Tag.LIBRARY)
     fd.add_option(o)
 
@@ -345,7 +344,7 @@ def create_models():
     ds.add_option(o)
 
     o1 = Option('pta')
-    for k in ['SPARK', 'PADDLE', 'GEOM']:
+    for k in ['DEFAULT', 'PADDLE', 'GEOM']:
         o1.add_level(k)
     o1.add_tag(Tag.OBJECT)
     ds.add_option(o1)

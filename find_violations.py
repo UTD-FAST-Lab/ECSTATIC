@@ -1,5 +1,5 @@
 import logging
-logging.basicConfig(level = logging.WARN)
+logging.basicConfig(level = logging.CRITICAL)
 
 import xml.etree.ElementTree as ET
 from Flow import Flow
@@ -47,7 +47,7 @@ p.add_argument('--violation_location', default='./violations',
                help="""Where to store violations.""")
 args = p.parse_args()
 
-DEFAULT_CONFIG = {'flowdroid': 'aplength5'}
+DEFAULT_CONFIG = {'flowdroid': 'aplength5', 'droidsafe': 'kobjsens3'}
 TIMEOUTS = {'fossdroid': 7200000}
 
 def check_args():
@@ -57,8 +57,6 @@ def check_args():
     """
     if len(args.files_list) <= 1:
         raise RuntimeError('Must supply at least two files.')
-    if args.tool != 'flowdroid':
-        raise RuntimeError('Currently this tool only supports FlowDroid.')
     if args.dataset != 'fossdroid':
         raise RuntimeError('Currently this tool only supports FossDroid.')
 
@@ -91,7 +89,7 @@ def add_classifications(groundtruths: str, files_list: List[str],
                 #  we will just skip these.
                 continue
             if g not in groundtruths:
-                logging.critical(f'Flow with source and sink {g.get_source_and_sink()} '
+                logging.warn(f'Flow with source and sink {g.get_source_and_sink()} '
                                  'is not in groundtruths.')
                 to_remove.append(g)
             else:

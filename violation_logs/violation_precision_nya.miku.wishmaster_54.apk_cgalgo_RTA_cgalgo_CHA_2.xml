@@ -23,17 +23,17 @@
             </reference>
             <reference type="from">
                 <statement>
-                    <statementfull>$r7 = interfaceinvoke $r8.&lt;android.database.Cursor: java.lang.String getString(int)&gt;($i0)</statementfull>
+                    <statementfull>$r1 = interfaceinvoke $r7.&lt;android.database.Cursor: java.lang.String getString(int)&gt;($i1)</statementfull>
                     <statementgeneric>android.database.Cursor: java.lang.String getString(int)</statementgeneric>
                     <parameters>
                         <parameter>
                             <type>int</type>
-                            <value>$i0</value>
+                            <value>$i1</value>
                         </parameter>
                     </parameters>
                 </statement>
-                <method>&lt;nya.miku.wishmaster.ui.Database: nya.miku.wishmaster.ui.Database$IsHiddenDelegate getCachedIsHiddenDelegate(java.lang.String,java.lang.String,java.lang.String)&gt;</method>
-                <classname>nya.miku.wishmaster.ui.Database</classname>
+                <method>&lt;nya.miku.wishmaster.ui.presentation.Subscriptions$SubscriptionsDB: java.lang.String[] getSubscriptions(java.lang.String,java.lang.String,java.lang.String)&gt;</method>
+                <classname>nya.miku.wishmaster.ui.presentation.Subscriptions$SubscriptionsDB</classname>
                 <app>
                     <file>nya.miku.wishmaster_54.apk</file>
                     <hashes>
@@ -44,7 +44,7 @@
                 </app>
             </reference>
         <classification>FALSE</classification></flow>
-    <flow>
+        <flow>
             <reference type="to">
                 <statement>
                     <statementfull>virtualinvoke $r0.&lt;nya.miku.wishmaster.ui.gallery.GalleryActivity: android.content.ComponentName startService(android.content.Intent)&gt;($r1)</statementfull>
@@ -69,17 +69,17 @@
             </reference>
             <reference type="from">
                 <statement>
-                    <statementfull>$r1 = interfaceinvoke $r7.&lt;android.database.Cursor: java.lang.String getString(int)&gt;($i1)</statementfull>
+                    <statementfull>$r7 = interfaceinvoke $r8.&lt;android.database.Cursor: java.lang.String getString(int)&gt;($i0)</statementfull>
                     <statementgeneric>android.database.Cursor: java.lang.String getString(int)</statementgeneric>
                     <parameters>
                         <parameter>
                             <type>int</type>
-                            <value>$i1</value>
+                            <value>$i0</value>
                         </parameter>
                     </parameters>
                 </statement>
-                <method>&lt;nya.miku.wishmaster.ui.presentation.Subscriptions$SubscriptionsDB: java.lang.String[] getSubscriptions(java.lang.String,java.lang.String,java.lang.String)&gt;</method>
-                <classname>nya.miku.wishmaster.ui.presentation.Subscriptions$SubscriptionsDB</classname>
+                <method>&lt;nya.miku.wishmaster.ui.Database: nya.miku.wishmaster.ui.Database$IsHiddenDelegate getCachedIsHiddenDelegate(java.lang.String,java.lang.String,java.lang.String)&gt;</method>
+                <classname>nya.miku.wishmaster.ui.Database</classname>
                 <app>
                     <file>nya.miku.wishmaster_54.apk</file>
                     <hashes>
@@ -90,4 +90,4 @@
                 </app>
             </reference>
         <classification>FALSE</classification></flow>
-        </violation>
+    </violation>

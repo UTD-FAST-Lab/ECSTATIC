@@ -1,21 +1,17 @@
 <violation config1="aplength5" config2="aliasalgolazy" type="precision"><flow>
             <reference type="to">
                 <statement>
-                    <statementfull>virtualinvoke $r0.&lt;protect.budgetwatch.TransactionViewActivity: void startActivityForResult(android.content.Intent,int)&gt;($r5, 1)</statementfull>
-                    <statementgeneric>protect.budgetwatch.TransactionViewActivity: void startActivityForResult(android.content.Intent,int)</statementgeneric>
+                    <statementfull>virtualinvoke $r1.&lt;android.content.Context: void sendBroadcast(android.content.Intent)&gt;($r2)</statementfull>
+                    <statementgeneric>android.content.Context: void sendBroadcast(android.content.Intent)</statementgeneric>
                     <parameters>
                         <parameter>
                             <type>android.content.Intent</type>
-                            <value>$r5</value>
-                        </parameter>
-                        <parameter>
-                            <type>int</type>
-                            <value>1</value>
+                            <value>$r2</value>
                         </parameter>
                     </parameters>
                 </statement>
-                <method>&lt;protect.budgetwatch.TransactionViewActivity: void captureReceipt()&gt;</method>
-                <classname>protect.budgetwatch.TransactionViewActivity</classname>
+                <method>&lt;protect.budgetwatch.DBHelper: void sendChangeNotification()&gt;</method>
+                <classname>protect.budgetwatch.DBHelper</classname>
                 <app>
                     <file>protect.budgetwatch_29.apk</file>
                     <hashes>
@@ -51,17 +47,21 @@
         <flow>
             <reference type="to">
                 <statement>
-                    <statementfull>virtualinvoke $r1.&lt;android.content.Context: void sendBroadcast(android.content.Intent)&gt;($r2)</statementfull>
-                    <statementgeneric>android.content.Context: void sendBroadcast(android.content.Intent)</statementgeneric>
+                    <statementfull>virtualinvoke $r0.&lt;protect.budgetwatch.TransactionViewActivity: void startActivityForResult(android.content.Intent,int)&gt;($r5, 1)</statementfull>
+                    <statementgeneric>protect.budgetwatch.TransactionViewActivity: void startActivityForResult(android.content.Intent,int)</statementgeneric>
                     <parameters>
                         <parameter>
                             <type>android.content.Intent</type>
-                            <value>$r2</value>
+                            <value>$r5</value>
+                        </parameter>
+                        <parameter>
+                            <type>int</type>
+                            <value>1</value>
                         </parameter>
                     </parameters>
                 </statement>
-                <method>&lt;protect.budgetwatch.DBHelper: void sendChangeNotification()&gt;</method>
-                <classname>protect.budgetwatch.DBHelper</classname>
+                <method>&lt;protect.budgetwatch.TransactionViewActivity: void captureReceipt()&gt;</method>
+                <classname>protect.budgetwatch.TransactionViewActivity</classname>
                 <app>
                     <file>protect.budgetwatch_29.apk</file>
                     <hashes>
