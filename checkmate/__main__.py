@@ -68,7 +68,7 @@ def create_models():
     o = Option('onesourceatatime')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
-    o.is_as_sound('FALSE', 'TRUE')
+    o.is_as_precise('TRUE', 'FALSE')
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     fd.add_option(o)
 
@@ -248,9 +248,11 @@ def create_models():
     ds = Tool("DroidSafe")
 
     o = Option('kobjsens')
-    for k in ['k', 'k+1']:
+    ops = ['1', '2', '3', '4', '5', '6', '18']
+    for k in ops:
         o.add_level(k)
-    o.is_as_precise('k+1', 'k')
+    for i in range(len(ops) - 1):
+        o.is_as_sound(ops[i+1], ops[i])
     o.add_tag(Tag.OBJECT)
     ds.add_option(o)
 
@@ -309,7 +311,7 @@ def create_models():
     o.add_tag(Tag.OBJECT)
     ds.add_option(o)
 
-    o = Option('analyzestrings_unfiltered')
+    o = Option('analyzestringsunfiltered')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
     o.is_as_precise('TRUE', 'FALSE')
@@ -318,7 +320,7 @@ def create_models():
     o.add_tag(Tag.LIBRARY)
     ds.add_option(o)
 
-    o = Option('filetransforms')
+    o = Option('filetransform')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
     o.is_as_precise('TRUE', 'FALSE')
@@ -337,7 +339,6 @@ def create_models():
     o = Option('multipassfb')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
-    o.is_as_sound('FALSE', 'TRUE')
     o.is_as_sound('TRUE', 'FALSE')
     o.add_tag(Tag.ANDROID_LIFECYCLE)
     o.add_tag(Tag.LIBRARY)
@@ -396,10 +397,11 @@ def create_models():
     ds.add_dominates(o1, 'GEOM', o)
 
     o = Option('apicalldepth')
-    for k in ['k', 'k+1', -1]:
+    ops = ['0', '1', '50', '80', '90', '100', '110', '120', '150', '200', '600', '-1']
+    for k in ops:
         o.add_level(k)
-    o.is_as_sound(-1, 'k+1')
-    o.is_as_sound('k+1', 'k')
+    for i in range(len(ops) - 1):
+        o.is_as_sound(ops[i+1], ops[i])
     o.add_tag(Tag.LIBRARY)
     ds.add_option(o)
     ds.add_dominates(o1, 'PADDLE', o)
@@ -423,7 +425,6 @@ def create_models():
     for k in ['TRUE', 'FALSE']:
         o.add_level(k)
     o.is_as_sound('FALSE', 'TRUE')
-    o.is_as_precise('TRUE', 'FALSE')
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     ds.add_option(o)
 
