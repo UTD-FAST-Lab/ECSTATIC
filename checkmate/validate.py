@@ -28,7 +28,6 @@ from csv import DictReader, DictWriter
 import pickle
 from typing import Dict, Tuple, List
 
-
 timeouts = {'droidbench': 600000,
            'fossdroid': 7200000}
 defaults = {'flowdroid': 'config_FlowDroid_aplength5.xml',
@@ -48,6 +47,7 @@ def main():
         model : Tool = pickle.load(f)
     logging.debug("Checking model constraints now.")
     p = partial(compute_violations, records)
+    results = list()
     with Pool(args.jobs) as pool:
         results = pool.map(p, model.options)
     all_results = list()
@@ -85,20 +85,21 @@ def compute_violations(records, o) -> List:
                                   r['apk'] == r1['apk'] and
                                   (r['option_under_investigation'] == r1['option_under_investigation'] or
                                    defaults[args.tool] in r['generating_script'] or
-                                   (True if defaults[args.tool] in r1['generating_script'] else False)) and
-                                  r['true_positive'] == r1['true_positive']]
+                                   defaults[args.tool] in r1['generating_script']) and
+                                  r['true_positive'] == r1['true_positive'] and
+                                  r['replication'] == r1['replication']]
                     logging.debug(f'r1 = {r1}, candidates = {candidates}')
                     for r2 in candidates:
                         r1_option = r1['option_under_investigation']
                         r2_option = r2['option_under_investigation']
                         logging.debug(f'Comparing {r1_option}:{r1[r1_option]} to {r2_option}:{r2[r2_option]}')
                         if num_timeouts(r2, records, args.benchmark) > 0:
+                            logging.debug('exiting because of timeouts.')
                             continue
                         try:
                             if compare_levels(r1[o.name], r2[o.name]) > 0:
                                 logging.debug(f'comparing on {relation_name} {r1} {r2} {compare_tp_fp_fn(r1, r2)}')
-                                if compare_tp_fp_fn(r1, r2) == False:
-                                    # Make sure it wasn't because of a timeout.
+                                if not compare_tp_fp_fn(r1, r2):
                                     results.append((r2, r1))
                                     print(f'Violation {relation_name}: {o.name} values {r1[o.name]} {r2[o.name]} on {r1} and {r2}')
                                 else:
@@ -120,7 +121,8 @@ def compute_violations(records, o) -> List:
                                (r['option_under_investigation'] == r1['option_under_investigation'] or
                                 defaults[args.tool] in r['generating_script'] or
                                 (True if defaults[args.tool] in r1['generating_script'] else False)) and
-                               float(r['time']) < timeouts['fossdroid']]:
+                               float(r['time']) < timeouts['fossdroid'] and
+                               r['replication'] == r1['replication']]:
                         try:
                            if compare_levels(r1[o.name], r2[o.name]) > 0:
                                r1_dict = {'tp': int(r1['detected_TP']), 'fp': int(r1['detected_FP']),

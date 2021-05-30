@@ -50,7 +50,7 @@ def create_models():
     fd.add_option(o)
     
     o = Option("cgalgo")
-    for k in ['CHA', 'RTA', 'VTA', 'GEOM', 'SPARK']:
+    for k in ['CHA', 'RTA', 'VTA', 'GEOM', 'DEFAULT']:
         o.add_level(k)
     o.is_as_precise('RTA', 'CHA')
     o.is_as_precise('VTA', 'RTA')
@@ -68,14 +68,14 @@ def create_models():
     o = Option('onesourceatatime')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
-    o.is_as_sound('FALSE', 'TRUE')
+    o.is_as_precise('TRUE', 'FALSE')
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     fd.add_option(o)
 
     o = Option('dataflowsolver')
-    for k in ['CONTEXTFLOWSENSITIVE', 'FLOWINSENSITIVE']:
+    for k in ['DEFAULT', 'FLOWINSENSITIVE']:
         o.add_level(k)
-    o.is_as_precise('CONTEXTFLOWSENSITIVE',
+    o.is_as_precise('DEFAULT',
                     'FLOWINSENSITIVE')
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     fd.add_option(o)
@@ -103,15 +103,16 @@ def create_models():
     fd.add_option(o)
     
     o1 = Option('staticmode')
-    for k in ['CONTEXTFLOWSENSITIVE',
+    for k in ['DEFAULT',
               'CONTEXTFLOWINSENSITIVE',
               'NONE']:
         o1.add_level(k)
     o1.add_tag(Tag.STATIC)
-    o1.is_as_precise('CONTEXTFLOWSENSITIVE', 'CONTEXTFLOWINSENSITIVE')
-    o1.is_as_sound('CONTEXTFLOWSENSITIVE', 'NONE')
+    o1.is_as_precise('DEFAULT', 'CONTEXTFLOWINSENSITIVE')
+    o1.is_as_sound('DEFAULT', 'NONE')
     o1.is_as_sound('CONTEXTFLOWINSENSITIVE', 'NONE')
-
+    fd.add_option(o1)
+    
     o = Option('nostatic')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
@@ -122,18 +123,18 @@ def create_models():
     fd.add_subsumes(o1, o)
 
     o = Option('aliasalgo')
-    for k in ['NONE', 'LAZY', 'FLOWSENSITIVE', 'PTSBASED']:
+    for k in ['NONE', 'LAZY', 'DEFAULT', 'PTSBASED']:
         o.add_level(k)
     o.add_tag(Tag.OBJECT)
     o.is_as_sound('LAZY', 'NONE')
-    o.is_as_sound('FLOWSENSITIVE', 'NONE')
+    o.is_as_sound('DEFAULT', 'NONE')
     o.is_as_sound('PTSBASED', 'NONE')
-    o.is_as_precise('FLOWSENSITIVE', 'LAZY')
-    o.is_as_precise('FLOWSENSITIVE', 'PTSBASED')
+    o.is_as_precise('DEFAULT', 'LAZY')
+    o.is_as_precise('DEFAULT', 'PTSBASED')
     fd.add_option(o)
     
     o = Option('codeelimination')
-    for k in ['PROPAGATECONSTS', 'NONE', 'REMOVECODE']:
+    for k in ['DEFAULT', 'NONE', 'REMOVECODE']:
         o.add_level(k)
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     o.is_as_precise('REMOVECODE', 'DEFAULT')
@@ -141,10 +142,10 @@ def create_models():
     fd.add_option(o)
 
     o1 = Option('implicit')
-    for k in ['NONE', 'ARRAYONLY', 'ALL']:
+    for k in ['DEFAULT', 'ARRAYONLY', 'ALL']:
         o1.add_level(k)
     o1.is_as_sound('ALL', 'ARRAYONLY')
-    o1.is_as_sound('ARRAYONLY', 'NONE')
+    o1.is_as_sound('ARRAYONLY', 'DEFAULT')
     o1.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     fd.add_option(o1)
     fd.add_constraint(Constraint(o1, 'ALL', o, 'REMOVECODE'))
@@ -191,11 +192,11 @@ def create_models():
     fd.add_option(o)
 
     o = Option('pathalgo')
-    for k in ['CONTEXTSENSITIVE', 'CONTEXTINSENSITIVE', 'SOURCESONLY']:
+    for k in ['DEFAULT', 'CONTEXTINSENSITIVE', 'SOURCESONLY']:
         o.add_level(k)
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
-    o.is_as_precise('CONTEXTSENSITIVE', 'CONTEXTINSENSITIVE')
-    o.is_as_precise('CONTEXTSENSITIVE', 'SOURCESONLY')
+    o.is_as_precise('DEFAULT', 'CONTEXTINSENSITIVE')
+    o.is_as_precise('DEFAULT', 'SOURCESONLY')
     fd.add_option(o)
 
     o = Option('pathspecificresults')
@@ -220,7 +221,6 @@ def create_models():
     o.is_as_sound('DEFAULTFALLBACK', 'DEFAULT')
     o.is_as_sound('EASY', 'NONE')
     o.is_as_sound('DEFAULT', 'NONE')
-    o.is_as_precise('DEFAULT', 'EASY')
     o.add_tag(Tag.LIBRARY)
     fd.add_option(o)
 
@@ -247,9 +247,11 @@ def create_models():
     ds = Tool("DroidSafe")
 
     o = Option('kobjsens')
-    for k in ['k', 'k+1']:
+    ops = ['1', '2', '3', '4', '5', '6', '18']
+    for k in ops:
         o.add_level(k)
-    o.is_as_precise('k+1', 'k')
+    for i in range(len(ops) - 1):
+        o.is_as_sound(ops[i+1], ops[i])
     o.add_tag(Tag.OBJECT)
     ds.add_option(o)
 
@@ -308,7 +310,7 @@ def create_models():
     o.add_tag(Tag.OBJECT)
     ds.add_option(o)
 
-    o = Option('analyzestrings_unfiltered')
+    o = Option('analyzestringsunfiltered')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
     o.is_as_precise('TRUE', 'FALSE')
@@ -317,7 +319,7 @@ def create_models():
     o.add_tag(Tag.LIBRARY)
     ds.add_option(o)
 
-    o = Option('filetransforms')
+    o = Option('filetransform')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
     o.is_as_precise('TRUE', 'FALSE')
@@ -336,14 +338,13 @@ def create_models():
     o = Option('multipassfb')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
-    o.is_as_sound('FALSE', 'TRUE')
     o.is_as_sound('TRUE', 'FALSE')
     o.add_tag(Tag.ANDROID_LIFECYCLE)
     o.add_tag(Tag.LIBRARY)
     ds.add_option(o)
 
     o1 = Option('pta')
-    for k in ['SPARK', 'PADDLE', 'GEOM']:
+    for k in ['DEFAULT', 'PADDLE', 'GEOM']:
         o1.add_level(k)
     o1.add_tag(Tag.OBJECT)
     ds.add_option(o1)
@@ -395,10 +396,11 @@ def create_models():
     ds.add_dominates(o1, 'GEOM', o)
 
     o = Option('apicalldepth')
-    for k in ['k', 'k+1', -1]:
+    ops = ['0', '1', '50', '80', '90', '100', '110', '120', '150', '200', '600', '-1']
+    for k in ops:
         o.add_level(k)
-    o.is_as_sound(-1, 'k+1')
-    o.is_as_sound('k+1', 'k')
+    for i in range(len(ops) - 1):
+        o.is_as_sound(ops[i+1], ops[i])
     o.add_tag(Tag.LIBRARY)
     ds.add_option(o)
     ds.add_dominates(o1, 'PADDLE', o)
@@ -422,7 +424,6 @@ def create_models():
     for k in ['TRUE', 'FALSE']:
         o.add_level(k)
     o.is_as_sound('FALSE', 'TRUE')
-    o.is_as_precise('TRUE', 'FALSE')
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     ds.add_option(o)
 
