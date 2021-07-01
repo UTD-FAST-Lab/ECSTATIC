@@ -1,0 +1,63 @@
+<flowset config1="aplength5" config2="dataflowsolverfins" type="precision" violation="False"><preserve config="aplength5" /><preserve config="dataflowsolverfins"><flow>
+            <reference type="to">
+                <statement>
+                    <statementfull>$r8 = virtualinvoke $r5.&lt;android.content.ContentResolver: android.database.Cursor query(android.net.Uri,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String)&gt;($r6, $r7, null, null, null)</statementfull>
+                    <statementgeneric>android.content.ContentResolver: android.database.Cursor query(android.net.Uri,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>android.net.Uri</type>
+                            <value>$r6</value>
+                        </parameter>
+                        <parameter>
+                            <type>java.lang.String[]</type>
+                            <value>$r7</value>
+                        </parameter>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>null</value>
+                        </parameter>
+                        <parameter>
+                            <type>java.lang.String[]</type>
+                            <value>null</value>
+                        </parameter>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>null</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;org.dnaq.dialer2.DialerActivity: void updateMissedCalls()&gt;</method>
+                <classname>org.dnaq.dialer2.DialerActivity</classname>
+                <app>
+                    <file>org.dnaq.dialer2_17.apk</file>
+                    <hashes>
+                        <hash type="MD5">1174085e22f690e6a263428a44f0999c</hash>
+                        <hash type="SHA-1">5f6319ea6284bd159eaf075207a2d3002a27c688</hash>
+                        <hash type="SHA-256">4f6079121dfe2f2b61df488e7288a101782b7fc3e1b63c45ef245093eff76de3</hash>
+                    </hashes>
+                </app>
+            </reference>
+            <reference type="from">
+                <statement>
+                    <statementfull>$r10 = interfaceinvoke $r8.&lt;android.database.Cursor: java.lang.String getString(int)&gt;(1)</statementfull>
+                    <statementgeneric>android.database.Cursor: java.lang.String getString(int)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>int</type>
+                            <value>1</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;org.dnaq.dialer2.DialerActivity: void updateMissedCalls()&gt;</method>
+                <classname>org.dnaq.dialer2.DialerActivity</classname>
+                <app>
+                    <file>org.dnaq.dialer2_17.apk</file>
+                    <hashes>
+                        <hash type="MD5">1174085e22f690e6a263428a44f0999c</hash>
+                        <hash type="SHA-1">5f6319ea6284bd159eaf075207a2d3002a27c688</hash>
+                        <hash type="SHA-256">4f6079121dfe2f2b61df488e7288a101782b7fc3e1b63c45ef245093eff76de3</hash>
+                    </hashes>
+                </app>
+            </reference>
+        <classification>FALSE</classification></flow>
+    </preserve></flowset>

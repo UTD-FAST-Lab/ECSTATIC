@@ -1,0 +1,117 @@
+<flowset config1="cgalgovta" config2="cgalgorta" type="soundness" violation="False"><preserve config="cgalgovta"><flow>
+            <reference type="to">
+                <statement>
+                    <statementfull>virtualinvoke $r5.&lt;android.content.ContentResolver: int update(android.net.Uri,android.content.ContentValues,java.lang.String,java.lang.String[])&gt;($r6, $r1, "number=?", $r7)</statementfull>
+                    <statementgeneric>android.content.ContentResolver: int update(android.net.Uri,android.content.ContentValues,java.lang.String,java.lang.String[])</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>android.net.Uri</type>
+                            <value>$r6</value>
+                        </parameter>
+                        <parameter>
+                            <type>android.content.ContentValues</type>
+                            <value>$r1</value>
+                        </parameter>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>"number=?"</value>
+                        </parameter>
+                        <parameter>
+                            <type>java.lang.String[]</type>
+                            <value>$r7</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;org.dnaq.dialer2.DialerActivity: void updateMissedCalls()&gt;</method>
+                <classname>org.dnaq.dialer2.DialerActivity</classname>
+                <app>
+                    <file>org.dnaq.dialer2_17.apk</file>
+                    <hashes>
+                        <hash type="MD5">1174085e22f690e6a263428a44f0999c</hash>
+                        <hash type="SHA-1">5f6319ea6284bd159eaf075207a2d3002a27c688</hash>
+                        <hash type="SHA-256">4f6079121dfe2f2b61df488e7288a101782b7fc3e1b63c45ef245093eff76de3</hash>
+                    </hashes>
+                </app>
+            </reference>
+            <reference type="from">
+                <statement>
+                    <statementfull>$r10 = interfaceinvoke $r8.&lt;android.database.Cursor: java.lang.String getString(int)&gt;(1)</statementfull>
+                    <statementgeneric>android.database.Cursor: java.lang.String getString(int)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>int</type>
+                            <value>1</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;org.dnaq.dialer2.DialerActivity: void updateMissedCalls()&gt;</method>
+                <classname>org.dnaq.dialer2.DialerActivity</classname>
+                <app>
+                    <file>org.dnaq.dialer2_17.apk</file>
+                    <hashes>
+                        <hash type="MD5">1174085e22f690e6a263428a44f0999c</hash>
+                        <hash type="SHA-1">5f6319ea6284bd159eaf075207a2d3002a27c688</hash>
+                        <hash type="SHA-256">4f6079121dfe2f2b61df488e7288a101782b7fc3e1b63c45ef245093eff76de3</hash>
+                    </hashes>
+                </app>
+            </reference>
+        <classification>TRUE</classification></flow>
+        </preserve><preserve config="cgalgorta"><flow>
+            <reference type="to">
+                <statement>
+                    <statementfull>virtualinvoke $r5.&lt;android.content.ContentResolver: int update(android.net.Uri,android.content.ContentValues,java.lang.String,java.lang.String[])&gt;($r6, $r1, "number=?", $r7)</statementfull>
+                    <statementgeneric>android.content.ContentResolver: int update(android.net.Uri,android.content.ContentValues,java.lang.String,java.lang.String[])</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>android.net.Uri</type>
+                            <value>$r6</value>
+                        </parameter>
+                        <parameter>
+                            <type>android.content.ContentValues</type>
+                            <value>$r1</value>
+                        </parameter>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>"number=?"</value>
+                        </parameter>
+                        <parameter>
+                            <type>java.lang.String[]</type>
+                            <value>$r7</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;org.dnaq.dialer2.DialerActivity: void updateMissedCalls()&gt;</method>
+                <classname>org.dnaq.dialer2.DialerActivity</classname>
+                <app>
+                    <file>org.dnaq.dialer2_17.apk</file>
+                    <hashes>
+                        <hash type="MD5">1174085e22f690e6a263428a44f0999c</hash>
+                        <hash type="SHA-1">5f6319ea6284bd159eaf075207a2d3002a27c688</hash>
+                        <hash type="SHA-256">4f6079121dfe2f2b61df488e7288a101782b7fc3e1b63c45ef245093eff76de3</hash>
+                    </hashes>
+                </app>
+            </reference>
+            <reference type="from">
+                <statement>
+                    <statementfull>$r10 = interfaceinvoke $r8.&lt;android.database.Cursor: java.lang.String getString(int)&gt;(1)</statementfull>
+                    <statementgeneric>android.database.Cursor: java.lang.String getString(int)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>int</type>
+                            <value>1</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;org.dnaq.dialer2.DialerActivity: void updateMissedCalls()&gt;</method>
+                <classname>org.dnaq.dialer2.DialerActivity</classname>
+                <app>
+                    <file>org.dnaq.dialer2_17.apk</file>
+                    <hashes>
+                        <hash type="MD5">1174085e22f690e6a263428a44f0999c</hash>
+                        <hash type="SHA-1">5f6319ea6284bd159eaf075207a2d3002a27c688</hash>
+                        <hash type="SHA-256">4f6079121dfe2f2b61df488e7288a101782b7fc3e1b63c45ef245093eff76de3</hash>
+                    </hashes>
+                </app>
+            </reference>
+        <classification>TRUE</classification></flow>
+        </preserve></flowset>

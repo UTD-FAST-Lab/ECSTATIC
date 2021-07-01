@@ -39,16 +39,19 @@ p.add_argument('--verify_classifications', action='store_true',
 p.add_argument('--data_directory', default='./checkmate/data',
                help="""The directory in which checkmate's model files \
                are stored.""")
-p.add_argument('--tool', default='flowdroid', choices=['flowdroid','droidsafe'],
+np.add_argument('--tool', default='flowdroid', choices=['flowdroid','droidsafe'],
                help="""The tool that we are checking for violations in.""")
 p.add_argument('--dataset', default='fossdroid', choices=['fossdroid', 'droidsafe'],
                help="""The dataset these reports are from.""")
 p.add_argument('--violation_location', default='./violations',
                help="""Where to store violations.""")
+p.add_argument('--no_deltadebugger_output', action='store_true',
+               help="""If this option is enabled, the program will not output the formats that are required
+               by the delta debugger.""")
 args = p.parse_args()
 
 DEFAULT_CONFIG = {'flowdroid': 'aplength5', 'droidsafe': 'kobjsens3'}
-TIMEOUTS = {'fossdroid': 7200000}
+TIMEOUTS = {'fossdroid': 7200000, 'droidbench': 600000}
 
 def check_args():
     """
@@ -327,6 +330,7 @@ def check_for_violations(configurations_to_flows: Dict[Configuration, List[Flow]
                                                    f.get_classification().upper() == 'TRUE'])
                             logging.debug(f'Length of tp2 is {len(tp2)}.')
                             comparison_set : Set[Flow] = tp2.difference(tp1)
+                            provenance = config2.config_file
                         elif t == 'precision':
                             fp1 : Set[Flow] = set([f for f in listflows1 if \
                                                    f.get_classification().upper() == 'FALSE'])
@@ -335,29 +339,71 @@ def check_for_violations(configurations_to_flows: Dict[Configuration, List[Flow]
                                                    f.get_classification().upper() == 'FALSE'])
                             logging.debug(f'Length of fp2 is {len(fp2)}.')
                             comparison_set : Set[Flow] = fp1.difference(fp2)
-                        
+                            provenance = config1.config_file
+
                         if len(comparison_set) > 0:
                             print(f'Violation ({t}) found between {oui} settings '
                                   f'{config1.configuration[oui]} and '
                                   f'{config2.configuration[oui]} in '
                                   f'{" ".join([str(f) for f in comparison_set])}')
-                            violation : ET.Element = ET.Element('violation')
+                            violation : ET.Element = ET.Element('flowset')
+                            violation.set('violation', 'True')
                             violation.set('type', t)
                             violation.set('config1', config1.config_file)
                             violation.set('config2', config2.config_file)
+                            preserve : ET.Element = ET.Element('preserve')
+                            preserve.set('config', provenance)
                             f: Flow
                             for f in comparison_set:
-                                violation.append(f.element)
+                                preserve.append(f.element)
                             if not os.path.exists(violation_directory):
                                 os.makedirs(violation_directory)
-                            fname = f'violation_{t}_{config1.apk}'\
+                            violation.append(preserve)
+                            fname = f'flowset_violation-true_{t}_{config1.apk}'\
                                     f'_{config1.option_under_investigation}_'\
                                     f'{config1.configuration[oui]}_{config2.option_under_investigation}_'\
                                     f'{config2.configuration[oui]}_{suffix}.xml'
                             # Output to file.
                             tree = ET.ElementTree(violation)
                             tree.write(os.path.join(violation_directory, fname))
-                                      
+                        else:
+                            if args.no_deltadebugger_output:
+                                continue
+                            print(f'No violation ({t}) found between {oui} settings '
+                                  f'{config1.configuration[oui]} and '
+                                  f'{config2.configuration[oui]}.')
+                            violation : ET.Element = ET.Element('flowset')
+                            violation.set('violation', 'False')
+                            violation.set('type', t)
+                            violation.set('config1', config1.config_file)
+                            violation.set('config2', config2.config_file)
+                            f: Flow
+                            # Here, we want to output the set of true and false flows
+                            #  so that the delta debugger can minimize.
+                            if t == 'precision':
+                                set1 : Set[Flow] = fp1
+                                set2 : Set[Flow] = fp2
+                            elif t == 'soundness':
+                                set1 : Set[Flow] = tp1
+                                set2 : Set[Flow] = tp2
+
+                            for s, provenance in [(set1, config1.config_file),
+                                                  (set2, config2.config_file)]:
+                                preserve : ET.Element = ET.Element('preserve')
+                                preserve.set('config', provenance)
+                                for f in s:
+                                    preserve.append(f.element)
+                                violation.append(preserve)
+                            if not os.path.exists(violation_directory):
+                                os.makedirs(violation_directory)
+                            fname = f'flowset_violation-false_{t}_{config1.apk}'\
+                                    f'_{config1.option_under_investigation}_'\
+                                    f'{config1.configuration[oui]}_{config2.option_under_investigation}_'\
+                                    f'{config2.configuration[oui]}_{suffix}.xml'
+                            # Output to file.
+                            tree = ET.ElementTree(violation)
+                            tree.write(os.path.join(violation_directory, fname))
+
 def main():
     # Check that the arguments are correct.
     check_args()

@@ -1,0 +1,51 @@
+<flowset config1="aplength2" config2="aplength1" type="soundness" violation="True"><preserve config="aplength1"><flow>
+            <reference type="to">
+                <statement>
+                    <statementfull>virtualinvoke $r4.&lt;android.os.Bundle: void putString(java.lang.String,java.lang.String)&gt;("receipt", $r8)</statementfull>
+                    <statementgeneric>android.os.Bundle: void putString(java.lang.String,java.lang.String)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>"receipt"</value>
+                        </parameter>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>$r8</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;protect.budgetwatch.TransactionViewActivity$4: void onClick(android.view.View)&gt;</method>
+                <classname>protect.budgetwatch.TransactionViewActivity$4</classname>
+                <app>
+                    <file>protect.budgetwatch_29.apk</file>
+                    <hashes>
+                        <hash type="MD5">10483789cab4534cc567558211d6be8e</hash>
+                        <hash type="SHA-1">c0113d86f591634f32db0b8ecd1b4cfa9090d267</hash>
+                        <hash type="SHA-256">978e0babed09f782273643ae39915a3951a6cbbd4ebd1cbf491588971cc6334e</hash>
+                    </hashes>
+                </app>
+            </reference>
+            <reference type="from">
+                <statement>
+                    <statementfull>$r3 = interfaceinvoke $r1.&lt;android.database.Cursor: java.lang.String getString(int)&gt;($i2)</statementfull>
+                    <statementgeneric>android.database.Cursor: java.lang.String getString(int)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>int</type>
+                            <value>$i2</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;protect.budgetwatch.Transaction: protect.budgetwatch.Transaction toTransaction(android.database.Cursor)&gt;</method>
+                <classname>protect.budgetwatch.Transaction</classname>
+                <app>
+                    <file>protect.budgetwatch_29.apk</file>
+                    <hashes>
+                        <hash type="MD5">10483789cab4534cc567558211d6be8e</hash>
+                        <hash type="SHA-1">c0113d86f591634f32db0b8ecd1b4cfa9090d267</hash>
+                        <hash type="SHA-256">978e0babed09f782273643ae39915a3951a6cbbd4ebd1cbf491588971cc6334e</hash>
+                    </hashes>
+                </app>
+            </reference>
+        <classification>TRUE</classification></flow>
+        </preserve></flowset>

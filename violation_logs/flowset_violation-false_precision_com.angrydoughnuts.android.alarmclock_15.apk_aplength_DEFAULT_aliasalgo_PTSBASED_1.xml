@@ -1,0 +1,451 @@
+<flowset config1="aplength5" config2="aliasalgoptsbased" type="precision" violation="False"><preserve config="aplength5" /><preserve config="aliasalgoptsbased"><flow>
+            <reference type="to">
+                <statement>
+                    <statementfull>staticinvoke &lt;android.util.Log: int e(java.lang.String,java.lang.String)&gt;($r3, $r11)</statementfull>
+                    <statementgeneric>android.util.Log: int e(java.lang.String,java.lang.String)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>$r3</value>
+                        </parameter>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>$r11</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;com.angrydoughnuts.android.alarmclock.AlarmNotificationService: void snoozeAll(long)&gt;</method>
+                <classname>com.angrydoughnuts.android.alarmclock.AlarmNotificationService</classname>
+                <app>
+                    <file>com.angrydoughnuts.android.alarmclock_15.apk</file>
+                    <hashes>
+                        <hash type="MD5">41a3ba6707763e7bf473ac7c4fc5d314</hash>
+                        <hash type="SHA-1">529661adf62eb3b9975d3f49fa5b8807b6446a59</hash>
+                        <hash type="SHA-256">545b577006bd9d93e6e272fa343f05334dcb0061888b8ed664676ea53e1e01c2</hash>
+                    </hashes>
+                </app>
+            </reference>
+            <reference type="from">
+                <statement>
+                    <statementfull>$r2 = interfaceinvoke $r1.&lt;android.database.Cursor: java.lang.String getString(int)&gt;($i0)</statementfull>
+                    <statementgeneric>android.database.Cursor: java.lang.String getString(int)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>int</type>
+                            <value>$i0</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;com.angrydoughnuts.android.alarmclock.DbUtil$Alarm: void &lt;init&gt;(android.database.Cursor)&gt;</method>
+                <classname>com.angrydoughnuts.android.alarmclock.DbUtil$Alarm</classname>
+                <app>
+                    <file>com.angrydoughnuts.android.alarmclock_15.apk</file>
+                    <hashes>
+                        <hash type="MD5">41a3ba6707763e7bf473ac7c4fc5d314</hash>
+                        <hash type="SHA-1">529661adf62eb3b9975d3f49fa5b8807b6446a59</hash>
+                        <hash type="SHA-256">545b577006bd9d93e6e272fa343f05334dcb0061888b8ed664676ea53e1e01c2</hash>
+                    </hashes>
+                </app>
+            </reference>
+        <classification>FALSE</classification></flow>
+    <flow>
+            <reference type="to">
+                <statement>
+                    <statementfull>staticinvoke &lt;android.util.Log: int i(java.lang.String,java.lang.String)&gt;($r2, $r6)</statementfull>
+                    <statementgeneric>android.util.Log: int i(java.lang.String,java.lang.String)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>$r2</value>
+                        </parameter>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>$r6</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;com.angrydoughnuts.android.alarmclock.AlarmNotificationActivity: void onNewIntent(android.content.Intent)&gt;</method>
+                <classname>com.angrydoughnuts.android.alarmclock.AlarmNotificationActivity</classname>
+                <app>
+                    <file>com.angrydoughnuts.android.alarmclock_15.apk</file>
+                    <hashes>
+                        <hash type="MD5">41a3ba6707763e7bf473ac7c4fc5d314</hash>
+                        <hash type="SHA-1">529661adf62eb3b9975d3f49fa5b8807b6446a59</hash>
+                        <hash type="SHA-256">545b577006bd9d93e6e272fa343f05334dcb0061888b8ed664676ea53e1e01c2</hash>
+                    </hashes>
+                </app>
+            </reference>
+            <reference type="from">
+                <statement>
+                    <statementfull>$r2 = interfaceinvoke $r1.&lt;android.database.Cursor: java.lang.String getString(int)&gt;($i0)</statementfull>
+                    <statementgeneric>android.database.Cursor: java.lang.String getString(int)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>int</type>
+                            <value>$i0</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;com.angrydoughnuts.android.alarmclock.DbUtil$Alarm: void &lt;init&gt;(android.database.Cursor)&gt;</method>
+                <classname>com.angrydoughnuts.android.alarmclock.DbUtil$Alarm</classname>
+                <app>
+                    <file>com.angrydoughnuts.android.alarmclock_15.apk</file>
+                    <hashes>
+                        <hash type="MD5">41a3ba6707763e7bf473ac7c4fc5d314</hash>
+                        <hash type="SHA-1">529661adf62eb3b9975d3f49fa5b8807b6446a59</hash>
+                        <hash type="SHA-256">545b577006bd9d93e6e272fa343f05334dcb0061888b8ed664676ea53e1e01c2</hash>
+                    </hashes>
+                </app>
+            </reference>
+        <classification>FALSE</classification></flow>
+        <flow>
+            <reference type="to">
+                <statement>
+                    <statementfull>staticinvoke &lt;android.util.Log: int w(java.lang.String,java.lang.String)&gt;($r1, "Alarm timeout")</statementfull>
+                    <statementgeneric>android.util.Log: int w(java.lang.String,java.lang.String)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>$r1</value>
+                        </parameter>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>"Alarm timeout"</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;com.angrydoughnuts.android.alarmclock.AlarmNotificationService$ActiveAlarms$2: void run()&gt;</method>
+                <classname>com.angrydoughnuts.android.alarmclock.AlarmNotificationService$ActiveAlarms$2</classname>
+                <app>
+                    <file>com.angrydoughnuts.android.alarmclock_15.apk</file>
+                    <hashes>
+                        <hash type="MD5">41a3ba6707763e7bf473ac7c4fc5d314</hash>
+                        <hash type="SHA-1">529661adf62eb3b9975d3f49fa5b8807b6446a59</hash>
+                        <hash type="SHA-256">545b577006bd9d93e6e272fa343f05334dcb0061888b8ed664676ea53e1e01c2</hash>
+                    </hashes>
+                </app>
+            </reference>
+            <reference type="from">
+                <statement>
+                    <statementfull>$r2 = interfaceinvoke $r1.&lt;android.database.Cursor: java.lang.String getString(int)&gt;($i0)</statementfull>
+                    <statementgeneric>android.database.Cursor: java.lang.String getString(int)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>int</type>
+                            <value>$i0</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;com.angrydoughnuts.android.alarmclock.DbUtil$Alarm: void &lt;init&gt;(android.database.Cursor)&gt;</method>
+                <classname>com.angrydoughnuts.android.alarmclock.DbUtil$Alarm</classname>
+                <app>
+                    <file>com.angrydoughnuts.android.alarmclock_15.apk</file>
+                    <hashes>
+                        <hash type="MD5">41a3ba6707763e7bf473ac7c4fc5d314</hash>
+                        <hash type="SHA-1">529661adf62eb3b9975d3f49fa5b8807b6446a59</hash>
+                        <hash type="SHA-256">545b577006bd9d93e6e272fa343f05334dcb0061888b8ed664676ea53e1e01c2</hash>
+                    </hashes>
+                </app>
+            </reference>
+        <classification>FALSE</classification></flow>
+        <flow>
+            <reference type="to">
+                <statement>
+                    <statementfull>staticinvoke &lt;android.util.Log: int i(java.lang.String,java.lang.String)&gt;($r11, $r13)</statementfull>
+                    <statementgeneric>android.util.Log: int i(java.lang.String,java.lang.String)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>$r11</value>
+                        </parameter>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>$r13</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;com.angrydoughnuts.android.alarmclock.AlarmNotificationService$ActiveAlarms: void &lt;init&gt;(android.content.Context,android.os.PowerManager$WakeLock,com.angrydoughnuts.android.alarmclock.DbUtil$Settings)&gt;</method>
+                <classname>com.angrydoughnuts.android.alarmclock.AlarmNotificationService$ActiveAlarms</classname>
+                <app>
+                    <file>com.angrydoughnuts.android.alarmclock_15.apk</file>
+                    <hashes>
+                        <hash type="MD5">41a3ba6707763e7bf473ac7c4fc5d314</hash>
+                        <hash type="SHA-1">529661adf62eb3b9975d3f49fa5b8807b6446a59</hash>
+                        <hash type="SHA-256">545b577006bd9d93e6e272fa343f05334dcb0061888b8ed664676ea53e1e01c2</hash>
+                    </hashes>
+                </app>
+            </reference>
+            <reference type="from">
+                <statement>
+                    <statementfull>$r2 = interfaceinvoke $r1.&lt;android.database.Cursor: java.lang.String getString(int)&gt;($i0)</statementfull>
+                    <statementgeneric>android.database.Cursor: java.lang.String getString(int)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>int</type>
+                            <value>$i0</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;com.angrydoughnuts.android.alarmclock.DbUtil$Alarm: void &lt;init&gt;(android.database.Cursor)&gt;</method>
+                <classname>com.angrydoughnuts.android.alarmclock.DbUtil$Alarm</classname>
+                <app>
+                    <file>com.angrydoughnuts.android.alarmclock_15.apk</file>
+                    <hashes>
+                        <hash type="MD5">41a3ba6707763e7bf473ac7c4fc5d314</hash>
+                        <hash type="SHA-1">529661adf62eb3b9975d3f49fa5b8807b6446a59</hash>
+                        <hash type="SHA-256">545b577006bd9d93e6e272fa343f05334dcb0061888b8ed664676ea53e1e01c2</hash>
+                    </hashes>
+                </app>
+            </reference>
+        <classification>FALSE</classification></flow>
+        <flow>
+            <reference type="to">
+                <statement>
+                    <statementfull>staticinvoke &lt;android.util.Log: int e(java.lang.String,java.lang.String)&gt;($r7, $r2)</statementfull>
+                    <statementgeneric>android.util.Log: int e(java.lang.String,java.lang.String)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>$r7</value>
+                        </parameter>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>$r2</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;com.angrydoughnuts.android.alarmclock.AlarmNotificationService: void handleTriggerAlarm(android.content.Intent)&gt;</method>
+                <classname>com.angrydoughnuts.android.alarmclock.AlarmNotificationService</classname>
+                <app>
+                    <file>com.angrydoughnuts.android.alarmclock_15.apk</file>
+                    <hashes>
+                        <hash type="MD5">41a3ba6707763e7bf473ac7c4fc5d314</hash>
+                        <hash type="SHA-1">529661adf62eb3b9975d3f49fa5b8807b6446a59</hash>
+                        <hash type="SHA-256">545b577006bd9d93e6e272fa343f05334dcb0061888b8ed664676ea53e1e01c2</hash>
+                    </hashes>
+                </app>
+            </reference>
+            <reference type="from">
+                <statement>
+                    <statementfull>$r2 = interfaceinvoke $r1.&lt;android.database.Cursor: java.lang.String getString(int)&gt;($i0)</statementfull>
+                    <statementgeneric>android.database.Cursor: java.lang.String getString(int)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>int</type>
+                            <value>$i0</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;com.angrydoughnuts.android.alarmclock.DbUtil$Alarm: void &lt;init&gt;(android.database.Cursor)&gt;</method>
+                <classname>com.angrydoughnuts.android.alarmclock.DbUtil$Alarm</classname>
+                <app>
+                    <file>com.angrydoughnuts.android.alarmclock_15.apk</file>
+                    <hashes>
+                        <hash type="MD5">41a3ba6707763e7bf473ac7c4fc5d314</hash>
+                        <hash type="SHA-1">529661adf62eb3b9975d3f49fa5b8807b6446a59</hash>
+                        <hash type="SHA-256">545b577006bd9d93e6e272fa343f05334dcb0061888b8ed664676ea53e1e01c2</hash>
+                    </hashes>
+                </app>
+            </reference>
+        <classification>FALSE</classification></flow>
+        <flow>
+            <reference type="to">
+                <statement>
+                    <statementfull>staticinvoke &lt;android.util.Log: int i(java.lang.String,java.lang.String)&gt;($r6, $r10)</statementfull>
+                    <statementgeneric>android.util.Log: int i(java.lang.String,java.lang.String)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>$r6</value>
+                        </parameter>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>$r10</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;com.angrydoughnuts.android.alarmclock.AlarmNotificationService$AlarmTriggerReceiver: void onReceive(android.content.Context,android.content.Intent)&gt;</method>
+                <classname>com.angrydoughnuts.android.alarmclock.AlarmNotificationService$AlarmTriggerReceiver</classname>
+                <app>
+                    <file>com.angrydoughnuts.android.alarmclock_15.apk</file>
+                    <hashes>
+                        <hash type="MD5">41a3ba6707763e7bf473ac7c4fc5d314</hash>
+                        <hash type="SHA-1">529661adf62eb3b9975d3f49fa5b8807b6446a59</hash>
+                        <hash type="SHA-256">545b577006bd9d93e6e272fa343f05334dcb0061888b8ed664676ea53e1e01c2</hash>
+                    </hashes>
+                </app>
+            </reference>
+            <reference type="from">
+                <statement>
+                    <statementfull>$r2 = interfaceinvoke $r1.&lt;android.database.Cursor: java.lang.String getString(int)&gt;($i0)</statementfull>
+                    <statementgeneric>android.database.Cursor: java.lang.String getString(int)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>int</type>
+                            <value>$i0</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;com.angrydoughnuts.android.alarmclock.DbUtil$Alarm: void &lt;init&gt;(android.database.Cursor)&gt;</method>
+                <classname>com.angrydoughnuts.android.alarmclock.DbUtil$Alarm</classname>
+                <app>
+                    <file>com.angrydoughnuts.android.alarmclock_15.apk</file>
+                    <hashes>
+                        <hash type="MD5">41a3ba6707763e7bf473ac7c4fc5d314</hash>
+                        <hash type="SHA-1">529661adf62eb3b9975d3f49fa5b8807b6446a59</hash>
+                        <hash type="SHA-256">545b577006bd9d93e6e272fa343f05334dcb0061888b8ed664676ea53e1e01c2</hash>
+                    </hashes>
+                </app>
+            </reference>
+        <classification>FALSE</classification></flow>
+        <flow>
+            <reference type="to">
+                <statement>
+                    <statementfull>staticinvoke &lt;android.util.Log: int i(java.lang.String,java.lang.String)&gt;($r2, "Releasing wake lock")</statementfull>
+                    <statementgeneric>android.util.Log: int i(java.lang.String,java.lang.String)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>$r2</value>
+                        </parameter>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>"Releasing wake lock"</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;com.angrydoughnuts.android.alarmclock.AlarmNotificationService$ActiveAlarms: void release()&gt;</method>
+                <classname>com.angrydoughnuts.android.alarmclock.AlarmNotificationService$ActiveAlarms</classname>
+                <app>
+                    <file>com.angrydoughnuts.android.alarmclock_15.apk</file>
+                    <hashes>
+                        <hash type="MD5">41a3ba6707763e7bf473ac7c4fc5d314</hash>
+                        <hash type="SHA-1">529661adf62eb3b9975d3f49fa5b8807b6446a59</hash>
+                        <hash type="SHA-256">545b577006bd9d93e6e272fa343f05334dcb0061888b8ed664676ea53e1e01c2</hash>
+                    </hashes>
+                </app>
+            </reference>
+            <reference type="from">
+                <statement>
+                    <statementfull>$r2 = interfaceinvoke $r1.&lt;android.database.Cursor: java.lang.String getString(int)&gt;($i0)</statementfull>
+                    <statementgeneric>android.database.Cursor: java.lang.String getString(int)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>int</type>
+                            <value>$i0</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;com.angrydoughnuts.android.alarmclock.DbUtil$Alarm: void &lt;init&gt;(android.database.Cursor)&gt;</method>
+                <classname>com.angrydoughnuts.android.alarmclock.DbUtil$Alarm</classname>
+                <app>
+                    <file>com.angrydoughnuts.android.alarmclock_15.apk</file>
+                    <hashes>
+                        <hash type="MD5">41a3ba6707763e7bf473ac7c4fc5d314</hash>
+                        <hash type="SHA-1">529661adf62eb3b9975d3f49fa5b8807b6446a59</hash>
+                        <hash type="SHA-256">545b577006bd9d93e6e272fa343f05334dcb0061888b8ed664676ea53e1e01c2</hash>
+                    </hashes>
+                </app>
+            </reference>
+        <classification>FALSE</classification></flow>
+        <flow>
+            <reference type="to">
+                <statement>
+                    <statementfull>staticinvoke &lt;android.util.Log: int e(java.lang.String,java.lang.String)&gt;($r2, "Unhandled intent!")</statementfull>
+                    <statementgeneric>android.util.Log: int e(java.lang.String,java.lang.String)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>$r2</value>
+                        </parameter>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>"Unhandled intent!"</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;com.angrydoughnuts.android.alarmclock.AlarmNotificationActivity: void onNewIntent(android.content.Intent)&gt;</method>
+                <classname>com.angrydoughnuts.android.alarmclock.AlarmNotificationActivity</classname>
+                <app>
+                    <file>com.angrydoughnuts.android.alarmclock_15.apk</file>
+                    <hashes>
+                        <hash type="MD5">41a3ba6707763e7bf473ac7c4fc5d314</hash>
+                        <hash type="SHA-1">529661adf62eb3b9975d3f49fa5b8807b6446a59</hash>
+                        <hash type="SHA-256">545b577006bd9d93e6e272fa343f05334dcb0061888b8ed664676ea53e1e01c2</hash>
+                    </hashes>
+                </app>
+            </reference>
+            <reference type="from">
+                <statement>
+                    <statementfull>$r2 = interfaceinvoke $r1.&lt;android.database.Cursor: java.lang.String getString(int)&gt;($i0)</statementfull>
+                    <statementgeneric>android.database.Cursor: java.lang.String getString(int)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>int</type>
+                            <value>$i0</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;com.angrydoughnuts.android.alarmclock.DbUtil$Alarm: void &lt;init&gt;(android.database.Cursor)&gt;</method>
+                <classname>com.angrydoughnuts.android.alarmclock.DbUtil$Alarm</classname>
+                <app>
+                    <file>com.angrydoughnuts.android.alarmclock_15.apk</file>
+                    <hashes>
+                        <hash type="MD5">41a3ba6707763e7bf473ac7c4fc5d314</hash>
+                        <hash type="SHA-1">529661adf62eb3b9975d3f49fa5b8807b6446a59</hash>
+                        <hash type="SHA-256">545b577006bd9d93e6e272fa343f05334dcb0061888b8ed664676ea53e1e01c2</hash>
+                    </hashes>
+                </app>
+            </reference>
+        <classification>FALSE</classification></flow>
+        <flow>
+            <reference type="to">
+                <statement>
+                    <statementfull>staticinvoke &lt;android.util.Log: int i(java.lang.String,java.lang.String)&gt;($r5, $r7)</statementfull>
+                    <statementgeneric>android.util.Log: int i(java.lang.String,java.lang.String)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>$r5</value>
+                        </parameter>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>$r7</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;com.angrydoughnuts.android.alarmclock.AlarmNotificationService: long newAlarm(android.content.Context,int)&gt;</method>
+                <classname>com.angrydoughnuts.android.alarmclock.AlarmNotificationService</classname>
+                <app>
+                    <file>com.angrydoughnuts.android.alarmclock_15.apk</file>
+                    <hashes>
+                        <hash type="MD5">41a3ba6707763e7bf473ac7c4fc5d314</hash>
+                        <hash type="SHA-1">529661adf62eb3b9975d3f49fa5b8807b6446a59</hash>
+                        <hash type="SHA-256">545b577006bd9d93e6e272fa343f05334dcb0061888b8ed664676ea53e1e01c2</hash>
+                    </hashes>
+                </app>
+            </reference>
+            <reference type="from">
+                <statement>
+                    <statementfull>$r2 = interfaceinvoke $r1.&lt;android.database.Cursor: java.lang.String getString(int)&gt;($i0)</statementfull>
+                    <statementgeneric>android.database.Cursor: java.lang.String getString(int)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>int</type>
+                            <value>$i0</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;com.angrydoughnuts.android.alarmclock.DbUtil$Alarm: void &lt;init&gt;(android.database.Cursor)&gt;</method>
+                <classname>com.angrydoughnuts.android.alarmclock.DbUtil$Alarm</classname>
+                <app>
+                    <file>com.angrydoughnuts.android.alarmclock_15.apk</file>
+                    <hashes>
+                        <hash type="MD5">41a3ba6707763e7bf473ac7c4fc5d314</hash>
+                        <hash type="SHA-1">529661adf62eb3b9975d3f49fa5b8807b6446a59</hash>
+                        <hash type="SHA-256">545b577006bd9d93e6e272fa343f05334dcb0061888b8ed664676ea53e1e01c2</hash>
+                    </hashes>
+                </app>
+            </reference>
+        <classification>FALSE</classification></flow>
+        </preserve></flowset>
