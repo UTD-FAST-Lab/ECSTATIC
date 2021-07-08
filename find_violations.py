@@ -39,7 +39,7 @@ p.add_argument('--verify_classifications', action='store_true',
 p.add_argument('--data_directory', default='./checkmate/data',
                help="""The directory in which checkmate's model files \
                are stored.""")
-np.add_argument('--tool', default='flowdroid', choices=['flowdroid','droidsafe'],
+p.add_argument('--tool', default='flowdroid', choices=['flowdroid','droidsafe'],
                help="""The tool that we are checking for violations in.""")
 p.add_argument('--dataset', default='fossdroid', choices=['fossdroid', 'droidsafe'],
                help="""The dataset these reports are from.""")
@@ -358,14 +358,17 @@ def check_for_violations(configurations_to_flows: Dict[Configuration, List[Flow]
                                 preserve.append(f.element)
                             if not os.path.exists(violation_directory):
                                 os.makedirs(violation_directory)
+                            subpath = f'{config1.option_under_investigation}_'\
+                                      f'{config1.configuration[oui]}_{config2.option_under_investigation}_'\
+                                      f'{config2.configuration[oui]}_{t}'
+                            if not os.path.exists(os.path.join(violation_directory, subpath)):
+                                os.makedirs(os.path.join(violation_directory, subpath))
                             violation.append(preserve)
-                            fname = f'flowset_violation-true_{t}_{config1.apk}'\
-                                    f'_{config1.option_under_investigation}_'\
-                                    f'{config1.configuration[oui]}_{config2.option_under_investigation}_'\
-                                    f'{config2.configuration[oui]}_{suffix}.xml'
+                            fname = f'flowset_violation-true_{config1.apk}'\
+                                    f'_{suffix}.xml'
                             # Output to file.
                             tree = ET.ElementTree(violation)
-                            tree.write(os.path.join(violation_directory, fname))
+                            tree.write(os.path.join(violation_directory, subpath, fname))
                         else:
                             if args.no_deltadebugger_output:
                                 continue
@@ -396,13 +399,17 @@ def check_for_violations(configurations_to_flows: Dict[Configuration, List[Flow]
                                 violation.append(preserve)
                             if not os.path.exists(violation_directory):
                                 os.makedirs(violation_directory)
-                            fname = f'flowset_violation-false_{t}_{config1.apk}'\
-                                    f'_{config1.option_under_investigation}_'\
-                                    f'{config1.configuration[oui]}_{config2.option_under_investigation}_'\
-                                    f'{config2.configuration[oui]}_{suffix}.xml'
+                            subpath = f'{config1.option_under_investigation}_'\
+                                      f'{config1.configuration[oui]}_{config2.option_under_investigation}_'\
+                                      f'{config2.configuration[oui]}_{t}'
+                            if not os.path.exists(os.path.join(violation_directory, subpath)):
+                                os.makedirs(os.path.join(violation_directory, subpath))
+                            violation.append(preserve)
+                            fname = f'flowset_violation-false_{config1.apk}'\
+                                    f'_{suffix}.xml'
                             # Output to file.
                             tree = ET.ElementTree(violation)
-                            tree.write(os.path.join(violation_directory, fname))
+                            tree.write(os.path.join(violation_directory, subpath, fname))
 
 def main():
     # Check that the arguments are correct.
