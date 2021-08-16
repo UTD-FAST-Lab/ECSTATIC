@@ -41,7 +41,7 @@ p.add_argument('--data_directory', default='./checkmate/data',
                are stored.""")
 p.add_argument('--tool', default='flowdroid', choices=['flowdroid','droidsafe'],
                help="""The tool that we are checking for violations in.""")
-p.add_argument('--dataset', default='fossdroid', choices=['fossdroid', 'droidsafe'],
+p.add_argument('--dataset', default='fossdroid', choices=['fossdroid', 'droidbench'],
                help="""The dataset these reports are from.""")
 p.add_argument('--violation_location', default='./violations',
                help="""Where to store violations.""")
