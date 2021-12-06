@@ -1,0 +1,12 @@
+#!/usr/bin/env python
+import argparse
+p = argparse.ArgumentParser()
+p.add_argument("--analyzeframeworks")
+p.add_argument("--codeeliminationmode", choices=['NONE', 'REMOVECODE', 'PROPAGATECONSTS'])
+args = p.parse_args()
+
+def main():
+    print(args)
+
+if __name__ == '__main__':
+    main()

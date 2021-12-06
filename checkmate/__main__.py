@@ -1,30 +1,30 @@
-from art import text2art
 import argparse
 import logging
-import subprocess
-import coloredlogs
+logging.basicConfig(level=logging.WARNING)
 from checkmate.models.Option import Option
 from checkmate.models.Tool import Tool
 from checkmate.models.Constraint import Constraint
 from checkmate.models.Tag import Tag
+from checkmate.fuzzing import fuzzer
 import pickle
 
-logging.basicConfig(level=logging.WARNING)
+
 parser = argparse.ArgumentParser()
-parser.add_argument('--generate-models', help="Generate models.",
-                    action="store_true")
-parser.add_argument('-c', '--call', help="""Full callstring. For example,
-'java -jar soot-infoflow-cmd-jar-with-dependencies.jar -a ./TestApk1
--p ~/Android/Sdk/platforms -s ./SourcesAndSinks.txt'""")
-parser.add_argument('-t', '--tune', help="Open tuning interface.",
-                    action="store_true")
-parser.add_argument('-a', '--analyze')
-parser.add_argument('--soundness', action='store_true')
-parser.add_argument('--tags')
+subparsers = parser.add_subparsers()
+fuzz_parser = subparsers.add_parser('fuzz', help='fuzzing control.')
+fuzz_parser.set_defaults(func=lambda r: fuzzer.main(r.model_location, r.number_configs))
+fuzz_parser.add_argument('-m', '--model_location', help='the location of the model to use.',
+                         default = 'data/flowdroid.model')
+fuzz_parser.add_argument('-n', '--number_configs', help='the number of configurations to generate.',
+                         default = 100)
+generate_models_parser = subparsers.add_parser('generate', help='generate models.')
+generate_models_parser.set_defaults(func=lambda r: create_models(r.location))
+generate_models_parser.add_argument('--location', '-l', help='where to dump models.',
+                                    default = '.')
 args = parser.parse_args()
 
-HOME="."
-def create_models():
+
+def create_models(location):
     """Creates the models"""
 
     # am = Tool("Amandroid")
@@ -35,7 +35,7 @@ def create_models():
     # o.add_tag(Tag.OBJECT)
     # am.add_option(o)
 
-    # with open(f'{HOME}/data/amandroid.model', 'wb') as f:
+    # with open(f'{location}/data/amandroid.model', 'wb') as f:
     #     pickle.dump(am, f, protocol=0)
 
     fd = Tool("FlowDroid")
@@ -47,6 +47,7 @@ def create_models():
     for i in range(len(ops) - 1):
         o.is_as_sound(ops[i+1], ops[i])
     o.add_tag(Tag.OBJECT)
+    o.set_default('5')
     fd.add_option(o)
     
     o = Option("cgalgo")
@@ -56,6 +57,7 @@ def create_models():
     o.is_as_precise('VTA', 'RTA')
     o.add_tag(Tag.OBJECT)
     o.add_tag(Tag.REFLECTION)
+    o.set_default('DEFAULT')
     fd.add_option(o)
     
     o = Option("nothischainreduction")
@@ -63,12 +65,14 @@ def create_models():
         o.add_level(k)
     o.is_as_precise('FALSE', 'TRUE')
     o.add_tag(Tag.OBJECT)
+    o.set_default('FALSE')
     fd.add_option(o)
     
     o = Option('onesourceatatime')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
     o.is_as_precise('TRUE', 'FALSE')
+    o.set_default('FALSE')
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     fd.add_option(o)
 
@@ -77,6 +81,7 @@ def create_models():
         o.add_level(k)
     o.is_as_precise('DEFAULT',
                     'FLOWINSENSITIVE')
+    o.set_default('DEFAULT')
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     fd.add_option(o)
 
@@ -85,6 +90,7 @@ def create_models():
         o1.add_level(k)
     o1.is_as_precise('FALSE', 'TRUE')
     o1.add_tag(Tag.OBJECT)
+    o1.set_default('FALSE')
     fd.add_option(o1)
     fd.add_dominates(o, 'FLOWINSENSITIVE', o1)
     
@@ -92,6 +98,7 @@ def create_models():
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
+    o.set_default('FALSE')
     o.is_as_sound('FALSE', 'TRUE')
     fd.add_option(o)
 
@@ -99,6 +106,7 @@ def create_models():
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
     o.is_as_sound('FALSE', 'TRUE')
+    o.set_default('FALSE')
     o.add_tag(Tag.ANDROID_LIFECYCLE)
     fd.add_option(o)
     
@@ -111,6 +119,7 @@ def create_models():
     o1.is_as_precise('DEFAULT', 'CONTEXTFLOWINSENSITIVE')
     o1.is_as_sound('DEFAULT', 'NONE')
     o1.is_as_sound('CONTEXTFLOWINSENSITIVE', 'NONE')
+    o1.set_default('DEFAULT')
     fd.add_option(o1)
     
     o = Option('nostatic')
@@ -118,6 +127,7 @@ def create_models():
         o.add_level(k)
     o.add_tag(Tag.STATIC)
     o.is_as_sound('FALSE', 'TRUE')
+    o.set_default('FALSE')
     fd.add_option(o)
 
     fd.add_subsumes(o1, o)
@@ -131,6 +141,7 @@ def create_models():
     o.is_as_sound('PTSBASED', 'NONE')
     o.is_as_precise('DEFAULT', 'LAZY')
     o.is_as_precise('DEFAULT', 'PTSBASED')
+    o.set_default('DEFAULT')
     fd.add_option(o)
     
     o = Option('codeelimination')
@@ -139,6 +150,7 @@ def create_models():
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     o.is_as_precise('REMOVECODE', 'DEFAULT')
     o.is_as_precise('DEFAULT', 'NONE')
+    o.set_default('DEFAULT')
     fd.add_option(o)
 
     o1 = Option('implicit')
@@ -147,6 +159,7 @@ def create_models():
     o1.is_as_sound('ALL', 'ARRAYONLY')
     o1.is_as_sound('ARRAYONLY', 'DEFAULT')
     o1.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
+    o1.set_default('DEFAULT')
     fd.add_option(o1)
     fd.add_constraint(Constraint(o1, 'ALL', o, 'REMOVECODE'))
 
@@ -155,6 +168,7 @@ def create_models():
         o.add_level(k)
     o.add_tag(Tag.ANDROID_LIFECYCLE)
     o.is_as_sound('FALSE', 'TRUE')
+    o.set_default('FALSE')
     fd.add_option(o)
 
     o1 = Option('callbackanalyzer')
@@ -162,6 +176,7 @@ def create_models():
         o1.add_level(k)
     o1.add_tag(Tag.ANDROID_LIFECYCLE)
     o1.is_as_precise('DEFAULT', 'FAST')
+    o1.set_default('DEFAULT')
     fd.add_option(o1)
     
     fd.add_dominates(o, 'TRUE', o1)
@@ -173,6 +188,7 @@ def create_models():
     o.add_tag(Tag.ANDROID_LIFECYCLE)
     for i in range(len(ops)-1):
         o.is_as_sound(ops[i+1], ops[1])
+    o.set_default('100')
     fd.add_option(o)
 
     o = Option('maxcallbacksdepth')
@@ -182,6 +198,7 @@ def create_models():
     o.add_tag(Tag.ANDROID_LIFECYCLE)
     for i in range(len(ops) - 1):
         o.is_as_sound(ops[i+1], ops[i])
+    o.set_default('-1')
     fd.add_option(o)
 
     o = Option('enablereflection')
@@ -189,6 +206,7 @@ def create_models():
         o.add_level(k)
     o.add_tag(Tag.REFLECTION)
     o.is_as_sound('TRUE', 'FALSE')
+    o.set_default('FALSE')
     fd.add_option(o)
 
     o = Option('pathalgo')
@@ -197,6 +215,7 @@ def create_models():
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     o.is_as_precise('DEFAULT', 'CONTEXTINSENSITIVE')
     o.is_as_precise('DEFAULT', 'SOURCESONLY')
+    o.set_default('DEFAULT')
     fd.add_option(o)
 
     o = Option('pathspecificresults')
@@ -204,6 +223,7 @@ def create_models():
         o.add_level(k)
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     o.is_as_precise('TRUE', 'FALSE')
+    o.set_default('FALSE')
     fd.add_option(o)
 
     o = Option('noexceptions')
@@ -212,6 +232,7 @@ def create_models():
     o.add_tag(Tag.EXCEPTION)
     o.add_tag(Tag.OBJECT)
     o.is_as_sound('FALSE', 'TRUE')
+    o.set_default('FALSE')
     fd.add_option(o)
 
     o = Option('taintwrapper')
@@ -221,6 +242,7 @@ def create_models():
     o.is_as_sound('DEFAULTFALLBACK', 'DEFAULT')
     o.is_as_sound('EASY', 'NONE')
     o.is_as_sound('DEFAULT', 'NONE')
+    o.set_default('DEFAULT')
     o.add_tag(Tag.LIBRARY)
     fd.add_option(o)
 
@@ -229,6 +251,7 @@ def create_models():
         o1.add_level(k)
     o.add_tag(Tag.LIBRARY)
     o1.is_as_sound('TRUE', 'FALSE')
+    o1.set_default('FALSE')
     fd.add_option(o1)
 
     fd.add_dominates(o1, 'TRUE', o)
@@ -238,10 +261,10 @@ def create_models():
 
     Option.precision = 0
     Option.soundness = 0
-    with open(f'{HOME}/data/flowdroid.model', 'wb') as f:
+    with open(f'{location}/data/flowdroid.model', 'wb') as f:
         pickle.dump(fd, f, protocol=0)
 
-    print(f'Flowdroid model generated and stored in {HOME}/data/flowdroid.model')
+    print(f'Flowdroid model generated and stored in {location}/data/flowdroid.model')
 
     # droidsafe
     ds = Tool("DroidSafe")
@@ -444,97 +467,14 @@ def create_models():
     print(f'DroidSafe has {Option.precision} partial orders '
           f'and {Option.soundness} soundness partial orders.')
     
-    with open(f'{HOME}/data/droidsafe.model', 'wb') as f:
+    with open(f'{location}/data/droidsafe.model', 'wb') as f:
         pickle.dump(ds, f, protocol=0)
 
-    print(f'DroidSafe model stored in {HOME}/data/droidsafe.model.')
+    print(f'DroidSafe model stored in {location}/data/droidsafe.model.')
+
 
 def main():
-    title = text2art("checkmate")
-    print(title)
-    if args.generate_models:
-        create_models()
-        exit(0)
-    
-    if args.call is not None:
-        if args.call.startswith('java'):
-            ##load flowdroid model
-            call = args.call
-            with open(f'{HOME}/data/flowdroid.model', 'rb') as f:
-                model = pickle.load(f)
-            skip = ['-s', '--sourcesandsinks',
-                    '-a', '--apkfile',
-                    '-p', '--platformsdir',
-                    '-jar']
-        else:
-            with open('./Makefile') as f:
-                content = f.readlines()
-                # need to 
-                call = [c for c in content if c.startswith("DSARGS")][0]
-            with open(f'{HOME}/data/droidsafe.model', 'b') as f:
-                model = pickle.load(f)
-            skip = []
-        # Go through each option
-        i = 0
-        toks = call.split()
-        conf = list()
-        while i < len(toks):
-            if toks[i].startswith('--'):
-                if toks[i] in skip:
-                    continue
-                # the setting of it should be next, otherwise it's true
-                try:
-                    if not toks[i+1].startswith('--'):
-                        setting = toks[i+1]
-                    else:
-                        setting = 'TRUE'
-                except IndexError:
-                    # i+1 overflowed
-                    setting = 'TRUE'
-                conf.append(toks[i].lstrip('-'))
-                try:
-                    conf.append(int(setting))
-                except ValueError:
-                    conf.append(setting) # setting wasn't an int
-            elif toks[i].startswith('-') and toks[i] not in skip:
-                logging.warning(f'checkmate does not support short options.'
-                                'Please use the long option format instead.')
-            i += 1
-        # check configuration against each of the constraints.
-        for c in model.constraints:
-            if c.o1.name in conf and\
-               conf[conf.index(c.o1.name) + 1] == c.l1 and\
-               c.o2.name in conf and\
-               conf[conf.index(c.o2.name) + 1] == c.l2:
-                logging.warning(f"{c.o1.name} with setting {c.l1} "
-                                f"disables {c.o2.name} "
-                                f"with setting {c.l2}.")
-                            
-        subprocess.run(args.call, cwd=".", shell=True)
-        
+    args.func(args)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
-
-def interpret_call(call):
-    """Interprets a call and returns a configuration list."""
-    if call.startswith('java'):
-        logging.debug(f'{call} is a flowdroid call.')
-        ## load flowdroid model
-        with open(f'{HOME}/data/flowdroid.model', 'b') as f:
-            fd = pickle.load(f)
-
-        return parse_call(call, fd)
-                    
-
-def parse_call(call, model):
-    toks = call.split()
-    for i in range(len(toks)):
-        if toks[i].startswith('-'):
-            logging.warning(f'checkmate only understands options supplied in '
-                            'long form (e.g., --aplength rather than -a). '
-                            'Skipping {toks[i]}')
-            continue
-        elif toks[i].startswith('--'):
-            op = toks[i].lstrip('-')
-            model_ops = [o.name for o in model.options]
