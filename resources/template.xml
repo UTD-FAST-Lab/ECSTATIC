@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<config>
+  <androidPlatforms>/home/issta2021/Android/platforms</androidPlatforms>
+    <maxMemory>4</maxMemory>
+    <tools>
+        <tool name="FlowDroid" version="1">
+            <priority>1</priority>
+            <path>/home/issta2021/AndroidTAEnvironment/tools/FlowDroid</path>
+            <run>/home/issta2021/AndroidTAEnvironment/tools/config/FlowDroid/1-way/aqlRun_aplength5.sh %MEMORY% %APP_APK% %ANDROID_PLATFORMS% %APP_APK_FILENAME%.txt</run>
+            <runOnExit>/home/issta2021/AndroidTAEnvironment/AQL-System/flushMemory.sh</runOnExit>
+            <runOnAbort>/home/issta2021/AndroidTAEnvironment/AQL-System/killpid.sh %PID%</runOnAbort>
+            <result>/home/issta2021/AndroidTAEnvironment/tools/FlowDroid/%APP_APK_FILENAME%_601e6e89842647ecd65b494756617ed7.txt</result>
+            <questions>IntraAppFlows</questions>
+            <instances>0</instances>
+            <memoryPerInstance>4</memoryPerInstance>
+        </tool>
+    </tools>
+    <preprocessors>
+        <tool name="ApkCombiner" version="1">
+            <priority>1</priority>
+            <path>/home/issta2021/AndroidTAEnvironment/preprocessor/ApkCombiner/release</path>
+            <run>/home/issta2021/AndroidTAEnvironment/preprocessor/ApkCombiner/release/aqlRun.sh %APP_APK_FILENAME% %ANDROID_PLATFORMS% %APP_APK%</run>
+            <runOnExit>/home/issta2021/AndroidTAEnvironment/AQL-System/flushMemory.sh</runOnExit>
+            <result>/home/issta2021/AndroidTAEnvironment/preprocessor/ApkCombiner/results/%APP_APK_FILENAME%_601e6e89842647ecd65b494756617ed7_combined.apk</result>
+            <questions>COMBINE</questions>
+            <instances>1</instances>
+            <memoryPerInstance>4</memoryPerInstance>
+        </tool>
+    </preprocessors>
+</config>
