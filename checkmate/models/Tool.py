@@ -1,5 +1,6 @@
 ###
 # Copyright 2020 by Austin Mordahl
+
 #
 # This file is part of checkmate.
 #

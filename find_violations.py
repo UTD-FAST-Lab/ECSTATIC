@@ -58,8 +58,8 @@ def check_args():
     Sanity checks for arguments. Throws exceptions if any arguments are
     incorrect.
     """
-    if len(args.files_list) <= 1:
-        raise RuntimeError('Must supply at least two files.')
+    if len(args.files_list) < 1:
+        raise RuntimeError('Must supply at least one file.')
     if args.dataset != 'fossdroid':
         raise RuntimeError('Currently this tool only supports FossDroid.')
 
@@ -413,8 +413,8 @@ def check_for_violations(configurations_to_flows: Dict[Configuration, List[Flow]
 
 def main():
     # Check that the arguments are correct.
-    check_args()
-    logging.info('Argument sanity check passed.')
+#    check_args()
+#    logging.info('Argument sanity check passed.')
 
     for i, single_file in enumerate(args.files_list):
         with open(single_file) as f:

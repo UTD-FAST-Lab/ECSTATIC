@@ -34,7 +34,18 @@ class Option:
         self.all = set()
         self.constraints = list()
         self.tags = set()
+        self.default = None
 
+    def set_default(self, default: str):
+        """Set default value."""
+        if default not in self.all:
+            raise RuntimeError("Cannot set a default value without first adding it as a level.")
+        self.default = default
+
+    def get_default(self) -> str:
+        """Return default setting."""
+        return self.default
+    
     def add_tag(self, t):
         """Adds a tag."""
         self.tags.add(t)

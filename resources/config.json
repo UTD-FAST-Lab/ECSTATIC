@@ -1,0 +1,12 @@
+{
+  "flowdroid_location": "/Users/austin/git/FlowDroid",
+  "source_sink_location": "/Users/austin/git/FlowDroid/soot-infoflow-android/SourcesAndSinks.txt",
+  "android_platforms_location": "/Users/austin/Library/Android/sdk/platforms",
+  "aql_template_location": "./resources/template.xml",
+  "shell_template_location": "./resources/flowdroid.sh",
+  "output_directory": "./resources/generated",
+  "apk_location": "/Users/austin/Downloads/DroidBench30/benchmark/apks",
+  "flushmemory_location": "/Users/austin/git/AndroidTAEnvironment/AQL-System/mvn/flushMemory.sh",
+  "killpid_location": "/Users/austin/git/AndroidTAEnvironment/AQL-System/mvn/killpid.sh",
+  "aql_location": "/Users/austin/git/AndroidTAEnvironment/AQL-System/target/build/AQL-System-1.1.0-SNAPSHOT.jar"
+}
