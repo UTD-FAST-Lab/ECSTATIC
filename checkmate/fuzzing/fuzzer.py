@@ -1,5 +1,6 @@
 import time
 
+from checkmate.models.Flow import Flow
 from .flowdroid_grammar import FlowdroidGrammar
 from fuzzingbook.GrammarCoverageFuzzer import GrammarCoverageFuzzer
 from fuzzingbook.Grammars import convert_ebnf_grammar
@@ -25,15 +26,49 @@ def main(model_location: str, number_configs: int):
         fuzzed_config = process_config(fuzzer.fuzz())
         candidates = mutate_config(model, fuzzed_config)
         choice = random.choice(candidates)
-        print(f'Pair of configs is {fuzzed_config}, {choice}. Different on {[k for k in choice.keys() if k not in fuzzed_config.keys() or fuzzed_config[k] != choice[k]]}.')
-        for c in [fuzzed_config, choice]:
-            c_str = dict_to_config_str(c)
-            shell_location = create_shell_file(c_str)
-            xml_location = create_xml_config_file(shell_location)
-            for a in get_apks(config.configuration['apk_location']):
-                run_aql(a, xml_location)
+        option_under_investigation = [k for k in choice.keys() if k not in fuzzed_config.keys() or fuzzed_config[k] != choice[k]]
+        print(f'Pair of configs is {fuzzed_config}, {choice}. Different on {option_under_investigation}.')
+        for a in get_apks(config.configuration['apk_location']):
+            outputs : List[str] = []
+            for c in [fuzzed_config, choice]:
+                c_str = dict_to_config_str(c)
+                shell_location = create_shell_file(c_str)
+                xml_location = create_xml_config_file(shell_location)
+                output = run_aql(a, xml_location)
+                classified = num_tp_fp_fn(output, a)
 
 
+def num_tp_fp_fn(output_file: str, apk_name: str) -> Dict[str, int]:
+    """
+    Given an output file and the apk name, check the ground truth file.
+    """
+    output_flows = map(Flow.__init__, ET.parse(output_file).getroot().findall('flow'))
+    gt_flows = filter(lambda f: os.path.basename(apk_name) == os.path.basename(f.get_file()),
+                   map(Flow.__init__, ET.parse(config.configuration['ground_truth_location']).getroot().findall('flow')))
+    tp = filter(lambda f: f.get_classification(), gt_flows)
+    fp = filter(lambda f: not f.get_classification(), gt_flows)
+    result = dict()
+    result['tp'] = len(filter(lambda f: f in output_flows, tp))
+    result['fp'] = len(filter(lambda f: f in output_flows, fp))
+    result['fn'] = len(filter(lambda f: f not in output_flows, tp))
+    return result
+
+
+
+def output_file_to_validation_record(output_file: str, option_under_investigation: str) -> Dict[str, str]:
+    """
+    Reads in an output file and transforms it into the record type
+    that the violation checker is expecting.
+
+    Expects the following fields:
+    fp: number of false positives
+    fn: number of false negatives
+    tp: number of true positives
+    tn: number of true negatives
+    generating_script: the script that generated it
+    apk: the number of apks
+    """
+    return None
 
 def get_apks(directory: str) -> List[str]:
     for root, dirs, files in os.walk(directory):
@@ -57,7 +92,7 @@ def create_shell_file(config_str: str) -> str:
         content = infile.readlines()
 
     content = map(lambda r: r.replace('%CONFIG%', config_str), content)
-    content = map(lambda r: r.replace('%FLOWDROID_HOME%', config.configuration['flowdroid_location']), content)
+    content = map(lambda r: r.replace('%FLOWDROID_HOME%', config.configuration['flowdroid_root']), content)
     content = map(lambda r: r.replace('%SOURCE_SINK_LOCATION%', config.configuration['source_sink_location']), content)
 
     shell_file_name = os.path.join(config.configuration['output_directory'],
@@ -76,7 +111,7 @@ def create_xml_config_file(shell_file_path: str) -> str:
     aql_config = ET.parse(config.configuration['aql_template_location'])
     for element in aql_config.iter():
         if element.tag == 'path':
-            element.text = os.path.abspath(config.configuration["flowdroid_location"])
+            element.text = os.path.abspath(config.configuration["flowdroid_root"])
         elif element.tag == 'run':
             element.text = f"{os.path.abspath(shell_file_path)} %MEMORY% %APP_APK% %ANDROID_PLATFORMS% " +\
                            os.path.abspath(f"{os.path.join(config.configuration['output_directory'], prefix + '_flowdroid.result')}")
@@ -96,7 +131,7 @@ def create_xml_config_file(shell_file_path: str) -> str:
 
 
 def run_aql(apk: str,
-            xml_config_file: str):
+            xml_config_file: str) -> str:
     """
     Runs Flowdroid given a config.
     The steps to running flowdroid are:
@@ -111,18 +146,25 @@ def run_aql(apk: str,
     output = os.path.abspath(output)
     # check if it exists
     if not os.path.exists(output):
-        cmd = ["java", "-jar", os.path.abspath(config.configuration['aql_location']), "-t", "2h",
-               "-reset", "-c", os.path.abspath(xml_config_file), "-q",
-               "\"Flows IN App('", os.path.abspath(apk), "') ?\"", "-o", output]
-        cur = os.curdir
+        cmd = [config.configuration['aql_run_script_location'], os.path.abspath(xml_config_file),
+               os.path.abspath(apk), output]
+        curdir = os.path.abspath(os.curdir)
         os.chdir(os.path.dirname(config.configuration['aql_location']))
-        cp = subprocess.run(cmd, capture_output=True)
-        os.chdir(cur)
-        tree = ET.parse(output)
-        root = tree.getroot()
-        root.set("time", str(t))
+        start = time.time()
+        cp = subprocess.run(cmd)
+        t = time.time() - start
+        os.chdir(curdir)
+        if os.path.exists(output):
+            tree = ET.parse(output)
+            root = tree.getroot()
+            root.set("time", str(t))
+        else:
+            answers = ET.Element('answer')
+            answers.set('time', str(t))
+            tree = ET.ElementTree(answers)
 
         tree.write(output)
+        return output
 
 def process_config(config: str) -> Dict[str, str]:
     """

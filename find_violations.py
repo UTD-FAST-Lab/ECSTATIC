@@ -2,8 +2,8 @@ import logging
 logging.basicConfig(level = logging.CRITICAL)
 
 import xml.etree.ElementTree as ET
-from Flow import Flow
-from Configuration import Configuration
+from checkmate.models.Flow import Flow
+from checkmate.models.Configuration import Configuration
 from checkmate.models.Constraint import Constraint 
 from checkmate.models.Option import Option
 from checkmate.models.Level import Level
