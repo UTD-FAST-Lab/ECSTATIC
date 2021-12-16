@@ -45,9 +45,13 @@ def main(model_location: str, number_configs: int):
             elif soundness_level == 1: # 1 means that choice is as sound as fuzzed_config
                 violated = classified[0]['tp'] > classified[1]['tp']
             if violated:
-                print(f'VIOLATION between configs {fuzzed_config} and {choice}. '
+                print(f'Violation detected between configs {fuzzed_config} and {choice} (different on {option_under_investigation}). '
                       f'{fuzzed_config} was expected to be {"more sound" if soundness_level == -1 else "less sound"} '
                       f'than {choice}, yet their findings were {classified[0]} and {classified[1]}')
+            else:
+                print(f'All good between configs {fuzzed_config} and {choice} (different on {option_under_investigation}). '
+                      f'{fuzzed_config} was expected to be {"more sound" if soundness_level == -1 else "less sound"} '
+                      f'than {choice}, and their findings were {classified[0]} and {classified[1]}')
 
                 
 
