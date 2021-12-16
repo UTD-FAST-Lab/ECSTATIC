@@ -1,15 +1,8 @@
 import argparse
-import logging
-logging.basicConfig(level=logging.WARNING)
-from checkmate.models.Option import Option
-from checkmate.models.Tool import Tool
-from checkmate.models.Constraint import Constraint
-from checkmate.models.Tag import Tag
 from checkmate.fuzzing import fuzzer
-import pickle
-
 
 parser = argparse.ArgumentParser()
+parser.add_argument("-v", dest='verbosity', action='count', default=0)
 subparsers = parser.add_subparsers()
 fuzz_parser = subparsers.add_parser('fuzz', help='fuzzing control.')
 fuzz_parser.set_defaults(func=lambda r: fuzzer.main(r.model_location, r.number_configs))
@@ -22,6 +15,22 @@ generate_models_parser.set_defaults(func=lambda r: create_models(r.location))
 generate_models_parser.add_argument('--location', '-l', help='where to dump models.',
                                     default = '.')
 args = parser.parse_args()
+
+import logging
+if args.verbosity >= 3:
+    logging.basicConfig(level=logging.DEBUG)
+elif args.verbosity == 2:
+    logging.basicConfig(level=logging.INFO)
+elif args.verbosity == 1:
+    logging.basicConfig(level=logging.WARN)
+else:
+    logging.basicConfig(level=logging.CRITICAL)
+    
+from checkmate.models.Option import Option
+from checkmate.models.Tool import Tool
+from checkmate.models.Constraint import Constraint
+from checkmate.models.Tag import Tag
+import pickle
 
 
 def create_models(location):

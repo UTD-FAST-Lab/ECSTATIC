@@ -1,5 +1,5 @@
 import time
-
+import logging
 from checkmate.models.Flow import Flow
 from .flowdroid_grammar import FlowdroidGrammar
 from fuzzingbook.GrammarCoverageFuzzer import GrammarCoverageFuzzer
@@ -36,21 +36,32 @@ def main(model_location: str, number_configs: int):
                 xml_location = create_xml_config_file(shell_location)
                 output = run_aql(a, xml_location)
                 classified = num_tp_fp_fn(output, a)
+                logging.debug(f'Result is {classified}')
+                
 
 
 def num_tp_fp_fn(output_file: str, apk_name: str) -> Dict[str, int]:
     """
     Given an output file and the apk name, check the ground truth file.
     """
-    output_flows = map(Flow.__init__, ET.parse(output_file).getroot().findall('flow'))
-    gt_flows = filter(lambda f: os.path.basename(apk_name) == os.path.basename(f.get_file()),
-                   map(Flow.__init__, ET.parse(config.configuration['ground_truth_location']).getroot().findall('flow')))
+    try:
+        output_flows = [Flow(f) for f in ET.parse(output_file).getroot().find('flows').findall('flow')]
+    except AttributeError:
+        output_flows = []
+    gt_flows = list(
+        filter(
+            lambda f: os.path.basename(apk_name) == os.path.basename(f.get_file()),
+            [Flow(f) for f in ET.parse(config.configuration['ground_truth_location']).getroot().findall('flow')]
+            )
+        )
+    logging.info(f'output flows is {len(output_flows)} flows long.')
+    logging.info(f'gt flows is {len(gt_flows)} flows long.')
     tp = filter(lambda f: f.get_classification(), gt_flows)
     fp = filter(lambda f: not f.get_classification(), gt_flows)
     result = dict()
-    result['tp'] = len(filter(lambda f: f in output_flows, tp))
-    result['fp'] = len(filter(lambda f: f in output_flows, fp))
-    result['fn'] = len(filter(lambda f: f not in output_flows, tp))
+    result['tp'] = len(list(filter(lambda f: f in output_flows, tp)))
+    result['fp'] = len(list(filter(lambda f: f in output_flows, fp)))
+    result['fn'] = len(list(filter(lambda f: f not in output_flows, tp)))
     return result
 
 
@@ -164,7 +175,7 @@ def run_aql(apk: str,
             tree = ET.ElementTree(answers)
 
         tree.write(output)
-        return output
+    return output
 
 def process_config(config: str) -> Dict[str, str]:
     """

@@ -2,7 +2,6 @@
 
 from typing import Dict
 import logging
-#logging.basicConfig(level=logging.DEBUG)
 import os
 import re
 import xml.etree.ElementTree as ET
@@ -15,7 +14,6 @@ class Flow:
     register_regex = re.compile(r"\$[a-z]\d+")
 
     def __init__(self, element):
-        logging.debug(f"Element is {element}")
         self.element = element
         self.update_file()
     
@@ -23,7 +21,6 @@ class Flow:
         f = self.element.find("reference").findall("app")[0].findall("file")[0].text
         f = f.replace('\\', '/')
         f = f.split('/')[-1]
-        logging.debug(f"Extracted file: {f}")
         return f
 
     def get_classification(self) -> bool:
