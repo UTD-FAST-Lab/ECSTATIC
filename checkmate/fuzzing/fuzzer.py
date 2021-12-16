@@ -37,15 +37,16 @@ def main(model_location: str, number_configs: int):
                 shell_location = create_shell_file(c_str)
                 xml_location = create_xml_config_file(shell_location)
                 output = run_aql(a, xml_location)
-                classified.append(num_tp_fp_fn(output, a))
-                logging.debug(f'Result is {classified}')
+                result = num_tp_fp_fn(output, a)
+                classified.append(result)
+                logging.debug(f'Result is {result}')
             if soundness_level == -1: # -1 means that the fuzzed_config is as sound as choice
                 violated = classified[1]['tp'] > classified[0]['tp']
             elif soundness_level == 1: # 1 means that choice is as sound as fuzzed_config
                 violated = classified[0]['tp'] > classified[1]['tp']
             if violated:
-                print(f'VIOLATION between configs {fuzzed_config} and {choice}.')
-                print(f'{fuzzed_config} was expected to be {"more sound" if soundness_level == -1 else "less sound"} '
+                print(f'VIOLATION between configs {fuzzed_config} and {choice}. '
+                      f'{fuzzed_config} was expected to be {"more sound" if soundness_level == -1 else "less sound"} '
                       f'than {choice}, yet their findings were {classified[0]} and {classified[1]}')
 
                 
