@@ -25,18 +25,29 @@ def main(model_location: str, number_configs: int):
     while True:
         fuzzed_config = process_config(fuzzer.fuzz())
         candidates = mutate_config(model, fuzzed_config)
-        choice = random.choice(candidates)
+        choice_tuple = random.choice(candidates)
+        choice = choice_tuple[0]
+        soundness_level = choice_tuple[1]
         option_under_investigation = [k for k in choice.keys() if k not in fuzzed_config.keys() or fuzzed_config[k] != choice[k]]
         print(f'Pair of configs is {fuzzed_config}, {choice}. Different on {option_under_investigation}.')
         for a in get_apks(config.configuration['apk_location']):
-            outputs : List[str] = []
+            classified : List[Dict[str, int]] = []
             for c in [fuzzed_config, choice]:
                 c_str = dict_to_config_str(c)
                 shell_location = create_shell_file(c_str)
                 xml_location = create_xml_config_file(shell_location)
                 output = run_aql(a, xml_location)
-                classified = num_tp_fp_fn(output, a)
+                classified.append(num_tp_fp_fn(output, a))
                 logging.debug(f'Result is {classified}')
+            if soundness_level == -1: # -1 means that the fuzzed_config is as sound as choice
+                violated = classified[1]['tp'] > classified[0]['tp']
+            elif soundness_level == 1: # 1 means that choice is as sound as fuzzed_config
+                violated = classified[0]['tp'] > classified[1]['tp']
+            if violated:
+                print(f'VIOLATION between configs {fuzzed_config} and {choice}.')
+                print(f'{fuzzed_config} was expected to be {"more sound" if soundness_level == -1 else "less sound"} '
+                      f'than {choice}, yet their findings were {classified[0]} and {classified[1]}')
+
                 
 
 
@@ -213,10 +224,11 @@ def mutate_config(model: Tool, config: Dict[str, str]):
             current_setting = config[o.name]
             if level == config[o.name]:
                  continue
-            if (o.soundness_compare(level, config[o.name]) != 0):
+            soundness_level = o.soundness_compare(level, config[o.name])
+            if soundness_level != 0:
                 config_copy = copy.deepcopy(config)
                 config_copy[o.name] = level
-                candidates.append(config_copy)
+                candidates.append((config_copy, soundness_level))
     return candidates
 
 if __name__ == '__main__':
