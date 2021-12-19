@@ -1,8 +1,8 @@
 import logging
 import os
 import subprocess
+import time
 from typing import List, Dict
-from datetime import time
 from xml.etree.ElementTree import ElementTree as ET
 
 from checkmate.models.Flow import Flow
