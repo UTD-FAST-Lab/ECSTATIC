@@ -1,7 +1,7 @@
 import copy
 import logging
 import pickle
-from random import random
+import random
 from typing import List, Dict
 
 from fuzzingbook.GrammarCoverageFuzzer import GrammarCoverageFuzzer
@@ -29,6 +29,7 @@ class FuzzGenerator:
         """
         fuzzed_config = self.process_config(self.fuzzer.fuzz())
         candidates = self.mutate_config(self.model, fuzzed_config)
+
         choice_tuple = random.choice(candidates)
         choice = choice_tuple[0]
         soundness_level = choice_tuple[1]
