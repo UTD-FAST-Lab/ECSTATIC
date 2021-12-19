@@ -3,7 +3,7 @@ import os
 import subprocess
 import time
 from typing import List, Dict
-from xml.etree.ElementTree import ElementTree as ET
+import xml.etree.ElementTree as ET
 
 from checkmate.models.Flow import Flow
 from checkmate.util import FuzzingPairJob, config
