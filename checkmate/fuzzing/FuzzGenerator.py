@@ -19,7 +19,7 @@ class FuzzGenerator:
     def __init__(self, model_location: str):
         self.flowdroid_ebnf_grammar = FlowdroidGrammar.getGrammar()
         self.flowdroid_grammar = convert_ebnf_grammar(self.flowdroid_ebnf_grammar)
-        self.fuzzer = GrammarCoverageFuzzer(flowdroid_grammar)
+        self.fuzzer = GrammarCoverageFuzzer(self.flowdroid_grammar)
         with open(model_location, 'rb') as f:
             self.model = pickle.load(f)
 

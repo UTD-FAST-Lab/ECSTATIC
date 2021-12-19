@@ -1,19 +1,10 @@
-import logging
-import pickle
-import random
 import threading
 import time
 from functools import partial
-from typing import Dict, List, Tuple
-
-from fuzzingbook.GrammarCoverageFuzzer import GrammarCoverageFuzzer
-from fuzzingbook.Grammars import convert_ebnf_grammar
 
 from checkmate.fuzzing.FuzzGenerator import FuzzGenerator
 from checkmate.fuzzing.FuzzRunner import FuzzRunner
 from checkmate.fuzzing.FuzzScheduler import FuzzScheduler
-from checkmate.util.FuzzingPairJob import FuzzingJob
-from .flowdroid_grammar import FlowdroidGrammar
 from ..util import config
 
 
