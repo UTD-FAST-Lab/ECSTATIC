@@ -16,7 +16,7 @@ def main(model_location: str, num_run_threads: int):
     threads = list()
     threads.append(threading.Thread(target=partial(fuzzConfigurations, generator, scheduler)))
     for i in range(num_run_threads):
-        threads.append(threading.Thread(target=partial(runSubmittedJobs, scheduler, runner)))
+        threads.append(threading.Thread(target=partial(runSubmittedJobs, scheduler, runner, results)))
     threads.append(threading.Thread(target=partial(printOutput, results)))
 
     [t.start() for t in threads]
@@ -34,7 +34,7 @@ def printOutput(results):
     while True:
         if len(results) > 0:
             print(results.pop(0))
-    
+
 
 if __name__ == '__main__':
     main()
