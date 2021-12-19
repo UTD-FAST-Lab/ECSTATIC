@@ -5,10 +5,16 @@ class FuzzScheduler:
 
     jobQueue = list()
 
+    def __init__(self, max_capacity = 1000):
+        self.max_capacity = 1000
+
     def addNewJob(self, job: FuzzingPairJob):
         """
         Submits a new job to the scheduler
         """
+        while(len(self.jobQueue) >= self.max_capacity)
+            pass
+        
         self.jobQueue.append(job)
 
 
