@@ -1,5 +1,5 @@
 import threading
-import time
+from typing import List
 from functools import partial
 
 from checkmate.fuzzing.FuzzGenerator import FuzzGenerator
@@ -12,10 +12,12 @@ def main(model_location: str, num_run_threads: int):
     generator = FuzzGenerator(model_location)
     scheduler = FuzzScheduler()
     runner = FuzzRunner(config.configuration['apk_location'])
+    results = list()
     threads = list()
     threads.append(threading.Thread(target=partial(fuzzConfigurations, generator, scheduler)))
     for i in range(num_run_threads):
         threads.append(threading.Thread(target=partial(runSubmittedJobs, scheduler, runner)))
+    threads.append(threading.Thread(target=partial(printOutput, results)))
 
     [t.start() for t in threads]
     [t.join() for t in threads]
@@ -24,9 +26,15 @@ def fuzzConfigurations(generator: FuzzGenerator, scheduler: FuzzScheduler):
     while True:
         scheduler.addNewJob(generator.getNewPair())
 
-def runSubmittedJobs(scheduler: FuzzScheduler, runner: FuzzRunner):
+def runSubmittedJobs(scheduler: FuzzScheduler, runner: FuzzRunner, results_list: List[str]):
     while True:
-        runner.runJob(scheduler.getNextJobBlocking())
+        results_list.append(runner.runJob(scheduler.getNextJobBlocking()))
+
+def printOutput(results):
+    while True:
+        if len(results) > 0:
+            print(results.pop(0))
+    
 
 if __name__ == '__main__':
     main()

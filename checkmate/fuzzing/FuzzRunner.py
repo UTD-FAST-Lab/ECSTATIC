@@ -13,7 +13,7 @@ class FuzzRunner:
     def __init__(self, apk_location: str):
         self.apk_location = apk_location
         
-    def runJob(self, job: FuzzingPairJob):
+    def runJob(self, job: FuzzingPairJob) -> str:
         logging.debug(f'Running job: {job}')
         for a in self.get_apks(self.apk_location):
             classified = list()
@@ -28,15 +28,12 @@ class FuzzRunner:
             elif job.soundness_level == 1:  # 1 means that job.config2 is as sound as job.config1
                 violated = classified[0]['tp'] > classified[1]['tp']
             if violated:
-                print(
-                    f'Violation detected between configs {job.config1} and {job.config2} on apk {a} (different on {job.option_under_investigation}). '
-                    f'{job.config1} was expected to be {"more sound" if job.soundness_level == -1 else "less sound"} '
-                    f'than {job.config2}, yet their findings were {classified[0]} and {classified[1]}')
+                result = f'VIOLATION: {job.option_under_investigation} on {a} ({job.config1};{classified[0]} ' \
+                         f'{"more sound than" if job.soundness_level == -1 else "less sound than"} {job.config2};{classified[1]})'
             else:
-                print(
-                    f'All good between configs {job.config1} and {job.config2} on apk {a} (different on {job.option_under_investigation}). '
-                    f'{job.config1} was expected to be {"more sound" if job.soundness_level == -1 else "less sound"} '
-                    f'than {job.config2}, and their findings were {classified[0]} and {classified[1]}')
+                result = f'SUCCESS: {job.option_under_investigation} on {a} ({job.config1};{classified[0]} ' \
+                         f'{"more sound than" if job.soundness_level == -1 else "less sound than"} {job.config2};{classified[1]})'
+            return result
 
     def num_tp_fp_fn(self, output_file: str, apk_name: str) -> Dict[str, int]:
         """
