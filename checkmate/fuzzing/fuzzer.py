@@ -17,7 +17,7 @@ from .flowdroid_grammar import FlowdroidGrammar
 from ..util import config
 
 
-def main(model_location: str, number_configs: int, number_of_jobs: int):
+def main(model_location: str, number_configs: int):
     generator = FuzzGenerator(model_location)
     scheduler = FuzzScheduler()
     runner = FuzzRunner(config.configuration['apk_location'])
