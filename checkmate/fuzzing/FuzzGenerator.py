@@ -36,7 +36,7 @@ class FuzzGenerator:
                                       k not in fuzzed_config.keys() or fuzzed_config[k] != choice[k]]
 
         f = FuzzingPairJob(fuzzed_config, choice, soundness_level, option_under_investigation)
-        logging.DEBUG(f'Generated new job: {f}')
+        logging.debug(f'Generated new job: {f}')
         return f
 
     def process_config(self, config: str) -> Dict[str, str]:
