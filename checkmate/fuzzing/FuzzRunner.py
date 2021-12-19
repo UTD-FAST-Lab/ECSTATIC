@@ -1,6 +1,7 @@
 import logging
 import os
 import subprocess
+import sys
 import time
 from typing import List, Dict
 import xml.etree.ElementTree as ET
@@ -136,7 +137,7 @@ class FuzzRunner:
             curdir = os.path.abspath(os.curdir)
             os.chdir(os.path.dirname(config.configuration['aql_location']))
             start = time.time()
-            cp = subprocess.run(cmd)
+            cp = subprocess.run(cmd, stdout=sys.stderr)
             t = time.time() - start
             os.chdir(curdir)
             if os.path.exists(output):
