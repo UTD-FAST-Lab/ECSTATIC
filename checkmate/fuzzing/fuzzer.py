@@ -8,20 +8,17 @@ from checkmate.fuzzing.FuzzScheduler import FuzzScheduler
 from ..util import config
 
 
-def main(model_location: str, number_configs: int):
+def main(model_location: str, num_run_threads: int):
     generator = FuzzGenerator(model_location)
     scheduler = FuzzScheduler()
     runner = FuzzRunner(config.configuration['apk_location'])
-    fuzzThread = threading.Thread(target=partial(fuzzConfigurations, generator, scheduler))
-    runThread = threading.Thread(target=partial(runSubmittedJobs, scheduler, runner))
+    threads = list()
+    threads.append(threading.Thread(target=partial(fuzzConfigurations, generator, scheduler)))
+    for i in range(num_run_threads):
+        threads.append(threading.Thread(target=partial(runSubmittedJobs, scheduler, runner)))
 
-    current_time = time.time()
-    fuzzThread.start()
-    runThread.start()
-
-    fuzzThread.join()
-    runThread.join()
-
+    [t.start() for t in threads]
+    [t.join() for t in threads]
 
 def fuzzConfigurations(generator: FuzzGenerator, scheduler: FuzzScheduler):
     while True:

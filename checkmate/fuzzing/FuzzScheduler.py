@@ -5,8 +5,8 @@ class FuzzScheduler:
 
     jobQueue = list()
 
-    def __init__(self, max_capacity = 1000):
-        self.max_capacity = 1000
+    def __init__(self, max_capacity = 100):
+        self.max_capacity = max_capacity
 
     def addNewJob(self, job: FuzzingPairJob):
         """
@@ -23,7 +23,7 @@ class FuzzScheduler:
         Returns the next job to run.
         """
         if len(self.jobQueue) > 0:
-            return self.jobQueue.pop()
+            return self.jobQueue.pop(0)
         else:
             return None
 
