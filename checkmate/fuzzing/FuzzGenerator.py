@@ -39,7 +39,7 @@ class FuzzGenerator:
         logging.DEBUG(f'Generated new job: {f}')
         return f
 
-    def process_config(config: str) -> Dict[str, str]:
+    def process_config(self, config: str) -> Dict[str, str]:
         """
         Converts the string config produced by the fuzzer to a dictionary mapping options to settings.
         """
@@ -58,7 +58,7 @@ class FuzzGenerator:
                 i = i + 1  # skip
         return result
 
-    def mutate_config(model: Tool, config: Dict[str, str]):
+    def mutate_config(self, model: Tool, config: Dict[str, str]):
         """
         For each option, consult the model for settings that are different.
         Add it to the configuration and randomly select one/some as a mutant.
