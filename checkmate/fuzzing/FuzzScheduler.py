@@ -12,9 +12,9 @@ class FuzzScheduler:
         """
         Submits a new job to the scheduler
         """
-        while(len(self.jobQueue) >= self.max_capacity)
+        while len(self.jobQueue) >= self.max_capacity:
             pass
-        
+
         self.jobQueue.append(job)
 
 
