@@ -7,11 +7,10 @@ from typing import List, Dict
 from fuzzingbook.GrammarCoverageFuzzer import GrammarCoverageFuzzer
 from fuzzingbook.Grammars import convert_ebnf_grammar
 
-from checkmate.fuzzing import flowdroid_grammar
 from checkmate.fuzzing.flowdroid_grammar import FlowdroidGrammar
 from checkmate.models.Option import Option
 from checkmate.models.Tool import Tool
-from checkmate.util import FuzzingPairJob
+from checkmate.util.FuzzingPairJob import FuzzingPairJob
 
 
 class FuzzGenerator:

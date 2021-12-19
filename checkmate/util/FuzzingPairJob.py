@@ -1,6 +1,6 @@
 from typing import Dict
 
-class FuzzingJob:
+class FuzzingPairJob:
 
     def __init__(self, config1: Dict[str, str], config2: Dict[str, str], soundness_level, option_under_investigation):
         self.config1 = config1
