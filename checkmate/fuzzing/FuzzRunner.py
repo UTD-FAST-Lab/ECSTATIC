@@ -20,6 +20,7 @@ class FuzzRunner:
         logging.debug(f'Running job: {job}')
         for a in self.get_apks(self.apk_location):
             classified = list()
+            locations = list()
             for c in [job.config1, job.config2]:
                 if self.fuzzlogger.checkIfHasBeenRun(c, a):
                     logging.info(f'Configuration {c} on apk {a} has already been run. Skipping')
@@ -27,7 +28,9 @@ class FuzzRunner:
                 c_str = self.dict_to_config_str(c)
                 shell_location = self.create_shell_file(c_str)
                 xml_location = self.create_xml_config_file(shell_location)
-                classified.append(self.num_tp_fp_fn(self.run_aql(a, xml_location), a))
+                results_location = self.run_aql(a, xml_location)
+                locations.append(results_location)
+                classified.append(self.num_tp_fp_fn(results_location, a))
                 os.remove(shell_location)
                 os.remove(xml_location)
                 self.fuzzlogger.logNewConfig(c, a)
@@ -38,10 +41,12 @@ class FuzzRunner:
                 violated = classified[0]['tp'] > classified[1]['tp']
             if violated:
                 result = f'VIOLATION: {job.option_under_investigation} on {a} ({job.config1};{classified[0]} ' \
-                         f'{"more sound than" if job.soundness_level == -1 else "less sound than"} {job.config2};{classified[1]})'
+                         f'{"more sound than" if job.soundness_level == -1 else "less sound than"} {job.config2};{classified[1]}) ' \
+                         f'(files are {results_location})'
             else:
                 result = f'SUCCESS: {job.option_under_investigation} on {a} ({job.config1};{classified[0]} ' \
-                         f'{"more sound than" if job.soundness_level == -1 else "less sound than"} {job.config2};{classified[1]})'
+                         f'{"more sound than" if job.soundness_level == -1 else "less sound than"} {job.config2};{classified[1]}) ' \
+                         f'(files are {results_location})'
             return result
 
     def num_tp_fp_fn(self, output_file: str, apk_name: str) -> Dict[str, int]:
