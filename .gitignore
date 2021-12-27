@@ -129,3 +129,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Don't add generated scripts
+resources/generated/*
+
+# Don't add Mac-specific files
+.DS_Store
+
+# Don't add .idea files
+.idea/*

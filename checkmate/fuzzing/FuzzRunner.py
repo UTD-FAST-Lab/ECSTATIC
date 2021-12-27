@@ -6,12 +6,14 @@ import time
 from typing import List, Dict
 import xml.etree.ElementTree as ET
 
+from checkmate.fuzzing.FuzzLogger import FuzzLogger
 from checkmate.models.Flow import Flow
 from checkmate.util import FuzzingPairJob, config
 
 class FuzzRunner:
     
-    def __init__(self, apk_location: str):
+    def __init__(self, apk_location: str, fuzzlogger: FuzzLogger):
+        self.fuzzlogger = fuzzlogger
         self.apk_location = apk_location
         
     def runJob(self, job: FuzzingPairJob) -> str:
@@ -19,10 +21,14 @@ class FuzzRunner:
         for a in self.get_apks(self.apk_location):
             classified = list()
             for c in [job.config1, job.config2]:
+                if self.fuzzlogger.checkIfHasBeenRun(c, a):
+                    logging.info(f'Configuration {c} on apk {a} has already been run. Skipping')
+                    continue
                 c_str = self.dict_to_config_str(c)
                 shell_location = self.create_shell_file(c_str)
                 xml_location = self.create_xml_config_file(shell_location)
                 classified.append(self.num_tp_fp_fn(self.run_aql(a, xml_location), a))
+                self.fuzzlogger.logNewConfig(c, a)
 
             if job.soundness_level == -1:  # -1 means that the job.config1 is as sound as job.config2
                 violated = classified[1]['tp'] > classified[0]['tp']
@@ -136,9 +142,13 @@ class FuzzRunner:
                    os.path.abspath(apk), output]
             curdir = os.path.abspath(os.curdir)
             os.chdir(os.path.dirname(config.configuration['aql_location']))
-            start = time.time()
-            cp = subprocess.run(cmd, stdout=sys.stderr)
-            t = time.time() - start
+            loop = True
+            while loop:
+                start = time.time()
+                logging.info(f'Cmd is {cmd}')
+                cp = subprocess.run(cmd, capture_output=True)
+                t = time.time() - start
+                loop = False if (b'FlowDroid successfully executed' in cp.stdout) else True
             os.chdir(curdir)
             if os.path.exists(output):
                 tree = ET.parse(output)

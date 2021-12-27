@@ -1,9 +1,11 @@
+from checkmate.fuzzing.FuzzLogger import FuzzLogger
 from checkmate.util import FuzzingPairJob
 
 
 class FuzzScheduler:
 
     jobQueue = list()
+    logger = FuzzLogger()
 
     def __init__(self, max_capacity = 100):
         self.max_capacity = max_capacity
@@ -33,4 +35,4 @@ class FuzzScheduler:
         """
         while (len(self.jobQueue) == 0):
             pass
-        return self.jobQueue.pop()
+        return self.jobQueue.pop(0)
