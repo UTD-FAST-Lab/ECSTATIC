@@ -42,11 +42,11 @@ class FuzzRunner:
             if violated:
                 result = f'VIOLATION: {job.option_under_investigation} on {a} ({job.config1};{classified[0]} ' \
                          f'{"more sound than" if job.soundness_level == -1 else "less sound than"} {job.config2};{classified[1]}) ' \
-                         f'(files are {results_location})'
+                         f'(files are {locations})'
             else:
                 result = f'SUCCESS: {job.option_under_investigation} on {a} ({job.config1};{classified[0]} ' \
                          f'{"more sound than" if job.soundness_level == -1 else "less sound than"} {job.config2};{classified[1]}) ' \
-                         f'(files are {results_location})'
+                         f'(files are {locations})'
             return result
 
     def num_tp_fp_fn(self, output_file: str, apk_name: str) -> Dict[str, int]:
