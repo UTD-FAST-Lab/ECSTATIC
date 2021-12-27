@@ -28,6 +28,8 @@ class FuzzRunner:
                 shell_location = self.create_shell_file(c_str)
                 xml_location = self.create_xml_config_file(shell_location)
                 classified.append(self.num_tp_fp_fn(self.run_aql(a, xml_location), a))
+                os.remove(shell_location)
+                os.remove(xml_location)
                 self.fuzzlogger.logNewConfig(c, a)
 
             if job.soundness_level == -1:  # -1 means that the job.config1 is as sound as job.config2
