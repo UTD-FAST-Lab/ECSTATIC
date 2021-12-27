@@ -17,10 +17,6 @@ def main(model_location: str, num_run_threads: int):
     results = list()
     threads = list()
 
-    while True:
-        scheduler.addNewJob(generator.getNewPair())
-        results.append(runner.runJob(scheduler.getNextJobBlocking()))
-
     threads.append(threading.Thread(target=partial(fuzzConfigurations, generator, scheduler)))
     for i in range(num_run_threads):
         threads.append(threading.Thread(target=partial(runSubmittedJobs, scheduler, runner, results)))
