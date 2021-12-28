@@ -18,8 +18,8 @@
 # along with checkmate.  If not, see <https://www.gnu.org/licenses/>.
 ###
 
-from .Option import Option
-from .Constraint import Constraint
+from checkmate.models.Option import Option
+from checkmate.models.Constraint import Constraint, from_dict
 
 
 class Tool:
@@ -37,7 +37,7 @@ class Tool:
         """Construct a Tool object from a dictionary produced by self.as_dict()"""
         t = Tool(d["name"])
         t.options = [Option.from_dict(o) for o in d['options']]
-        t.constraints = [Constraint.from_dict(c) for c in d['options']]
+        t.constraints = [from_dict(c) for c in d['options']]
 
     def as_dict(self):
         """Return the dictionary representation of this object."""

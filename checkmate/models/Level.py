@@ -5,12 +5,12 @@ class Level:
         self.level_name = level_name
         
     def __eq__(self, o1):
-        return isinstance(o1, ) and\
+        return isinstance(o1, Level) and\
             o1.option_name == self.option_name and\
-                o1.level_name == self.level_name
+            o1.level_name == self.level_name
 
-        def __hash__(self):
-            return hash((self.option_name, self.level_name))
+    def __hash__(self):
+        return hash((self.option_name, self.level_name))
 
-        def __str__(self):
-            return f"{self.option_name}.{self.level_name}"
+    def __str__(self):
+        return f"{self.option_name}.{self.level_name}"

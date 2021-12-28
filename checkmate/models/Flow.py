@@ -1,10 +1,11 @@
 # Copyright 2020 Austin Mordahl
 
-from typing import Dict
+from typing import Dict, Optional
 import logging
 import os
 import re
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ElementTree
+
 
 class Flow:
     """
@@ -16,18 +17,17 @@ class Flow:
     def __init__(self, element):
         self.element = element
         self.update_file()
-    
+
     def get_file(self) -> str:
         f = self.element.find("reference").findall("app")[0].findall("file")[0].text
         f = f.replace('\\', '/')
         f = f.split('/')[-1]
         return f
 
-    def get_classification(self) -> bool:
+    def get_classification(self) -> Optional[bool]:
         for e in self.element:
             if e.tag == 'classification':
                 return e.text
-        return None
 
     def add_classification(self, classification: str) -> None:
         for e in self.element:
@@ -36,22 +36,23 @@ class Flow:
                 return
 
         # We have to add it if it doesn't exist.
-        cl = ET.Element('classification')
-        cl.text=classification
+        cl = ElementTree.Element('classification')
+        cl.text = classification
         self.element.append(cl)
+
     def update_file(self):
         for e in self.element:
             if e.tag == "reference":
                 f = e.find("app").find("file").text
                 e.find("app").find("file").text = os.path.basename(f)
-                
+
     @classmethod
     def clean(cls, stmt: str) -> str:
         c = Flow.register_regex.sub("", stmt)
         c = re.sub(r"_ds_method_clone_[\d]*", "", c)
         logging.debug(f"Before clean: {stmt}\nAfter clean: {c}")
         return c.strip()
-    
+
     def get_source_and_sink(self) -> Dict[str, str]:
         result = dict()
         references = self.element.findall("reference")
@@ -59,10 +60,7 @@ class Flow:
         source = [r for r in references if r.get("type") == "from"][0]
         sink = [r for r in references if r.get("type") == "to"][0]
 
-        def get_statement_full(a: ET.Element) -> str:
-            return a.find("statement").find("statementfull").text
-
-        def get_statement_generic(a: ET.Element) -> str:
+        def get_statement_generic(a: ElementTree.Element) -> str:
             return a.find("statement").find("statementgeneric").text
 
         result["source_statement_generic"] = Flow.clean(get_statement_generic(source))
@@ -76,7 +74,7 @@ class Flow:
 
     def __str__(self) -> str:
         return f'File: {self.get_file()}, Flow: {str(self.get_source_and_sink())}'
-    
+
     def __eq__(self, other):
         """
         Return true if two flows are equal
@@ -118,11 +116,11 @@ class Flow:
                 return d1['source_method'] != d2['source_method']
             elif d1['source_statement_generic'] != d2['source_statement_generic']:
                 return d1['source_statement_generic'] != d2['source_statement_generic']
-            else: # completely equal in every way
+            else:  # completely equal in every way
                 return False
 
     def __lt__(self, other):
-        return not(self == other) and not(self > other)
+        return not (self == other) and not (self > other)
 
     def __le__(self, other):
         return self == other or self < other

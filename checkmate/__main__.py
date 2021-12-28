@@ -1,5 +1,5 @@
 import argparse
-from checkmate.fuzzing import fuzzer
+import logging
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-v", dest='verbosity', action='count', default=0)
@@ -7,16 +7,15 @@ subparsers = parser.add_subparsers()
 fuzz_parser = subparsers.add_parser('fuzz', help='fuzzing control.')
 fuzz_parser.set_defaults(func=lambda r: fuzzer.main(r.model_location, r.threads))
 fuzz_parser.add_argument('-m', '--model_location', help='the location of the model to use.',
-                         default = 'data/flowdroid.model')
+                         default='data/flowdroid.model')
 fuzz_parser.add_argument('-t', '--threads', help='the number of execution threads to generate.',
-                         default = 8)
+                         default=8)
 generate_models_parser = subparsers.add_parser('generate', help='generate models.')
 generate_models_parser.set_defaults(func=lambda r: create_models(r.location))
 generate_models_parser.add_argument('--location', '-l', help='where to dump models.',
-                                    default = '.')
+                                    default='.')
 args = parser.parse_args()
 
-import logging
 if args.verbosity >= 3:
     logging.basicConfig(level=logging.DEBUG)
 elif args.verbosity == 2:
@@ -25,7 +24,8 @@ elif args.verbosity == 1:
     logging.basicConfig(level=logging.WARN)
 else:
     logging.basicConfig(level=logging.CRITICAL)
-    
+
+from checkmate.fuzzing import fuzzer
 from checkmate.models.Option import Option
 from checkmate.models.Tool import Tool
 from checkmate.models.Constraint import Constraint
@@ -33,6 +33,7 @@ from checkmate.models.Tag import Tag
 import pickle
 
 
+# noinspection DuplicatedCode
 def create_models(location):
     """Creates the models"""
 
@@ -54,11 +55,11 @@ def create_models(location):
     for k in ops:
         o.add_level(k)
     for i in range(len(ops) - 1):
-        o.is_as_sound(ops[i+1], ops[i])
+        o.is_as_sound(ops[i + 1], ops[i])
     o.add_tag(Tag.OBJECT)
     o.set_default('5')
     fd.add_option(o)
-    
+
     o = Option("cgalgo")
     for k in ['CHA', 'RTA', 'VTA', 'GEOM', 'DEFAULT']:
         o.add_level(k)
@@ -68,7 +69,7 @@ def create_models(location):
     o.add_tag(Tag.REFLECTION)
     o.set_default('DEFAULT')
     fd.add_option(o)
-    
+
     o = Option("nothischainreduction")
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
@@ -76,7 +77,7 @@ def create_models(location):
     o.add_tag(Tag.OBJECT)
     o.set_default('FALSE')
     fd.add_option(o)
-    
+
     o = Option('onesourceatatime')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
@@ -102,7 +103,7 @@ def create_models(location):
     o1.set_default('FALSE')
     fd.add_option(o1)
     fd.add_dominates(o, 'FLOWINSENSITIVE', o1)
-    
+
     o = Option('singlejoinpointabstraction')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
@@ -118,7 +119,7 @@ def create_models(location):
     o.set_default('FALSE')
     o.add_tag(Tag.ANDROID_LIFECYCLE)
     fd.add_option(o)
-    
+
     o1 = Option('staticmode')
     for k in ['DEFAULT',
               'CONTEXTFLOWINSENSITIVE',
@@ -130,7 +131,7 @@ def create_models(location):
     o1.is_as_sound('CONTEXTFLOWINSENSITIVE', 'NONE')
     o1.set_default('DEFAULT')
     fd.add_option(o1)
-    
+
     o = Option('nostatic')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
@@ -152,7 +153,7 @@ def create_models(location):
     o.is_as_precise('DEFAULT', 'PTSBASED')
     o.set_default('DEFAULT')
     fd.add_option(o)
-    
+
     o = Option('codeelimination')
     for k in ['DEFAULT', 'NONE', 'REMOVECODE']:
         o.add_level(k)
@@ -187,7 +188,7 @@ def create_models(location):
     o1.is_as_precise('DEFAULT', 'FAST')
     o1.set_default('DEFAULT')
     fd.add_option(o1)
-    
+
     fd.add_dominates(o, 'TRUE', o1)
 
     o = Option('maxcallbackspercomponent')
@@ -195,8 +196,8 @@ def create_models(location):
     for k in ops:
         o.add_level(k)
     o.add_tag(Tag.ANDROID_LIFECYCLE)
-    for i in range(len(ops)-1):
-        o.is_as_sound(ops[i+1], ops[1])
+    for i in range(len(ops) - 1):
+        o.is_as_sound(ops[i + 1], ops[1])
     o.set_default('100')
     fd.add_option(o)
 
@@ -206,7 +207,7 @@ def create_models(location):
         o.add_level(k)
     o.add_tag(Tag.ANDROID_LIFECYCLE)
     for i in range(len(ops) - 1):
-        o.is_as_sound(ops[i+1], ops[i])
+        o.is_as_sound(ops[i + 1], ops[i])
     o.set_default('-1')
     fd.add_option(o)
 
@@ -283,7 +284,7 @@ def create_models(location):
     for k in ops:
         o.add_level(k)
     for i in range(len(ops) - 1):
-        o.is_as_sound(ops[i+1], ops[i])
+        o.is_as_sound(ops[i + 1], ops[i])
     o.add_tag(Tag.OBJECT)
     ds.add_option(o)
 
@@ -294,7 +295,7 @@ def create_models(location):
     o.add_level(Tag.OBJECT)
     o.add_level(Tag.ANDROID_LIFECYCLE)
     ds.add_option(o)
-    
+
     o1 = Option('nojsa')
     for k in ['TRUE', 'FALSE']:
         o1.add_level(k)
@@ -362,7 +363,7 @@ def create_models(location):
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
     o.is_as_precise('FALSE', 'TRUE')
-#    o.is_as_sound('TRUE', 'FALSE')
+    #    o.is_as_sound('TRUE', 'FALSE')
     o.add_tag(Tag.ANDROID_LIFECYCLE)
     o.add_tag(Tag.LIBRARY)
     ds.add_option(o)
@@ -432,7 +433,7 @@ def create_models(location):
     for k in ops:
         o.add_level(k)
     for i in range(len(ops) - 1):
-        o.is_as_sound(ops[i+1], ops[i])
+        o.is_as_sound(ops[i + 1], ops[i])
     o.add_tag(Tag.LIBRARY)
     ds.add_option(o)
     ds.add_dominates(o1, 'PADDLE', o)
@@ -448,7 +449,7 @@ def create_models(location):
     o = Option('noarrayindex')
     for k in ['TRUE', 'FALSE']:
         o.add_level(k)
-    o.is_as_sound('FALSE','TRUE')
+    o.is_as_sound('FALSE', 'TRUE')
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     ds.add_option(o)
 
@@ -475,7 +476,7 @@ def create_models(location):
 
     print(f'DroidSafe has {Option.precision} partial orders '
           f'and {Option.soundness} soundness partial orders.')
-    
+
     with open(f'{location}/data/droidsafe.model', 'wb') as f:
         pickle.dump(ds, f, protocol=0)
 
@@ -484,6 +485,7 @@ def create_models(location):
 
 def main():
     args.func(args)
+
 
 if __name__ == '__main__':
     main()

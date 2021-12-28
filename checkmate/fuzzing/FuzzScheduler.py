@@ -3,14 +3,13 @@ from checkmate.util import FuzzingPairJob
 
 
 class FuzzScheduler:
-
     jobQueue = list()
     logger = FuzzLogger()
 
-    def __init__(self, max_capacity = 100):
+    def __init__(self, max_capacity=100):
         self.max_capacity = max_capacity
 
-    def addNewJob(self, job: FuzzingPairJob):
+    def add_new_job(self, job: FuzzingPairJob):
         """
         Submits a new job to the scheduler
         """
@@ -19,8 +18,7 @@ class FuzzScheduler:
 
         self.jobQueue.append(job)
 
-
-    def getNextJobNonBlocking(self) -> FuzzingPairJob:
+    def get_next_job_non_blocking(self) -> FuzzingPairJob:
         """
         Returns the next job to run.
         """
@@ -29,10 +27,10 @@ class FuzzScheduler:
         else:
             return None
 
-    def getNextJobBlocking(self) -> FuzzingPairJob:
+    def get_next_job_blocking(self) -> FuzzingPairJob:
         """
         Returns the next job to run (blocks if there is no job).
         """
-        while (len(self.jobQueue) == 0):
+        while len(self.jobQueue) == 0:
             pass
         return self.jobQueue.pop(0)

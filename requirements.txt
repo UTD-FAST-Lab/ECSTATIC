@@ -1,2 +1,7 @@
 art
-fuzzingbook
+fuzzingbook~=1.0.3
+
+checkmate~=0.0.0
+setuptools~=57.0.0
+pytest~=6.2.5
+frozendict~=2.1.3

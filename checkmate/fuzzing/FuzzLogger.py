@@ -14,14 +14,14 @@ class FuzzLogger:
             f = open(self.log_file, 'w')
             f.close()
 
-    def checkIfHasBeenRun(self, config: Dict[str, str], apk: str) -> bool:
+    def check_if_has_been_run(self, config_to_check: Dict[str, str], apk: str) -> bool:
         with open(self.log_file, 'r') as f:
-            lines = [l.strip().split(',') for l in f.readlines()]
+            lines = [line.strip().split(',') for line in f.readlines()]
 
-        return [str(config), apk] in lines
+        return [str(config_to_check), apk] in lines
 
-    def logNewConfig(self, config: str, apk: str):
+    def log_new_config(self, config_to_log: str, apk: str):
         self.lock.acquire()
         with open(self.log_file, 'a') as f:
-            f.write(f'{str(config)},{apk}\n')
+            f.write(f'{str(config_to_log)},{apk}\n')
         self.lock.release()

@@ -12,35 +12,31 @@ from ..util import config
 def main(model_location: str, num_run_threads: int):
     generator = FuzzGenerator(model_location)
     scheduler = FuzzScheduler()
-    fuzzlogger = FuzzLogger()
-    runner = FuzzRunner(config.configuration['apk_location'], fuzzlogger)
+    fuzz_logger = FuzzLogger()
+    runner = FuzzRunner(config.configuration['apk_location'], fuzz_logger)
     results = list()
     threads = list()
 
-    threads.append(threading.Thread(target=partial(fuzzConfigurations, generator, scheduler)))
+    threads.append(threading.Thread(target=partial(fuzz_configurations, generator, scheduler)))
     for i in range(num_run_threads):
-        threads.append(threading.Thread(target=partial(runSubmittedJobs, scheduler, runner, results)))
-    threads.append(threading.Thread(target=partial(printOutput, results)))
+        threads.append(threading.Thread(target=partial(run_submitted_jobs, scheduler, runner, results)))
+    threads.append(threading.Thread(target=partial(print_output, results)))
 
     [t.start() for t in threads]
     [t.join() for t in threads]
 
 
-def fuzzConfigurations(generator: FuzzGenerator, scheduler: FuzzScheduler):
+def fuzz_configurations(generator: FuzzGenerator, scheduler: FuzzScheduler):
     while True:
-        scheduler.addNewJob(generator.getNewPair())
+        scheduler.add_new_job(generator.get_new_pair())
 
 
-def runSubmittedJobs(scheduler: FuzzScheduler, runner: FuzzRunner, results_list: List[str]):
+def run_submitted_jobs(scheduler: FuzzScheduler, runner: FuzzRunner, results_list: List[str]):
     while True:
-        results_list.append(runner.runJob(scheduler.getNextJobBlocking()))
+        results_list.append(runner.run_job(scheduler.get_next_job_blocking()))
 
 
-def printOutput(results):
+def print_output(results):
     while True:
         if len(results) > 0:
             print(results.pop(0))
-
-
-if __name__ == '__main__':
-    main()

@@ -17,13 +17,13 @@
 # along with checkmate.  If not, see <https://www.gnu.org/licenses/>.
 ###
 
-from .Option import Option
-import logging
-logging.basicConfig(level=logging.DEBUG)
+from checkmate.models.Option import Option
+from typing import Dict
 
 
 class Constraint:
     """Represents a disables constraint o1.l1 --(disables)--> o2.l2"""
+
     def __init__(self, o1: Option, l1: str,
                  o2: Option, l2: str):
         self.o1 = o1
@@ -40,12 +40,9 @@ class Constraint:
                 "level1": self.l1,
                 "level2": self.l2}
 
-    @staticmethod
-    def from_dict(d):
-        return Constraint(Option.from_dict(d['option1']),
-                          d['level1'],
-                          Option.from_dict(d['option2']),
-                          d['level2'])
-                                           
 
-    
+def from_dict(d: Dict[str, str]) -> Constraint:
+    return Constraint(Option.from_dict(d['option1']),
+                      d['level1'],
+                      Option.from_dict(d['option2']),
+                      d['level2'])
