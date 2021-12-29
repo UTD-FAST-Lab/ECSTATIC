@@ -2,12 +2,14 @@ import logging
 import os
 import subprocess
 import time
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ElementTree
 from typing import List, Dict
 
 from checkmate.fuzzing.FuzzLogger import FuzzLogger
 from checkmate.models.Flow import Flow
 from checkmate.util import FuzzingPairJob, config
+
+RUN_THRESHOLD = 5  # how many times to try to reattempt running AQL
 
 
 def get_apks(directory: str) -> List[str]:
@@ -28,7 +30,7 @@ def run_aql(apk: str,
     # create output file
     b = os.path.basename(xml_config_file)
     output = os.path.join(config.configuration['output_directory'],
-                          os.path.basename(apk) + \
+                          os.path.basename(apk) +
                           os.path.basename(xml_config_file))
     output = os.path.abspath(output)
     # check if it exists
@@ -37,22 +39,27 @@ def run_aql(apk: str,
                os.path.abspath(apk), output]
         curdir = os.path.abspath(os.curdir)
         os.chdir(os.path.dirname(config.configuration['aql_location']))
-        loop = True
-        while loop:
+        num_runs = 0
+        while num_runs < RUN_THRESHOLD:
             start = time.time()
             logging.info(f'Cmd is {cmd}')
             cp = subprocess.run(cmd, capture_output=True)
             t = time.time() - start
-            loop = False if (b'FlowDroid successfully executed' in cp.stdout) else True
+            if b'FlowDroid successfully executed' in cp.stdout:
+                break
+            num_runs += 1
+        if num_runs == RUN_THRESHOLD:
+            raise RuntimeError(f'Could not run configuration specified in file {xml_config_file} on {apk}. '
+                               f'Tried to run {RUN_THRESHOLD} times but it failed each time.')
         os.chdir(curdir)
         if os.path.exists(output):
-            tree = ET.parse(output)
+            tree = ElementTree.parse(output)
             root = tree.getroot()
             root.set("time", str(t))
         else:
-            answers = ET.Element('answer')
+            answers = ElementTree.Element('answer')
             answers.set('time', str(t))
-            tree = ET.ElementTree(answers)
+            tree = ElementTree.ElementTree(answers)
 
         tree.write(output)
     return output
@@ -62,7 +69,7 @@ def create_xml_config_file(shell_file_path: str) -> str:
     """Fill out the template file with information from checkmate's config."""
     prefix = os.path.basename(shell_file_path).replace('.sh', '')
 
-    aql_config = ET.parse(config.configuration['aql_template_location'])
+    aql_config = ElementTree.parse(config.configuration['aql_template_location'])
     for element in aql_config.iter():
         if element.tag == 'path':
             element.text = os.path.abspath(config.configuration["flowdroid_root"])
@@ -121,14 +128,14 @@ def num_tp_fp_fn(output_file: str, apk_name: str) -> Dict[str, int]:
     Given an output file and the apk name, check the ground truth file.
     """
     try:
-        output_flows = [Flow(f) for f in ET.parse(output_file).getroot().find('flows').findall('flow')]
+        output_flows = [Flow(f) for f in ElementTree.parse(output_file).getroot().find('flows').findall('flow')]
     except AttributeError:
         output_flows = []
     gt_flows = list(
         filter(
             lambda f: os.path.basename(apk_name) == os.path.basename(f.get_file()),
             [Flow(f) for f in
-             ET.parse(config.configuration['ground_truth_location']).getroot().findall('flow')]
+             ElementTree.parse(config.configuration['ground_truth_location']).getroot().findall('flow')]
         )
     )
     logging.info(f'output flows is {len(output_flows)} flows long.')
