@@ -1,5 +1,7 @@
 import json
 import logging
+import os.path
+
 
 def __get_configuration():
     try:
@@ -10,6 +12,10 @@ def __get_configuration():
                     for k1, v1 in raw_content['variables'].items():
                         raw_content[k] = raw_content[k].replace(k1, raw_content[v1])
 
+        for _, v in raw_content.items():
+            if not os.path.exists(v):
+                raise FileNotFoundError(f'Could not find file {v} from config.json')
+            
         return raw_content
     except FileNotFoundError as fe:
         logging.critical("Config file not found. Looking in "
