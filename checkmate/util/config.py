@@ -11,6 +11,7 @@ def __get_configuration():
                 if k != "variables":
                     for k1, v1 in raw_content['variables'].items():
                         raw_content[k] = raw_content[k].replace(k1, raw_content[v1])
+            raw_content.pop('variables')
     except FileNotFoundError as fe:
         logging.critical("Config file not found. Looking in "
                          "./resources/config.json. Try running again from "
