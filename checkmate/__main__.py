@@ -16,14 +16,12 @@ generate_models_parser.add_argument('--location', '-l', help='where to dump mode
                                     default='.')
 args = parser.parse_args()
 
-if args.verbosity >= 3:
+if args.verbosity >= 2:
     logging.basicConfig(level=logging.DEBUG)
-elif args.verbosity == 2:
-    logging.basicConfig(level=logging.INFO)
 elif args.verbosity == 1:
-    logging.basicConfig(level=logging.WARN)
+    logging.basicConfig(level=logging.INFO)
 else:
-    logging.basicConfig(level=logging.CRITICAL)
+    logging.basicConfig(level=logging.WARN)
 
 from checkmate.fuzzing import fuzzer
 from checkmate.models.Option import Option
