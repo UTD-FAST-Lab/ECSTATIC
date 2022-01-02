@@ -188,5 +188,4 @@ class FuzzRunner:
                 result = f'SUCCESS: {job.option_under_investigation} on {a} ({job.config1};{classified[0]} ' \
                          f'{"more sound than" if job.soundness_level == -1 else "less sound than"} {job.config2};{classified[1]}) ' \
                          f'(files are {locations})'
-            results.append(result)
-        return result
+            yield result

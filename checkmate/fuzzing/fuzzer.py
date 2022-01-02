@@ -33,7 +33,7 @@ def fuzz_configurations(generator: FuzzGenerator, scheduler: FuzzScheduler):
 
 def run_submitted_jobs(scheduler: FuzzScheduler, runner: FuzzRunner, results_list: List[str]):
     while True:
-        results_list.extend(runner.run_job(scheduler.get_next_job_blocking()))
+        [results_list.append(r) for r in runner.run_job(scheduler.get_next_job_blocking())]
 
 
 def print_output(results):
