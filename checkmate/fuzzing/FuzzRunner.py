@@ -159,6 +159,7 @@ class FuzzRunner:
         logging.debug(f'Running job: {job}')
         results = list()
         for a in get_apks(self.apk_location):
+            logging.info(f'Apk is {a}')
             classified = list()
             locations = list()
             for c in [job.config1, job.config2]:
