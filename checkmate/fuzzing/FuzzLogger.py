@@ -18,6 +18,7 @@ class FuzzLogger:
         with open(self.log_file, 'r') as f:
             lines = f.readlines()
 
+        logging.info(f'Looking for {str(config_to_check)},{apk}\n')
         return f'{str(config_to_check)},{apk}\n' in lines
 
     def log_new_config(self, config_to_log: str, apk: str):
