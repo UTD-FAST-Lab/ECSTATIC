@@ -164,7 +164,7 @@ class FuzzRunner:
             locations = list()
             for c in [job.config1, job.config2]:
                 if self.fuzzlogger.check_if_has_been_run(c, a):
-                    logging.info(f'Configuration {c} on apk {a} has already been run. Skipping')
+                    logging.warning(f'Configuration {c} on apk {a} has already been run. Skipping')
                     continue
                 c_str = dict_to_config_str(c)
                 shell_location = create_shell_file(c_str)
