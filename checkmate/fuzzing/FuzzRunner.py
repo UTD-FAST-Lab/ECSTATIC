@@ -10,6 +10,7 @@ from checkmate.models.Flow import Flow
 from checkmate.util import FuzzingPairJob, config
 
 RUN_THRESHOLD = 5  # how many times to try to reattempt running AQL
+logger = logging.getLogger(__name__)
 
 
 def get_apks(directory: str) -> List[str]:
@@ -42,7 +43,7 @@ def run_aql(apk: str,
         num_runs = 0
         while num_runs < RUN_THRESHOLD:
             start = time.time()
-            logging.info(f'Cmd is {cmd}')
+            logger.info(f'Cmd is {cmd}')
             cp = subprocess.run(cmd, capture_output=True)
             t = time.time() - start
             if b'FlowDroid successfully executed' in cp.stdout:
@@ -138,8 +139,8 @@ def num_tp_fp_fn(output_file: str, apk_name: str) -> Dict[str, int]:
              ElementTree.parse(config.configuration['ground_truth_location']).getroot().findall('flow')]
         )
     )
-    logging.info(f'output flows is {len(output_flows)} flows long.')
-    logging.info(f'gt flows is {len(gt_flows)} flows long.')
+    logger.info(f'output flows is {len(output_flows)} flows long.')
+    logger.info(f'gt flows is {len(gt_flows)} flows long.')
     tp = filter(lambda f: f.get_classification(), gt_flows)
     fp = filter(lambda f: not f.get_classification(), gt_flows)
     result = dict()
@@ -156,25 +157,29 @@ class FuzzRunner:
         self.apk_location = apk_location
 
     def run_job(self, job: FuzzingPairJob) -> str:
-        logging.debug(f'Running job: {job}')
+        logger.debug(f'Running job: {job}')
         results = list()
         for a in get_apks(self.apk_location):
-            logging.info(f'Apk is {a}')
+            logger.info(f'Apk is {a}')
             classified = list()
             locations = list()
-            for c in [job.config1, job.config2]:
-                if self.fuzzlogger.check_if_has_been_run(c, a):
-                    logging.warning(f'Configuration {c} on apk {a} has already been run. Skipping')
-                    continue
-                c_str = dict_to_config_str(c)
-                shell_location = create_shell_file(c_str)
-                xml_location = create_xml_config_file(shell_location)
-                results_location = run_aql(a, xml_location)
-                locations.append(results_location)
-                classified.append(num_tp_fp_fn(results_location, a))
-                os.remove(shell_location)
-                os.remove(xml_location)
-                self.fuzzlogger.log_new_config(c, a)
+            try:
+                for c in [job.config1, job.config2]:
+                    if self.fuzzlogger.check_if_has_been_run(c, a):
+                        logger.warning(f'Configuration {c} on apk {a} has already been run. Skipping')
+                        continue
+                    c_str = dict_to_config_str(c)
+                    shell_location = create_shell_file(c_str)
+                    xml_location = create_xml_config_file(shell_location)
+                    results_location = run_aql(a, xml_location)
+                    locations.append(results_location)
+                    classified.append(num_tp_fp_fn(results_location, a))
+                    os.remove(shell_location)
+                    os.remove(xml_location)
+                    self.fuzzlogger.log_new_config(c, a)
+            except RuntimeError as re:
+                logger.exception("Failed to run pair. Skipping to next pair.")
+                continue
 
             if job.soundness_level == -1:  # -1 means that the job.config1 is as sound as job.config2
                 violated = classified[1]['tp'] > classified[0]['tp']
@@ -183,9 +188,9 @@ class FuzzRunner:
             if violated:
                 result = f'VIOLATION: {job.option_under_investigation} on {a} ({job.config1};{classified[0]} ' \
                          f'{"more sound than" if job.soundness_level == -1 else "less sound than"} {job.config2};{classified[1]}) ' \
-                         f'(files are {locations})'
+                         f'(files are {locations})\n'
             else:
                 result = f'SUCCESS: {job.option_under_investigation} on {a} ({job.config1};{classified[0]} ' \
                          f'{"more sound than" if job.soundness_level == -1 else "less sound than"} {job.config2};{classified[1]}) ' \
-                         f'(files are {locations})'
+                         f'(files are {locations})\n'
             yield result

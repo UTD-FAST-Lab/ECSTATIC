@@ -39,4 +39,7 @@ def run_submitted_jobs(scheduler: FuzzScheduler, runner: FuzzRunner, results_lis
 def print_output(results):
     while True:
         if len(results) > 0:
-            print(results.pop(0))
+            with open(config.configuration['results_location'], 'a') as  f:
+                result = results.pop(0)
+                f.write(result)
+                print(result)
