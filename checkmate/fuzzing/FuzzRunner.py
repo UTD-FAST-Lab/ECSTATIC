@@ -192,6 +192,7 @@ class FuzzRunner:
             result = {'type': 'VIOLATION' if violated else 'SUCCESS',
                       'config1': job.config1,
                       'config2': job.config2,
+                      'results': locations,
                       'start_time': start_time,
                       'end_time': end_time,
                       'relation': "more sound than" if job.soundness_level == -1 else "less sound than",
