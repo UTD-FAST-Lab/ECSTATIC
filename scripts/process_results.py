@@ -22,7 +22,7 @@ class ResultsProcessor:
 
         csv = List[str]
         csv.append(','.join(objs[0].keys()) + '\n')
-        [csv.append(','.join([val.replace(',', ';') for val in line.values()]) for line in objs + '\n')]
+        [csv.append(','.join([val.replace(',', ';') for val in line.values()])) for line in objs + '\n']
         return csv
 
 

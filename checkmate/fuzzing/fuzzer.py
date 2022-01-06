@@ -42,5 +42,5 @@ def print_output(results):
             with open(config.configuration['results_location'], 'a') as  f:
                 result = results.pop(0)
                 string_result = json.dumps(result)
-                f.write(string_result)
+                f.write(string_result + '\n')
                 print(string_result)
