@@ -2,6 +2,7 @@ import logging
 import os
 import subprocess
 import time
+import copy
 import xml.etree.ElementTree as ElementTree
 from typing import List, Dict
 
@@ -163,6 +164,7 @@ class FuzzRunner:
             logger.info(f'Apk is {a}')
             classified = list()
             locations = list()
+            start_time = time.time()
             try:
                 for c in [job.config1, job.config2]:
                     if self.fuzzlogger.check_if_has_been_run(c, a):
@@ -181,16 +183,21 @@ class FuzzRunner:
                 logger.exception("Failed to run pair. Skipping to next pair.")
                 continue
 
+            end_time = time.time()
             if job.soundness_level == -1:  # -1 means that the job.config1 is as sound as job.config2
                 violated = classified[1]['tp'] > classified[0]['tp']
             elif job.soundness_level == 1:  # 1 means that job.config2 is as sound as job.config1
                 violated = classified[0]['tp'] > classified[1]['tp']
-            if violated:
-                result = f'VIOLATION: {job.option_under_investigation} on {a} ({job.config1};{classified[0]} ' \
-                         f'{"more sound than" if job.soundness_level == -1 else "less sound than"} {job.config2};{classified[1]}) ' \
-                         f'(files are {locations})\n'
-            else:
-                result = f'SUCCESS: {job.option_under_investigation} on {a} ({job.config1};{classified[0]} ' \
-                         f'{"more sound than" if job.soundness_level == -1 else "less sound than"} {job.config2};{classified[1]}) ' \
-                         f'(files are {locations})\n'
+
+            result = {'type': 'VIOLATION' if violated else 'SUCCESS',
+                      'config1': job.config1,
+                      'config2': job.config2,
+                      'start_time': start_time,
+                      'end_time': end_time,
+                      'relation': "more sound than" if job.soundness_level == -1 else "less sound than",
+                      'option_under_investigation': job.option_under_investigation,
+                      'classification_1': classified[0],
+                      'classification_2': classified[1]
+                      }
+
             yield result

@@ -1,7 +1,7 @@
 import threading
 from typing import List
 from functools import partial
-
+import json
 from checkmate.fuzzing.FuzzGenerator import FuzzGenerator
 from checkmate.fuzzing.FuzzLogger import FuzzLogger
 from checkmate.fuzzing.FuzzRunner import FuzzRunner
@@ -41,5 +41,6 @@ def print_output(results):
         if len(results) > 0:
             with open(config.configuration['results_location'], 'a') as  f:
                 result = results.pop(0)
-                f.write(result)
-                print(result)
+                string_result = json.dumps(result)
+                f.write(string_result)
+                print(string_result)
