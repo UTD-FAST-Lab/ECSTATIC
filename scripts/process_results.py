@@ -15,14 +15,14 @@ class ResultsProcessor:
     def __init__(self, results_file: str):
         self.results_file = results_file
 
-    def get_lines_as_csv(self) -> List[Dict[str, str]]:
+    def get_lines_as_csv(self) -> List[str]:
         with open(self.results_file) as f:
             lines = f.readlines()
         objs: List[Dict[str, str]] = [json.loads(x.strip()) for x in lines]
 
-        csv = List[str]
+        csv: List[str] = list()
         csv.append(','.join(objs[0].keys()) + '\n')
-        [csv.append(','.join([val.replace(',', ';') for val in line.values()])) for line in objs + '\n']
+        [csv.append(','.join([str(val).replace(',', ';') for val in line.values()]) + '\n') for line in objs]
         return csv
 
 
