@@ -225,8 +225,8 @@ class FuzzRunner:
                   'end_time': end_time,
                   'relation': "more sound than" if job.soundness_level == -1 else "less sound than",
                   'option_under_investigation': job.option_under_investigation,
-                  'classification_1': classified[0],
-                  'classification_2': classified[1]
+                  'classification_1': list(classified[0]),
+                  'classification_2': list(classified[1])
                   }
 
         return result
