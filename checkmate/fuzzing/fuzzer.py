@@ -1,46 +1,57 @@
-import threading
-from typing import List
+from multiprocessing import JoinableQueue, Process
 from functools import partial
 import json
 from checkmate.fuzzing.FuzzGenerator import FuzzGenerator
 from checkmate.fuzzing.FuzzLogger import FuzzLogger
 from checkmate.fuzzing.FuzzRunner import FuzzRunner
 from checkmate.fuzzing.FuzzScheduler import FuzzScheduler
-from ..util import config
+from ..util import config, FuzzingPairJob
 
 
-def main(model_location: str, num_run_threads: int):
+def main(model_location: str, num_processes: int):
+    fuzz_job_queue = JoinableQueue(100)
+    results_queue = JoinableQueue()
+
     generator = FuzzGenerator(model_location)
-    scheduler = FuzzScheduler()
+    scheduler = FuzzScheduler(fuzz_job_queue)
     fuzz_logger = FuzzLogger()
     runner = FuzzRunner(config.configuration['apk_location'], fuzz_logger)
-    results = list()
-    threads = list()
 
-    threads.append(threading.Thread(target=partial(fuzz_configurations, generator, scheduler)))
-    for i in range(num_run_threads):
-        threads.append(threading.Thread(target=partial(run_submitted_jobs, scheduler, runner, results)))
-    threads.append(threading.Thread(target=partial(print_output, results)))
+    processes = list()
 
-    [t.start() for t in threads]
-    [t.join() for t in threads]
+    processes.append(Process(target=partial(fuzz_configurations, generator, scheduler)))
+    for i in range(max(num_processes - 2, 1)):
+        processes.append(Process(target=partial(run_submitted_jobs, scheduler, runner, results_queue)))
+    processes.append(Process(target=partial(print_output, results_queue, fuzz_logger)))
+
+    for t in processes:
+        t.start()
+
+    [t.join() for t in processes]
 
 
 def fuzz_configurations(generator: FuzzGenerator, scheduler: FuzzScheduler):
     while True:
-        scheduler.add_new_job(generator.get_new_pair())
+        for p in generator.get_new_pair():
+            scheduler.add_new_job(p)
 
 
-def run_submitted_jobs(scheduler: FuzzScheduler, runner: FuzzRunner, results_list: List[str]):
+def run_submitted_jobs(scheduler: FuzzScheduler, runner: FuzzRunner, results_queue: JoinableQueue):
     while True:
-        [results_list.append(r) for r in runner.run_job(scheduler.get_next_job_blocking())]
+        job: FuzzingPairJob = scheduler.get_next_job_blocking()
+        result = runner.run_job(job)
+        if result is not None:
+            results_queue.put(result)
+        scheduler.set_job_as_done()
 
 
-def print_output(results):
+def print_output(results_queue: JoinableQueue, fuzz_logger: FuzzLogger):
     while True:
-        if len(results) > 0:
-            with open(config.configuration['results_location'], 'a') as  f:
-                result = results.pop(0)
-                string_result = json.dumps(result)
-                f.write(string_result + '\n')
-                print(string_result)
+        result = results_queue.get()
+        with open(config.configuration['results_location'], 'a') as f:
+            string_result = json.dumps(result)
+            f.write(string_result + '\n')
+            print(string_result)
+        fuzz_logger.log_new_config(result['config1'], result['apk'])
+        fuzz_logger.log_new_config(result['config2'], result['apk'])
+        results_queue.task_done()

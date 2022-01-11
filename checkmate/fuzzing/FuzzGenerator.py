@@ -1,16 +1,21 @@
 import copy
 import logging
+import os
 import pickle
 import random
 from typing import List, Dict
 
 from fuzzingbook.GrammarCoverageFuzzer import GrammarCoverageFuzzer
 from fuzzingbook.Grammars import convert_ebnf_grammar
+from fuzzingbook.GreyboxFuzzer import Mutator, PowerSchedule
+from fuzzingbook.GreyboxGrammarFuzzer import GreyboxGrammarFuzzer, FragmentMutator
+from fuzzingbook.Parser import EarleyParser
 
 from checkmate.fuzzing.flowdroid_grammar import FlowdroidGrammar
 from checkmate.models.Option import Option
 from checkmate.models.Tool import Tool
 from checkmate.util.FuzzingPairJob import FuzzingPairJob
+from checkmate.util.config import configuration
 
 
 def mutate_config(model: Tool, config: Dict[str, str]):
@@ -22,7 +27,6 @@ def mutate_config(model: Tool, config: Dict[str, str]):
     options: List[Option] = model.get_options()
 
     for o in options:
-        #        import pdb; pdb.set_trace()
         for level in o.get_levels():
             if o.name not in config:
                 config[o.name] = o.get_default()
@@ -56,29 +60,39 @@ def process_config(config: str) -> Dict[str, str]:
     return result
 
 
+def get_apks(directory: str) -> List[str]:
+    for root, dirs, files in os.walk(directory):
+        for f in files:
+            if f.endswith('.apk'):
+                yield os.path.join(root, f)
+
+
 class FuzzGenerator:
 
     def __init__(self, model_location: str):
         self.flowdroid_ebnf_grammar = FlowdroidGrammar.getGrammar()
         self.flowdroid_grammar = convert_ebnf_grammar(self.flowdroid_ebnf_grammar)
-        self.fuzzer = GrammarCoverageFuzzer(self.flowdroid_grammar)
+        self.fuzzer = GreyboxGrammarFuzzer([FlowdroidGrammar.getDefault()], Mutator(), FragmentMutator(EarleyParser(self.flowdroid_grammar)),
+                                           PowerSchedule())
+        #self.fuzzer = GrammarCoverageFuzzer(self.flowdroid_grammar)
         with open(model_location, 'rb') as f:
             self.model = pickle.load(f)
 
-    def get_new_pair(self) -> FuzzingPairJob:
+    def get_new_pair(self) -> List[FuzzingPairJob]:
         """
         This method generates the next task for the fuzzer.
         """
         fuzzed_config = process_config(self.fuzzer.fuzz())
         candidates = mutate_config(self.model, fuzzed_config)
+        results = list()
 
-        choice_tuple = random.choice(candidates)
-        choice = choice_tuple[0]
-        soundness_level = choice_tuple[1]
-        option_under_investigation = [k for k in choice.keys() if
-                                      k not in fuzzed_config.keys() or fuzzed_config[k] != choice[k]]
+        for choice_tuple in candidates:
+            choice = choice_tuple[0]
+            soundness_level = choice_tuple[1]
+            option_under_investigation = [k for k in choice.keys() if
+                                          k not in fuzzed_config.keys() or fuzzed_config[k] != choice[k]]
 
-        f = FuzzingPairJob(fuzzed_config, choice, soundness_level, option_under_investigation)
-        logging.debug(f'Generated new job: {f}')
-        return f
-
+            for a in get_apks(configuration['apk_location']):
+                results.append(FuzzingPairJob(fuzzed_config, choice, soundness_level, option_under_investigation, a))
+        # logging.debug(f'Generated new job:')
+        return results
