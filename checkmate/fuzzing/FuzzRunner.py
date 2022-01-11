@@ -178,17 +178,24 @@ class FuzzRunner:
         end_time = time.time()
 
         if job.soundness_level == -1:  # -1 means that the job.config1 is as sound as job.config2
+            # thus, violation if job.config2 produced true positives that job.config1 did not.
             violated = len(classified[1]['tp'] - classified[0]['tp']) > 0
         elif job.soundness_level == 1:  # 1 means that job.config2 is as sound as job.config1
+            # thus, violation if job.config1 produced true positives that job.config2 did not.
             violated = len(classified[0]['tp'] - classified[1]['tp']) > 0
 
         root = ElementTree.Element('flowset')
         root.set('config1', job.config1)
         root.set('config2', job.config2)
         root.set('type', 'soundness')
+        root.set('partial_order',
+                 f'{job.option_under_investigation[0]}={job.config1[job.option_under_investigation[0]]} '
+                 f'{"more sound than" if job.soundness_level < 0 else "less sound than"} '
+                 f'{job.option_under_investigation[0]}={job.config2[job.option_under_investigation[0]]}')
         root.set('violation', str(violated))
 
         if violated:
+            # we want to only keep the differences (i.e., same computation as violated above)
             preserve_set_1 = classified[0]['tp'] - classified[1]['tp'] if job.soundness_level == 1 else set()
             preserve_set_2 = classified[1]['tp'] - classified[0]['tp'] if job.soundness_level == -1 else set()
         else:
@@ -211,7 +218,7 @@ class FuzzRunner:
             if not os.path.exists(output_dir):
                 os.mkdir(output_dir)
         except FileExistsError as fe:
-            pass # silently ignore, we don't care
+            pass  # silently ignore, we don't care
 
         output_file = os.path.join(output_dir, f'flowset_violation-{violated}_{os.path.basename(job.apk)}.xml')
         tree.write(output_file)
@@ -223,10 +230,12 @@ class FuzzRunner:
                   'results': output_file,
                   'start_time': start_time,
                   'end_time': end_time,
-                  'relation': "more sound than" if job.soundness_level == -1 else "less sound than",
                   'option_under_investigation': job.option_under_investigation,
                   'classification_1': [(k, list(v)) for k, v in classified[0].items()],
-                  'classification_2': [(k, list(v)) for k, v in classified[1].items()]
+                  'classification_2': [(k, list(v)) for k, v in classified[1].items()],
+                  'partial_order': f'{job.option_under_investigation[0]}={job.config1[job.option_under_investigation[0]]} '
+                                   f'{"more sound than" if job.soundness_level > 0 else "less sound than"} '
+                                   f'{job.option_under_investigation[0]}={job.config2[job.option_under_investigation[0]]}'
                   }
 
         return result
