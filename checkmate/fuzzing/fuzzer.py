@@ -1,5 +1,4 @@
 from multiprocessing import JoinableQueue, Process
-from typing import List
 from functools import partial
 import json
 from checkmate.fuzzing.FuzzGenerator import FuzzGenerator
@@ -21,13 +20,13 @@ def main(model_location: str, num_processes: int):
     processes = list()
 
     processes.append(Process(target=partial(fuzz_configurations, generator, scheduler)))
-    for i in range(max(num_processes-2, 1)):
+    for i in range(max(num_processes - 2, 1)):
         processes.append(Process(target=partial(run_submitted_jobs, scheduler, runner, results_queue)))
     processes.append(Process(target=partial(print_output, results_queue, fuzz_logger)))
 
     for t in processes:
         t.start()
-    #[t.start() for t in processes]
+
     [t.join() for t in processes]
 
 
@@ -35,7 +34,6 @@ def fuzz_configurations(generator: FuzzGenerator, scheduler: FuzzScheduler):
     while True:
         for p in generator.get_new_pair():
             scheduler.add_new_job(p)
-        #[scheduler.add_new_job(p) for p in generator.get_new_pair()]
 
 
 def run_submitted_jobs(scheduler: FuzzScheduler, runner: FuzzRunner, results_queue: JoinableQueue):
