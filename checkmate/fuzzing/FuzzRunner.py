@@ -29,34 +29,36 @@ def run_aql(apk: str,
                           os.path.basename(xml_config_file))
     output = os.path.abspath(output)
     # check if it exists
-    if not os.path.exists(output):
-        cmd = [config.configuration['aql_run_script_location'], os.path.abspath(xml_config_file),
-               os.path.abspath(apk), output]
-        curdir = os.path.abspath(os.curdir)
-        os.chdir(os.path.dirname(config.configuration['aql_location']))
-        num_runs = 0
-        while num_runs < RUN_THRESHOLD:
-            start = time.time()
-            logger.info(f'Cmd is {cmd}')
-            cp = subprocess.run(cmd, capture_output=True)
-            t = time.time() - start
-            if b'FlowDroid successfully executed' in cp.stdout:
-                break
-            num_runs += 1
-        if num_runs == RUN_THRESHOLD:
-            raise RuntimeError(f'Could not run configuration specified in file {xml_config_file} on {apk}. '
-                               f'Tried to run {RUN_THRESHOLD} times but it failed each time.')
-        os.chdir(curdir)
-        if os.path.exists(output):
-            tree = ElementTree.parse(output)
-            root = tree.getroot()
-            root.set("time", str(t))
-        else:
-            answers = ElementTree.Element('answer')
-            answers.set('time', str(t))
-            tree = ElementTree.ElementTree(answers)
+    if os.path.exists(output):
+        os.remove(output)
+        
+    cmd = [config.configuration['aql_run_script_location'], os.path.abspath(xml_config_file),
+           os.path.abspath(apk), output]
+    curdir = os.path.abspath(os.curdir)
+    os.chdir(os.path.dirname(config.configuration['aql_location']))
+    num_runs = 0
+    while num_runs < RUN_THRESHOLD:
+        start = time.time()
+        logger.info(f'Cmd is {cmd}')
+        cp = subprocess.run(cmd, capture_output=True)
+        t = time.time() - start
+        if b'FlowDroid successfully executed' in cp.stdout:
+            break
+        num_runs += 1
+    if num_runs == RUN_THRESHOLD:
+        raise RuntimeError(f'Could not run configuration specified in file {xml_config_file} on {apk}. '
+                           f'Tried to run {RUN_THRESHOLD} times but it failed each time.')
+    os.chdir(curdir)
+    if os.path.exists(output):
+        tree = ElementTree.parse(output)
+        root = tree.getroot()
+        root.set("time", str(t))
+    else:
+        answers = ElementTree.Element('answer')
+        answers.set('time', str(t))
+        tree = ElementTree.ElementTree(answers)
 
-        tree.write(output)
+    tree.write(output)
     return output
 
 
@@ -204,8 +206,12 @@ class FuzzRunner:
         tree = ElementTree.ElementTree(root)
         output_dir = os.path.join(config.configuration['output_directory'],
                                   f"{hash(dict_to_config_str(job.config1))}_{hash(dict_to_config_str(job.config2))}")
-        if not os.path.exists(output_dir):
-            os.mkdir(output_dir)
+
+        try:
+            if not os.path.exists(output_dir):
+                os.mkdir(output_dir)
+        except FileExistsError as fe:
+            pass # silently ignore, we don't care
 
         output_file = os.path.join(output_dir, f'flowset_violation-{violated}_{os.path.basename(job.apk)}.xml')
         tree.write(output_file)

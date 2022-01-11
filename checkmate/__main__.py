@@ -267,6 +267,14 @@ def create_models(location):
     print(f'FlowDroid has {Option.precision} partial orders '
           f'and {Option.soundness} soundness partial orders.')
 
+    all_options = set()
+    for o in fd.get_options():
+        o: Option
+        for p in [o.precision, o.soundness]:
+            for l1, l2 in p:
+                all_options.add((o.name, l1))
+                all_options.add((o.name, l2))
+
     Option.precision = 0
     Option.soundness = 0
     with open(f'{location}/data/flowdroid.model', 'wb') as f:
