@@ -1,5 +1,6 @@
 from multiprocessing import JoinableQueue, Process
 from functools import partial
+import logging
 import json
 from checkmate.fuzzing.FuzzGenerator import FuzzGenerator
 from checkmate.fuzzing.FuzzLogger import FuzzLogger
@@ -7,7 +8,7 @@ from checkmate.fuzzing.FuzzRunner import FuzzRunner
 from checkmate.fuzzing.FuzzScheduler import FuzzScheduler
 from ..util import config, FuzzingPairJob
 
-
+logger = logging.getLogger(__name__)
 def main(model_location: str, num_processes: int):
     fuzz_job_queue = JoinableQueue(100)
     results_queue = JoinableQueue()
@@ -38,11 +39,15 @@ def fuzz_configurations(generator: FuzzGenerator, scheduler: FuzzScheduler):
 
 def run_submitted_jobs(scheduler: FuzzScheduler, runner: FuzzRunner, results_queue: JoinableQueue):
     while True:
-        job: FuzzingPairJob = scheduler.get_next_job_blocking()
-        result = runner.run_job(job)
-        if result is not None:
-            results_queue.put(result)
-        scheduler.set_job_as_done()
+        try:
+            job: FuzzingPairJob = scheduler.get_next_job_blocking()
+            result = runner.run_job(job)
+            if result is not None:
+                results_queue.put(result)
+            scheduler.set_job_as_done()
+        except Exception as ex:
+            logger.exception('Run failed')
+
 
 
 def print_output(results_queue: JoinableQueue, fuzz_logger: FuzzLogger):
