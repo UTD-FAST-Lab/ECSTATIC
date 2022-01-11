@@ -9,7 +9,7 @@ fuzz_parser.set_defaults(func=lambda r: fuzzer.main(r.model_location, r.processe
 fuzz_parser.add_argument('-m', '--model_location', help='the location of the model to use.',
                          default='data/flowdroid.model')
 fuzz_parser.add_argument('-p', '--processes', help='the number of processes to generate.',
-                         default=4)
+                         default=4, type=int)
 generate_models_parser = subparsers.add_parser('generate', help='generate models.')
 generate_models_parser.set_defaults(func=lambda r: create_models(r.location))
 generate_models_parser.add_argument('--location', '-l', help='where to dump models.',

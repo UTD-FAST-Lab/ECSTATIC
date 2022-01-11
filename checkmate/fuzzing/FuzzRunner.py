@@ -31,7 +31,7 @@ def run_aql(apk: str,
     # check if it exists
     if os.path.exists(output):
         os.remove(output)
-        
+
     cmd = [config.configuration['aql_run_script_location'], os.path.abspath(xml_config_file),
            os.path.abspath(apk), output]
     curdir = os.path.abspath(os.curdir)
