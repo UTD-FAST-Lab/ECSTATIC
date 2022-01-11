@@ -4,7 +4,7 @@ import subprocess
 import time
 import copy
 import xml.etree.ElementTree as ElementTree
-from typing import List, Dict
+from typing import List, Dict, Union
 
 from checkmate.fuzzing.FuzzLogger import FuzzLogger
 from checkmate.models.Flow import Flow
@@ -12,13 +12,6 @@ from checkmate.util import FuzzingPairJob, config
 
 RUN_THRESHOLD = 5  # how many times to try to reattempt running AQL
 logger = logging.getLogger(__name__)
-
-
-def get_apks(directory: str) -> List[str]:
-    for root, dirs, files in os.walk(directory):
-        for f in files:
-            if f.endswith('.apk'):
-                yield os.path.join(root, f)
 
 
 def run_aql(apk: str,
@@ -157,48 +150,49 @@ class FuzzRunner:
         self.fuzzlogger = fuzzlogger
         self.apk_location = apk_location
 
-    def run_job(self, job: FuzzingPairJob) -> str:
+    def run_job(self, job: FuzzingPairJob) -> Dict[str, Union[str, float]]:
         logger.debug(f'Running job: {job}')
         results = list()
-        for a in get_apks(self.apk_location):
-            logger.info(f'Apk is {a}')
-            classified = list()
-            locations = list()
-            start_time = time.time()
-            try:
-                for c in [job.config1, job.config2]:
-                    if self.fuzzlogger.check_if_has_been_run(c, a):
-                        logger.warning(f'Configuration {c} on apk {a} has already been run. Skipping')
-                        continue
-                    c_str = dict_to_config_str(c)
-                    shell_location = create_shell_file(c_str)
-                    xml_location = create_xml_config_file(shell_location)
-                    results_location = run_aql(a, xml_location)
-                    locations.append(results_location)
-                    classified.append(num_tp_fp_fn(results_location, a))
-                    os.remove(shell_location)
-                    os.remove(xml_location)
-                    self.fuzzlogger.log_new_config(c, a)
-            except RuntimeError as re:
-                logger.exception("Failed to run pair. Skipping to next pair.")
-                continue
+        classified = list()
+        locations = list()
+        start_time = time.time()
+        if self.fuzzlogger.check_if_has_been_run(job.config1, job.apk) and \
+                self.fuzzlogger.check_if_has_been_run(job.config2, job.apk):
+            logger.warning(f'Configurations {job.config1},{job.config2} on apk '
+                           f'{job.apk} has already been run. Skipping')
+            return None
+        try:
+            for c in [job.config1, job.config2]:
+                c_str = dict_to_config_str(c)
+                shell_location = create_shell_file(c_str)
+                xml_location = create_xml_config_file(shell_location)
+                results_location = run_aql(job.apk, xml_location)
+                locations.append(results_location)
+                classified.append(num_tp_fp_fn(results_location, job.apk))
+                os.remove(shell_location)
+                os.remove(xml_location)
+        except RuntimeError as re:
+            logger.exception("Failed to run pair. Skipping to next pair.")
+            return None
 
-            end_time = time.time()
-            if job.soundness_level == -1:  # -1 means that the job.config1 is as sound as job.config2
-                violated = classified[1]['tp'] > classified[0]['tp']
-            elif job.soundness_level == 1:  # 1 means that job.config2 is as sound as job.config1
-                violated = classified[0]['tp'] > classified[1]['tp']
+        end_time = time.time()
 
-            result = {'type': 'VIOLATION' if violated else 'SUCCESS',
-                      'config1': job.config1,
-                      'config2': job.config2,
-                      'results': locations,
-                      'start_time': start_time,
-                      'end_time': end_time,
-                      'relation': "more sound than" if job.soundness_level == -1 else "less sound than",
-                      'option_under_investigation': job.option_under_investigation,
-                      'classification_1': classified[0],
-                      'classification_2': classified[1]
-                      }
+        if job.soundness_level == -1:  # -1 means that the job.config1 is as sound as job.config2
+            violated = classified[1]['tp'] > classified[0]['tp']
+        elif job.soundness_level == 1:  # 1 means that job.config2 is as sound as job.config1
+            violated = classified[0]['tp'] > classified[1]['tp']
 
-            yield result
+        result = {'type': 'VIOLATION' if violated else 'SUCCESS',
+                  'apk': job.apk,
+                  'config1': job.config1,
+                  'config2': job.config2,
+                  'results': locations,
+                  'start_time': start_time,
+                  'end_time': end_time,
+                  'relation': "more sound than" if job.soundness_level == -1 else "less sound than",
+                  'option_under_investigation': job.option_under_investigation,
+                  'classification_1': classified[0],
+                  'classification_2': classified[1]
+                  }
+
+        return result
