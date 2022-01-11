@@ -231,8 +231,8 @@ class FuzzRunner:
                   'start_time': start_time,
                   'end_time': end_time,
                   'option_under_investigation': job.option_under_investigation,
-                  'classification_1': [(k, list(v)) for k, v in classified[0].items()],
-                  'classification_2': [(k, list(v)) for k, v in classified[1].items()],
+                  'classification_1': [(k, len(v)) for k, v in classified[0].items()],
+                  'classification_2': [(k, len(v)) for k, v in classified[1].items()],
                   'partial_order': f'{job.option_under_investigation[0]}={job.config1[job.option_under_investigation[0]]} '
                                    f'{"more sound than" if job.soundness_level > 0 else "less sound than"} '
                                    f'{job.option_under_investigation[0]}={job.config2[job.option_under_investigation[0]]}'
