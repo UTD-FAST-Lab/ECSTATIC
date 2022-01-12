@@ -113,7 +113,9 @@ def print_output(results_queue: JoinableQueue):
             # Find configs with potential partial order relationships.
             candidates: List[FinishedFuzzingJob]
             if option_under_investigation is None:
-                candidates = result.finished_jobs
+                candidates = [f for f in result.finished_jobs if
+                f.job.apk == finished_run.job.apk and
+                f.results_location != finished_run.results_location]
             else:
                 candidates = [f for f in result.finished_jobs if
                               (f.job.option_under_investigation is None or
