@@ -40,8 +40,6 @@ def convert_to_int(i: str):
 
 def compare_helper(level, o1: Level, o2: Level):
     # If both are the same, don't compare them
-    o1 = str(o1)
-    o2 = str(o2)
     if (o1, o2) in level:
         # o1 is more precise/sound as o2
         return 1
