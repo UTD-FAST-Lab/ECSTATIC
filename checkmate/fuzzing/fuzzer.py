@@ -136,9 +136,13 @@ def print_output(results_queue: JoinableQueue):
                 soundness_level = option_under_investigation.soundness_compare(
                     finished_run.job.configuration[option_under_investigation],
                     candidate.job.configuration[option_under_investigation])
+                logger.info(f'Soundness level between {finished_run.job.configuration[option_under_investigation]} and'
+                            f'{candidate.job.configuration[option_under_investigation]} is {soundness_level}')
                 precision_level = option_under_investigation.precision_compare(
                     finished_run.job.configuration[option_under_investigation],
                     candidate.job.configuration[option_under_investigation])
+                logger.info(f'Precision level between {finished_run.job.configuration[option_under_investigation]} and'
+                            f'{candidate.job.configuration[option_under_investigation]} is {precision_level}')
                 if soundness_level < 0:  # left side is less sound than right side
                     violated = len(finished_run.detected_flows['tp'].difference(candidate.detected_flows['tp'])) > 0
                     if violated:
