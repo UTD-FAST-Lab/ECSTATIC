@@ -176,9 +176,9 @@ class FuzzRunner:
         logger.debug(f'Running job with configuration {str(job.configuration)} on apk {job.apk}')
         start_time: float = time.time()
         result_location: str
+        shell_location: str = create_shell_file(job.configuration)
+        xml_location: str = create_xml_config_file(shell_location)
         try:
-            shell_location: str = create_shell_file(job.configuration)
-            xml_location: str = create_xml_config_file(shell_location)
             result_location = run_aql(job.apk, xml_location)
             classified: Dict[str, Set[Flow]] = num_tp_fp_fn(result_location, job.apk)
 
@@ -191,7 +191,7 @@ class FuzzRunner:
                 configuration_location=xml_location,
                 detected_flows=classified)
         except (KeyboardInterrupt, RuntimeError) as ex:
-            logger.exception("Failed to run. Cleaning up gracefully.")
+            logger.exception(f'Failed to run configuration {xml_location} on apk {job.apk}')
             if result_location is not None:
                 os.remove(result_location)
             return None
