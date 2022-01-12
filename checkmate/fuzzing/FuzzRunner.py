@@ -14,7 +14,7 @@ from checkmate.models.Option import Option
 from checkmate.util import FuzzingJob, config
 from checkmate.util.NamedTuples import FinishedFuzzingJob
 
-RUN_THRESHOLD = 5  # how many times to try to reattempt running AQL
+RUN_THRESHOLD = 2  # how many times to try to reattempt running AQL
 logger = logging.getLogger(__name__)
 
 
@@ -49,6 +49,7 @@ def run_aql(apk: str,
             t = time.time() - start
             if b'FlowDroid successfully executed' in cp.stdout:
                 break
+            print(f'Restarting {xml_config_file} on {apk}, since it failed.')
             num_runs += 1
         if num_runs == RUN_THRESHOLD:
             raise RuntimeError(f'Could not run configuration specified in file {xml_config_file} on {apk}. '
@@ -173,13 +174,14 @@ class FuzzRunner:
         self.apk_location = apk_location
 
     def run_job(self, job: FuzzingJob) -> Dict[str, Union[str, float]]:
-        logger.debug(f'Running job with configuration {str(job.configuration)} on apk {job.apk}')
         start_time: float = time.time()
         result_location: str
         shell_location: str = create_shell_file(job.configuration)
         xml_location: str = create_xml_config_file(shell_location)
+        print(f'Running job with configuration {xml_location} on apk {job.apk}')
         try:
             result_location = run_aql(job.apk, xml_location)
+            print(f'Job on configuration {xml_location} on apk {job.apk} done.')
             classified: Dict[str, Set[Flow]] = num_tp_fp_fn(result_location, job.apk)
 
             end_time: float = time.time()
