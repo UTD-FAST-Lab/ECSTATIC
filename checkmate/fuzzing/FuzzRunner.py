@@ -64,12 +64,14 @@ def run_aql(apk: str,
             tree = ElementTree.ElementTree(answers)
 
         tree.write(output)
+        return output
 
     except KeyboardInterrupt as ki:
         if os.path.exists(output):
             os.remove(output)
+        return None
 
-    return output
+
 
 
 def create_xml_config_file(shell_file_path: str) -> str:
@@ -179,19 +181,20 @@ class FuzzRunner:
             xml_location: str = create_xml_config_file(shell_location)
             result_location = run_aql(job.apk, xml_location)
             classified: Dict[str, Set[Flow]] = num_tp_fp_fn(result_location, job.apk)
+
+            end_time: float = time.time()
+
+            return FinishedFuzzingJob(
+                job=job,
+                execution_time=(end_time - start_time),
+                results_location=result_location,
+                configuration_location=xml_location,
+                detected_flows=classified)
         except (KeyboardInterrupt, RuntimeError) as ex:
             logger.exception("Failed to run. Cleaning up gracefully.")
             if result_location is not None:
                 os.remove(result_location)
-
-        end_time: float = time.time()
-
-        return FinishedFuzzingJob(
-            job=job,
-            execution_time=(end_time - start_time),
-            results_location=result_location,
-            configuration_location=xml_location,
-            detected_flows=classified)
+            return None
 
         #
         # if job.soundness_level == -1:  # -1 means that the job.config1 is as sound as job.config2
