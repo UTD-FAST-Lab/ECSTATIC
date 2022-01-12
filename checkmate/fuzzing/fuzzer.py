@@ -169,4 +169,5 @@ def print_output(results_queue: JoinableQueue):
                     write_flowset(relation_type='precision', preserve1=preserve_set_1, preserve2=preserve_set_2,
                                   run1=finished_run, run2=candidate)
 
+        print('Campaign value processing done.')
         results_queue.task_done()
