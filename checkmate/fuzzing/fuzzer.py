@@ -54,7 +54,7 @@ def run_submitted_jobs(scheduler: FuzzScheduler, runner: FuzzRunner, results_que
             campaign_result: List[FuzzingJob] = list()
             print(f"Starting fuzzing campaign with {len(campaign.jobs)}")
             with Pool() as p:
-                results = list(tqdm.tqdm(p.imap_unordered(runner.run_job, campaign.jobs), total=len(campaign.jobs)))
+                results = list(p.imap_unordered(runner.run_job, campaign.jobs))
             campaign_results = list(filter(lambda x: x is not None, results))
             print("Finished fuzzing campaign.")
             results_queue.put(FinishedCampaign(campaign_results))
