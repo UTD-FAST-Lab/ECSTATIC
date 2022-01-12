@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with checkmate.  If not, see <https://www.gnu.org/licenses/>.
 ###
-
+from checkmate.models.Level import Level
 from checkmate.models.Option import Option
 from checkmate.models.Constraint import Constraint, from_dict
 
@@ -61,9 +61,9 @@ class Tool:
         Adds a dominates relationship, i.e., a level of c1
         disables every level of c2.
         """
-        if l1 not in o1.all:
-            raise ValueError(f"{l1} is not in {o1}")
+        l1 = Level(o1.name, l1)
         for l in o2.all:
+            l: Level
             self.add_constraint(Constraint(o1, l1, o2, l))
 
     def add_subsumes(self, o1: Option, o2: Option):

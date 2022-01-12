@@ -38,7 +38,7 @@ def convert_to_int(i: str):
         return i
 
 
-def compare_helper(level, o1, o2):
+def compare_helper(level, o1: Level, o2: Level):
     # If both are the same, don't compare them
     o1 = str(o1)
     o2 = str(o2)
@@ -51,7 +51,7 @@ def compare_helper(level, o1, o2):
     return 0
 
 
-def add_partial_order(level, o1, o2):
+def add_partial_order(level, o1: Level, o2: Level):
     """Helper function to add to any of the partial order lists"""
     level.append((o1, o2))
 
@@ -107,14 +107,13 @@ class Option:
         self.constraints = list()
         self.tags = set()
         self.default = None
+        self.options_involved_in_partial_orders = set()
 
     def set_default(self, default: str):
         """Set default value."""
-        if default not in self.all:
-            raise RuntimeError("Cannot set a default value without first adding it as a level.")
-        self.default = default
+        self.default = self.get_level(default)
 
-    def get_default(self) -> str:
+    def get_default(self) -> Level:
         """Return default setting."""
         return self.default
 
@@ -131,11 +130,18 @@ class Option:
 
     def add_level(self, level):
         """Add a level of the option to the master list."""
-        self.all.add(level)
+        self.all.add(Level(self.name, level))
 
     def get_levels(self):
         """Returns list of all registered levels"""
         return self.all
+
+    def get_level(self, name: str) -> Level:
+        for l in self.all:
+            l: Level
+            if l.level_name == name:
+                return l
+        raise ValueError(f'Level {name} has not been added to option {self.name}.')
 
     def is_as_precise(self, o1, o2):
         """
@@ -145,6 +151,10 @@ class Option:
         """
         Option.precision += 1
         Option.soundness += 2
+        o1 = self.get_level(o1)
+        o2 = self.get_level(o2)
+        self.options_involved_in_partial_orders.add(o1)
+        self.options_involved_in_partial_orders.add(o2)
         add_partial_order(self.precision, o1, o2)
         add_partial_order(self.soundness, o1, o2)
         add_partial_order(self.soundness, o2, o1)
@@ -157,10 +167,14 @@ class Option:
         o2.
         """
         Option.soundness += 1
+        o1 = self.get_level(o1)
+        o2 = self.get_level(o2)
+        self.options_involved_in_partial_orders.add(o1)
+        self.options_involved_in_partial_orders.add(o2)
         add_partial_order(self.soundness, o1, o2)
         logging.debug(f'{self.name} Soundness constraint: {self.soundness}')
 
-    def precision_compare(self, o1, o2):
+    def precision_compare(self, o1: Level, o2: Level):
         """
         Returns 0 if o1 and o2 are at the same level in terms of precision,
         -1 if o2 is at least as precise as o1, and
@@ -168,7 +182,7 @@ class Option:
         """
         return compare_helper(self.precision, o1, o2)
 
-    def soundness_compare(self, o1, o2):
+    def soundness_compare(self, o1: Level, o2: Level):
         return compare_helper(self.soundness, o1, o2)
 
     def __eq__(self, other):
@@ -187,6 +201,9 @@ class Option:
                             else s for s in self.soundness]),
                      self.name,
                      frozenset(self.tags)))
+
+    def __str__(self):
+        return self.name
 
     def as_dict(self):
         return {'name': self.name,

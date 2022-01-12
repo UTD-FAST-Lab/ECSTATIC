@@ -100,7 +100,6 @@ def create_models(location):
     o1.add_tag(Tag.OBJECT)
     o1.set_default('FALSE')
     fd.add_option(o1)
-    fd.add_dominates(o, 'FLOWINSENSITIVE', o1)
 
     o = Option('singlejoinpointabstraction')
     for k in ['FALSE', 'TRUE']:

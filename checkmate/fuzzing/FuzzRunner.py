@@ -1,14 +1,18 @@
+import hashlib
 import logging
 import os
 import subprocess
 import time
-import copy
 import xml.etree.ElementTree as ElementTree
-from typing import List, Dict, Union
+from typing import Dict, Union, Set
 
-from checkmate.fuzzing.FuzzLogger import FuzzLogger
+from frozendict import frozendict
+
 from checkmate.models.Flow import Flow
-from checkmate.util import FuzzingPairJob, config
+from checkmate.models.Level import Level
+from checkmate.models.Option import Option
+from checkmate.util import FuzzingJob, config
+from checkmate.util.NamedTuples import FinishedFuzzingJob
 
 RUN_THRESHOLD = 5  # how many times to try to reattempt running AQL
 logger = logging.getLogger(__name__)
@@ -22,43 +26,50 @@ def run_aql(apk: str,
     1) Modifying the shell script that AQL's config file uses.
     2) Run AQL, save output somewhere.
     """
-    # create output file
-    b = os.path.basename(xml_config_file)
-    output = os.path.join(config.configuration['output_directory'],
-                          os.path.basename(apk) +
-                          os.path.basename(xml_config_file))
-    output = os.path.abspath(output)
-    # check if it exists
-    if os.path.exists(output):
-        os.remove(output)
+    try:
+        # create output file
+        b = os.path.basename(xml_config_file)
+        output = os.path.join(config.configuration['output_directory'],
+                              os.path.basename(apk) +
+                              os.path.basename(xml_config_file))
+        output = os.path.abspath(output)
 
-    cmd = [config.configuration['aql_run_script_location'], os.path.abspath(xml_config_file),
-           os.path.abspath(apk), output]
-    curdir = os.path.abspath(os.curdir)
-    os.chdir(os.path.dirname(config.configuration['aql_location']))
-    num_runs = 0
-    while num_runs < RUN_THRESHOLD:
-        start = time.time()
-        logger.info(f'Cmd is {cmd}')
-        cp = subprocess.run(cmd, capture_output=True)
-        t = time.time() - start
-        if b'FlowDroid successfully executed' in cp.stdout:
-            break
-        num_runs += 1
-    if num_runs == RUN_THRESHOLD:
-        raise RuntimeError(f'Could not run configuration specified in file {xml_config_file} on {apk}. '
-                           f'Tried to run {RUN_THRESHOLD} times but it failed each time.')
-    os.chdir(curdir)
-    if os.path.exists(output):
-        tree = ElementTree.parse(output)
-        root = tree.getroot()
-        root.set("time", str(t))
-    else:
-        answers = ElementTree.Element('answer')
-        answers.set('time', str(t))
-        tree = ElementTree.ElementTree(answers)
+        if os.path.exists(output):
+            logger.info(f'Found result already for config {xml_config_file} on {apk}')
+            return output
 
-    tree.write(output)
+        cmd = [config.configuration['aql_run_script_location'], os.path.abspath(xml_config_file),
+               os.path.abspath(apk), output]
+        curdir = os.path.abspath(os.curdir)
+        os.chdir(os.path.dirname(config.configuration['aql_location']))
+        num_runs = 0
+        while num_runs < RUN_THRESHOLD:
+            start = time.time()
+            logger.info(f'Cmd is {cmd}')
+            cp = subprocess.run(cmd, capture_output=True)
+            t = time.time() - start
+            if b'FlowDroid successfully executed' in cp.stdout:
+                break
+            num_runs += 1
+        if num_runs == RUN_THRESHOLD:
+            raise RuntimeError(f'Could not run configuration specified in file {xml_config_file} on {apk}. '
+                               f'Tried to run {RUN_THRESHOLD} times but it failed each time.')
+        os.chdir(curdir)
+        if os.path.exists(output):
+            tree = ElementTree.parse(output)
+            root = tree.getroot()
+            root.set("time", str(t))
+        else:
+            answers = ElementTree.Element('answer')
+            answers.set('time', str(t))
+            tree = ElementTree.ElementTree(answers)
+
+        tree.write(output)
+
+    except KeyboardInterrupt as ki:
+        if os.path.exists(output):
+            os.remove(output)
+
     return output
 
 
@@ -89,11 +100,14 @@ def create_xml_config_file(shell_file_path: str) -> str:
     return output_file
 
 
-def create_shell_file(config_str: str) -> str:
+def create_shell_file(configuration: Dict[Option, Level]) -> str:
     """Create a shell script file with the configuration the fuzzer is generating."""
-
+    hash_value = hashlib.md5()
+    config_as_string = str(sorted({str(k): str(v) for k, v in configuration.items()}.items(), key=lambda x: x[0]))
+    hash_value.update(config_as_string.encode('utf-8'))
     shell_file_name = os.path.join(config.configuration['output_directory'],
-                                   f"{hash(config_str)}.sh")
+                                   f"{hash_value.hexdigest()}.sh")
+    config_str = dict_to_config_str(configuration)
     if not os.path.exists(shell_file_name):
         with open(config.configuration['shell_template_location'], 'r') as infile:
             content = infile.readlines()
@@ -111,18 +125,18 @@ def create_shell_file(config_str: str) -> str:
     return shell_file_name
 
 
-def dict_to_config_str(config_as_dict: Dict[str, str]) -> str:
+def dict_to_config_str(config_as_dict: Dict[Option, Level]) -> str:
     """Transforms a dictionary to a config string"""
     result = ""
     for k, v in config_as_dict.items():
-        if v.lower() not in ['false', 'true', 'default']:
-            result += f'--{k} {v} '
-        elif v.lower() == 'true':
-            result += f'--{k} '
+        if v.level_name.lower() not in ['false', 'true', 'default']:
+            result += f'--{k.name} {v.level_name} '
+        elif v.level_name.lower() == 'true':
+            result += f'--{k.name} '
     return result
 
 
-def num_tp_fp_fn(output_file: str, apk_name: str) -> Dict[str, int]:
+def num_tp_fp_fn(output_file: str, apk_name: str) -> Dict[str, Set[Flow]]:
     """
     Given an output file and the apk name, check the ground truth file.
     """
@@ -150,92 +164,92 @@ def num_tp_fp_fn(output_file: str, apk_name: str) -> Dict[str, int]:
 
 class FuzzRunner:
 
-    def __init__(self, apk_location: str, fuzzlogger: FuzzLogger):
-        self.fuzzlogger = fuzzlogger
+    def __init__(self, apk_location: str):
         self.apk_location = apk_location
 
-    def run_job(self, job: FuzzingPairJob) -> Dict[str, Union[str, float]]:
+    def run_job(self, job: FuzzingJob) -> Dict[str, Union[str, float]]:
         logger.debug(f'Running job: {job}')
-        results = list()
-        classified = list()
-        start_time = time.time()
-        if self.fuzzlogger.check_if_has_been_run(job.config1, job.apk) and \
-                self.fuzzlogger.check_if_has_been_run(job.config2, job.apk):
-            logger.warning(f'Configurations {job.config1},{job.config2} on apk '
-                           f'{job.apk} has already been run. Skipping')
-            return None
+        start_time: float = time.time()
+        result_location: str
         try:
-            for c in [job.config1, job.config2]:
-                c_str = dict_to_config_str(c)
-                shell_location = create_shell_file(c_str)
-                xml_location = create_xml_config_file(shell_location)
-                results_location = run_aql(job.apk, xml_location)
-                classified.append(num_tp_fp_fn(results_location, job.apk))
-        except RuntimeError as re:
-            logger.exception("Failed to run pair. Skipping to next pair.")
-            return None
+            shell_location: str = create_shell_file(job.configuration)
+            xml_location: str = create_xml_config_file(shell_location)
+            result_location = run_aql(job.apk, xml_location)
+            classified: Dict[str, Set[Flow]] = num_tp_fp_fn(result_location, job.apk)
+        except (KeyboardInterrupt, RuntimeError) as ex:
+            logger.exception("Failed to run. Cleaning up gracefully.")
+            if result_location is not None:
+                os.remove(result_location)
 
-        end_time = time.time()
+        end_time: float = time.time()
 
-        if job.soundness_level == -1:  # -1 means that the job.config1 is as sound as job.config2
-            # thus, violation if job.config2 produced true positives that job.config1 did not.
-            violated = len(classified[1]['tp'] - classified[0]['tp']) > 0
-        elif job.soundness_level == 1:  # 1 means that job.config2 is as sound as job.config1
-            # thus, violation if job.config1 produced true positives that job.config2 did not.
-            violated = len(classified[0]['tp'] - classified[1]['tp']) > 0
+        return FinishedFuzzingJob(
+            job=job,
+            execution_time=(end_time - start_time),
+            results_location=result_location,
+            configuration_location=xml_location,
+            detected_flows=classified)
 
-        root = ElementTree.Element('flowset')
-        root.set('config1', job.config1)
-        root.set('config2', job.config2)
-        root.set('type', 'soundness')
-        root.set('partial_order',
-                 f'{job.option_under_investigation[0]}={job.config1[job.option_under_investigation[0]]} '
-                 f'{"more sound than" if job.soundness_level < 0 else "less sound than"} '
-                 f'{job.option_under_investigation[0]}={job.config2[job.option_under_investigation[0]]}')
-        root.set('violation', str(violated))
-
-        if violated:
-            # we want to only keep the differences (i.e., same computation as violated above)
-            preserve_set_1 = classified[0]['tp'] - classified[1]['tp'] if job.soundness_level == 1 else set()
-            preserve_set_2 = classified[1]['tp'] - classified[0]['tp'] if job.soundness_level == -1 else set()
-        else:
-            preserve_set_1 = classified[0]['tp']
-            preserve_set_2 = classified[1]['tp']
-
-        for j, c in [(job.config1, preserve_set_1), (job.config2, preserve_set_2)]:
-            preserve = ElementTree.Element('preserve')
-            preserve.set('config', j)
-            for f in c:
-                f: Flow
-                preserve.append(f.element)
-            root.append(preserve)
-
-        tree = ElementTree.ElementTree(root)
-        output_dir = os.path.join(config.configuration['output_directory'],
-                                  f"{hash(dict_to_config_str(job.config1))}_{hash(dict_to_config_str(job.config2))}")
-
-        try:
-            if not os.path.exists(output_dir):
-                os.mkdir(output_dir)
-        except FileExistsError as fe:
-            pass  # silently ignore, we don't care
-
-        output_file = os.path.join(output_dir, f'flowset_violation-{violated}_{os.path.basename(job.apk)}.xml')
-        tree.write(output_file)
-
-        result = {'type': 'VIOLATION' if violated else 'SUCCESS',
-                  'apk': job.apk,
-                  'config1': job.config1,
-                  'config2': job.config2,
-                  'results': output_file,
-                  'start_time': start_time,
-                  'end_time': end_time,
-                  'option_under_investigation': job.option_under_investigation,
-                  'classification_1': [(k, len(v)) for k, v in classified[0].items()],
-                  'classification_2': [(k, len(v)) for k, v in classified[1].items()],
-                  'partial_order': f'{job.option_under_investigation[0]}={job.config1[job.option_under_investigation[0]]} '
-                                   f'{"more sound than" if job.soundness_level > 0 else "less sound than"} '
-                                   f'{job.option_under_investigation[0]}={job.config2[job.option_under_investigation[0]]}'
-                  }
-
-        return result
+        #
+        # if job.soundness_level == -1:  # -1 means that the job.config1 is as sound as job.config2
+        #     # thus, violation if job.config2 produced true positives that job.config1 did not.
+        #     violated = len(classified[1]['tp'] - classified[0]['tp']) > 0
+        # elif job.soundness_level == 1:  # 1 means that job.config2 is as sound as job.config1
+        #     # thus, violation if job.config1 produced true positives that job.config2 did not.
+        #     violated = len(classified[0]['tp'] - classified[1]['tp']) > 0
+        #
+        # root = ElementTree.Element('flowset')
+        # root.set('config1', job.config1)
+        # root.set('config2', job.config2)
+        # root.set('type', 'soundness')
+        # root.set('partial_order',
+        #          f'{job.option_under_investigation[0]}={job.config1[job.option_under_investigation[0]]} '
+        #          f'{"more sound than" if job.soundness_level < 0 else "less sound than"} '
+        #          f'{job.option_under_investigation[0]}={job.config2[job.option_under_investigation[0]]}')
+        # root.set('violation', str(violated))
+        #
+        # if violated:
+        #     # we want to only keep the differences (i.e., same computation as violated above)
+        #     preserve_set_1 = classified[0]['tp'] - classified[1]['tp'] if job.soundness_level == 1 else set()
+        #     preserve_set_2 = classified[1]['tp'] - classified[0]['tp'] if job.soundness_level == -1 else set()
+        # else:
+        #     preserve_set_1 = classified[0]['tp']
+        #     preserve_set_2 = classified[1]['tp']
+        #
+        # for j, c in [(job.config1, preserve_set_1), (job.config2, preserve_set_2)]:
+        #     preserve = ElementTree.Element('preserve')
+        #     preserve.set('config', j)
+        #     for f in c:
+        #         f: Flow
+        #         preserve.append(f.element)
+        #     root.append(preserve)
+        #
+        # tree = ElementTree.ElementTree(root)
+        # output_dir = os.path.join(config.configuration['output_directory'],
+        #                           f"{hash(dict_to_config_str(job.config1))}_{hash(dict_to_config_str(job.config2))}")
+        #
+        # try:
+        #     if not os.path.exists(output_dir):
+        #         os.mkdir(output_dir)
+        # except FileExistsError as fe:
+        #     pass  # silently ignore, we don't care
+        #
+        # output_file = os.path.join(output_dir, f'flowset_violation-{violated}_{os.path.basename(job.apk)}.xml')
+        # tree.write(output_file)
+        #
+        # result = {'type': 'VIOLATION' if violated else 'SUCCESS',
+        #           'apk': job.apk,
+        #           'config1': job.config1,
+        #           'config2': job.config2,
+        #           'results': output_file,
+        #           'start_time': start_time,
+        #           'end_time': end_time,
+        #           'option_under_investigation': job.option_under_investigation,
+        #           'classification_1': [(k, len(v)) for k, v in classified[0].items()],
+        #           'classification_2': [(k, len(v)) for k, v in classified[1].items()],
+        #           'partial_order': f'{job.option_under_investigation[0]}={job.config1[job.option_under_investigation[0]]} '
+        #                            f'{"more sound than" if job.soundness_level > 0 else "less sound than"} '
+        #                            f'{job.option_under_investigation[0]}={job.config2[job.option_under_investigation[0]]}'
+        #           }
+        #
+        # return result
