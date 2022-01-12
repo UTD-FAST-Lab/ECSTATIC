@@ -121,6 +121,13 @@ def print_output(results_queue: JoinableQueue):
                               f.job.apk == finished_run.job.apk]
             logger.info(f'Found {len(candidates)} candidates for job {finished_run.results_location}')
             for candidate in candidates:
+                if option_under_investigation is None:
+                    # switch to the other candidate's
+                    option_under_investigation = candidate.job.option_under_investigation
+                    if option_under_investigation is None:
+                        raise RuntimeError('Trying to compare two configurations with None as the option '
+                                           'under investigation. This should never happen.')
+
                 candidate: FinishedFuzzingJob
                 # check if there is a partial order relationship
                 soundness_level = option_under_investigation.soundness_compare(
