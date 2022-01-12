@@ -5,7 +5,7 @@ import logging
 import json
 from multiprocessing.pool import Pool
 from typing import List
-from xml.etree.ElementTree import ElementTree
+from xml.etree.ElementTree import ElementTree, Element
 
 import tqdm as tqdm
 
@@ -69,7 +69,7 @@ def write_flowset(relation_type: str,
                   run2: FinishedFuzzingJob,
                   preserve1: List[Flow],
                   preserve2: List[Flow]):
-    root = ElementTree.Element('flowset')
+    root = Element('flowset')
     root.set('config1', run1.configuration_location)
     root.set('config2', run2.configuration_location)
     root.set('type', relation_type)
@@ -80,7 +80,7 @@ def write_flowset(relation_type: str,
     root.set('violation', str(violated))
 
     for j, c in [(run1.configuration_location, preserve1), (run2.configuration_location, preserve2)]:
-        preserve = ElementTree.Element('preserve')
+        preserve = Element('preserve')
         preserve.set('config', j)
         for f in c:
             f: Flow
