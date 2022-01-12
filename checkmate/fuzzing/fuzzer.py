@@ -66,7 +66,8 @@ def run_submitted_jobs(scheduler: FuzzScheduler, runner: FuzzRunner, results_que
 def write_flowset(relation_type: str,
                   violated: bool,
                   run1: FinishedFuzzingJob,
-                  run2: FinishedFuzzingJob, preserve1: List[Flow],
+                  run2: FinishedFuzzingJob,
+                  preserve1: List[Flow],
                   preserve2: List[Flow]):
     root = ElementTree.Element('flowset')
     root.set('config1', run1.configuration_location)
@@ -155,7 +156,7 @@ def print_output(results_queue: JoinableQueue):
                         preserve_set_1 = list(finished_run.detected_flows['tp'])
                         preserve_set_2 = list(candidate.detected_flows['tp'])
                     write_flowset(relation_type='soundness', preserve1=preserve_set_1, preserve2=preserve_set_2,
-                                  run1=finished_run, run2=candidate)
+                                  run1=finished_run, run2=candidate, violated=violated)
                 if precision_level < 0:  # left side is less precise than right side
                     violated = len(candidate.detected_flows['fp'].difference(finished_run.detected_flows['fp'])) > 0
                     if violated:
@@ -167,7 +168,7 @@ def print_output(results_queue: JoinableQueue):
                         preserve_set_1 = list(finished_run.detected_flows['fp'])
                         preserve_set_2 = list(candidate.detected_flows['fp'])
                     write_flowset(relation_type='precision', preserve1=preserve_set_1, preserve2=preserve_set_2,
-                                  run1=finished_run, run2=candidate)
+                                  run1=finished_run, run2=candidate, violated=violated)
 
         print('Campaign value processing done.')
         results_queue.task_done()
