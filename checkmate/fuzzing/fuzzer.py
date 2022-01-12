@@ -68,15 +68,16 @@ def write_flowset(relation_type: str,
                   run1: FinishedFuzzingJob,
                   run2: FinishedFuzzingJob,
                   preserve1: List[Flow],
-                  preserve2: List[Flow]):
+                  preserve2: List[Flow],
+                  option_under_investigation: Option):
     root = Element('flowset')
     root.set('config1', run1.configuration_location)
     root.set('config2', run2.configuration_location)
     root.set('type', relation_type)
     root.set('partial_order',
-             f'{run1.job.option_under_investigation}={run1.job.configuration[run1.job.option_under_investigation]} '
+             f'{option_under_investigation}={run1.job.configuration[option_under_investigation]} '
              f'less {relation_type} than '
-             f'{run2.job.option_under_investigation}={run2.job.configuration[run2.job.option_under_investigation]}')
+             f'{option_under_investigation}={run2.job.configuration[option_under_investigation]}')
     root.set('violation', str(violated))
 
     for j, c in [(run1.configuration_location, preserve1), (run2.configuration_location, preserve2)]:
@@ -156,7 +157,8 @@ def print_output(results_queue: JoinableQueue):
                         preserve_set_1 = list(finished_run.detected_flows['tp'])
                         preserve_set_2 = list(candidate.detected_flows['tp'])
                     write_flowset(relation_type='soundness', preserve1=preserve_set_1, preserve2=preserve_set_2,
-                                  run1=finished_run, run2=candidate, violated=violated)
+                                  run1=finished_run, run2=candidate, violated=violated,
+                                  option_under_investigation=option_under_investigation)
                 if precision_level < 0:  # left side is less precise than right side
                     violated = len(candidate.detected_flows['fp'].difference(finished_run.detected_flows['fp'])) > 0
                     if violated:
@@ -168,7 +170,8 @@ def print_output(results_queue: JoinableQueue):
                         preserve_set_1 = list(finished_run.detected_flows['fp'])
                         preserve_set_2 = list(candidate.detected_flows['fp'])
                     write_flowset(relation_type='precision', preserve1=preserve_set_1, preserve2=preserve_set_2,
-                                  run1=finished_run, run2=candidate, violated=violated)
+                                  run1=finished_run, run2=candidate, violated=violated,
+                                  option_under_investigation=option_under_investigation)
 
         print('Campaign value processing done.')
         results_queue.task_done()
