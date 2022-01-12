@@ -28,7 +28,6 @@ def run_aql(apk: str,
     """
     try:
         # create output file
-        b = os.path.basename(xml_config_file)
         output = os.path.join(config.configuration['output_directory'],
                               os.path.basename(apk) +
                               os.path.basename(xml_config_file))
@@ -45,7 +44,7 @@ def run_aql(apk: str,
         num_runs = 0
         while num_runs < RUN_THRESHOLD:
             start = time.time()
-            logger.info(f'Cmd is {cmd}')
+            logger.info(f'Cmd is {" ".join(cmd)}')
             cp = subprocess.run(cmd, capture_output=True)
             t = time.time() - start
             if b'FlowDroid successfully executed' in cp.stdout:
@@ -78,6 +77,7 @@ def create_xml_config_file(shell_file_path: str) -> str:
     prefix = os.path.basename(shell_file_path).replace('.sh', '')
     output_file = os.path.join(config.configuration['output_directory'], f"{os.path.join(prefix)}.xml")
     if not os.path.exists(output_file):
+        logger.info(f'Creating {output_file}')
         aql_config = ElementTree.parse(config.configuration['aql_template_location'])
         for element in aql_config.iter():
             if element.tag == 'path':
@@ -97,6 +97,8 @@ def create_xml_config_file(shell_file_path: str) -> str:
                 element.text = os.path.abspath(config.configuration['android_platforms_location'])
 
         aql_config.write(output_file)
+    else:
+        logger.info(f'AQL config file {output_file} already exists. Returning')
     return output_file
 
 
@@ -108,7 +110,9 @@ def create_shell_file(configuration: Dict[Option, Level]) -> str:
     shell_file_name = os.path.join(config.configuration['output_directory'],
                                    f"{hash_value.hexdigest()}.sh")
     config_str = dict_to_config_str(configuration)
+    logger.info(f'Hashed configuration {config_as_string} to {os.path.basename(shell_file_name)}')
     if not os.path.exists(shell_file_name):
+        logger.debug(f'Creating shell file {shell_file_name}')
         with open(config.configuration['shell_template_location'], 'r') as infile:
             content = infile.readlines()
 
@@ -121,7 +125,8 @@ def create_shell_file(configuration: Dict[Option, Level]) -> str:
             f.writelines(content)
 
         os.chmod(shell_file_name, 0o777)
-
+    else:
+        logger.debug(f'{os.path.basename(shell_file_name)} already exists. Returning.')
     return shell_file_name
 
 
@@ -151,8 +156,6 @@ def num_tp_fp_fn(output_file: str, apk_name: str) -> Dict[str, Set[Flow]]:
              ElementTree.parse(config.configuration['ground_truth_location']).getroot().findall('flow')]
         )
     )
-    logger.info(f'output flows is {len(output_flows)} flows long.')
-    logger.info(f'gt flows is {len(gt_flows)} flows long.')
     tp = filter(lambda f: f.get_classification(), gt_flows)
     fp = filter(lambda f: not f.get_classification(), gt_flows)
     result = dict()
@@ -168,7 +171,7 @@ class FuzzRunner:
         self.apk_location = apk_location
 
     def run_job(self, job: FuzzingJob) -> Dict[str, Union[str, float]]:
-        logger.debug(f'Running job: {job}')
+        logger.debug(f'Running job with configuration {str(job.configuration)} on apk {job.apk}')
         start_time: float = time.time()
         result_location: str
         try:

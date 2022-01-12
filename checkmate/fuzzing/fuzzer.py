@@ -40,7 +40,9 @@ def main(model_location: str, num_processes: int):
 
 def fuzz_configurations(generator: FuzzGenerator, scheduler: FuzzScheduler):
     while True:
+        logger.info("Generating new fuzzing campaign.")
         scheduler.add_new_job(generator.generate_campaign())
+        logger.info("New fuzzing campaign generated.")
 
 
 def run_submitted_jobs(scheduler: FuzzScheduler, runner: FuzzRunner, results_queue: JoinableQueue):
@@ -48,8 +50,8 @@ def run_submitted_jobs(scheduler: FuzzScheduler, runner: FuzzRunner, results_que
         try:
             campaign: FuzzingCampaign = scheduler.get_next_job_blocking()
             campaign_result: List[FuzzingJob] = list()
-            logger.info("Starting fuzzing campaign.")
-            with Pool() as p:
+            logger.info(f"Starting fuzzing campaign with {len(campaign.jobs)}")
+            with Pool(1) as p:
                 results = p.map(runner.run_job, campaign.jobs)
             campaign_results = list(filter(lambda x: x is not None, results))
             logger.info("Finished fuzzing campaign.")

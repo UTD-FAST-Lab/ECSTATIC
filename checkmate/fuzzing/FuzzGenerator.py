@@ -91,24 +91,30 @@ class FuzzGenerator:
         This method generates the next task for the fuzzer.
         """
         if FuzzGenerator.FIRST_RUN:
+            logger.info("First run, returning default configuration.")
             fuzzed_config = process_config(self.model, FlowdroidGrammar.get_default())
             FuzzGenerator.FIRST_RUN = False
         else:
             while True:
+                while True:
+                    pass
                 try:
                     config_to_try: str = self.fuzzer.fuzz()
                     fuzzed_config: Dict[str, str] = process_config(self.model, config_to_try)
                     break
                 except ValueError as ve:
                     logger.warning(f'Produced config {config_to_try}, which is invalid. Trying again.')
+        logger.info(f"Configuration is {str(fuzzed_config)}")
         candidates: List[ConfigWithMutatedOption] = mutate_config(self.model, fuzzed_config)
+        logger.info(f"Generated {len(candidates)} single-option mutant configurations.")
         results: List[FuzzingJob] = list()
         candidates.append(ConfigWithMutatedOption(frozendict(fuzzed_config), None))
 
-        for candidate in candidates[0:2]:
+        for candidate in candidates:
             choice = candidate.config
             option_under_investigation = candidate.option
-            for a in get_apks(configuration['apk_location']):
+            apks = [a for a in get_apks(configuration['apk_location'])]
+            for a in apks[:4]:
                 results.append(FuzzingJob(choice, option_under_investigation, a))
 
         return FuzzingCampaign(results)
