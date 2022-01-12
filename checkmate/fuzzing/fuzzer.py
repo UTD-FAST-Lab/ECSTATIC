@@ -51,7 +51,7 @@ def run_submitted_jobs(scheduler: FuzzScheduler, runner: FuzzRunner, results_que
             campaign: FuzzingCampaign = scheduler.get_next_job_blocking()
             campaign_result: List[FuzzingJob] = list()
             logger.info(f"Starting fuzzing campaign with {len(campaign.jobs)}")
-            with Pool(1) as p:
+            with Pool() as p:
                 results = p.map(runner.run_job, campaign.jobs)
             campaign_results = list(filter(lambda x: x is not None, results))
             logger.info("Finished fuzzing campaign.")

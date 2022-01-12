@@ -114,7 +114,7 @@ class FuzzGenerator:
             choice = candidate.config
             option_under_investigation = candidate.option
             apks = [a for a in get_apks(configuration['apk_location'])]
-            for a in apks[:4]:
+            for a in apks:
                 results.append(FuzzingJob(choice, option_under_investigation, a))
 
         return FuzzingCampaign(results)
