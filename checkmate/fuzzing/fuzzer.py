@@ -118,7 +118,8 @@ def print_output(results_queue: JoinableQueue):
                 candidates = [f for f in result.finished_jobs if
                               (f.job.option_under_investigation is None or
                                f.job.option_under_investigation == option_under_investigation) and
-                              f.job.apk == finished_run.job.apk]
+                              f.job.apk == finished_run.job.apk and
+                              f.results_location != finished_run.results_location]
             logger.info(f'Found {len(candidates)} candidates for job {finished_run.results_location}')
             for candidate in candidates:
                 if finished_run.job.option_under_investigation is None:
