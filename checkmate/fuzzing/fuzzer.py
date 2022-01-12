@@ -7,6 +7,8 @@ from multiprocessing.pool import Pool
 from typing import List
 from xml.etree.ElementTree import ElementTree
 
+import tqdm as tqdm
+
 from checkmate.fuzzing.FuzzGenerator import FuzzGenerator
 from checkmate.fuzzing.FuzzRunner import FuzzRunner
 from checkmate.fuzzing.FuzzScheduler import FuzzScheduler
@@ -50,11 +52,11 @@ def run_submitted_jobs(scheduler: FuzzScheduler, runner: FuzzRunner, results_que
         try:
             campaign: FuzzingCampaign = scheduler.get_next_job_blocking()
             campaign_result: List[FuzzingJob] = list()
-            logger.info(f"Starting fuzzing campaign with {len(campaign.jobs)}")
+            print(f"Starting fuzzing campaign with {len(campaign.jobs)}")
             with Pool() as p:
-                results = p.map(runner.run_job, campaign.jobs)
+                results = list(tqdm.tqdm(p.imap_unordered(runner.run_job, campaign.jobs), total=len(campaign.jobs)))
             campaign_results = list(filter(lambda x: x is not None, results))
-            logger.info("Finished fuzzing campaign.")
+            print("Finished fuzzing campaign.")
             results_queue.put(FinishedCampaign(campaign_results))
             scheduler.set_job_as_done()
         except Exception as ex:
@@ -104,6 +106,7 @@ def write_flowset(relation_type: str,
 def print_output(results_queue: JoinableQueue):
     while True:
         result: FinishedCampaign = results_queue.get()
+        print('Now processing campaign values.')
         for finished_run in result.finished_jobs:
             finished_run: FinishedFuzzingJob
             option_under_investigation: Option = finished_run.job.option_under_investigation
@@ -116,7 +119,7 @@ def print_output(results_queue: JoinableQueue):
                               (f.job.option_under_investigation is None or
                                f.job.option_under_investigation == option_under_investigation) and
                               f.job.apk == finished_run.job.apk]
-
+            logger.info(f'Found {len(candidates)} candidates for job {finished_run.results_location}')
             for candidate in candidates:
                 candidate: FinishedFuzzingJob
                 # check if there is a partial order relationship
@@ -129,10 +132,12 @@ def print_output(results_queue: JoinableQueue):
                 if soundness_level < 0:  # left side is less sound than right side
                     violated = len(finished_run.detected_flows['tp'].difference(candidate.detected_flows['tp'])) > 0
                     if violated:
+                        logger.info('Detected soundness violation!')
                         preserve_set_1 = list(
                             finished_run.detected_flows['tp'].difference(candidate.detected_flows['tp']))
                         preserve_set_2 = list()
                     else:
+                        logger.info('No soundness violation detected.')
                         preserve_set_1 = list(finished_run.detected_flows['tp'])
                         preserve_set_2 = list(candidate.detected_flows['tp'])
                     write_flowset(relation_type='soundness', preserve1=preserve_set_1, preserve2=preserve_set_2,
@@ -140,9 +145,11 @@ def print_output(results_queue: JoinableQueue):
                 if precision_level < 0:  # left side is less precise than right side
                     violated = len(candidate.detected_flows['fp'].difference(finished_run.detected_flows['fp'])) > 0
                     if violated:
+                        logger.info('Precision violation detected!')
                         preserve_set_1 = list()
                         preserve_set_2 = list(candidate.detected_flows['fp'].difference(finished_run.detected_flows['fp']))
                     else:
+                        logger.info('No precision violation detected.')
                         preserve_set_1 = list(finished_run.detected_flows['fp'])
                         preserve_set_2 = list(candidate.detected_flows['fp'])
                     write_flowset(relation_type='precision', preserve1=preserve_set_1, preserve2=preserve_set_2,
