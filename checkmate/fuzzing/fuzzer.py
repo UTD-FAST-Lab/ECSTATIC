@@ -121,7 +121,7 @@ def print_output(results_queue: JoinableQueue):
                               f.job.apk == finished_run.job.apk]
             logger.info(f'Found {len(candidates)} candidates for job {finished_run.results_location}')
             for candidate in candidates:
-                if finished_run.option_under_investigation is None:
+                if finished_run.job.option_under_investigation is None:
                     # switch to the other candidate's
                     option_under_investigation = candidate.job.option_under_investigation
                     if option_under_investigation is None:
