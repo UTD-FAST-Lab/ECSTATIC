@@ -74,7 +74,7 @@ def create_xml_config_file(shell_file_path: str, apk: str) -> XmlLocationAndFlow
     """Fill out the template file with information from checkmate's config."""
     prefix = os.path.basename(shell_file_path).replace('.sh', '')
     xml_output_file = os.path.join(config.configuration['output_directory'],
-                                   f"{prefix + '_' + category_and_apk(apk)}.xml")
+                                   f"{prefix + '_' + category_and_apk(apk).replace('/', '_')}.xml")
     flowdroid_output = os.path.abspath(xml_output_file) + ".flowdroid.result"
     if not os.path.exists(xml_output_file):
         logger.info(f'Creating {xml_output_file}')
