@@ -40,8 +40,7 @@ FLOWDROID_EBNF_GRAMMAR: Grammar = {
     '<maxcallbacksdepthopts>': ['-1', '1', '50', '80', '90', '100', '110', '120', '150', '600'],
     '<pathalgoopts>': ['DEFAULT', 'CONTEXTINSENSITIVE', 'SOURCESONLY'],
     '<staticmodeopts>': ['CONTEXTFLOWINSENSITIVE', 'DEFAULT'],
-    '<taintwrapperopts>': ['DEFAULT', 'DEFAULTFALLBACK', 'NONE',
-                           'EASY -t /Users/austin/git/AndroidTAEnvironment/tools/FlowDroid/soot-infoflow/EasyTaintWrapperSource.txt']
+    '<taintwrapperopts>': ['DEFAULT', 'DEFAULTFALLBACK', 'NONE', 'EASY']
 }
 
 DEFAULT_CONFIG = "--aliasalgo DEFAULT --aliasflowins FALSE --aplength 5 --cgalgo DEFAULT --analyzeframeworks FALSE " \

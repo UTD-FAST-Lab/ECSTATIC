@@ -132,6 +132,8 @@ def dict_to_config_str(config_as_dict: Dict[Option, Level]) -> str:
     """Transforms a dictionary to a config string"""
     result = ""
     for k, v in config_as_dict.items():
+        if k.name == 'taintwrapper' and v.level_name == 'EASY': # taintwrapper EASY requires an option
+            result += f'--taintwrapper EASY -t {config.configuration["taintwrapper_easy_location"]}'
         if v.level_name.lower() not in ['false', 'true', 'default']:
             result += f'--{k.name} {v.level_name} '
         elif v.level_name.lower() == 'true':
