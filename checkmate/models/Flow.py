@@ -24,6 +24,11 @@ class Flow:
         f = f.split('/')[-1]
         return f
 
+    def get_full_file(self) -> str:
+        f = self.element.find("reference").findall("app")[0].findall("file")[0].text
+        f = f.replace('\\', '/')
+        return f
+
     def get_classification(self) -> Optional[bool]:
         for e in self.element:
             if e.tag == 'classification':
