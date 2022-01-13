@@ -29,8 +29,7 @@ def run_aql(apk: str,
     try:
         # create output file
         output = os.path.join(config.configuration['output_directory'],
-                              os.path.basename(apk) +
-                              os.path.basename(xml_config_file))
+                              os.path.basename(xml_config_file) + '.results')
         output = os.path.abspath(output)
 
         if os.path.exists(output):
@@ -176,7 +175,7 @@ class FuzzRunner:
         start_time: float = time.time()
         result_location: str
         shell_location: str = create_shell_file(job.configuration)
-        xml_location: str = create_xml_config_file(shell_location)
+        xml_location: str = create_xml_config_file(shell_location, job.apk)
         print(f'Running job with configuration {xml_location} on apk {job.apk}')
         try:
             result_location = run_aql(job.apk, xml_location)
