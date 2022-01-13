@@ -74,7 +74,7 @@ def create_xml_config_file(shell_file_path: str, apk: str) -> XmlLocationAndFlow
     """Fill out the template file with information from checkmate's config."""
     prefix = os.path.basename(shell_file_path).replace('.sh', '')
     xml_output_file = os.path.join(config.configuration['output_directory'],
-                                   f"{prefix + '_' + os.path.basename(apk)}.xml")
+                                   f"{prefix + '_' + category_and_apk(apk)}.xml")
     flowdroid_output = os.path.abspath(xml_output_file) + ".flowdroid.result"
     if not os.path.exists(xml_output_file):
         logger.info(f'Creating {xml_output_file}')
@@ -138,6 +138,8 @@ def dict_to_config_str(config_as_dict: Dict[Option, Level]) -> str:
             result += f'--{k.name} '
     return result
 
+def category_and_apk(path: str) -> str:
+    return f'{os.path.basename(os.path.dirname(path))}/{os.path.basename(path)}'
 
 def num_tp_fp_fn(output_file: str, apk_name: str) -> Dict[str, Set[Flow]]:
     """
@@ -147,9 +149,6 @@ def num_tp_fp_fn(output_file: str, apk_name: str) -> Dict[str, Set[Flow]]:
         output_flows = [Flow(f) for f in ElementTree.parse(output_file).getroot().find('flows').findall('flow')]
     except AttributeError:
         output_flows = []
-
-        def category_and_apk(path: str) -> str:
-            return f'{os.path.basename(os.path.dirname(path))}/{os.path.basename(path)}'
 
     gt_flows = list(
         filter(
