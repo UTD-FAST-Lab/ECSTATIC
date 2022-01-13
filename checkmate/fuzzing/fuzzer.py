@@ -32,12 +32,11 @@ def main(model_location: str, num_processes: int):
 
     processes.append(Process(target=partial(fuzz_configurations, generator, scheduler)))
     processes.append(Process(target=partial(run_submitted_jobs, scheduler, runner, results_queue)))
-    processes.append(Process(target=partial(print_output, results_queue)))
 
     for t in processes:
         t.start()
 
-    [t.join() for t in processes]
+    print_output(results_queue)
 
 
 def fuzz_configurations(generator: FuzzGenerator, scheduler: FuzzScheduler):
@@ -172,6 +171,5 @@ def print_output(results_queue: JoinableQueue):
                     write_flowset(relation_type='precision', preserve1=preserve_set_1, preserve2=preserve_set_2,
                                   run1=finished_run, run2=candidate, violated=violated,
                                   option_under_investigation=option_under_investigation)
-
         print('Campaign value processing done.')
         results_queue.task_done()
