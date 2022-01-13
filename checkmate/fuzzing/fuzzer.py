@@ -89,8 +89,8 @@ def write_flowset(relation_type: str,
 
     tree = ElementTree(root)
     output_dir = os.path.join(config.configuration['output_directory'],
-                              f"{os.path.basename(run1.configuration_location.replace('.xml', ''))}_"
-                              f"{os.path.basename(run2.configuration_location.replace('.xml', ''))}_"
+                              f"{os.path.basename(run1.configuration_location).split('_')[0]}_"
+                              f"{os.path.basename(run2.configuration_location).split('_')[0]}_"
                               f"{relation_type}")
 
     try:

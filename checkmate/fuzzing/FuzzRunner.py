@@ -75,7 +75,7 @@ def run_aql(apk: str,
 def create_xml_config_file(shell_file_path: str, apk: str) -> str:
     """Fill out the template file with information from checkmate's config."""
     prefix = os.path.basename(shell_file_path).replace('.sh', '')
-    output_file = os.path.join(config.configuration['output_directory'], f"{prefix + os.path.basename(apk)}.xml")
+    output_file = os.path.join(config.configuration['output_directory'], f"{prefix + '_' + os.path.basename(apk)}.xml")
     if not os.path.exists(output_file):
         logger.info(f'Creating {output_file}')
         aql_config = ElementTree.parse(config.configuration['aql_template_location'])
