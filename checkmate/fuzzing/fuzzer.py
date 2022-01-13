@@ -101,7 +101,7 @@ def write_flowset(relation_type: str,
 
     output_file = os.path.join(output_dir, f'flowset_violation-{violated}_{os.path.basename(run1.job.apk)}.xml')
     tree.write(output_file)
-    print(f'Output result to {os.path.basename(output_file)}')
+    print(f'Wrote flowset to {os.path.abspath(output_file)}')
 
 
 def print_output(results_queue: JoinableQueue):
