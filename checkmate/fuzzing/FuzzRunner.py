@@ -30,7 +30,7 @@ def run_aql(apk: str,
         # create output file
         output = os.path.abspath(xml_config_file) + '.aql.result'
 
-        if os.path.exists(flowdroid_output_file):
+        if os.path.exists(output):
             logger.info(f'Found result already for config {xml_config_file} on {apk}')
             return output
 
