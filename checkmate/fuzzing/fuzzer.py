@@ -31,7 +31,7 @@ def main(model_location: str, num_processes: int):
     processes = list()
 
     processes.append(Process(target=partial(fuzz_configurations, generator, scheduler)))
-    processes.append(Process(target=partial(run_submitted_jobs, scheduler, runner, results_queue)))
+    processes.append(Process(target=partial(run_submitted_jobs, scheduler, runner, results_queue, num_processes)))
 
     for t in processes:
         t.start()
@@ -46,13 +46,13 @@ def fuzz_configurations(generator: FuzzGenerator, scheduler: FuzzScheduler):
         logger.info("New fuzzing campaign generated.")
 
 
-def run_submitted_jobs(scheduler: FuzzScheduler, runner: FuzzRunner, results_queue: JoinableQueue):
+def run_submitted_jobs(scheduler: FuzzScheduler, runner: FuzzRunner, results_queue: JoinableQueue, num_processes: int):
     while True:
         try:
             campaign: FuzzingCampaign = scheduler.get_next_job_blocking()
             campaign_result: List[FuzzingJob] = list()
             print(f"Starting fuzzing campaign with {len(campaign.jobs)}")
-            with Pool() as p:
+            with Pool(max(1, num_processes-2)) as p: # -2 because of the other two processes we spawn (parent and the generator)
                 results = list(p.imap_unordered(runner.run_job, campaign.jobs, chunksize=100))
             campaign_results = list(filter(lambda x: x is not None, results))
             print("Finished fuzzing campaign.")

@@ -26,3 +26,8 @@ class FinishedFuzzingJob(NamedTuple):
 
 class FinishedCampaign(NamedTuple):
     finished_jobs: List[FinishedFuzzingJob]
+
+
+class XmlLocationAndFlowDroidOutput(NamedTuple):
+    xml_location: str
+    flowdroid_output: str

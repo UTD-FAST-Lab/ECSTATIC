@@ -12,14 +12,15 @@ from checkmate.models.Flow import Flow
 from checkmate.models.Level import Level
 from checkmate.models.Option import Option
 from checkmate.util import FuzzingJob, config
-from checkmate.util.NamedTuples import FinishedFuzzingJob
+from checkmate.util.NamedTuples import FinishedFuzzingJob, XmlLocationAndFlowDroidOutput
 
 RUN_THRESHOLD = 2  # how many times to try to reattempt running AQL
 logger = logging.getLogger(__name__)
 
 
 def run_aql(apk: str,
-            xml_config_file: str) -> str:
+            xml_config_file: str,
+            flowdroid_output_file) -> str:
     """
     Runs Flowdroid given a config.
     The steps to running flowdroid are:
@@ -28,11 +29,9 @@ def run_aql(apk: str,
     """
     try:
         # create output file
-        output = os.path.join(config.configuration['output_directory'],
-                              os.path.basename(xml_config_file) + '.results')
-        output = os.path.abspath(output)
+        output = os.path.abspath(xml_config_file) + '.aql.result'
 
-        if os.path.exists(output):
+        if os.path.exists(flowdroid_output_file):
             logger.info(f'Found result already for config {xml_config_file} on {apk}')
             return output
 
@@ -72,35 +71,33 @@ def run_aql(apk: str,
         return None
 
 
-def create_xml_config_file(shell_file_path: str, apk: str) -> str:
+def create_xml_config_file(shell_file_path: str, apk: str) -> XmlLocationAndFlowDroidOutput:
     """Fill out the template file with information from checkmate's config."""
     prefix = os.path.basename(shell_file_path).replace('.sh', '')
-    output_file = os.path.join(config.configuration['output_directory'], f"{prefix + '_' + os.path.basename(apk)}.xml")
-    if not os.path.exists(output_file):
-        logger.info(f'Creating {output_file}')
+    xml_output_file = os.path.join(config.configuration['output_directory'], f"{prefix + '_' + os.path.basename(apk)}.xml")
+    flowdroid_output = os.path.abspath(xml_output_file) + ".flowdroid.result"
+    if not os.path.exists(xml_output_file):
+        logger.info(f'Creating {xml_output_file}')
         aql_config = ElementTree.parse(config.configuration['aql_template_location'])
         for element in aql_config.iter():
             if element.tag == 'path':
                 element.text = os.path.abspath(config.configuration["flowdroid_root"])
             elif element.tag == 'run':
                 element.text = f"{os.path.abspath(shell_file_path)} %MEMORY% %APP_APK% %ANDROID_PLATFORMS% " + \
-                               os.path.abspath(
-                                   f"{os.path.join(config.configuration['output_directory'], prefix + '_flowdroid.result')}")
+                               flowdroid_output
             elif element.tag == 'runOnExit':
                 element.text = os.path.abspath(config.configuration['flushmemory_location'])
             elif element.tag == 'runOnAbort':
                 element.text = os.path.abspath(f"{config.configuration['killpid_location']} %PID%")
             elif element.tag == 'result':
-                element.text = os.path.abspath(
-                    os.path.join(config.configuration['output_directory'],
-                                 os.path.basename(apk) + prefix + '_flowdroid.result'))
+                element.text = flowdroid_output
             elif element.tag == 'androidPlatforms':
                 element.text = os.path.abspath(config.configuration['android_platforms_location'])
 
-        aql_config.write(output_file)
+        aql_config.write(xml_output_file)
     else:
-        logger.info(f'AQL config file {output_file} already exists. Returning')
-    return output_file
+        logger.info(f'AQL config file {xml_output_file} already exists. Returning')
+    return xml_output_file
 
 
 def create_shell_file(configuration: Dict[Option, Level]) -> str:
