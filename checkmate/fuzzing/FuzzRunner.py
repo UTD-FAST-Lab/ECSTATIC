@@ -19,8 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 def run_aql(apk: str,
-            xml_config_file: str,
-            flowdroid_output_file) -> str:
+            xml_config_file: str) -> str:
     """
     Runs Flowdroid given a config.
     The steps to running flowdroid are:
