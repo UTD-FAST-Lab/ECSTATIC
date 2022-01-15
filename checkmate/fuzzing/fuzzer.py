@@ -39,7 +39,7 @@ def main(model_location: str, num_processes: int):
     campaign: FuzzingCampaign = generator.generate_campaign()
     with Pool(num_processes) as p:
         results = list(p.map(runner.run_job, campaign.jobs))
-    print_output(results)
+    print_output(FinishedCampaign(results))
     print('Done!')
 
 
