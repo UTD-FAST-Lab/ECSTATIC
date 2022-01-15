@@ -150,7 +150,9 @@ def print_output(result: FinishedCampaign):
             #             f'{candidate.job.configuration[option_under_investigation]} is {precision_level}')
             if option_under_investigation.is_less_sound(
                 finished_run.job.configuration[option_under_investigation],
-                candidate.job.configuration[option_under_investigation]):  # left side is less sound than right side
+                candidate.job.configuration[option_under_investigation]): # left side is less sound than right side
+                logger.info(f'{finished_run.job.configuration[option_under_investigation]} is less sound than or '
+                            f'equal to {candidate.job.configuration[option_under_investigation]}')
                 violated = len(finished_run.detected_flows['tp'].difference(candidate.detected_flows['tp'])) > 0
                 if violated:
                     logger.info('Detected soundness violation!')
@@ -167,6 +169,8 @@ def print_output(result: FinishedCampaign):
             if option_under_investigation.is_less_precise(
                 finished_run.job.configuration[option_under_investigation],
                 candidate.job.configuration[option_under_investigation]):  # left side is less precise than right side
+                logger.info(f'{finished_run.job.configuration[option_under_investigation]} is less precise than or '
+                            f'equal to {candidate.job.configuration[option_under_investigation]}')
                 violated = len(candidate.detected_flows['fp'].difference(finished_run.detected_flows['fp'])) > 0
                 if violated:
                     logger.info('Precision violation detected!')
