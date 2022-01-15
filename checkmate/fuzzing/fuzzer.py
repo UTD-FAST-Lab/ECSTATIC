@@ -70,14 +70,14 @@ def write_flowset(relation_type: str,
                   preserve2: List[Flow],
                   option_under_investigation: Option,
                   campaign_index: int):
+    partial_order = f'{option_under_investigation}={run1.job.configuration[option_under_investigation].split(" ")[0]}_'\
+             f'less_{relation_type}_than_'\
+             f'{option_under_investigation}={run2.job.configuration[option_under_investigation].split(" ")[0]}'
     root = Element('flowset')
     root.set('config1', run1.configuration_location)
     root.set('config2', run2.configuration_location)
     root.set('type', relation_type)
-    root.set('partial_order',
-             f'{option_under_investigation}={run1.job.configuration[option_under_investigation]} '
-             f'less {relation_type} than '
-             f'{option_under_investigation}={run2.job.configuration[option_under_investigation]}')
+    root.set('partial_order', partial_order)
     root.set('violation', str(violated))
 
     for j, c in [(run1.configuration_location, preserve1), (run2.configuration_location, preserve2)]:
@@ -99,7 +99,8 @@ def write_flowset(relation_type: str,
     except FileExistsError as fe:
         pass  # silently ignore, we don't care
 
-    output_file = os.path.join(output_dir, f'flowset_violation-{violated}_{os.path.basename(run1.job.apk)}.xml')
+    output_file = os.path.join(output_dir, f'flowset_violation-{violated}_{os.path.basename(run1.job.apk)}_'
+                                           f'{partial_order}.xml')
     tree.write(output_file)
     print(f'Wrote flowset to {os.path.abspath(output_file)}')
 
