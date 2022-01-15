@@ -70,9 +70,9 @@ def write_flowset(relation_type: str,
                   preserve2: List[Flow],
                   option_under_investigation: Option,
                   campaign_index: int):
-    partial_order = f'{option_under_investigation}={str(run1.job.configuration[option_under_investigation]).split(" ")[0]}_'\
+    partial_order = f'{str(run1.job.configuration[option_under_investigation]).split(" ")[0]}_'\
              f'less_{relation_type}_than_'\
-             f'{option_under_investigation}={str(run2.job.configuration[option_under_investigation]).split(" ")[0]}'
+             f'{str(run2.job.configuration[option_under_investigation]).split(" ")[0]}'
     root = Element('flowset')
     root.set('config1', run1.configuration_location)
     root.set('config2', run2.configuration_location)
