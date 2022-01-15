@@ -28,15 +28,19 @@ def main(model_location: str, num_processes: int):
     scheduler = FuzzScheduler(fuzz_job_queue)
     runner = FuzzRunner(config.configuration['apk_location'])
 
-    processes = list()
+    # processes = list()
+    #
+    # processes.append(Process(target=partial(fuzz_configurations, generator, scheduler)))
+    # processes.append(Process(target=partial(run_submitted_jobs, scheduler, runner, results_queue, num_processes)))
+    #
+    # for t in processes:
+    #     t.start()
 
-    processes.append(Process(target=partial(fuzz_configurations, generator, scheduler)))
-    processes.append(Process(target=partial(run_submitted_jobs, scheduler, runner, results_queue, num_processes)))
-
-    for t in processes:
-        t.start()
-
-    print_output(results_queue)
+    campaign: FuzzingCampaign = generator.generate_campaign()
+    with Pool(num_processes) as p:
+        results = list(p.map(runner.run_job), campaign.jobs)
+    print_output(results)
+    print('Done!')
 
 
 def fuzz_configurations(generator: FuzzGenerator, scheduler: FuzzScheduler):
