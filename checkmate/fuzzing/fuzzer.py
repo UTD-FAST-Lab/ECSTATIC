@@ -178,5 +178,5 @@ def print_output(result: FinishedCampaign):
                 write_flowset(relation_type='precision', preserve1=preserve_set_1, preserve2=preserve_set_2,
                               run1=finished_run, run2=candidate, violated=violated,
                               option_under_investigation=option_under_investigation, campaign_index=campaign_index)
-        print('Campaign value processing done.')
+    print('Campaign value processing done.')
         #results_queue.task_done()
