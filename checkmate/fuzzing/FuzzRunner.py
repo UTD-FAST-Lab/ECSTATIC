@@ -34,8 +34,6 @@ def run_aql(apk: str,
             logger.info(f'Found result already for config {xml_config_file} on {apk}')
             return output
 
-        while True:
-            pass
         cmd = [config.configuration['aql_run_script_location'], os.path.abspath(xml_config_file),
                os.path.abspath(apk), output]
         curdir = os.path.abspath(os.curdir)
