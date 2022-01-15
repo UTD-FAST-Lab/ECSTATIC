@@ -52,8 +52,10 @@ def create_models(location):
     ops = ['1', '2', '3', '4', '5', '7', '10', '20']
     for k in ops:
         o.add_level(k)
-    for i in range(len(ops) - 1):
-        o.is_as_sound(ops[i + 1], ops[i])
+    for k in ops:
+        for k1 in ops:
+            if int(k) < int(k1):
+                o.is_as_precise(k1, k)
     o.add_tag(Tag.OBJECT)
     o.set_default('5')
     fd.add_option(o)
@@ -193,8 +195,10 @@ def create_models(location):
     for k in ops:
         o.add_level(k)
     o.add_tag(Tag.ANDROID_LIFECYCLE)
-    for i in range(len(ops) - 1):
-        o.is_as_sound(ops[i + 1], ops[1])
+    for k in ops:
+        for k1 in ops:
+            if int(k) < int(k1):
+                o.is_as_sound(k1, k)
     o.set_default('100')
     fd.add_option(o)
 
@@ -203,8 +207,12 @@ def create_models(location):
     for k in ops:
         o.add_level(k)
     o.add_tag(Tag.ANDROID_LIFECYCLE)
-    for i in range(len(ops) - 1):
-        o.is_as_sound(ops[i + 1], ops[i])
+    for k in ops:
+        for k1 in ops:
+            if int(k) != int(k1) and int(k) != -1:
+                o.is_as_sound(k, k1)
+            elif int(k) < int(k1):
+                o.is_as_sound(k1, k)
     o.set_default('-1')
     fd.add_option(o)
 

@@ -51,7 +51,8 @@ def compare_helper(level, o1: Level, o2: Level):
 
 def add_partial_order(level, o1: Level, o2: Level):
     """Helper function to add to any of the partial order lists"""
-    level.append((o1, o2))
+    if (o1, o2) not in level:
+        level.append((o1, o2))
 
 
 def get_index(level, o):

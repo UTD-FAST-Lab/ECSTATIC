@@ -110,72 +110,73 @@ def write_flowset(relation_type: str,
 
 def print_output(result: FinishedCampaign):
     campaign_index = -1
-    while True:
+    #while True:
  #       result: FinishedCampaign = results_queue.get()
-        campaign_index += 1
-        print('Now processing campaign values.')
-        for finished_run in result.finished_jobs:
-            finished_run: FinishedFuzzingJob
-            option_under_investigation: Option = finished_run.job.option_under_investigation
-            # Find configs with potential partial order relationships.
-            candidates: List[FinishedFuzzingJob]
-            if option_under_investigation is None:
-                candidates = [f for f in result.finished_jobs if
-                f.job.apk == finished_run.job.apk and
-                f.results_location != finished_run.results_location]
-            else:
-                candidates = [f for f in result.finished_jobs if
-                              (f.job.option_under_investigation is None or
-                               f.job.option_under_investigation == option_under_investigation) and
-                              f.job.apk == finished_run.job.apk and
-                              f.results_location != finished_run.results_location]
-            logger.info(f'Found {len(candidates)} candidates for job {finished_run.results_location}')
-            for candidate in candidates:
-                if finished_run.job.option_under_investigation is None:
-                    # switch to the other candidate's
-                    option_under_investigation = candidate.job.option_under_investigation
-                    if option_under_investigation is None:
-                        raise RuntimeError('Trying to compare two configurations with None as the option '
-                                           'under investigation. This should never happen.')
+ # campaign_index += 1
+    campaign_index = 1
+    print('Now processing campaign values.')
+    for finished_run in result.finished_jobs:
+        finished_run: FinishedFuzzingJob
+        option_under_investigation: Option = finished_run.job.option_under_investigation
+        # Find configs with potential partial order relationships.
+        candidates: List[FinishedFuzzingJob]
+        if option_under_investigation is None:
+            candidates = [f for f in result.finished_jobs if
+            f.job.apk == finished_run.job.apk and
+            f.results_location != finished_run.results_location]
+        else:
+            candidates = [f for f in result.finished_jobs if
+                          (f.job.option_under_investigation is None or
+                           f.job.option_under_investigation == option_under_investigation) and
+                          f.job.apk == finished_run.job.apk and
+                          f.results_location != finished_run.results_location]
+        logger.info(f'Found {len(candidates)} candidates for job {finished_run.results_location}')
+        for candidate in candidates:
+            if finished_run.job.option_under_investigation is None:
+                # switch to the other candidate's
+                option_under_investigation = candidate.job.option_under_investigation
+                if option_under_investigation is None:
+                    raise RuntimeError('Trying to compare two configurations with None as the option '
+                                       'under investigation. This should never happen.')
 
-                candidate: FinishedFuzzingJob
-                # check if there is a partial order relationship
-                soundness_level = option_under_investigation.soundness_compare(
-                    finished_run.job.configuration[option_under_investigation],
-                    candidate.job.configuration[option_under_investigation])
-                logger.info(f'Soundness level between {finished_run.job.configuration[option_under_investigation]} and'
-                            f'{candidate.job.configuration[option_under_investigation]} is {soundness_level}')
-                precision_level = option_under_investigation.precision_compare(
-                    finished_run.job.configuration[option_under_investigation],
-                    candidate.job.configuration[option_under_investigation])
-                logger.info(f'Precision level between {finished_run.job.configuration[option_under_investigation]} and'
-                            f'{candidate.job.configuration[option_under_investigation]} is {precision_level}')
-                if soundness_level < 0:  # left side is less sound than right side
-                    violated = len(finished_run.detected_flows['tp'].difference(candidate.detected_flows['tp'])) > 0
-                    if violated:
-                        logger.info('Detected soundness violation!')
-                        preserve_set_1 = list(
-                            finished_run.detected_flows['tp'].difference(candidate.detected_flows['tp']))
-                        preserve_set_2 = list()
-                    else:
-                        logger.info('No soundness violation detected.')
-                        preserve_set_1 = list(finished_run.detected_flows['tp'])
-                        preserve_set_2 = list(candidate.detected_flows['tp'])
-                    write_flowset(relation_type='soundness', preserve1=preserve_set_1, preserve2=preserve_set_2,
-                                  run1=finished_run, run2=candidate, violated=violated,
-                                  option_under_investigation=option_under_investigation, campaign_index=campaign_index)
-                if precision_level < 0:  # left side is less precise than right side
-                    violated = len(candidate.detected_flows['fp'].difference(finished_run.detected_flows['fp'])) > 0
-                    if violated:
-                        logger.info('Precision violation detected!')
-                        preserve_set_1 = list()
-                        preserve_set_2 = list(candidate.detected_flows['fp'].difference(finished_run.detected_flows['fp']))
-                    else:
-                        logger.info('No precision violation detected.')
-                        preserve_set_1 = list(finished_run.detected_flows['fp'])
-                        preserve_set_2 = list(candidate.detected_flows['fp'])
-                    write_flowset(relation_type='precision', preserve1=preserve_set_1, preserve2=preserve_set_2,
-                                  run1=finished_run, run2=candidate, violated=violated,
-                                  option_under_investigation=option_under_investigation, campaign_index=campaign_index)
+            candidate: FinishedFuzzingJob
+            # check if there is a partial order relationship
+            soundness_level = option_under_investigation.soundness_compare(
+                finished_run.job.configuration[option_under_investigation],
+                candidate.job.configuration[option_under_investigation])
+            logger.info(f'Soundness level between {finished_run.job.configuration[option_under_investigation]} and'
+                        f'{candidate.job.configuration[option_under_investigation]} is {soundness_level}')
+            precision_level = option_under_investigation.precision_compare(
+                finished_run.job.configuration[option_under_investigation],
+                candidate.job.configuration[option_under_investigation])
+            logger.info(f'Precision level between {finished_run.job.configuration[option_under_investigation]} and'
+                        f'{candidate.job.configuration[option_under_investigation]} is {precision_level}')
+            if soundness_level < 0:  # left side is less sound than right side
+                violated = len(finished_run.detected_flows['tp'].difference(candidate.detected_flows['tp'])) > 0
+                if violated:
+                    logger.info('Detected soundness violation!')
+                    preserve_set_1 = list(
+                        finished_run.detected_flows['tp'].difference(candidate.detected_flows['tp']))
+                    preserve_set_2 = list()
+                else:
+                    logger.info('No soundness violation detected.')
+                    preserve_set_1 = list(finished_run.detected_flows['tp'])
+                    preserve_set_2 = list(candidate.detected_flows['tp'])
+                write_flowset(relation_type='soundness', preserve1=preserve_set_1, preserve2=preserve_set_2,
+                              run1=finished_run, run2=candidate, violated=violated,
+                              option_under_investigation=option_under_investigation, campaign_index=campaign_index)
+            if precision_level < 0:  # left side is less precise than right side
+                violated = len(candidate.detected_flows['fp'].difference(finished_run.detected_flows['fp'])) > 0
+                if violated:
+                    logger.info('Precision violation detected!')
+                    preserve_set_1 = list()
+                    preserve_set_2 = list(candidate.detected_flows['fp'].difference(finished_run.detected_flows['fp']))
+                else:
+                    logger.info('No precision violation detected.')
+                    preserve_set_1 = list(finished_run.detected_flows['fp'])
+                    preserve_set_2 = list(candidate.detected_flows['fp'])
+                write_flowset(relation_type='precision', preserve1=preserve_set_1, preserve2=preserve_set_2,
+                              run1=finished_run, run2=candidate, violated=violated,
+                              option_under_investigation=option_under_investigation, campaign_index=campaign_index)
         print('Campaign value processing done.')
         #results_queue.task_done()
