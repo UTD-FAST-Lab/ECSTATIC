@@ -11,7 +11,9 @@ fuzz_parser.add_argument('-m', '--model_location', help='the location of the mod
 fuzz_parser.add_argument('-p', '--processes', help='the number of processes to generate.',
                          default=64, type=int)
 generate_models_parser = subparsers.add_parser('generate', help='generate models.')
-generate_models_parser.set_defaults(func=lambda r: create_models(r.location))
+generate_models_parser.set_defaults(func=lambda r: create_models(r.location, r.transitive))
+generate_models_parser.add_argument('-t', '--transitive', help='generate transitive partial orders.',
+                                    action='store_true')
 generate_models_parser.add_argument('--location', '-l', help='where to dump models.',
                                     default='.')
 args = parser.parse_args()
@@ -32,7 +34,7 @@ import pickle
 
 
 # noinspection DuplicatedCode
-def create_models(location):
+def create_models(location, transitive):
     """Creates the models"""
 
     # am = Tool("Amandroid")
@@ -52,10 +54,15 @@ def create_models(location):
     ops = ['1', '2', '3', '4', '5', '7', '10', '20']
     for k in ops:
         o.add_level(k)
-    for k in ops:
-        for k1 in ops:
-            if int(k) < int(k1):
-                o.set_more_precise_than(k1, k)
+
+    if transitive:
+        for k in ops:
+            for k1 in ops:
+                if int(k) < int(k1):
+                    o.set_more_precise_than(k1, k)
+    else:
+        for i in range(len(ops) - 1):
+            o.set_more_precise_than(ops[i + 1], ops[i])
     o.add_tag(Tag.OBJECT)
     o.set_default('5')
     fd.add_option(o)
@@ -195,10 +202,14 @@ def create_models(location):
     for k in ops:
         o.add_level(k)
     o.add_tag(Tag.ANDROID_LIFECYCLE)
-    for k in ops:
-        for k1 in ops:
-            if int(k) < int(k1):
-                o.set_more_sound_than(k1, k)
+    if transitive:
+        for k in ops:
+            for k1 in ops:
+                if int(k) < int(k1):
+                    o.set_more_sound_than(k1, k)
+    else:
+        for i in range(len(ops) - 1):
+            o.set_more_sound_than(ops[i + 1], ops[i])
     o.set_default('100')
     fd.add_option(o)
 
@@ -207,12 +218,16 @@ def create_models(location):
     for k in ops:
         o.add_level(k)
     o.add_tag(Tag.ANDROID_LIFECYCLE)
-    for k in ops:
-        for k1 in ops:
-            if int(k) != int(k1) and int(k) != -1:
-                o.set_more_sound_than(k, k1)
-            elif int(k) < int(k1):
-                o.set_more_sound_than(k1, k)
+    if transitive:
+        for k in ops:
+            for k1 in ops:
+                if int(k) != int(k1) and int(k) != -1:
+                    o.set_more_sound_than(k, k1)
+                elif int(k) < int(k1):
+                    o.set_more_sound_than(k1, k)
+    else:
+        for i in range(len(ops) - 1):
+            o.set_more_sound_than(ops[i + 1], ops[i])
     o.set_default('-1')
     fd.add_option(o)
 
