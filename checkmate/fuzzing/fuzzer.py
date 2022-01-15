@@ -141,17 +141,16 @@ def print_output(result: FinishedCampaign):
 
             candidate: FinishedFuzzingJob
             # check if there is a partial order relationship
-            soundness_level = option_under_investigation.soundness_compare(
+            # logger.info(f'Soundness level between {finished_run.job.configuration[option_under_investigation]} and'
+            #             f'{candidate.job.configuration[option_under_investigation]} is {soundness_level}')
+            # precision_level = option_under_investigation.precision_compare(
+            #     finished_run.job.configuration[option_under_investigation],
+            #     candidate.job.configuration[option_under_investigation])
+            # logger.info(f'Precision level between {finished_run.job.configuration[option_under_investigation]} and'
+            #             f'{candidate.job.configuration[option_under_investigation]} is {precision_level}')
+            if option_under_investigation.is_less_sound(
                 finished_run.job.configuration[option_under_investigation],
-                candidate.job.configuration[option_under_investigation])
-            logger.info(f'Soundness level between {finished_run.job.configuration[option_under_investigation]} and'
-                        f'{candidate.job.configuration[option_under_investigation]} is {soundness_level}')
-            precision_level = option_under_investigation.precision_compare(
-                finished_run.job.configuration[option_under_investigation],
-                candidate.job.configuration[option_under_investigation])
-            logger.info(f'Precision level between {finished_run.job.configuration[option_under_investigation]} and'
-                        f'{candidate.job.configuration[option_under_investigation]} is {precision_level}')
-            if soundness_level < 0:  # left side is less sound than right side
+                candidate.job.configuration[option_under_investigation]):  # left side is less sound than right side
                 violated = len(finished_run.detected_flows['tp'].difference(candidate.detected_flows['tp'])) > 0
                 if violated:
                     logger.info('Detected soundness violation!')
@@ -165,7 +164,9 @@ def print_output(result: FinishedCampaign):
                 write_flowset(relation_type='soundness', preserve1=preserve_set_1, preserve2=preserve_set_2,
                               run1=finished_run, run2=candidate, violated=violated,
                               option_under_investigation=option_under_investigation, campaign_index=campaign_index)
-            if precision_level < 0:  # left side is less precise than right side
+            if option_under_investigation.is_less_precise(
+                finished_run.job.configuration[option_under_investigation],
+                candidate.job.configuration[option_under_investigation]):  # left side is less precise than right side
                 violated = len(candidate.detected_flows['fp'].difference(finished_run.detected_flows['fp'])) > 0
                 if violated:
                     logger.info('Precision violation detected!')

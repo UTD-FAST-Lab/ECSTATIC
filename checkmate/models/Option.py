@@ -178,7 +178,7 @@ class Option:
 
     def is_less_precise(self, o1: Level, o2: Level) -> bool:
         return (o1, o2) in self.precision
-    
+
     def precision_compare(self, o1: Level, o2: Level):
         """
         Returns 0 if o1 and o2 are at the same level in terms of precision,
