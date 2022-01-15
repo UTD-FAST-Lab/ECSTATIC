@@ -68,7 +68,8 @@ def write_flowset(relation_type: str,
                   run2: FinishedFuzzingJob,
                   preserve1: List[Flow],
                   preserve2: List[Flow],
-                  option_under_investigation: Option):
+                  option_under_investigation: Option,
+                  campaign_index: int):
     root = Element('flowset')
     root.set('config1', run1.configuration_location)
     root.set('config2', run2.configuration_location)
@@ -91,8 +92,7 @@ def write_flowset(relation_type: str,
     output_dir = os.path.join(config.configuration['output_directory'],
                               f"{os.path.basename(run1.configuration_location).split('_')[0]}_"
                               f"{os.path.basename(run2.configuration_location).split('_')[0]}_"
-                              f"{relation_type}")
-
+                              f"{relation_type}_campaign{campaign_index}")
     try:
         if not os.path.exists(output_dir):
             os.mkdir(output_dir)
@@ -105,8 +105,10 @@ def write_flowset(relation_type: str,
 
 
 def print_output(results_queue: JoinableQueue):
+    campaign_index = -1
     while True:
         result: FinishedCampaign = results_queue.get()
+        campaign_index += 1
         print('Now processing campaign values.')
         for finished_run in result.finished_jobs:
             finished_run: FinishedFuzzingJob
@@ -157,7 +159,7 @@ def print_output(results_queue: JoinableQueue):
                         preserve_set_2 = list(candidate.detected_flows['tp'])
                     write_flowset(relation_type='soundness', preserve1=preserve_set_1, preserve2=preserve_set_2,
                                   run1=finished_run, run2=candidate, violated=violated,
-                                  option_under_investigation=option_under_investigation)
+                                  option_under_investigation=option_under_investigation, campaign_index=campaign_index)
                 if precision_level < 0:  # left side is less precise than right side
                     violated = len(candidate.detected_flows['fp'].difference(finished_run.detected_flows['fp'])) > 0
                     if violated:
@@ -170,6 +172,6 @@ def print_output(results_queue: JoinableQueue):
                         preserve_set_2 = list(candidate.detected_flows['fp'])
                     write_flowset(relation_type='precision', preserve1=preserve_set_1, preserve2=preserve_set_2,
                                   run1=finished_run, run2=candidate, violated=violated,
-                                  option_under_investigation=option_under_investigation)
+                                  option_under_investigation=option_under_investigation, campaign_index=campaign_index)
         print('Campaign value processing done.')
         results_queue.task_done()
