@@ -142,7 +142,7 @@ class Option:
                 return l
         raise ValueError(f'Level {name} has not been added to option {self.name}.')
 
-    def is_as_precise(self, o1, o2):
+    def set_more_precise_than(self, o1, o2):
         """
         Add a precision relationship, that o1 is more precise than
         o2. Either o1 or o2 can be a level, a list of levels, or a
@@ -160,7 +160,7 @@ class Option:
         logging.debug(f'{self.name} Soundness constraint: {self.soundness}')
         logging.debug(f'{self.name} Precision constraint: {self.precision}')
 
-    def is_as_sound(self, o1, o2):
+    def set_more_sound_than(self, o1, o2):
         """
         Add a soundness relationship, that o1 is at least as sound as 
         o2.
@@ -173,6 +173,12 @@ class Option:
         add_partial_order(self.soundness, o1, o2)
         logging.debug(f'{self.name} Soundness constraint: {self.soundness}')
 
+    def is_less_sound(self, o1: Level, o2: Level) -> bool:
+        return (o1, o2) in self.soundness
+
+    def is_less_precise(self, o1: Level, o2: Level) -> bool:
+        return (o1, o2) in self.precision
+    
     def precision_compare(self, o1: Level, o2: Level):
         """
         Returns 0 if o1 and o2 are at the same level in terms of precision,

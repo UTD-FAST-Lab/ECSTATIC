@@ -55,7 +55,7 @@ def create_models(location):
     for k in ops:
         for k1 in ops:
             if int(k) < int(k1):
-                o.is_as_precise(k1, k)
+                o.set_more_precise_than(k1, k)
     o.add_tag(Tag.OBJECT)
     o.set_default('5')
     fd.add_option(o)
@@ -63,8 +63,8 @@ def create_models(location):
     o = Option("cgalgo")
     for k in ['CHA', 'RTA', 'VTA', 'GEOM', 'DEFAULT']:
         o.add_level(k)
-    o.is_as_precise('RTA', 'CHA')
-    o.is_as_precise('VTA', 'RTA')
+    o.set_more_precise_than('RTA', 'CHA')
+    o.set_more_precise_than('VTA', 'RTA')
     o.add_tag(Tag.OBJECT)
     o.add_tag(Tag.REFLECTION)
     o.set_default('DEFAULT')
@@ -73,7 +73,7 @@ def create_models(location):
     o = Option("nothischainreduction")
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
-    o.is_as_precise('FALSE', 'TRUE')
+    o.set_more_precise_than('FALSE', 'TRUE')
     o.add_tag(Tag.OBJECT)
     o.set_default('FALSE')
     fd.add_option(o)
@@ -81,7 +81,7 @@ def create_models(location):
     o = Option('onesourceatatime')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
-    o.is_as_precise('TRUE', 'FALSE')
+    o.set_more_precise_than('TRUE', 'FALSE')
     o.set_default('FALSE')
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     fd.add_option(o)
@@ -89,7 +89,7 @@ def create_models(location):
     o = Option('dataflowsolver')
     for k in ['DEFAULT', 'FLOWINSENSITIVE']:
         o.add_level(k)
-    o.is_as_precise('DEFAULT',
+    o.set_more_precise_than('DEFAULT',
                     'FLOWINSENSITIVE')
     o.set_default('DEFAULT')
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
@@ -98,7 +98,7 @@ def create_models(location):
     o1 = Option('aliasflowins')
     for k in ['FALSE', 'TRUE']:
         o1.add_level(k)
-    o1.is_as_precise('FALSE', 'TRUE')
+    o1.set_more_precise_than('FALSE', 'TRUE')
     o1.add_tag(Tag.OBJECT)
     o1.set_default('FALSE')
     fd.add_option(o1)
@@ -108,13 +108,13 @@ def create_models(location):
         o.add_level(k)
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     o.set_default('FALSE')
-    o.is_as_sound('FALSE', 'TRUE')
+    o.set_more_sound_than('FALSE', 'TRUE')
     fd.add_option(o)
 
     o = Option('onecomponentatatime')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
-    o.is_as_sound('FALSE', 'TRUE')
+    o.set_more_sound_than('FALSE', 'TRUE')
     o.set_default('FALSE')
     o.add_tag(Tag.ANDROID_LIFECYCLE)
     fd.add_option(o)
@@ -125,9 +125,9 @@ def create_models(location):
               'NONE']:
         o1.add_level(k)
     o1.add_tag(Tag.STATIC)
-    o1.is_as_precise('DEFAULT', 'CONTEXTFLOWINSENSITIVE')
-    o1.is_as_sound('DEFAULT', 'NONE')
-    o1.is_as_sound('CONTEXTFLOWINSENSITIVE', 'NONE')
+    o1.set_more_precise_than('DEFAULT', 'CONTEXTFLOWINSENSITIVE')
+    o1.set_more_sound_than('DEFAULT', 'NONE')
+    o1.set_more_sound_than('CONTEXTFLOWINSENSITIVE', 'NONE')
     o1.set_default('DEFAULT')
     fd.add_option(o1)
 
@@ -135,7 +135,7 @@ def create_models(location):
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
     o.add_tag(Tag.STATIC)
-    o.is_as_sound('FALSE', 'TRUE')
+    o.set_more_sound_than('FALSE', 'TRUE')
     o.set_default('FALSE')
     fd.add_option(o)
 
@@ -145,11 +145,11 @@ def create_models(location):
     for k in ['NONE', 'LAZY', 'DEFAULT', 'PTSBASED']:
         o.add_level(k)
     o.add_tag(Tag.OBJECT)
-    o.is_as_sound('LAZY', 'NONE')
-    o.is_as_sound('DEFAULT', 'NONE')
-    o.is_as_sound('PTSBASED', 'NONE')
-    o.is_as_precise('DEFAULT', 'LAZY')
-    o.is_as_precise('DEFAULT', 'PTSBASED')
+    o.set_more_sound_than('LAZY', 'NONE')
+    o.set_more_sound_than('DEFAULT', 'NONE')
+    o.set_more_sound_than('PTSBASED', 'NONE')
+    o.set_more_precise_than('DEFAULT', 'LAZY')
+    o.set_more_precise_than('DEFAULT', 'PTSBASED')
     o.set_default('DEFAULT')
     fd.add_option(o)
 
@@ -157,16 +157,16 @@ def create_models(location):
     for k in ['DEFAULT', 'NONE', 'REMOVECODE']:
         o.add_level(k)
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
-    o.is_as_precise('REMOVECODE', 'DEFAULT')
-    o.is_as_precise('DEFAULT', 'NONE')
+    o.set_more_precise_than('REMOVECODE', 'DEFAULT')
+    o.set_more_precise_than('DEFAULT', 'NONE')
     o.set_default('DEFAULT')
     fd.add_option(o)
 
     o1 = Option('implicit')
     for k in ['DEFAULT', 'ARRAYONLY', 'ALL']:
         o1.add_level(k)
-    o1.is_as_sound('ALL', 'ARRAYONLY')
-    o1.is_as_sound('ARRAYONLY', 'DEFAULT')
+    o1.set_more_sound_than('ALL', 'ARRAYONLY')
+    o1.set_more_sound_than('ARRAYONLY', 'DEFAULT')
     o1.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     o1.set_default('DEFAULT')
     fd.add_option(o1)
@@ -176,7 +176,7 @@ def create_models(location):
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
     o.add_tag(Tag.ANDROID_LIFECYCLE)
-    o.is_as_sound('FALSE', 'TRUE')
+    o.set_more_sound_than('FALSE', 'TRUE')
     o.set_default('FALSE')
     fd.add_option(o)
 
@@ -184,7 +184,7 @@ def create_models(location):
     for k in ['DEFAULT', 'FAST']:
         o1.add_level(k)
     o1.add_tag(Tag.ANDROID_LIFECYCLE)
-    o1.is_as_precise('DEFAULT', 'FAST')
+    o1.set_more_precise_than('DEFAULT', 'FAST')
     o1.set_default('DEFAULT')
     fd.add_option(o1)
 
@@ -198,7 +198,7 @@ def create_models(location):
     for k in ops:
         for k1 in ops:
             if int(k) < int(k1):
-                o.is_as_sound(k1, k)
+                o.set_more_sound_than(k1, k)
     o.set_default('100')
     fd.add_option(o)
 
@@ -210,9 +210,9 @@ def create_models(location):
     for k in ops:
         for k1 in ops:
             if int(k) != int(k1) and int(k) != -1:
-                o.is_as_sound(k, k1)
+                o.set_more_sound_than(k, k1)
             elif int(k) < int(k1):
-                o.is_as_sound(k1, k)
+                o.set_more_sound_than(k1, k)
     o.set_default('-1')
     fd.add_option(o)
 
@@ -220,7 +220,7 @@ def create_models(location):
     for k in ['TRUE', 'FALSE']:
         o.add_level(k)
     o.add_tag(Tag.REFLECTION)
-    o.is_as_sound('TRUE', 'FALSE')
+    o.set_more_sound_than('TRUE', 'FALSE')
     o.set_default('FALSE')
     fd.add_option(o)
 
@@ -228,8 +228,8 @@ def create_models(location):
     for k in ['DEFAULT', 'CONTEXTINSENSITIVE', 'SOURCESONLY']:
         o.add_level(k)
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
-    o.is_as_precise('DEFAULT', 'CONTEXTINSENSITIVE')
-    o.is_as_precise('DEFAULT', 'SOURCESONLY')
+    o.set_more_precise_than('DEFAULT', 'CONTEXTINSENSITIVE')
+    o.set_more_precise_than('DEFAULT', 'SOURCESONLY')
     o.set_default('DEFAULT')
     fd.add_option(o)
 
@@ -237,7 +237,7 @@ def create_models(location):
     for k in ['TRUE', 'FALSE']:
         o.add_level(k)
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
-    o.is_as_precise('TRUE', 'FALSE')
+    o.set_more_precise_than('TRUE', 'FALSE')
     o.set_default('FALSE')
     fd.add_option(o)
 
@@ -246,17 +246,17 @@ def create_models(location):
         o.add_level(k)
     o.add_tag(Tag.EXCEPTION)
     o.add_tag(Tag.OBJECT)
-    o.is_as_sound('FALSE', 'TRUE')
+    o.set_more_sound_than('FALSE', 'TRUE')
     o.set_default('FALSE')
     fd.add_option(o)
 
     o = Option('taintwrapper')
     for k in ['DEFAULT', 'DEFAULTFALLBACK', 'EASY', 'NONE']:
         o.add_level(k)
-    o.is_as_sound('DEFAULTFALLBACK', 'NONE')
-    o.is_as_sound('DEFAULTFALLBACK', 'DEFAULT')
-    o.is_as_sound('EASY', 'NONE')
-    o.is_as_sound('DEFAULT', 'NONE')
+    o.set_more_sound_than('DEFAULTFALLBACK', 'NONE')
+    o.set_more_sound_than('DEFAULTFALLBACK', 'DEFAULT')
+    o.set_more_sound_than('EASY', 'NONE')
+    o.set_more_sound_than('DEFAULT', 'NONE')
     o.set_default('DEFAULT')
     o.add_tag(Tag.LIBRARY)
     fd.add_option(o)
@@ -265,7 +265,7 @@ def create_models(location):
     for k in ['TRUE', 'FALSE']:
         o1.add_level(k)
     o.add_tag(Tag.LIBRARY)
-    o1.is_as_sound('TRUE', 'FALSE')
+    o1.set_more_sound_than('TRUE', 'FALSE')
     o1.set_default('FALSE')
     fd.add_option(o1)
 
@@ -297,14 +297,14 @@ def create_models(location):
     for k in ops:
         o.add_level(k)
     for i in range(len(ops) - 1):
-        o.is_as_sound(ops[i + 1], ops[i])
+        o.set_more_sound_than(ops[i + 1], ops[i])
     o.add_tag(Tag.OBJECT)
     ds.add_option(o)
 
     o = Option('nova')
     for k in ['TRUE', 'FALSE']:
         o.add_level(k)
-    o.is_as_precise('FALSE', 'TRUE')
+    o.set_more_precise_than('FALSE', 'TRUE')
     o.add_level(Tag.OBJECT)
     o.add_level(Tag.ANDROID_LIFECYCLE)
     ds.add_option(o)
@@ -313,7 +313,7 @@ def create_models(location):
     for k in ['TRUE', 'FALSE']:
         o1.add_level(k)
     o.add_tag(Tag.OBJECT)
-    o1.is_as_precise('FALSE', 'TRUE')
+    o1.set_more_precise_than('FALSE', 'TRUE')
     ds.add_option(o1)
 
     ds.add_dominates(o1, 'TRUE', o)
@@ -323,27 +323,27 @@ def create_models(location):
         o.add_level(k)
     o.add_tag(Tag.OBJECT)
     o.add_tag(Tag.STATIC)
-    o.is_as_precise('FALSE', 'TRUE')
+    o.set_more_precise_than('FALSE', 'TRUE')
     ds.add_option(o)
 
     o = Option('limitcontextforcomplex')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
     o.add_tag(Tag.OBJECT)
-    o.is_as_precise('FALSE', 'TRUE')
+    o.set_more_precise_than('FALSE', 'TRUE')
     ds.add_option(o)
 
     o = Option('ignorenocontextflows')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
     o.add_tag(Tag.OBJECT)
-    o.is_as_sound('FALSE', 'TRUE')
+    o.set_more_sound_than('FALSE', 'TRUE')
     ds.add_option(o)
 
     o = Option('ignoreexceptionflows')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
-    o.is_as_sound('FALSE', 'TRUE')
+    o.set_more_sound_than('FALSE', 'TRUE')
     o.add_tag(Tag.EXCEPTION)
     o.add_tag(Tag.OBJECT)
     ds.add_option(o)
@@ -351,7 +351,7 @@ def create_models(location):
     o = Option('preciseinfoflow')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
-    o.is_as_precise('TRUE', 'FALSE')
+    o.set_more_precise_than('TRUE', 'FALSE')
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     o.add_tag(Tag.OBJECT)
     ds.add_option(o)
@@ -359,7 +359,7 @@ def create_models(location):
     o = Option('analyzestringsunfiltered')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
-    o.is_as_precise('TRUE', 'FALSE')
+    o.set_more_precise_than('TRUE', 'FALSE')
     o.add_tag(Tag.OBJECT)
     o.add_tag(Tag.ANDROID_LIFECYCLE)
     o.add_tag(Tag.LIBRARY)
@@ -368,14 +368,14 @@ def create_models(location):
     o = Option('filetransform')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
-    o.is_as_precise('TRUE', 'FALSE')
+    o.set_more_precise_than('TRUE', 'FALSE')
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     ds.add_option(o)
 
     o = Option('multipassfb')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
-    o.is_as_precise('FALSE', 'TRUE')
+    o.set_more_precise_than('FALSE', 'TRUE')
     #    o.is_as_sound('TRUE', 'FALSE')
     o.add_tag(Tag.ANDROID_LIFECYCLE)
     o.add_tag(Tag.LIBRARY)
@@ -384,7 +384,7 @@ def create_models(location):
     o = Option('multipassfb')
     for k in ['FALSE', 'TRUE']:
         o.add_level(k)
-    o.is_as_sound('TRUE', 'FALSE')
+    o.set_more_sound_than('TRUE', 'FALSE')
     o.add_tag(Tag.ANDROID_LIFECYCLE)
     o.add_tag(Tag.LIBRARY)
     ds.add_option(o)
@@ -398,7 +398,7 @@ def create_models(location):
     o = Option('imprecisestrings')
     for k in ['TRUE', 'FALSE']:
         o.add_level(k)
-    o.is_as_precise('FALSE', 'TRUE')
+    o.set_more_precise_than('FALSE', 'TRUE')
     o.add_tag(Tag.OBJECT)
     ds.add_option(o)
     ds.add_dominates(o1, 'PADDLE', o)
@@ -407,7 +407,7 @@ def create_models(location):
     o = Option('noclinitcontext')
     for k in ['TRUE', 'FALSE']:
         o.add_level(k)
-    o.is_as_precise('FALSE', 'TRUE')
+    o.set_more_precise_than('FALSE', 'TRUE')
     o.add_tag(Tag.OBJECT)
     o.add_tag(Tag.STATIC)
     ds.add_option(o)
@@ -417,7 +417,7 @@ def create_models(location):
     o = Option('typesforcontext')
     for k in ['TRUE', 'FALSE']:
         o.add_level(k)
-    o.is_as_precise('FALSE', 'TRUE')
+    o.set_more_precise_than('FALSE', 'TRUE')
     o.add_tag(Tag.OBJECT)
     ds.add_option(o)
     ds.add_dominates(o1, 'PADDLE', o)
@@ -426,7 +426,7 @@ def create_models(location):
     o = Option('limitcontextforstrings')
     for k in ['TRUE', 'FALSE']:
         o.add_level(k)
-    o.is_as_precise('FALSE', 'TRUE')
+    o.set_more_precise_than('FALSE', 'TRUE')
     o.add_tag(Tag.OBJECT)
     ds.add_option(o)
     ds.add_dominates(o1, 'PADDLE', o)
@@ -435,7 +435,7 @@ def create_models(location):
     o = Option('limitcontextforgui')
     for k in ['TRUE', 'FALSE']:
         o.add_level(k)
-    o.is_as_precise('FALSE', 'TRUE')
+    o.set_more_precise_than('FALSE', 'TRUE')
     o.add_tag(Tag.OBJECT)
     ds.add_option(o)
     ds.add_dominates(o1, 'PADDLE', o)
@@ -446,7 +446,7 @@ def create_models(location):
     for k in ops:
         o.add_level(k)
     for i in range(len(ops) - 1):
-        o.is_as_sound(ops[i + 1], ops[i])
+        o.set_more_sound_than(ops[i + 1], ops[i])
     o.add_tag(Tag.LIBRARY)
     ds.add_option(o)
     ds.add_dominates(o1, 'PADDLE', o)
@@ -455,35 +455,35 @@ def create_models(location):
     o = Option('implicitflow')
     for k in ['TRUE', 'FALSE']:
         o.add_level(k)
-    o.is_as_sound('TRUE', 'FALSE')
+    o.set_more_sound_than('TRUE', 'FALSE')
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     ds.add_option(o)
 
     o = Option('noarrayindex')
     for k in ['TRUE', 'FALSE']:
         o.add_level(k)
-    o.is_as_sound('FALSE', 'TRUE')
+    o.set_more_sound_than('FALSE', 'TRUE')
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     ds.add_option(o)
 
     o = Option('nofallback')
     for k in ['TRUE', 'FALSE']:
         o.add_level(k)
-    o.is_as_sound('FALSE', 'TRUE')
+    o.set_more_sound_than('FALSE', 'TRUE')
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     ds.add_option(o)
 
     o = Option('noscalaropts')
     for k in ['TRUE', 'FALSE']:
         o.add_level(k)
-    o.is_as_precise('FALSE', 'TRUE')
+    o.set_more_precise_than('FALSE', 'TRUE')
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     ds.add_option(o)
 
     o = Option('transfertaintfield')
     for k in ['TRUE', 'FALSE']:
         o.add_level(k)
-    o.is_as_precise('FALSE', 'TRUE')
+    o.set_more_precise_than('FALSE', 'TRUE')
     o.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     ds.add_option(o)
 
