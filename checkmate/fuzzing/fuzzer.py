@@ -108,10 +108,10 @@ def write_flowset(relation_type: str,
     print(f'Wrote flowset to {os.path.abspath(output_file)}')
 
 
-def print_output(results_queue: JoinableQueue):
+def print_output(result: FinishedCampaign):
     campaign_index = -1
     while True:
-        result: FinishedCampaign = results_queue.get()
+ #       result: FinishedCampaign = results_queue.get()
         campaign_index += 1
         print('Now processing campaign values.')
         for finished_run in result.finished_jobs:
@@ -178,4 +178,4 @@ def print_output(results_queue: JoinableQueue):
                                   run1=finished_run, run2=candidate, violated=violated,
                                   option_under_investigation=option_under_investigation, campaign_index=campaign_index)
         print('Campaign value processing done.')
-        results_queue.task_done()
+        #results_queue.task_done()
