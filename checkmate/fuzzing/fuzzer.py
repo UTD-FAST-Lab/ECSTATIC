@@ -75,7 +75,7 @@ def write_flowset(relation_type: str,
                   option_under_investigation: Option,
                   campaign_index: int):
     partial_order = f'{str(run1.job.configuration[option_under_investigation]).split(" ")[0]}_'\
-             f'less_{relation_type}_than_'\
+             f'more_{relation_type}_than_'\
              f'{str(run2.job.configuration[option_under_investigation]).split(" ")[0]}'
     root = Element('flowset')
     root.set('config1', run1.configuration_location)
@@ -148,17 +148,16 @@ def print_output(result: FinishedCampaign):
             #     candidate.job.configuration[option_under_investigation])
             # logger.info(f'Precision level between {finished_run.job.configuration[option_under_investigation]} and'
             #             f'{candidate.job.configuration[option_under_investigation]} is {precision_level}')
-            if option_under_investigation.is_less_sound(
+            if option_under_investigation.is_more_sound(
                 finished_run.job.configuration[option_under_investigation],
                 candidate.job.configuration[option_under_investigation]): # left side is less sound than right side
-                logger.info(f'{finished_run.job.configuration[option_under_investigation]} is less sound than or '
+                logger.info(f'{finished_run.job.configuration[option_under_investigation]} is more sound than or '
                             f'equal to {candidate.job.configuration[option_under_investigation]}')
-                violated = len(finished_run.detected_flows['tp'].difference(candidate.detected_flows['tp'])) > 0
+                violated = len(candidate.detected_flows['tp'].difference(finished_run.detected_flows['tp'])) > 0
                 if violated:
                     logger.info('Detected soundness violation!')
-                    preserve_set_1 = list(
-                        finished_run.detected_flows['tp'].difference(candidate.detected_flows['tp']))
-                    preserve_set_2 = list()
+                    preserve_set_1 = list()
+                    preserve_set_2 = list(candidate.detected_flows['tp'].difference(finished_run.detected_flows['tp']))
                 else:
                     logger.info('No soundness violation detected.')
                     preserve_set_1 = list(finished_run.detected_flows['tp'])
@@ -166,16 +165,16 @@ def print_output(result: FinishedCampaign):
                 write_flowset(relation_type='soundness', preserve1=preserve_set_1, preserve2=preserve_set_2,
                               run1=finished_run, run2=candidate, violated=violated,
                               option_under_investigation=option_under_investigation, campaign_index=campaign_index)
-            if option_under_investigation.is_less_precise(
+            if option_under_investigation.is_more_precise(
                 finished_run.job.configuration[option_under_investigation],
                 candidate.job.configuration[option_under_investigation]):  # left side is less precise than right side
-                logger.info(f'{finished_run.job.configuration[option_under_investigation]} is less precise than or '
+                logger.info(f'{finished_run.job.configuration[option_under_investigation]} is more precise than or '
                             f'equal to {candidate.job.configuration[option_under_investigation]}')
-                violated = len(candidate.detected_flows['fp'].difference(finished_run.detected_flows['fp'])) > 0
+                violated = len(finished_run.detected_flows['fp'].difference(candidate.detected_flows['fp'])) > 0
                 if violated:
                     logger.info('Precision violation detected!')
-                    preserve_set_1 = list()
-                    preserve_set_2 = list(candidate.detected_flows['fp'].difference(finished_run.detected_flows['fp']))
+                    preserve_set_1 = list(finished_run.detected_flows['fp'].difference(candidate.detected_flows['fp']))
+                    preserve_set_2 = list()
                 else:
                     logger.info('No precision violation detected.')
                     preserve_set_1 = list(finished_run.detected_flows['fp'])
