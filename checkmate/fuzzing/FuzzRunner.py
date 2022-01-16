@@ -159,8 +159,8 @@ def num_tp_fp_fn(output_file: str, apk_name: str) -> Dict[str, Set[Flow]]:
              ElementTree.parse(config.configuration['ground_truth_location']).getroot().findall('flow')]
         )
     )
-    tp = filter(lambda f: f.get_classification(), gt_flows)
-    fp = filter(lambda f: not f.get_classification(), gt_flows)
+    tp = filter(lambda f: f.get_classification().lower() == 'true', gt_flows)
+    fp = filter(lambda f: f.get_classification().lower() == 'false', gt_flows)
     if len(set(fp)) > 0:
         logger.info(f'Found {len(set(fp))} false positives in {output_file}')
     result = dict()

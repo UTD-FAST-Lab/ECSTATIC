@@ -32,8 +32,7 @@ class Flow:
     def get_classification(self) -> Optional[bool]:
         for e in self.element:
             if e.tag == 'classification':
-                return e.text.lower() == 'true'
-        return None
+                return e.text
 
     def add_classification(self, classification: str) -> None:
         for e in self.element:
