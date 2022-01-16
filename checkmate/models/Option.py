@@ -176,7 +176,7 @@ class Option:
     def is_more_sound(self, o1: Level, o2: Level) -> bool:
         return (o1, o2) in self.soundness
 
-    def is_more_sound(self, o1: Level, o2: Level) -> bool:
+    def is_more_precise(self, o1: Level, o2: Level) -> bool:
         return (o1, o2) in self.precision
 
     def precision_compare(self, o1: Level, o2: Level):
