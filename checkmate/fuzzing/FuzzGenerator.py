@@ -96,8 +96,6 @@ class FuzzGenerator:
             FuzzGenerator.FIRST_RUN = False
         else:
             while True:
-                while True:
-                    pass
                 try:
                     config_to_try: str = self.fuzzer.fuzz()
                     fuzzed_config: Dict[str, str] = process_config(self.model, config_to_try)
