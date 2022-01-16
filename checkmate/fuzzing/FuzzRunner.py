@@ -162,7 +162,7 @@ def num_tp_fp_fn(output_file: str, apk_name: str) -> Dict[str, Set[Flow]]:
     tp = filter(lambda f: f.get_classification().lower() == 'true', gt_flows)
     fp = filter(lambda f: f.get_classification().lower() == 'false', gt_flows)
     if len(set(fp)) > 0:
-        logger.info(f'Found {len(set(fp))} false positives in {output_file}')
+        logger.info(f'Found {len(set(fp))} false positives in {gt_flows}')
     result = dict()
     result['tp'] = (set(filter(lambda f: f in output_flows, tp)))
     result['fp'] = (set(filter(lambda f: f in output_flows, fp)))
