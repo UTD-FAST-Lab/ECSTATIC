@@ -39,7 +39,7 @@ FLOWDROID_EBNF_GRAMMAR: Grammar = {
     '<maxcallbackspercomponentopts>': ['1', '50', '80', '90', '100', '110', '120', '150', '600'],
     '<maxcallbacksdepthopts>': ['-1', '1', '50', '80', '90', '100', '110', '120', '150', '600'],
     '<pathalgoopts>': ['DEFAULT', 'CONTEXTINSENSITIVE', 'SOURCESONLY'],
-    '<staticmodeopts>': ['CONTEXTFLOWINSENSITIVE', 'DEFAULT'],
+    '<staticmodeopts>': ['CONTEXTFLOWINSENSITIVE', 'DEFAULT', 'NONE'],
     '<taintwrapperopts>': ['DEFAULT', 'DEFAULTFALLBACK', 'NONE', 'EASY']
 }
 
@@ -49,7 +49,7 @@ DEFAULT_CONFIG = "--aliasalgo DEFAULT --aliasflowins FALSE --aplength 5 --cgalgo
                  "--implicit DEFAULT --maxcallbackspercomponent 100 --maxcallbacksdepth -1 --nocallbacks FALSE " \
                  "--noexceptions FALSE --nostatic FALSE --nothischainreduction FALSE --onecomponentatatime FALSE " \
                  "--onesourceatatime FALSE --pathalgo DEFAULT --pathspecificresults FALSE " \
-                 "--singlejoinpointabstraction FALSE --staticmode NONE --taintwrapper DEFAULT"
+                 "--singlejoinpointabstraction FALSE --staticmode DEFAULT --taintwrapper DEFAULT"
 
 
 class FlowdroidGrammar:
