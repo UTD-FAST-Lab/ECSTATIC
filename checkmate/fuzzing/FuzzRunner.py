@@ -34,6 +34,7 @@ def run_aql(apk: str,
             logger.info(f'Found result already for config {xml_config_file} on {apk}')
             return output
 
+        return None
         cmd = [config.configuration['aql_run_script_location'], os.path.abspath(xml_config_file),
                os.path.abspath(apk), output]
         curdir = os.path.abspath(os.curdir)
@@ -168,9 +169,9 @@ def num_tp_fp_fn(output_file: str, apk_name: str) -> Dict[str, Set[Flow]]:
     if len(set(fp)) > 0:
         logger.info(f'Found {len(set(fp))} false positives in {gt_flows}')
     result = dict()
-    result['tp'] = (set(filter(lambda f: f in output_flows, tp)))
-    result['fp'] = (set(filter(lambda f: f in output_flows, fp)))
-    result['fn'] = (set(filter(lambda f: f not in output_flows, tp)))
+    result['tp'] = (set(filter(lambda f: f in tp, output_flows)))
+    result['fp'] = (set(filter(lambda f: f in fp, output_flows)))
+    result['fn'] = (set(filter(lambda f: f not in tp, output_flows)))
     return result
 
 
