@@ -103,7 +103,9 @@ def write_flowset(relation_type: str,
     except FileExistsError as fe:
         pass  # silently ignore, we don't care
 
-    output_file = os.path.join(output_dir, f'flowset_violation-{violated}_{os.path.basename(run1.job.apk)}.xml')
+    output_file = os.path.join(output_dir, f'flowset_violation-{violated}_'
+                                           f'{os.path.basename(os.path.dirname(run1.job.apk))}_'
+                                           f'{os.path.basename(run1.job.apk)}.xml')
     tree.write(output_file)
     print(f'Wrote flowset to {os.path.abspath(output_file)}')
 
