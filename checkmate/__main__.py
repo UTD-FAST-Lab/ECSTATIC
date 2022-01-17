@@ -1,5 +1,6 @@
 import argparse
 import logging
+logging.basicConfig(format='%(asctime)s %(message)s')
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-v", dest='verbosity', action='count', default=0)
