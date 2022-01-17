@@ -49,6 +49,8 @@ def run_aql(apk: str,
             print(f'Restarting {xml_config_file} on {apk}, since it failed.')
             num_runs += 1
         if num_runs == RUN_THRESHOLD:
+            if os.path.exists(output):
+                os.remove(output)
             raise RuntimeError(f'Could not run configuration specified in file {xml_config_file} on {apk}. '
                                f'Tried to run {RUN_THRESHOLD} times but it failed each time.')
         os.chdir(curdir)

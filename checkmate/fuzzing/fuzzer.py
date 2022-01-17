@@ -110,12 +110,7 @@ def write_flowset(relation_type: str,
     print(f'Wrote flowset to {os.path.abspath(output_file)}')
 
 
-def print_output(result: FinishedCampaign):
-    campaign_index = -1
-    #while True:
- #       result: FinishedCampaign = results_queue.get()
- # campaign_index += 1
-    campaign_index = 1
+def print_output(result: FinishedCampaign, campaign_index: int = 1):
     print('Now processing campaign values.')
     for finished_run in result.finished_jobs:
         finished_run: FinishedFuzzingJob
