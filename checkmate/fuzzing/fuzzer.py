@@ -1,5 +1,5 @@
 import os.path
-from datetime import time
+import time
 from multiprocessing import JoinableQueue, Process
 from functools import partial
 import logging
@@ -21,7 +21,7 @@ from ..util.NamedTuples import FuzzingCampaign, FinishedFuzzingJob, FinishedCamp
 logger = logging.getLogger(__name__)
 
 
-def main(model_location: str, num_processes: int):
+def main(model_location: str, num_processes: int, num_campaigns: int):
     fuzz_job_queue = JoinableQueue(100)
     results_queue = JoinableQueue()
 
@@ -39,7 +39,7 @@ def main(model_location: str, num_processes: int):
 
     campaign_index = 0
 
-    while True:
+    while campaign_index < num_campaigns:
         campaign_index += 1
         campaign: FuzzingCampaign = generator.generate_campaign()
         start = time.time()

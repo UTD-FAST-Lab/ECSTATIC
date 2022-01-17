@@ -5,11 +5,13 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-v", dest='verbosity', action='count', default=0)
 subparsers = parser.add_subparsers()
 fuzz_parser = subparsers.add_parser('fuzz', help='fuzzing control.')
-fuzz_parser.set_defaults(func=lambda r: fuzzer.main(r.model_location, r.processes))
+fuzz_parser.set_defaults(func=lambda r: fuzzer.main(r.model_location, r.processes, r.number_campaigns))
 fuzz_parser.add_argument('-m', '--model_location', help='the location of the model to use.',
                          default='data/flowdroid.model')
 fuzz_parser.add_argument('-p', '--processes', help='the number of processes to generate.',
                          default=64, type=int)
+fuzz_parser.add_argument('-n', '--number_campaigns', help='the number of campaigns',
+                         default=1, type=int)
 generate_models_parser = subparsers.add_parser('generate', help='generate models.')
 generate_models_parser.set_defaults(func=lambda r: create_models(r.location, r.transitive))
 generate_models_parser.add_argument('-t', '--transitive', help='generate transitive partial orders.',
