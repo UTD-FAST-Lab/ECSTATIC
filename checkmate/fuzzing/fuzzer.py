@@ -34,6 +34,7 @@ def main(model_location: str, num_processes: int, num_campaigns: int):
         start = time.time()
         with Pool(num_processes) as p:
             results = list(p.map(runner.run_job, campaign.jobs))
+        results = [r for r in results if r is not None]
         print(f'Campaign {campaign_index} finished (time {time.time() - start} seconds)')
         print_output(FinishedCampaign(results), campaign_index)
         print('Done!')
