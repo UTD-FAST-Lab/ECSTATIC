@@ -22,20 +22,8 @@ logger = logging.getLogger(__name__)
 
 
 def main(model_location: str, num_processes: int, num_campaigns: int):
-    fuzz_job_queue = JoinableQueue(100)
-    results_queue = JoinableQueue()
-
     generator = FuzzGenerator(model_location)
-    scheduler = FuzzScheduler(fuzz_job_queue)
     runner = FuzzRunner(config.configuration['apk_location'])
-
-    # processes = list()
-    #
-    # processes.append(Process(target=partial(fuzz_configurations, generator, scheduler)))
-    # processes.append(Process(target=partial(run_submitted_jobs, scheduler, runner, results_queue, num_processes)))
-    #
-    # for t in processes:
-    #     t.start()
 
     campaign_index = 0
 
