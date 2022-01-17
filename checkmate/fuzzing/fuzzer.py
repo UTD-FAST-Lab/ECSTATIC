@@ -1,4 +1,5 @@
 import os.path
+from datetime import time
 from multiprocessing import JoinableQueue, Process
 from functools import partial
 import logging
@@ -36,11 +37,17 @@ def main(model_location: str, num_processes: int):
     # for t in processes:
     #     t.start()
 
-    campaign: FuzzingCampaign = generator.generate_campaign()
-    with Pool(num_processes) as p:
-        results = list(p.map(runner.run_job, campaign.jobs))
-    print_output(FinishedCampaign(results))
-    print('Done!')
+    campaign_index = 0
+
+    while True:
+        campaign_index += 1
+        campaign: FuzzingCampaign = generator.generate_campaign()
+        start = time.time()
+        with Pool(num_processes) as p:
+            results = list(p.map(runner.run_job, campaign.jobs))
+        print(f'Campaign {campaign_index} finished (time {time.time() - start} seconds)')
+        print_output(FinishedCampaign(results), campaign_index)
+        print('Done!')
 
 
 def fuzz_configurations(generator: FuzzGenerator, scheduler: FuzzScheduler):
