@@ -151,7 +151,7 @@ class Fuzzer:
                         # Run again to check.
                         os.remove(candidate.results_location)
                         os.remove(finished_run.results_location)
-                        verify = (self.runner.run_job(candidate), self.runner.run_job(finished_run))
+                        verify = (self.runner.run_job(candidate.job), self.runner.run_job(finished_run.job))
                         violated = len(verify[0].detected_flows['tp'].difference(verify[1].detected_flows['fp'])) > 0
 
                     if violated:
