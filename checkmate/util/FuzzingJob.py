@@ -13,3 +13,8 @@ class FuzzingJob:
         self.configuration = configuration
         self.option_under_investigation = option_under_investigation
         self.apk = apk
+
+    def __eq__(self, other):
+        return isinstance(other, FuzzingJob) and self.configuration == other.configuration and\
+            self.option_under_investigation == other.option_under_investigation and\
+            self.apk == other.apk
