@@ -1,12 +1,15 @@
 import argparse
 import logging
+
+from checkmate.fuzzing.fuzzer import Fuzzer
+
 logging.basicConfig(format='%(levelname)s[%(asctime)s]: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-v", dest='verbosity', action='count', default=0)
 subparsers = parser.add_subparsers()
 fuzz_parser = subparsers.add_parser('fuzz', help='fuzzing control.')
-fuzz_parser.set_defaults(func=lambda r: fuzzer.main(r.model_location, r.processes, r.number_campaigns))
+fuzz_parser.set_defaults(func=lambda r: Fuzzer(r.model_location, r.processes, r.number_campaigns).main())
 fuzz_parser.add_argument('-m', '--model_location', help='the location of the model to use.',
                          default='data/flowdroid.model')
 fuzz_parser.add_argument('-p', '--processes', help='the number of processes to generate.',
