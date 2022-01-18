@@ -30,6 +30,8 @@ def main(model_location: str, num_processes: int, num_campaigns: int):
     while campaign_index < num_campaigns:
         campaign_index += 1
         campaign: FuzzingCampaign = generator.generate_campaign()
+        if campaign_index != 4:
+            continue
         print("Got new fuzzing campaign.")
         start = time.time()
         with Pool(num_processes) as p:
