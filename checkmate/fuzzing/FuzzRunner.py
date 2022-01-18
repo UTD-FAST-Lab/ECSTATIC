@@ -34,6 +34,9 @@ def run_aql(apk: str,
             logger.info(f'Found result already for config {xml_config_file} on {apk}')
             return output
 
+        if os.path.exists(output + '.timedout'):
+            raise TimeoutError(f'Skipping run for {xml_config_file} on {apk} because it timed out last time.')
+
         cmd = [config.configuration['aql_run_script_location'], os.path.abspath(xml_config_file),
                os.path.abspath(apk), output]
         curdir = os.path.abspath(os.curdir)
@@ -51,7 +54,9 @@ def run_aql(apk: str,
         if num_runs == RUN_THRESHOLD:
             if os.path.exists(output):
                 os.remove(output)
-            raise RuntimeError(f'Could not run configuration specified in file {xml_config_file} on {apk}. '
+            with open(output + '.timedout', 'w'):
+                pass
+            raise TimeoutError(f'Could not run configuration specified in file {xml_config_file} on {apk}. '
                                f'Tried to run {RUN_THRESHOLD} times but it failed each time.')
         os.chdir(curdir)
         if os.path.exists(output):
@@ -198,6 +203,6 @@ class FuzzRunner:
                 results_location=result_location,
                 configuration_location=xml_location,
                 detected_flows=classified)
-        except (KeyboardInterrupt, RuntimeError) as ex:
+        except (KeyboardInterrupt, TimeoutError, RuntimeError) as ex:
             logger.exception(f'Failed to run configuration {xml_location} on apk {job.apk}')
             return None
