@@ -11,7 +11,7 @@ from checkmate.fuzzing.FuzzRunner import FuzzRunner
 from checkmate.fuzzing.FuzzScheduler import FuzzScheduler
 from ..models.Flow import Flow
 from ..models.Option import Option
-from ..util import config, FuzzingJob
+from ..util import config, FuzzingJob.FuzzingJob
 from ..util.NamedTuples import FuzzingCampaign, FinishedFuzzingJob, FinishedCampaign
 
 logger = logging.getLogger(__name__)
