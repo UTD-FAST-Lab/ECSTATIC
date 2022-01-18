@@ -11,7 +11,7 @@ from checkmate.fuzzing.FuzzRunner import FuzzRunner
 from checkmate.fuzzing.FuzzScheduler import FuzzScheduler
 from ..models.Flow import Flow
 from ..models.Option import Option
-from ..util import config, FuzzingJob.FuzzingJob
+from ..util import config, FuzzingJob
 from ..util.NamedTuples import FuzzingCampaign, FinishedFuzzingJob, FinishedCampaign
 
 logger = logging.getLogger(__name__)
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 class Fuzzer:
     generator: FuzzGenerator
     runner: FuzzRunner
-    unverified_violations: List[Tuple[FuzzingJob, FuzzingJob]]
+    unverified_violations: List[Tuple[FuzzingJob.FuzzingJob, FuzzingJob.FuzzingJob]]
 
     def __init__(self, model_location: str, num_processes: int, num_campaigns: int):
         self.generator = FuzzGenerator(model_location)
