@@ -177,7 +177,7 @@ class Fuzzer:
                         print('Verifying violation.')
                         os.remove(candidate.results_location)
                         os.remove(finished_run.results_location)
-                        verify = (self.runner.run_job(candidate), self.runner.run_job(finished_run))
+                        verify = (self.runner.run_job(candidate.job), self.runner.run_job(finished_run.job))
                         try:
                             violated = len(verify[1].detected_flows['fp'].difference(verify[0].detected_flows['fp'])) > 0
                         except AttributeError: # in case one of the jobs is None
