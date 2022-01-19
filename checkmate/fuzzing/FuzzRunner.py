@@ -31,7 +31,7 @@ def run_aql(apk: str,
         output = os.path.abspath(xml_config_file) + '.aql.result'
 
         if os.path.exists(output):
-            logger.info(f'Found result already for config {xml_config_file} on {apk}')
+            print(f'Found result already for config {xml_config_file} on {apk}')
             return output
 
         if os.path.exists(output + '.timedout'):
