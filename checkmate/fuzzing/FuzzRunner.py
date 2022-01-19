@@ -141,6 +141,7 @@ def dict_to_config_str(config_as_dict: Dict[Option, Level]) -> str:
     for k, v in config_as_dict.items():
         if k.name == 'taintwrapper' and v.level_name == 'EASY':  # taintwrapper EASY requires an option
             result += f'--taintwrapper EASY -t {config.configuration["taintwrapper_easy_location"]}'
+            continue
         if v.level_name.lower() not in ['false', 'true', 'default']:
             result += f'--{k.name} {v.level_name} '
         elif v.level_name.lower() == 'true':
