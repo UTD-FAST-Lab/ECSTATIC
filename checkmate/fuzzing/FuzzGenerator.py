@@ -28,6 +28,8 @@ def fill_out_defaults(model: Tool, config: Dict[Option, Level]) -> Dict[Option, 
         if o not in config:
             config[o] = o.get_default()
 
+    return config
+
 
 def mutate_config(model: Tool, config: Dict[Option, Level]) -> List[ConfigWithMutatedOption]:
     """
