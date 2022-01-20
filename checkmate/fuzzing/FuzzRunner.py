@@ -114,7 +114,7 @@ def create_shell_file(configuration: Dict[Option, Level]) -> str:
     hash_value.update(config_as_string.encode('utf-8'))
     shell_file_name = os.path.join(config.configuration['output_directory'],
                                    f"{hash_value.hexdigest()}.sh")
-    print(f'Hash for {config_as_string} is {hash_value.hexdigest()}')
+    print(f'Hash is {hash_value.hexdigest()}')
     raise RuntimeError
     config_str = dict_to_config_str(configuration)
     logger.info(f'Hashed configuration {config_as_string} to {os.path.basename(shell_file_name)}')
