@@ -1,10 +1,11 @@
 import hashlib
+import json
 import logging
 import os
 import subprocess
 import time
 import xml.etree.ElementTree as ElementTree
-from typing import Dict, Union, Set
+from typing import Dict, Union, Set, Any
 
 from frozendict import frozendict
 
@@ -107,16 +108,24 @@ def create_xml_config_file(shell_file_path: str, apk: str) -> XmlLocationAndFlow
     return xml_output_file
 
 
+def dict_hash(dictionary: Dict[str, Any]) -> str:
+    """MD5 hash of a dictionary."""
+    dhash = hashlib.md5()
+    # We need to sort arguments so {'a': 1, 'b': 2} is
+    # the same as {'b': 2, 'a': 1}
+    encoded = json.dumps(dictionary, sort_keys=True).encode()
+    dhash.update(encoded)
+    return dhash.hexdigest()
+
+
 def create_shell_file(configuration: Dict[Option, Level]) -> str:
     """Create a shell script file with the configuration the fuzzer is generating."""
-    hash_value = hashlib.md5()
-    config_as_string = str(sorted({str(k): str(v) for k, v in configuration.items()}.items(), key=lambda x: x[0]))
-    hash_value.update(config_as_string.encode('utf-8'))
+    config_str = dict_to_config_str(configuration)
+    hash_value = dict_hash(configuration)
     shell_file_name = os.path.join(config.configuration['output_directory'],
-                                   f"{hash_value.hexdigest()}.sh")
+                                   f"{dict_hash(configuration)}.sh")
     print(f'Hash is {hash_value.hexdigest()}')
     raise RuntimeError
-    config_str = dict_to_config_str(configuration)
     logger.info(f'Hashed configuration {config_as_string} to {os.path.basename(shell_file_name)}')
     if not os.path.exists(shell_file_name):
         logger.debug(f'Creating shell file {shell_file_name}')
