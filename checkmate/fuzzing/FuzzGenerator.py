@@ -109,7 +109,7 @@ class FuzzGenerator:
                 except ValueError as ve:
                     logger.warning(f'Produced config {config_to_try}, which is invalid. Trying again.')
 
-        fuzzed_config = fill_out_defaults(fuzzed_config)
+        fuzzed_config = fill_out_defaults(self.model, fuzzed_config)
         print(f"Configuration is {[(str(k), str(v)) for k, v in fuzzed_config.items()]}")
         candidates: List[ConfigWithMutatedOption] = mutate_config(self.model, fuzzed_config)
         logger.info(f"Generated {len(candidates)} single-option mutant configurations.")
