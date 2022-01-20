@@ -111,9 +111,10 @@ def create_xml_config_file(shell_file_path: str, apk: str) -> XmlLocationAndFlow
 def dict_hash(dictionary: Dict[str, Any]) -> str:
     """MD5 hash of a dictionary."""
     dhash = hashlib.md5()
+    clone = {str(k): str(v) for k, v in dictionary.items()}
     # We need to sort arguments so {'a': 1, 'b': 2} is
     # the same as {'b': 2, 'a': 1}
-    encoded = json.dumps(dictionary, sort_keys=True).encode()
+    encoded = json.dumps(clone, sort_keys=True).encode()
     dhash.update(encoded)
     return dhash.hexdigest()
 
