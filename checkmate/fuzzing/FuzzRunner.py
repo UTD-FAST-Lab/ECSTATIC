@@ -114,6 +114,8 @@ def create_shell_file(configuration: Dict[Option, Level]) -> str:
     hash_value.update(config_as_string.encode('utf-8'))
     shell_file_name = os.path.join(config.configuration['output_directory'],
                                    f"{hash_value.hexdigest()}.sh")
+    print(f'Hash for {config_as_string} is {hash_value.hexdigest()}')
+    raise RuntimeError
     config_str = dict_to_config_str(configuration)
     logger.info(f'Hashed configuration {config_as_string} to {os.path.basename(shell_file_name)}')
     if not os.path.exists(shell_file_name):
@@ -185,12 +187,12 @@ class FuzzRunner:
         self.apk_location = apk_location
 
     def run_job(self, job: FuzzingJob) -> Dict[str, Union[str, float]]:
-        start_time: float = time.time()
-        result_location: str
-        shell_location: str = create_shell_file(job.configuration)
-        xml_location: str = create_xml_config_file(shell_location, job.apk)
-        print(f'Running job with configuration {xml_location} on apk {job.apk}')
         try:
+            start_time: float = time.time()
+            result_location: str
+            shell_location: str = create_shell_file(job.configuration)
+            xml_location: str = create_xml_config_file(shell_location, job.apk)
+            print(f'Running job with configuration {xml_location} on apk {job.apk}')
             result_location = run_aql(job.apk, xml_location)
             print(f'Job on configuration {xml_location} on apk {job.apk} done.')
             classified: Dict[str, Set[Flow]] = num_tp_fp_fn(result_location, job.apk)
