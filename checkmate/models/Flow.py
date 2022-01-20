@@ -11,7 +11,7 @@ class Flow:
     """
     Class that represents a flow returned by AQL.
     """
-
+    logger = logging.getLogger(__name__)
     register_regex = re.compile(r"\$[a-z]\d+")
 
     def __init__(self, element):
@@ -32,6 +32,7 @@ class Flow:
     def get_classification(self) -> Optional[bool]:
         for e in self.element:
             if e.tag == 'classification':
+                self.logger.info(f'Classification is {e.text}')
                 return e.text
 
     def add_classification(self, classification: str) -> None:

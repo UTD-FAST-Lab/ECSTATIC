@@ -18,7 +18,7 @@ def test_add_precision():
     k = Option("op3")
     k.add_level("a")
     k.add_level("b")
-    k.is_as_precise("a", "b")
+    k.set_more_precise_than("a", "b")
     assert k.precision_compare("b", "a") == -1
 
 def test_add_multiple_precision():
@@ -26,8 +26,8 @@ def test_add_multiple_precision():
     k.add_level("a")
     k.add_level("b")
     k.add_level("c")
-    k.is_as_precise("a", "b")
-    k.is_as_precise("b", "c")
+    k.set_more_precise_than("a", "b")
+    k.set_more_precise_than("b", "c")
     assert k.precision_compare("c", "a") == -1
 
 def test_add_items_same_precision():
@@ -40,9 +40,9 @@ def test_add_items_same_precision():
     k.add_level("b")
     k.add_level("c")
     k.add_level("d")
-    k.is_as_precise("c", "b")
-    k.is_as_precise("a", "b")
-    k.is_as_precise("d", "a")
+    k.set_more_precise_than("c", "b")
+    k.set_more_precise_than("a", "b")
+    k.set_more_precise_than("d", "a")
     assert k.precision == ["b", {"c", "a"}, "d"]
 
 
@@ -56,9 +56,9 @@ def test_more_precise():
     k.add_level("b")
     k.add_level("c")
     k.add_level("d")
-    k.is_as_precise("c", "b")
-    k.is_as_precise("a", "b")
-    k.is_as_precise("d", "a")
+    k.set_more_precise_than("c", "b")
+    k.set_more_precise_than("a", "b")
+    k.set_more_precise_than("d", "a")
     assert k.more_precise_than("b") == [{"c", "a"}, "d"] and\
         k.more_precise_than("a") == ["d"] and\
         k.more_precise_than("d") == []
@@ -72,8 +72,8 @@ def test_numeric_options():
     k.add_level(-1)
     k.add_level("k")
     k.add_level("k+1")
-    k.is_as_precise("k+1", "k")
-    k.is_as_precise(-1, "k+1")
+    k.set_more_precise_than("k+1", "k")
+    k.set_more_precise_than(-1, "k+1")
     assert k.precision_compare(6, 7) == -1 and\
         k.precision_compare(-1, 100) == 1 and\
         k.precision_compare(2, 2) == 0

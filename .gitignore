@@ -131,10 +131,12 @@ dmypy.json
 .pyre/
 
 # Don't add generated scripts
-resources/generated/*
+resources/generated*
+resources/do_not_commit/*
 
 # Don't add Mac-specific files
 .DS_Store
 
 # Don't add .idea files
 .idea/*
+
