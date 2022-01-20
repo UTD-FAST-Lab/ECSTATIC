@@ -20,7 +20,8 @@ logger = logging.getLogger(__name__)
 
 
 def run_aql(apk: str,
-            xml_config_file: str) -> str:
+            xml_config_file: str,
+            verify: bool) -> str:
     """
     Runs Flowdroid given a config.
     The steps to running flowdroid are:
@@ -30,6 +31,8 @@ def run_aql(apk: str,
     try:
         # create output file
         output = os.path.abspath(xml_config_file) + '.aql.result'
+        if verify:
+            output += '.verify'
 
         if os.path.exists(output):
             print(f'Found result already for config {xml_config_file} on {apk}')
@@ -78,12 +81,15 @@ def run_aql(apk: str,
         return None
 
 
-def create_xml_config_file(shell_file_path: str, apk: str) -> XmlLocationAndFlowDroidOutput:
+def create_xml_config_file(shell_file_path: str, apk: str, verify: bool) -> XmlLocationAndFlowDroidOutput:
     """Fill out the template file with information from checkmate's config."""
     prefix = os.path.basename(shell_file_path).replace('.sh', '')
     xml_output_file = os.path.join(config.configuration['output_directory'],
                                    f"{prefix + '_' + category_and_apk(apk).replace('/', '_')}.xml")
     flowdroid_output = os.path.abspath(xml_output_file) + ".flowdroid.result"
+    if verify:
+        xml_output_file += '.verify'
+        flowdroid_output += '.verify'
     if not os.path.exists(xml_output_file):
         logger.info(f'Creating {xml_output_file}')
         aql_config = ElementTree.parse(config.configuration['aql_template_location'])
@@ -197,14 +203,14 @@ class FuzzRunner:
     def __init__(self, apk_location: str):
         self.apk_location = apk_location
 
-    def run_job(self, job: FuzzingJob) -> Dict[str, Union[str, float]]:
+    def run_job(self, job: FuzzingJob, verify: bool = False) -> Dict[str, Union[str, float]]:
         try:
             start_time: float = time.time()
             result_location: str
             shell_location: str = create_shell_file(job.configuration)
-            xml_location: str = create_xml_config_file(shell_location, job.apk)
+            xml_location: str = create_xml_config_file(shell_location, job.apk, verify)
             print(f'Running job with configuration {xml_location} on apk {job.apk}')
-            result_location = run_aql(job.apk, xml_location)
+            result_location = run_aql(job.apk, xml_location, verify)
             print(f'Job on configuration {xml_location} on apk {job.apk} done.')
             classified: Dict[str, Set[Flow]] = num_tp_fp_fn(result_location, job.apk)
 

@@ -8,9 +8,6 @@ from typing import List, Dict
 from frozendict import frozendict
 from fuzzingbook.GrammarCoverageFuzzer import GrammarCoverageFuzzer
 from fuzzingbook.Grammars import convert_ebnf_grammar, Grammar
-from fuzzingbook.GreyboxFuzzer import Mutator, PowerSchedule
-from fuzzingbook.GreyboxGrammarFuzzer import GreyboxGrammarFuzzer, FragmentMutator, LangFuzzer, RegionMutator
-from fuzzingbook.Parser import EarleyParser
 
 from checkmate.fuzzing.flowdroid_grammar import FlowdroidGrammar
 from checkmate.models.Level import Level
@@ -91,6 +88,7 @@ class FuzzGenerator:
         self.flowdroid_ebnf_grammar: Grammar = FlowdroidGrammar.get_grammar()
         self.flowdroid_grammar = convert_ebnf_grammar(self.flowdroid_ebnf_grammar)
         self.fuzzer = GrammarCoverageFuzzer(self.flowdroid_grammar)
+        random.seed(2001)
         with open(model_location, 'rb') as f:
             self.model = pickle.load(f)
 
