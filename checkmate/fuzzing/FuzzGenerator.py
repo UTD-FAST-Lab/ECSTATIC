@@ -23,6 +23,12 @@ from checkmate.util.config import configuration
 logger = logging.getLogger(__name__)
 
 
+def fill_out_defaults(model: Tool, config: Dict[Option, Level]) -> Dict[Option, Level]:
+    for o in model.get_options():
+        if o not in config:
+            config[o] = o.get_default()
+
+
 def mutate_config(model: Tool, config: Dict[Option, Level]) -> List[ConfigWithMutatedOption]:
     """
     Given a configuration, generate every potential mutant of it that uses a configuration option in a partial
@@ -75,8 +81,8 @@ def get_apks(directory: str) -> List[str]:
             if f.endswith('.apk'):
                 yield os.path.join(root, f)
 
-class FuzzGenerator:
 
+class FuzzGenerator:
     FIRST_RUN = True
 
     def __init__(self, model_location: str):
@@ -102,7 +108,9 @@ class FuzzGenerator:
                     break
                 except ValueError as ve:
                     logger.warning(f'Produced config {config_to_try}, which is invalid. Trying again.')
-        print(f"Configuration is {[(str(k),str(v)) for k, v  in fuzzed_config.items()]}")
+
+        fuzzed_config = fill_out_defaults(fuzzed_config)
+        print(f"Configuration is {[(str(k), str(v)) for k, v in fuzzed_config.items()]}")
         candidates: List[ConfigWithMutatedOption] = mutate_config(self.model, fuzzed_config)
         logger.info(f"Generated {len(candidates)} single-option mutant configurations.")
         results: List[FuzzingJob] = list()
