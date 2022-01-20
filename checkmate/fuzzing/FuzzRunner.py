@@ -206,5 +206,5 @@ class FuzzRunner:
                 configuration_location=xml_location,
                 detected_flows=classified)
         except (KeyboardInterrupt, TimeoutError, RuntimeError) as ex:
-            logger.exception(f'Failed to run configuration {xml_location} on apk {job.apk}')
+            #logger.exception(f'Failed to run configuration {xml_location} on apk {job.apk}')
             return None
