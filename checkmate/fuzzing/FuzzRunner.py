@@ -115,10 +115,11 @@ def create_xml_config_file(shell_file_path: str, apk: str, verify: bool) -> XmlL
 
 
 def dict_hash(dictionary: Dict[str, Any]) -> str:
-    """MD5 hash of a dictionary."""
+    """MD5 hash of a dictionary.
+    Coopied from https://www.doc.ic.ac.uk/~nuric/coding/how-to-hash-a-dictionary-in-python.html
+    """
     dhash = hashlib.md5()
     clone = {str(k): str(v) for k, v in dictionary.items()}
-    print(f'Clone is {clone}')
     # We need to sort arguments so {'a': 1, 'b': 2} is
     # the same as {'b': 2, 'a': 1}
     encoded = json.dumps(clone, sort_keys=True).encode()
@@ -132,7 +133,7 @@ def create_shell_file(configuration: Dict[Option, Level]) -> str:
     hash_value = dict_hash(configuration)
     shell_file_name = os.path.join(config.configuration['output_directory'],
                                    f"{dict_hash(configuration)}.sh")
-    print(f'Hash is {hash_value}')
+    logger.info(f'Hash is {hash_value}')
     raise RuntimeError
     logger.info(f'Hashed configuration {config_as_string} to {os.path.basename(shell_file_name)}')
     if not os.path.exists(shell_file_name):
