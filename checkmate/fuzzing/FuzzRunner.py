@@ -132,10 +132,7 @@ def create_shell_file(configuration: Dict[Option, Level]) -> str:
     config_str = dict_to_config_str(configuration)
     hash_value = dict_hash(configuration)
     shell_file_name = os.path.join(config.configuration['output_directory'],
-                                   f"{dict_hash(configuration)}.sh")
-    logger.info(f'Hash is {hash_value}')
-    raise RuntimeError
-    logger.info(f'Hashed configuration {config_as_string} to {os.path.basename(shell_file_name)}')
+                                   f"{hash_value}.sh")
     if not os.path.exists(shell_file_name):
         logger.debug(f'Creating shell file {shell_file_name}')
         with open(config.configuration['shell_template_location'], 'r') as infile:
