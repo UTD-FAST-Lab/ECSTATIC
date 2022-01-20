@@ -210,6 +210,11 @@ class Option:
     def __str__(self):
         return self.name
 
+    def __lt__(self, other):
+        if not isinstance(other, Option):
+            raise TypeError('Can only compare options to options.')
+        return self.name < other.name
+
     def as_dict(self):
         return {'name': self.name,
                 'precision': self.precision,
