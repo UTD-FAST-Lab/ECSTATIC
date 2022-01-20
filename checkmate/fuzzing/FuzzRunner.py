@@ -125,7 +125,7 @@ def create_shell_file(configuration: Dict[Option, Level]) -> str:
     hash_value = dict_hash(configuration)
     shell_file_name = os.path.join(config.configuration['output_directory'],
                                    f"{dict_hash(configuration)}.sh")
-    print(f'Hash is {hash_value.hexdigest()}')
+    print(f'Hash is {hash_value}')
     raise RuntimeError
     logger.info(f'Hashed configuration {config_as_string} to {os.path.basename(shell_file_name)}')
     if not os.path.exists(shell_file_name):
