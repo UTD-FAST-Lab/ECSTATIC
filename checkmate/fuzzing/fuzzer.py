@@ -36,7 +36,6 @@ class Fuzzer:
             campaign_index += 1
             campaign: FuzzingCampaign = self.generator.generate_campaign()
             print("Got new fuzzing campaign.")
-            continue
             start = time.time()
             with Pool(self.num_processes) as p:
                 results = list(p.map(self.runner.run_job, campaign.jobs))
