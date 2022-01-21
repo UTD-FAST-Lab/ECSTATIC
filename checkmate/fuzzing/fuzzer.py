@@ -36,6 +36,7 @@ class Fuzzer:
             campaign_index += 1
             campaign: FuzzingCampaign = self.generator.generate_campaign()
             print("Got new fuzzing campaign.")
+            continue
             start = time.time()
             with Pool(self.num_processes) as p:
                 results = list(p.map(self.runner.run_job, campaign.jobs))
@@ -147,10 +148,12 @@ class Fuzzer:
 
                     if violated:
                         # Run again to check.
-                        os.remove(candidate.results_location)
-                        os.remove(finished_run.results_location)
-                        verify = (self.runner.run_job(candidate.job), self.runner.run_job(finished_run.job))
-                        violated = len(verify[0].detected_flows['tp'].difference(verify[1].detected_flows['fp'])) > 0
+                        print('Verifying violation.')
+                        verify = (self.runner.run_job(candidate.job, True), self.runner.run_job(finished_run.job, True))
+                        try:
+                            violated = len(verify[0].detected_flows['tp'].difference(verify[1].detected_flows['tp'])) > 0
+                        except AttributeError: # in case one of the jobs is None
+                            violated = False
 
                     if violated:
                         logger.info('Detected soundness violation!')
