@@ -13,6 +13,7 @@ args = p.parse_args()
 from typing import Tuple, List, Set
 from pathlib import Path
 import logging
+logging.basicConfig(level=logging.DEBUG)
 
 
 def get_config_name_from_apk_name(apk_name: str) -> Tuple[str, str]:
