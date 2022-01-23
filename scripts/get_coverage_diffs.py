@@ -25,7 +25,7 @@ def get_config_name_from_apk_name(apk_name: str) -> Tuple[str, str]:
 
 
 def get_apk_name_from_apk_name(apk_name: str) -> Path:
-    toks = os.path.split('_')
+    toks = apk_name.split('_')
     apk_name = f'{toks[-4]}_{toks[-3]}'
     logging.info(f'Apk name is {apk_name}')
     return apk_name
