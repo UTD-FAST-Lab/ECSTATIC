@@ -45,7 +45,7 @@ def main():
 
     # Write diff to file
     with open(os.path.join(args.diffs_location, f'{args.apk}.diff'), 'w') as f:
-        f.writelines(list(coverage_set1.difference(coverage_set2)))
+        f.writelines([f'{l}\n' for l in list(coverage_set1.difference(coverage_set2))])
 
 
 def read_coverage(output_file: str) -> Set[str]:
