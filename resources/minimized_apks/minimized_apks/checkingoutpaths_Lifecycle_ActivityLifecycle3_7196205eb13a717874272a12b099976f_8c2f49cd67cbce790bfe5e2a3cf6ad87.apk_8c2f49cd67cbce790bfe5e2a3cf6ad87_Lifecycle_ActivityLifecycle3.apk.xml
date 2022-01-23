@@ -1,0 +1,60 @@
+<answer time="8938.9713909477">
+    <flows>
+        <flow>
+            <reference type="to">
+                <statement>
+                    <statementfull>virtualinvoke $r3.&lt;android.telephony.SmsManager: void sendTextMessage(java.lang.String,java.lang.String,java.lang.String,android.app.PendingIntent,android.app.PendingIntent)&gt;("+49 1234", null, $r2, null, null)</statementfull>
+                    <statementgeneric>android.telephony.SmsManager: void sendTextMessage(java.lang.String,java.lang.String,java.lang.String,android.app.PendingIntent,android.app.PendingIntent)</statementgeneric>
+                    <parameters>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>"+49 1234"</value>
+                        </parameter>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>null</value>
+                        </parameter>
+                        <parameter>
+                            <type>java.lang.String</type>
+                            <value>$r2</value>
+                        </parameter>
+                        <parameter>
+                            <type>android.app.PendingIntent</type>
+                            <value>null</value>
+                        </parameter>
+                        <parameter>
+                            <type>android.app.PendingIntent</type>
+                            <value>null</value>
+                        </parameter>
+                    </parameters>
+                </statement>
+                <method>&lt;de.ecspride.MainActivity: void onRestoreInstanceState(android.os.Bundle)&gt;</method>
+                <classname>de.ecspride.MainActivity</classname>
+                <app>
+                    <file>debugger/minimized_apks/checkingoutpaths_Lifecycle_ActivityLifecycle3_7196205eb13a717874272a12b099976f_8c2f49cd67cbce790bfe5e2a3cf6ad87.apk</file>
+                    <hashes>
+                        <hash type="MD5">b379cbe01225e922a10d137610e87bfc</hash>
+                        <hash type="SHA-1">3722cd37996473222eb5cfb677190ef908789830</hash>
+                        <hash type="SHA-256">1fe644bdc927bcb2b38031748193b7bc5cfd70a57238fb13ec908c7bb18648a6</hash>
+                    </hashes>
+                </app>
+            </reference>
+            <reference type="from">
+                <statement>
+                    <statementfull>$r4 = virtualinvoke $r3.&lt;android.telephony.TelephonyManager: java.lang.String getSubscriberId()&gt;()</statementfull>
+                    <statementgeneric>android.telephony.TelephonyManager: java.lang.String getSubscriberId()</statementgeneric>
+                </statement>
+                <method>&lt;de.ecspride.MainActivity: void onSaveInstanceState(android.os.Bundle)&gt;</method>
+                <classname>de.ecspride.MainActivity</classname>
+                <app>
+                    <file>debugger/minimized_apks/checkingoutpaths_Lifecycle_ActivityLifecycle3_7196205eb13a717874272a12b099976f_8c2f49cd67cbce790bfe5e2a3cf6ad87.apk</file>
+                    <hashes>
+                        <hash type="MD5">b379cbe01225e922a10d137610e87bfc</hash>
+                        <hash type="SHA-1">3722cd37996473222eb5cfb677190ef908789830</hash>
+                        <hash type="SHA-256">1fe644bdc927bcb2b38031748193b7bc5cfd70a57238fb13ec908c7bb18648a6</hash>
+                    </hashes>
+                </app>
+            </reference>
+        </flow>
+    </flows>
+</answer>
