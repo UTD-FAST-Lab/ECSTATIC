@@ -15,12 +15,18 @@ from pathlib import Path
 import logging
 
 
-def get_config_name_from_apk_name(apk_name: str) -> Tuple[Path, Path]:
-    raise NotImplementedError
+def get_config_name_from_apk_name(apk_name: str) -> Tuple[str, str]:
+    # Example name is january_real_Threading_Looper1_7baaab9e231dd6adfa7d2d5ed04ed0e8_42c84347476d849c5186279326650631.apk
+    toks = os.path.basename(apk_name).split('.')[0].split('_')
+    shell = (toks[-2], toks[-1])
+    logging.info(f'Shell is {shell}')
 
 
 def get_apk_name_from_apk_name(apk_name: str) -> Path:
-    raise NotImplementedError
+    toks = os.path.split('_')
+    apk_name = f'{toks[-4]}_{toks[-3]}'
+    logging.info(f'Apk name is {apk_name}')
+    return apk_name
 
 
 def main():
@@ -49,6 +55,7 @@ def run_script(apk: str, script_location: str) -> Path:
     if not os.path.exists(output_location):
         cmd = [script_location, "4", os.path.abspath(apk), config.configuration['android_platforms_location'],
                output_location]
+        logging.info(f'Cmd is {" ".join(cmd)}')
         subprocess.run(cmd)
 
     return output_location
