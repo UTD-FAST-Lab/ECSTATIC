@@ -8,6 +8,8 @@ p = argparse.ArgumentParser()
 p.add_argument('apk', help='apk to determine coverage of.')
 p.add_argument('-s', '--script_location', help='where the shell scripts are located.')
 p.add_argument('-c', '--coverage_location', help='coverage log location', default='./coverage')
+p.add_argument('-f', '--force', help='overwrite records.', action='store_true')
+p.add_argument('-d', '--diffs_location', help='where to store diffs', default='./diffs')
 args = p.parse_args()
 
 from typing import Tuple, List, Set
@@ -42,7 +44,7 @@ def main():
     coverage_set1, coverage_set2 = (read_coverage(outputfile1), read_coverage(outputfile2))
 
     # Write diff to file
-    with open(f'{args.apk}.diff', 'w') as f:
+    with open(os.path.join(args.diffs_location, f'{args.apk}.diff'), 'w') as f:
         f.writelines(list(coverage_set1.difference(coverage_set2)))
 
 
@@ -54,7 +56,7 @@ def read_coverage(output_file: str) -> Set[str]:
 def run_script(apk: str, script_location: str) -> Path:
     output_location = os.path.join(args.coverage_location,
                                    f'{script_location.replace(".sh", "")}_{get_apk_name_from_apk_name(apk)}.coverage')
-    if not os.path.exists(output_location):
+    if not (args.force or os.path.exists(output_location)):
         cmd = [os.path.join(args.script_location, script_location + ".sh"), "4", os.path.abspath(apk), config.configuration['android_platforms_location'],
                output_location]
         logging.info(f'Cmd is {" ".join(cmd)}')
