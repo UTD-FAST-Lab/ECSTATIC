@@ -56,7 +56,7 @@ def read_coverage(output_file: str) -> Set[str]:
 def run_script(apk: str, script_location: str) -> Path:
     output_location = os.path.join(args.coverage_location,
                                    f'{script_location.replace(".sh", "")}_{get_apk_name_from_apk_name(apk)}.coverage')
-    if not (args.force or os.path.exists(output_location)):
+    if args.force or not os.path.exists(output_location)):
         cmd = [os.path.join(args.script_location, script_location + ".sh"), "4", os.path.abspath(apk), config.configuration['android_platforms_location'],
                output_location]
         logging.info(f'Cmd is {" ".join(cmd)}')
