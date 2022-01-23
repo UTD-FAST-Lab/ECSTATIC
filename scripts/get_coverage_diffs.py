@@ -1,6 +1,7 @@
 import argparse
 import os
 import subprocess
+import time
 
 from checkmate.util import config
 
@@ -53,14 +54,16 @@ def read_coverage(output_file: str) -> Set[str]:
         return set([line.strip() for line in f.readlines() if line.startswith('COVERAGE:')])
 
 
-def run_script(apk: str, script_location: str) -> Path:
+def run_script(apk: str, script_location: str) -> str:
     output_location = os.path.join(args.coverage_location,
                                    f'{script_location.replace(".sh", "")}_{get_apk_name_from_apk_name(apk)}.coverage')
     if args.force or not os.path.exists(output_location):
         cmd = [os.path.join(args.script_location, script_location + ".sh"), "4", os.path.abspath(apk), config.configuration['android_platforms_location'],
                output_location]
+        start = time.time()
         logging.info(f'Cmd is {" ".join(cmd)}')
         subprocess.run(cmd)
+        print(f'Time for {output_location} is {time.time() - start}')
 
     return output_location
 
