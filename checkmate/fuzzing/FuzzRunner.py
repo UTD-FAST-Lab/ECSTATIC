@@ -187,6 +187,7 @@ def num_tp_fp_fn(output_file: str, apk_name: str) -> Dict[str, Set[Flow]]:
     )
     tp = [f for f in gt_flows if f.get_classification() == 'TRUE']
     fp = [f for f in gt_flows if f.get_classification() == 'FALSE']
+    print(f'{len(tp)} true positives and {len(fp)} false positives for this apk.')
     if len(set(fp)) > 0:
         logger.info(f'Found {len(set(fp))} false positives in {gt_flows}')
     result = dict()
