@@ -193,6 +193,8 @@ def num_tp_fp_fn(output_file: str, apk_name: str) -> Dict[str, Set[Flow]]:
     result['tp'] = (set(filter(lambda f: f in tp, output_flows)))
     result['fp'] = (set(filter(lambda f: f in fp, output_flows)))
     result['fn'] = (set(filter(lambda f: f not in tp, output_flows)))
+    logger.info(f'Found {len(result["tp"])} true positives.')
+    logger.info(f'Found {len(result["fp"])} false positives.')
     return result
 
 
