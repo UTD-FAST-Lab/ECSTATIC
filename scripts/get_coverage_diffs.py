@@ -50,7 +50,7 @@ def main():
     # Write diff to file
     with open(os.path.join(args.diffs_location, f'{os.path.basename(args.apk)}.diff'), 'w') as f:
         diff = coverage_set1 - coverage_set2
-        logging.debug(f'Size of diff is {diff}')
+        logging.debug(f'Size of diff is {len(diff)}')
         f.writelines([f'{l}\n' for l in diff])
 
 
