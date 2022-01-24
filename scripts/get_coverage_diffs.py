@@ -2,6 +2,7 @@ import argparse
 import os
 import subprocess
 import time
+import random
 
 from checkmate.util import config
 
@@ -44,9 +45,13 @@ def main():
     # Get coverage sets
     coverage_set1, coverage_set2 = (read_coverage(outputfile1), read_coverage(outputfile2))
 
+    logging.debug(f'Coverage set 1 contains {random.choices(coverage_set1, k=5)}')
+    logging.debug(f'Coverage set 2 contains {random.choices(coverage_set2, k=5)}')
     # Write diff to file
     with open(os.path.join(args.diffs_location, f'{os.path.basename(args.apk)}.diff'), 'w') as f:
-        f.writelines([f'{l}\n' for l in list(coverage_set1.difference(coverage_set2))])
+        diff = coverage_set1 - coverage_set2
+        logging.debug(f'Size of diff is {diff}')
+        f.writelines([f'{l}\n' for l in diff])
 
 
 def read_coverage(output_file: str) -> Set[str]:
