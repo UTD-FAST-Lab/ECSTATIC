@@ -1,0 +1,6 @@
+COVERAGE:soot/jimple/infoflow/cmd/MainClass:362
+COVERAGE:soot/jimple/infoflow/cmd/MainClass:813
+COVERAGE:soot/jimple/infoflow/results/InfoflowResults:235
+COVERAGE:soot/jimple/infoflow/Infoflow:691
+COVERAGE:soot/jimple/infoflow/solver/functions/SolverReturnFlowFunction:18
+COVERAGE:soot/jimple/infoflow/cmd/MainClass:812

@@ -1,0 +1,13 @@
+COVERAGE:soot/jimple/infoflow/aliasing/AbstractInteractiveAliasStrategy:15
+COVERAGE:soot/jimple/infoflow/Infoflow:905
+COVERAGE:soot/jimple/infoflow/cmd/MainClass:563
+COVERAGE:soot/jimple/infoflow/cmd/MainClass:560
+COVERAGE:soot/jimple/infoflow/cmd/MainClass:558
+COVERAGE:soot/jimple/infoflow/Infoflow:904
+COVERAGE:soot/jimple/infoflow/aliasing/LazyAliasingStrategy:23
+COVERAGE:soot/jimple/infoflow/aliasing/AbstractInteractiveAliasStrategy:14
+COVERAGE:soot/jimple/infoflow/Infoflow:903
+COVERAGE:soot/jimple/infoflow/Infoflow:902
+COVERAGE:soot/jimple/infoflow/aliasing/LazyAliasingStrategy:93
+COVERAGE:soot/jimple/infoflow/aliasing/LazyAliasingStrategy:22
+COVERAGE:soot/jimple/infoflow/cmd/MainClass:562
