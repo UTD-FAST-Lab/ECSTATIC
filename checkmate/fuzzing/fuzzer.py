@@ -36,7 +36,7 @@ class Fuzzer:
             campaign_index += 1
             campaign: FuzzingCampaign = self.generator.generate_campaign()
             print("Got new fuzzing campaign.")
-            if i == 4:
+            if campaign_index == 4:
                 continue
             start = time.time()
             with Pool(self.num_processes) as p:
