@@ -158,11 +158,6 @@ def create_models(location, transitive):
     for k in ['NONE', 'LAZY', 'DEFAULT', 'PTSBASED']:
         o.add_level(k)
     o.add_tag(Tag.OBJECT)
-    o.set_more_sound_than('LAZY', 'NONE')
-    o.set_more_sound_than('DEFAULT', 'NONE')
-    o.set_more_sound_than('PTSBASED', 'NONE')
-    o.set_more_precise_than('DEFAULT', 'LAZY')
-    o.set_more_precise_than('DEFAULT', 'PTSBASED')
     o.set_default('DEFAULT')
     fd.add_option(o)
 
@@ -178,7 +173,6 @@ def create_models(location, transitive):
     o1 = Option('implicit')
     for k in ['DEFAULT', 'ARRAYONLY', 'ALL']:
         o1.add_level(k)
-    o1.set_more_sound_than('ALL', 'ARRAYONLY')
     o1.set_more_sound_than('ARRAYONLY', 'DEFAULT')
     o1.add_tag(Tag.TAINT_ANALYSIS_SPECIFIC)
     o1.set_default('DEFAULT')

@@ -96,7 +96,7 @@ class FuzzGenerator:
         """
         This method generates the next task for the fuzzer.
         """
-        if FuzzGenerator.FIRST_RUN:
+        if not FuzzGenerator.FIRST_RUN:
             logger.info("First run, returning default configuration.")
             fuzzed_config = process_config(self.model, FlowdroidGrammar.get_default())
             FuzzGenerator.FIRST_RUN = False
