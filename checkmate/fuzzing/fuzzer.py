@@ -22,17 +22,18 @@ class Fuzzer:
     runner: FuzzRunner
     unverified_violations: List[Tuple[FuzzingJob.FuzzingJob, FuzzingJob.FuzzingJob]]
 
-    def __init__(self, model_location: str, num_processes: int, num_campaigns: int):
+    def __init__(self, model_location: str, num_processes: int, num_campaigns: int, validate: bool):
         self.generator = FuzzGenerator(model_location)
         self.runner = FuzzRunner(config.configuration['apk_location'])
         self.unverified_violations = list()
         self.num_processes = num_processes
         self.num_campaigns = num_campaigns
+        self.validate = validate
 
     def main(self):
         campaign_index = 0
 
-        while True:
+        while campaign_index < self.num_campaigns:
             campaign_index += 1
             campaign: FuzzingCampaign = self.generator.generate_campaign()
             print("Got new fuzzing campaign.")
@@ -147,12 +148,13 @@ class Fuzzer:
                                 f'equal to {candidate.job.configuration[option_under_investigation]}')
                     violated = len(candidate.detected_flows['tp'].difference(finished_run.detected_flows['tp'])) > 0
 
-                    if violated:
+                    if violated and self.validate:
                         # Run again to check.
                         print('Verifying violation.')
                         verify = (self.runner.run_job(candidate.job, True), self.runner.run_job(finished_run.job, True))
                         try:
-                            violated = len(verify[0].detected_flows['tp'].difference(verify[1].detected_flows['tp'])) > 0
+                            violated = (verify[0].detected_flows['tp'].difference(verify[1].detected_flows['tp'])) == \
+                                       (candidate.detected_flows['tp'].difference(finished_run.detected_flows['tp']))
                         except AttributeError: # in case one of the jobs is None
                             violated = False
 
@@ -176,12 +178,13 @@ class Fuzzer:
                     logger.info(f'{finished_run.job.configuration[option_under_investigation]} is more precise than or '
                                 f'equal to {candidate.job.configuration[option_under_investigation]}')
                     violated = len(finished_run.detected_flows['fp'].difference(candidate.detected_flows['fp'])) > 0
-                    if violated:
+                    if violated and self.validate:
                         # Run again to check.
                         print('Verifying violation.')
                         verify = (self.runner.run_job(candidate.job, True), self.runner.run_job(finished_run.job, True))
                         try:
-                            violated = len(verify[1].detected_flows['fp'].difference(verify[0].detected_flows['fp'])) > 0
+                            violated = (verify[1].detected_flows['fp'].difference(verify[0].detected_flows['fp'])) == \
+                                       (finished_run.detected_flows['fp'].difference(candidate.detected_flows['fp']))
                         except AttributeError: # in case one of the jobs is None
                             violated = False
 
