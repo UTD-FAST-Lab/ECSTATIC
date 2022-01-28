@@ -1,0 +1,14 @@
+COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$2:454
+COVERAGE:soot/jimple/internal/AbstractVirtualInvokeExpr:90
+COVERAGE:soot/jimple/infoflow/data/SourceContextAndPath:237
+COVERAGE:soot/jimple/internal/AbstractVirtualInvokeExpr:89
+COVERAGE:soot/jimple/infoflow/memory/MemoryWarningSystem:100
+COVERAGE:soot/jimple/infoflow/problems/rules/PropagationRuleManager:146
+COVERAGE:soot/jimple/internal/AbstractVirtualInvokeExpr:88
+COVERAGE:soot/jimple/infoflow/codeOptimization/InterproceduralConstantValuePropagator:865
+COVERAGE:soot/jimple/infoflow/cmd/MainClass:813
+COVERAGE:soot/jimple/infoflow/cmd/MainClass:812
+COVERAGE:soot/jimple/internal/AbstractVirtualInvokeExpr:93
+COVERAGE:soot/jimple/infoflow/cmd/MainClass:362
+COVERAGE:soot/jimple/NullConstant:48
+COVERAGE:soot/jimple/infoflow/problems/rules/SkipSystemClassRule:49

@@ -1,0 +1,7 @@
+COVERAGE:soot/jimple/infoflow/cmd/MainClass:813
+COVERAGE:soot/jimple/infoflow/Infoflow:691
+COVERAGE:soot/jimple/infoflow/memory/MemoryWarningSystem:163[main]
+COVERAGE:soot/jimple/infoflow/memory/MemoryWarningSystem:101
+COVERAGE:soot/jimple/infoflow/cmd/MainClass:362
+COVERAGE:soot/jimple/infoflow/cmd/MainClass:812
+COVERAGE:soot/jimple/infoflow/results/InfoflowResults:235

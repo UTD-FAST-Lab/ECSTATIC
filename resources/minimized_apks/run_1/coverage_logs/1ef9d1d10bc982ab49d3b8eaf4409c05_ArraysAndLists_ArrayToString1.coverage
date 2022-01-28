@@ -475,7 +475,7 @@ COVERAGE:soot/jimple/infoflow/cmd/MainClass:304
 COVERAGE:soot/jimple/infoflow/cmd/MainClass:305
 COVERAGE:soot/jimple/infoflow/cmd/MainClass:310
 COVERAGE:soot/jimple/infoflow/cmd/MainClass:311
-[main] INFO soot.jimple.infoflow.cmd.MainClass - Analyzing app /home/asm140830/Documents/git/AndroidTA_FaultLocalization/fuzzing/checkmate/resources/minimized_apks/minimized_apks/january_real_ArraysAndLists_ArrayToString1_8c1eb69cc117c307729ac97fd5f617a1_1ef9d1d10bc982ab49d3b8eaf4409c05.apk (1 of 1)...
+[main] INFO soot.jimple.infoflow.cmd.MainClass - Analyzing app /home/asm140830/Documents/git/AndroidTA_FaultLocalization/fuzzing/checkmate/resources/minimized_apks/minimized_apks/january_real_no_opt_droidbench_soundness_ArraysAndLists_ArrayToString1_8c1eb69cc117c307729ac97fd5f617a1_1ef9d1d10bc982ab49d3b8eaf4409c05.apk (1 of 1)...
 COVERAGE:soot/jimple/infoflow/cmd/MainClass:314
 COVERAGE:soot/jimple/infoflow/cmd/MainClass:315
 COVERAGE:soot/jimple/infoflow/cmd/MainClass:329
@@ -5940,7 +5940,7 @@ COVERAGE:soot/jimple/infoflow/android/resources/AbstractResourceParser:77
 COVERAGE:soot/jimple/infoflow/android/resources/AbstractResourceParser:78
 COVERAGE:soot/jimple/infoflow/android/resources/ARSCFileParser:1992
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:430
-[main] INFO soot.jimple.infoflow.android.SetupApplication - ARSC file parsing took 0.149697125 seconds
+[main] INFO soot.jimple.infoflow.android.SetupApplication - ARSC file parsing took 0.098771298 seconds
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:431
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1340
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1342
@@ -13629,7 +13629,7 @@ COVERAGE:soot/jimple/infoflow/android/SetupApplication:1397
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1398
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1399
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1400
-[main] INFO soot.jimple.infoflow.android.SetupApplication - Collecting callbacks and building a callgraph took 8 seconds
+[main] INFO soot.jimple.infoflow.android.SetupApplication - Collecting callbacks and building a callgraph took 9 seconds
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1402
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:327
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1403
@@ -13638,7 +13638,7 @@ COVERAGE:soot/jimple/infoflow/android/SetupApplication:1404
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1405
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1410
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1411
-[main] INFO soot.jimple.infoflow.android.SetupApplication - Running data flow analysis on /home/asm140830/Documents/git/AndroidTA_FaultLocalization/fuzzing/checkmate/resources/minimized_apks/minimized_apks/january_real_ArraysAndLists_ArrayToString1_8c1eb69cc117c307729ac97fd5f617a1_1ef9d1d10bc982ab49d3b8eaf4409c05.apk with 39 sources and 126 sinks...
+[main] INFO soot.jimple.infoflow.android.SetupApplication - Running data flow analysis on /home/asm140830/Documents/git/AndroidTA_FaultLocalization/fuzzing/checkmate/resources/minimized_apks/minimized_apks/january_real_no_opt_droidbench_soundness_ArraysAndLists_ArrayToString1_8c1eb69cc117c307729ac97fd5f617a1_1ef9d1d10bc982ab49d3b8eaf4409c05.apk with 39 sources and 126 sinks...
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1416
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1422
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1489
@@ -14233,7 +14233,7 @@ COVERAGE:soot/jimple/infoflow/codeOptimization/DeadCodeEliminator:82
 COVERAGE:soot/jimple/infoflow/codeOptimization/DeadCodeEliminator:99
 COVERAGE:soot/jimple/infoflow/Infoflow:1028
 COVERAGE:soot/jimple/infoflow/Infoflow:285
-[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Dead code elimination took 0.217750649 seconds
+[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Dead code elimination took 0.222648596 seconds
 COVERAGE:soot/jimple/infoflow/Infoflow:290
 COVERAGE:soot/jimple/infoflow/Infoflow:295
 COVERAGE:soot/jimple/infoflow/Infoflow:296
@@ -15079,17 +15079,19 @@ COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:265
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:266
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:647
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:204
-COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver$PathEdgeProcessingTask:732
-COVERAGE:soot/jimple/infoflow/solver/cfg/InfoflowCFG:187
-COVERAGE:soot/jimple/toolkits/ide/icfg/AbstractJimpleBasedICFG:190
-COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver$PathEdgeProcessingTask:733
 COVERAGE:soot/jimple/infoflow/data/Abstraction:405
 COVERAGE:soot/jimple/infoflow/data/Abstraction:406
+COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver$PathEdgeProcessingTask:732
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:205
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:206
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:187
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:215
+COVERAGE:soot/jimple/infoflow/solver/cfg/InfoflowCFG:187
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:242
+COVERAGE:soot/jimple/infoflow/solver/executors/InterruptableExecutor:67
+COVERAGE:soot/jimple/toolkits/ide/icfg/AbstractJimpleBasedICFG:190
+COVERAGE:soot/jimple/infoflow/solver/executors/InterruptableExecutor:71
+COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver$PathEdgeProcessingTask:733
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:277
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:278
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:280
@@ -15103,8 +15105,6 @@ COVERAGE:soot/jimple/toolkits/ide/icfg/AbstractJimpleBasedICFG:106
 COVERAGE:soot/jimple/toolkits/ide/icfg/AbstractJimpleBasedICFG:116
 COVERAGE:soot/jimple/toolkits/ide/icfg/AbstractJimpleBasedICFG$1:63
 COVERAGE:soot/jimple/infoflow/cfg/DefaultBiDiICFGFactory$1:70
-COVERAGE:soot/jimple/infoflow/solver/executors/InterruptableExecutor:67
-COVERAGE:soot/jimple/infoflow/solver/executors/InterruptableExecutor:71
 COVERAGE:soot/dexpler/DalvikThrowAnalysis:185
 COVERAGE:soot/G:124
 COVERAGE:soot/G:125
@@ -15283,8 +15283,6 @@ COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:341
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:342
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver$PathEdgeProcessingTask:742
 COVERAGE:soot/jimple/infoflow/solver/executors/SetPoolExecutor:36
-COVERAGE:soot/jimple/infoflow/solver/executors/SetPoolExecutor:37
-COVERAGE:soot/jimple/infoflow/solver/executors/SetPoolExecutor:38
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver$PathEdgeProcessingTask:737
 COVERAGE:soot/jimple/infoflow/solver/cfg/InfoflowCFG:162
 COVERAGE:soot/jimple/toolkits/ide/icfg/AbstractJimpleBasedICFG:138
@@ -15301,6 +15299,8 @@ COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:560
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:564
 COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1:350
 COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1:353
+COVERAGE:soot/jimple/infoflow/solver/executors/SetPoolExecutor:37
+COVERAGE:soot/jimple/infoflow/solver/executors/SetPoolExecutor:38
 COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$1:353
 COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$NotifyingNormalFlowFunction:91
 COVERAGE:soot/jimple/infoflow/solver/functions/SolverNormalFlowFunction:15
@@ -15601,8 +15601,6 @@ COVERAGE:soot/jimple/infoflow/problems/BackwardsInfoflowProblem$1$1:421
 COVERAGE:soot/jimple/infoflow/problems/BackwardsInfoflowProblem$1:119
 COVERAGE:soot/jimple/infoflow/problems/BackwardsInfoflowProblem$1:123
 COVERAGE:soot/jimple/infoflow/problems/BackwardsInfoflowProblem$1:126
-COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1:741
-COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1:196
 COVERAGE:soot/jimple/infoflow/collect/MutableTwoElementSet:30
 COVERAGE:soot/jimple/infoflow/collect/MutableTwoElementSet:31
 COVERAGE:soot/jimple/infoflow/collect/MutableTwoElementSet:32
@@ -15613,16 +15611,9 @@ COVERAGE:soot/jimple/infoflow/aliasing/Aliasing:363
 COVERAGE:soot/jimple/infoflow/aliasing/Aliasing:364
 COVERAGE:soot/jimple/infoflow/problems/BackwardsInfoflowProblem$1:131
 COVERAGE:soot/jimple/infoflow/problems/BackwardsInfoflowProblem$1:139
-COVERAGE:soot/jimple/infoflow/problems/rules/SinkPropagationRule:118
 COVERAGE:soot/jimple/toolkits/ide/icfg/BackwardsInterproceduralCFG:85
-COVERAGE:soot/jimple/infoflow/problems/rules/SinkPropagationRule:119
-COVERAGE:soot/jimple/infoflow/problems/rules/SinkPropagationRule:120
-COVERAGE:soot/jimple/infoflow/problems/rules/SinkPropagationRule:142
-COVERAGE:soot/jimple/infoflow/problems/rules/SinkPropagationRule:144
-COVERAGE:soot/jimple/infoflow/problems/rules/SinkPropagationRule:145
 COVERAGE:soot/jimple/infoflow/problems/BackwardsInfoflowProblem$1:140
-COVERAGE:soot/jimple/infoflow/util/SystemClassHandler:63
-COVERAGE:soot/jimple/infoflow/util/SystemClassHandler:64
+COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1:741
 COVERAGE:soot/jimple/infoflow/problems/BackwardsInfoflowProblem$1:144
 COVERAGE:soot/jimple/infoflow/problems/BackwardsInfoflowProblem$1:148
 COVERAGE:soot/jimple/infoflow/problems/BackwardsInfoflowProblem$1:152
@@ -15633,32 +15624,6 @@ COVERAGE:soot/jimple/infoflow/problems/BackwardsInfoflowProblem$1$1:423
 COVERAGE:soot/jimple/infoflow/problems/BackwardsInfoflowProblem$1$1:429
 COVERAGE:soot/jimple/infoflow/data/Abstraction:306
 COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$1:360
-COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:55
-COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:59
-COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:60
-COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:63
-COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:69
-COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:70
-COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:71
-COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:72
-COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:78
-COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:79
-COVERAGE:soot/jimple/infoflow/problems/rules/StrongUpdatePropagationRule:135
-COVERAGE:soot/jimple/infoflow/problems/rules/SkipSystemClassRule:78
-COVERAGE:soot/jimple/infoflow/problems/rules/SkipSystemClassRule:79
-COVERAGE:soot/jimple/infoflow/problems/rules/SkipSystemClassRule:64
-COVERAGE:soot/jimple/infoflow/problems/rules/SkipSystemClassRule:80
-COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:791
-COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:792
-COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:794
-COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:799
-COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:806
-COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:863
-COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:870
-COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:871
-COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:876
-COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:902
-COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:906
 COVERAGE:soot/jimple/infoflow/data/Abstraction:407
 COVERAGE:soot/jimple/infoflow/data/Abstraction:409
 COVERAGE:soot/jimple/infoflow/data/Abstraction:413
@@ -15686,6 +15651,52 @@ COVERAGE:soot/jimple/infoflow/data/Abstraction:530
 COVERAGE:soot/jimple/infoflow/data/Abstraction:534
 COVERAGE:soot/jimple/infoflow/data/Abstraction:535
 COVERAGE:soot/jimple/infoflow/data/Abstraction:536
+COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1:196
+COVERAGE:soot/jimple/infoflow/data/Abstraction$NeighborHashingStrategy:83
+COVERAGE:soot/jimple/infoflow/data/Abstraction$NeighborHashingStrategy:80
+COVERAGE:soot/jimple/infoflow/problems/rules/SinkPropagationRule:118
+COVERAGE:soot/jimple/infoflow/problems/rules/SinkPropagationRule:119
+COVERAGE:soot/jimple/infoflow/problems/rules/SinkPropagationRule:120
+COVERAGE:soot/jimple/infoflow/problems/rules/SinkPropagationRule:142
+COVERAGE:soot/jimple/infoflow/problems/rules/SinkPropagationRule:144
+COVERAGE:soot/jimple/infoflow/problems/rules/SinkPropagationRule:145
+COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:55
+COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:59
+COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:60
+COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:63
+COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:69
+COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:70
+COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:71
+COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:72
+COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:78
+COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:79
+COVERAGE:soot/jimple/infoflow/problems/rules/StrongUpdatePropagationRule:135
+COVERAGE:soot/jimple/infoflow/problems/rules/SkipSystemClassRule:78
+COVERAGE:soot/jimple/infoflow/problems/rules/SkipSystemClassRule:79
+COVERAGE:soot/jimple/infoflow/problems/rules/SkipSystemClassRule:64
+COVERAGE:soot/jimple/infoflow/problems/rules/SkipSystemClassRule:80
+COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:791
+COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:792
+COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:794
+COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:799
+COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:806
+COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:863
+COVERAGE:soot/jimple/infoflow/data/Abstraction:549
+COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:870
+COVERAGE:soot/jimple/infoflow/data/Abstraction$NeighborHashingStrategy:87
+COVERAGE:soot/jimple/infoflow/data/Abstraction$NeighborHashingStrategy:90
+COVERAGE:soot/jimple/infoflow/data/Abstraction$NeighborHashingStrategy:91
+COVERAGE:soot/jimple/infoflow/data/Abstraction$NeighborHashingStrategy:93
+COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:871
+COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:876
+COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:902
+COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:906
+COVERAGE:soot/jimple/infoflow/data/Abstraction$NeighborHashingStrategy:94
+COVERAGE:soot/jimple/infoflow/data/Abstraction$NeighborHashingStrategy:96
+COVERAGE:soot/jimple/infoflow/data/Abstraction$NeighborHashingStrategy:97
+COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:635
+COVERAGE:soot/jimple/infoflow/util/SystemClassHandler:63
+COVERAGE:soot/jimple/infoflow/util/SystemClassHandler:64
 COVERAGE:soot/jimple/infoflow/android/source/AndroidSourceSinkManager:323
 COVERAGE:soot/jimple/infoflow/android/source/AndroidSourceSinkManager:324
 COVERAGE:soot/jimple/infoflow/android/source/AndroidSourceSinkManager:325
@@ -15698,17 +15709,6 @@ COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:83
 COVERAGE:soot/jimple/infoflow/InfoflowConfiguration:1142
 COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:85
 COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:86
-COVERAGE:soot/jimple/infoflow/data/Abstraction$NeighborHashingStrategy:83
-COVERAGE:soot/jimple/infoflow/data/Abstraction$NeighborHashingStrategy:80
-COVERAGE:soot/jimple/infoflow/data/Abstraction:549
-COVERAGE:soot/jimple/infoflow/data/Abstraction$NeighborHashingStrategy:87
-COVERAGE:soot/jimple/infoflow/data/Abstraction$NeighborHashingStrategy:90
-COVERAGE:soot/jimple/infoflow/data/Abstraction$NeighborHashingStrategy:91
-COVERAGE:soot/jimple/infoflow/data/Abstraction$NeighborHashingStrategy:93
-COVERAGE:soot/jimple/infoflow/data/Abstraction$NeighborHashingStrategy:94
-COVERAGE:soot/jimple/infoflow/data/Abstraction$NeighborHashingStrategy:96
-COVERAGE:soot/jimple/infoflow/data/Abstraction$NeighborHashingStrategy:97
-COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:635
 COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:88
 COVERAGE:soot/jimple/infoflow/problems/rules/WrapperPropagationRule:92
 COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:767
@@ -16357,6 +16357,23 @@ COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:872
 COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:873
 COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:903
 COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:904
+COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver$PathEdgeProcessingTask:738
+COVERAGE:soot/jimple/infoflow/solver/fastSolver/InfoflowSolver:127
+COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:430
+COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:431
+COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:433
+COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:434
+COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:440
+COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:664
+COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:665
+COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:442
+COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:673
+COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:674
+COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:446
+COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:501
+COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:502
+COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:503
+COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:504
 COVERAGE:soot/jimple/infoflow/problems/rules/SinkPropagationRule:150
 COVERAGE:soot/jimple/infoflow/problems/rules/AbstractTaintPropagationRule:40
 COVERAGE:soot/jimple/infoflow/sourcesSinks/manager/SinkInfo:12
@@ -16390,56 +16407,6 @@ COVERAGE:soot/jimple/infoflow/problems/TaintPropagationResults:84
 COVERAGE:soot/jimple/infoflow/problems/TaintPropagationResults:88
 COVERAGE:soot/jimple/infoflow/problems/TaintPropagationResults:89
 COVERAGE:soot/jimple/infoflow/problems/TaintPropagationResults:92
-COVERAGE:soot/jimple/infoflow/methodSummary/data/summary/ClassSummaries:214
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:134
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:225
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:239
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:254
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:255
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:256
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:257
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:258
-COVERAGE:soot/jimple/infoflow/methodSummary/data/provider/XMLSummaryProvider:398
-COVERAGE:soot/jimple/infoflow/methodSummary/data/provider/XMLSummaryProvider:400
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:259
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:269
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:270
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:139
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:140
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:141
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:70
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1275
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1276
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1278
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1279
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1281
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1282
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1283
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1286
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1289
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1290
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1292
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1294
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:143
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:147
-COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:149
-COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver$PathEdgeProcessingTask:738
-COVERAGE:soot/jimple/infoflow/solver/fastSolver/InfoflowSolver:127
-COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:430
-COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:431
-COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:433
-COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:434
-COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:440
-COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:664
-COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:665
-COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:442
-COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:673
-COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:674
-COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:446
-COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:501
-COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:502
-COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:503
-COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:504
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:505
 COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1:488
 COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1:490
@@ -16546,12 +16513,45 @@ COVERAGE:soot/jimple/infoflow/solver/fastSolver/InfoflowSolver:135
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/InfoflowSolver:137
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/InfoflowSolver:138
 COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$SummaryFRPSHandler:413
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:70
 COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$SummaryFRPSHandler:414
 COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1890
 COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$SummaryFRPSHandler:415
 COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$SummaryFRPSHandler:416
 COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$SummaryFRPSHandler:457
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/InfoflowSolver:140
+COVERAGE:soot/jimple/infoflow/methodSummary/data/summary/ClassSummaries:214
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:134
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:225
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:239
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:254
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:255
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:256
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:257
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:258
+COVERAGE:soot/jimple/infoflow/methodSummary/data/provider/XMLSummaryProvider:398
+COVERAGE:soot/jimple/infoflow/methodSummary/data/provider/XMLSummaryProvider:400
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:259
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:269
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:270
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:139
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:140
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:141
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1275
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1276
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1278
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1279
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1281
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1282
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1283
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1286
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1289
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1290
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1292
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper:1294
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:143
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:147
+COVERAGE:soot/jimple/infoflow/methodSummary/taintWrappers/SummaryTaintWrapper$1:149
 COVERAGE:soot/jimple/infoflow/methodSummary/xml/SummaryReader:248
 COVERAGE:soot/jimple/infoflow/methodSummary/xml/SummaryReader:249
 COVERAGE:soot/jimple/infoflow/methodSummary/data/sourceSink/FlowSource:38
@@ -16664,7 +16664,7 @@ COVERAGE:soot/jimple/infoflow/Infoflow:538
 COVERAGE:soot/jimple/infoflow/Infoflow:551
 COVERAGE:soot/jimple/infoflow/results/InfoflowPerformanceData:201
 COVERAGE:soot/jimple/infoflow/Infoflow:552
-[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Current memory consumption: 288 MB
+[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Current memory consumption: 980 MB
 COVERAGE:soot/jimple/infoflow/Infoflow:554
 COVERAGE:soot/jimple/infoflow/Infoflow:556
 COVERAGE:soot/jimple/infoflow/memory/FlowDroidMemoryWatcher:96
@@ -16705,7 +16705,7 @@ COVERAGE:soot/jimple/infoflow/Infoflow:576
 COVERAGE:soot/jimple/infoflow/Infoflow:579
 COVERAGE:soot/jimple/infoflow/Infoflow:580
 COVERAGE:soot/jimple/infoflow/Infoflow:581
-[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Memory consumption after cleanup: 53 MB
+[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Memory consumption after cleanup: 52 MB
 COVERAGE:soot/jimple/infoflow/Infoflow:584
 COVERAGE:soot/jimple/infoflow/InfoflowConfiguration$PathConfiguration:393
 COVERAGE:soot/jimple/infoflow/Infoflow:590
@@ -16727,9 +16727,13 @@ COVERAGE:soot/jimple/infoflow/data/pathBuilders/ConcurrentAbstractionPathBuilder
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/BatchPathBuilder:48
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/ConcurrentAbstractionPathBuilder:37
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/ConcurrentAbstractionPathBuilder:40
+COVERAGE:soot/jimple/infoflow/memory/MemoryWarningSystem:100
 [main] INFO soot.jimple.infoflow.data.pathBuilders.ContextSensitivePathBuilder - Obtainted 1 connections between sources and sinks
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/ConcurrentAbstractionPathBuilder:43
+COVERAGE:soot/jimple/infoflow/memory/MemoryWarningSystem:163
+COVERAGE:soot/jimple/infoflow/memory/MemoryWarningSystem:101
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/ConcurrentAbstractionPathBuilder:47
+COVERAGE:soot/jimple/infoflow/memory/MemoryWarningSystem:102
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/ConcurrentAbstractionPathBuilder:48
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/ConcurrentAbstractionPathBuilder:50
 COVERAGE:soot/jimple/infoflow/solver/executors/InterruptableExecutor:42
@@ -16793,10 +16797,6 @@ COVERAGE:soot/jimple/infoflow/data/pathBuilders/ContextSensitivePathBuilder:209
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/ContextSensitivePathBuilder:157
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/ContextSensitivePathBuilder:158
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/ContextSensitivePathBuilder:210
-COVERAGE:soot/jimple/infoflow/memory/MemoryWarningSystem:100
-COVERAGE:soot/jimple/infoflow/memory/MemoryWarningSystem:163
-COVERAGE:soot/jimple/infoflow/memory/MemoryWarningSystem:101
-COVERAGE:soot/jimple/infoflow/memory/MemoryWarningSystem:102
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/ContextSensitivePathBuilder$SourceFindingTask:49
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/ContextSensitivePathBuilder$SourceFindingTask:50
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/ContextSensitivePathBuilder$SourceFindingTask:51
@@ -16862,12 +16862,10 @@ COVERAGE:soot/jimple/infoflow/data/pathBuilders/ContextSensitivePathBuilder$Sour
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/ContextSensitivePathBuilder$SourceFindingTask:121
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/ContextSensitivePathBuilder$SourceFindingTask:68
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/ContextSensitivePathBuilder:161
-COVERAGE:soot/jimple/infoflow/data/pathBuilders/ContextSensitivePathBuilder$SourceFindingTask:69
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/ContextSensitivePathBuilder:165
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/ContextSensitivePathBuilder:171
 COVERAGE:soot/jimple/infoflow/data/Abstraction:503
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/ContextSensitivePathBuilder:172
-COVERAGE:soot/jimple/infoflow/data/SourceContextAndPath:86
 COVERAGE:soot/jimple/infoflow/data/SourceContext:33
 COVERAGE:soot/jimple/infoflow/data/SourceContext:37
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/ContextSensitivePathBuilder:173
@@ -16880,8 +16878,9 @@ COVERAGE:soot/jimple/infoflow/results/InfoflowResults:155
 COVERAGE:soot/jimple/infoflow/results/InfoflowResults:156
 COVERAGE:soot/jimple/infoflow/results/InfoflowResults:168
 COVERAGE:soot/jimple/infoflow/results/InfoflowResults:193
+COVERAGE:soot/jimple/infoflow/data/pathBuilders/ContextSensitivePathBuilder$SourceFindingTask:69
+COVERAGE:soot/jimple/infoflow/data/SourceContextAndPath:86
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/ContextSensitivePathBuilder$SourceFindingTask:71
-COVERAGE:soot/jimple/infoflow/data/pathBuilders/ContextSensitivePathBuilder$SourceFindingTask:73
 COVERAGE:soot/jimple/infoflow/results/AbstractResultSourceSinkInfo:14
 COVERAGE:soot/jimple/infoflow/results/ResultSourceInfo:30
 COVERAGE:soot/jimple/infoflow/results/AbstractResultSourceSinkInfo:26
@@ -16921,6 +16920,7 @@ COVERAGE:soot/jimple/infoflow/results/InfoflowResults:226
 COVERAGE:soot/jimple/infoflow/results/InfoflowResults:198
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/ContextSensitivePathBuilder:177
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/ContextSensitivePathBuilder:181
+COVERAGE:soot/jimple/infoflow/data/pathBuilders/ContextSensitivePathBuilder$SourceFindingTask:73
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/BatchPathBuilder:70
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/BatchPathBuilder:71
 COVERAGE:soot/jimple/infoflow/data/pathBuilders/BatchPathBuilder:75
@@ -16970,11 +16970,11 @@ COVERAGE:soot/jimple/infoflow/Infoflow:679
 COVERAGE:soot/jimple/infoflow/results/InfoflowPerformanceData:84
 COVERAGE:soot/jimple/infoflow/results/InfoflowPerformanceData:85
 COVERAGE:soot/jimple/infoflow/Infoflow:681
-[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Memory consumption after path building: 52 MB
+[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Memory consumption after path building: 50 MB
 COVERAGE:soot/jimple/infoflow/Infoflow:682
 COVERAGE:soot/jimple/infoflow/Infoflow:683
 COVERAGE:soot/jimple/infoflow/results/InfoflowPerformanceData:73
-[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Path reconstruction took 0 seconds
+[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Path reconstruction took 1 seconds
 COVERAGE:soot/jimple/infoflow/Infoflow:684
 COVERAGE:soot/jimple/infoflow/Infoflow:687
 COVERAGE:soot/jimple/infoflow/Infoflow:688
@@ -17044,7 +17044,7 @@ COVERAGE:soot/jimple/infoflow/Infoflow:712
 COVERAGE:soot/jimple/infoflow/Infoflow:713
 COVERAGE:soot/jimple/infoflow/results/InfoflowPerformanceData:95
 COVERAGE:soot/jimple/infoflow/results/InfoflowPerformanceData:118
-[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Data flow solver took 4 seconds. Maximum memory consumption: 52 MB
+[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Data flow solver took 4 seconds. Maximum memory consumption: 50 MB
 COVERAGE:soot/jimple/infoflow/Infoflow:716
 COVERAGE:soot/jimple/infoflow/results/InfoflowResults:495
 COVERAGE:soot/jimple/infoflow/results/InfoflowResults:496

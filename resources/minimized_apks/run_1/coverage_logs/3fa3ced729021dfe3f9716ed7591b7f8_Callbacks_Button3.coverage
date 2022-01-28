@@ -481,7 +481,7 @@ COVERAGE:soot/jimple/infoflow/cmd/MainClass:304
 COVERAGE:soot/jimple/infoflow/cmd/MainClass:305
 COVERAGE:soot/jimple/infoflow/cmd/MainClass:310
 COVERAGE:soot/jimple/infoflow/cmd/MainClass:311
-[main] INFO soot.jimple.infoflow.cmd.MainClass - Analyzing app /home/asm140830/Documents/git/AndroidTA_FaultLocalization/fuzzing/checkmate/resources/minimized_apks/minimized_apks/january_real_Callbacks_Button3_3fa3ced729021dfe3f9716ed7591b7f8_c167cc6905f08070a40daaa496572761.apk (1 of 1)...
+[main] INFO soot.jimple.infoflow.cmd.MainClass - Analyzing app /home/asm140830/Documents/git/AndroidTA_FaultLocalization/fuzzing/checkmate/resources/minimized_apks/minimized_apks/january_real_no_opt_droidbench_soundness_Callbacks_Button3_3fa3ced729021dfe3f9716ed7591b7f8_c167cc6905f08070a40daaa496572761.apk (1 of 1)...
 COVERAGE:soot/jimple/infoflow/cmd/MainClass:314
 COVERAGE:soot/jimple/infoflow/cmd/MainClass:315
 COVERAGE:soot/jimple/infoflow/cmd/MainClass:329
@@ -5948,7 +5948,7 @@ COVERAGE:soot/jimple/infoflow/android/resources/AbstractResourceParser:77
 COVERAGE:soot/jimple/infoflow/android/resources/AbstractResourceParser:78
 COVERAGE:soot/jimple/infoflow/android/resources/ARSCFileParser:1992
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:430
-[main] INFO soot.jimple.infoflow.android.SetupApplication - ARSC file parsing took 0.057413204 seconds
+[main] INFO soot.jimple.infoflow.android.SetupApplication - ARSC file parsing took 0.063569956 seconds
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:431
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1340
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1342
@@ -12641,6 +12641,13 @@ COVERAGE:soot/jimple/toolkits/typing/fast/UseChecker:346
 COVERAGE:soot/jimple/toolkits/typing/fast/UseChecker:347
 COVERAGE:soot/jimple/toolkits/typing/fast/AugEvalFunction:273
 COVERAGE:soot/jimple/toolkits/typing/fast/BytecodeHierarchy:220
+COVERAGE:soot/jimple/toolkits/base/Aggregator:228
+COVERAGE:soot/jimple/toolkits/base/Aggregator:244
+COVERAGE:soot/jimple/toolkits/base/Aggregator:281
+COVERAGE:soot/jimple/toolkits/base/Aggregator:282
+COVERAGE:soot/jimple/toolkits/base/Aggregator:291
+COVERAGE:soot/jimple/toolkits/base/Aggregator:193
+COVERAGE:soot/jimple/toolkits/base/Aggregator:194
 COVERAGE:soot/util/TrustingMonotonicArraySet:120
 COVERAGE:soot/util/TrustingMonotonicArraySet:180
 COVERAGE:soot/util/TrustingMonotonicArraySet:183
@@ -12657,13 +12664,6 @@ COVERAGE:soot/toolkits/scalar/LocalPacker:147
 COVERAGE:soot/toolkits/scalar/SimpleLocalDefs:410
 COVERAGE:soot/toolkits/scalar/SimpleLocalDefs$FlowAssignment:197
 COVERAGE:soot/toolkits/scalar/SimpleLocalDefs$FlowAssignment:199
-COVERAGE:soot/jimple/toolkits/base/Aggregator:193
-COVERAGE:soot/jimple/toolkits/base/Aggregator:194
-COVERAGE:soot/jimple/toolkits/base/Aggregator:228
-COVERAGE:soot/jimple/toolkits/base/Aggregator:244
-COVERAGE:soot/jimple/toolkits/base/Aggregator:281
-COVERAGE:soot/jimple/toolkits/base/Aggregator:282
-COVERAGE:soot/jimple/toolkits/base/Aggregator:291
 COVERAGE:soot/jimple/infoflow/android/callbacks/FastCallbackAnalyzer:90
 COVERAGE:soot/jimple/infoflow/android/callbacks/FastCallbackAnalyzer:46
 COVERAGE:soot/jimple/infoflow/android/callbacks/FastCallbackAnalyzer:47
@@ -13456,7 +13456,7 @@ COVERAGE:soot/jimple/infoflow/android/SetupApplication:1397
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1398
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1399
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1400
-[main] INFO soot.jimple.infoflow.android.SetupApplication - Collecting callbacks and building a callgraph took 9 seconds
+[main] INFO soot.jimple.infoflow.android.SetupApplication - Collecting callbacks and building a callgraph took 11 seconds
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1402
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:327
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1403
@@ -13465,7 +13465,7 @@ COVERAGE:soot/jimple/infoflow/android/SetupApplication:1404
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1405
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1410
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1411
-[main] INFO soot.jimple.infoflow.android.SetupApplication - Running data flow analysis on /home/asm140830/Documents/git/AndroidTA_FaultLocalization/fuzzing/checkmate/resources/minimized_apks/minimized_apks/january_real_Callbacks_Button3_3fa3ced729021dfe3f9716ed7591b7f8_c167cc6905f08070a40daaa496572761.apk with 39 sources and 126 sinks...
+[main] INFO soot.jimple.infoflow.android.SetupApplication - Running data flow analysis on /home/asm140830/Documents/git/AndroidTA_FaultLocalization/fuzzing/checkmate/resources/minimized_apks/minimized_apks/january_real_no_opt_droidbench_soundness_Callbacks_Button3_3fa3ced729021dfe3f9716ed7591b7f8_c167cc6905f08070a40daaa496572761.apk with 39 sources and 126 sinks...
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1416
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1422
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1489
@@ -14149,7 +14149,7 @@ COVERAGE:soot/jimple/infoflow/codeOptimization/DeadCodeEliminator:82
 COVERAGE:soot/jimple/infoflow/codeOptimization/DeadCodeEliminator:99
 COVERAGE:soot/jimple/infoflow/Infoflow:1028
 COVERAGE:soot/jimple/infoflow/Infoflow:285
-[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Dead code elimination took 0.406840246 seconds
+[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Dead code elimination took 0.277291456 seconds
 COVERAGE:soot/jimple/infoflow/Infoflow:290
 COVERAGE:soot/jimple/infoflow/Infoflow:295
 COVERAGE:soot/jimple/infoflow/Infoflow:296
@@ -14841,7 +14841,7 @@ COVERAGE:soot/jimple/infoflow/Infoflow:712
 COVERAGE:soot/jimple/infoflow/Infoflow:713
 COVERAGE:soot/jimple/infoflow/results/InfoflowPerformanceData:95
 COVERAGE:soot/jimple/infoflow/results/InfoflowPerformanceData:118
-[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Data flow solver took 1 seconds. Maximum memory consumption: 724 MB
+[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Data flow solver took 1 seconds. Maximum memory consumption: 775 MB
 COVERAGE:soot/jimple/infoflow/Infoflow:716
 COVERAGE:soot/jimple/infoflow/results/InfoflowResults:495
 COVERAGE:soot/jimple/infoflow/results/InfoflowResults:496

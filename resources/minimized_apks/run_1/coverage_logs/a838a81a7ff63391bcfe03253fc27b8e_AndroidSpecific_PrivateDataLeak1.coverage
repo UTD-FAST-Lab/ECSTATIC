@@ -339,7 +339,7 @@ COVERAGE:soot/jimple/infoflow/cmd/MainClass:304
 COVERAGE:soot/jimple/infoflow/cmd/MainClass:305
 COVERAGE:soot/jimple/infoflow/cmd/MainClass:310
 COVERAGE:soot/jimple/infoflow/cmd/MainClass:311
-[main] INFO soot.jimple.infoflow.cmd.MainClass - Analyzing app /home/asm140830/Documents/git/AndroidTA_FaultLocalization/fuzzing/checkmate/resources/minimized_apks/minimized_apks/january_real_AndroidSpecific_PrivateDataLeak1_a838a81a7ff63391bcfe03253fc27b8e_e5613aad75bc3bad53f848ba14482c54.apk (1 of 1)...
+[main] INFO soot.jimple.infoflow.cmd.MainClass - Analyzing app /home/asm140830/Documents/git/AndroidTA_FaultLocalization/fuzzing/checkmate/resources/minimized_apks/minimized_apks/january_real_no_opt_droidbench_soundness_AndroidSpecific_PrivateDataLeak1_a838a81a7ff63391bcfe03253fc27b8e_e5613aad75bc3bad53f848ba14482c54.apk (1 of 1)...
 COVERAGE:soot/jimple/infoflow/cmd/MainClass:314
 COVERAGE:soot/jimple/infoflow/cmd/MainClass:315
 COVERAGE:soot/jimple/infoflow/cmd/MainClass:329
@@ -5919,7 +5919,7 @@ COVERAGE:soot/jimple/infoflow/android/resources/AbstractResourceParser:77
 COVERAGE:soot/jimple/infoflow/android/resources/AbstractResourceParser:78
 COVERAGE:soot/jimple/infoflow/android/resources/ARSCFileParser:1992
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:430
-[main] INFO soot.jimple.infoflow.android.SetupApplication - ARSC file parsing took 0.096474216 seconds
+[main] INFO soot.jimple.infoflow.android.SetupApplication - ARSC file parsing took 0.123106722 seconds
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:431
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1340
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1342
@@ -12181,7 +12181,6 @@ COVERAGE:soot/util/queue/QueueReader:80
 COVERAGE:soot/jimple/spark/sets/HybridPointsToSet:131
 COVERAGE:soot/jimple/spark/internal/TypeManager:213
 COVERAGE:soot/jimple/spark/solver/PropWorklist:294
-COVERAGE:soot/jimple/toolkits/callgraph/VirtualCalls:85
 COVERAGE:soot/jimple/toolkits/callgraph/VirtualCalls:115
 COVERAGE:soot/jimple/toolkits/callgraph/VirtualCalls:116
 COVERAGE:soot/jimple/toolkits/callgraph/VirtualCalls:117
@@ -12622,12 +12621,6 @@ COVERAGE:soot/dexpler/instructions/JumpInstruction:41
 COVERAGE:soot/dexpler/instructions/JumpInstruction:42
 COVERAGE:soot/dexpler/instructions/ConditionalJumpInstruction:45
 COVERAGE:soot/dexpler/instructions/IfTestzInstruction:43
-COVERAGE:soot/dexpler/instructions/InstructionFactory:111
-COVERAGE:soot/dexpler/instructions/ConstStringInstruction:46
-COVERAGE:soot/dexpler/instructions/ConstStringInstruction:47
-COVERAGE:soot/dexpler/instructions/InstructionFactory:252
-COVERAGE:soot/dexpler/instructions/InvokeStaticInstruction:36
-COVERAGE:soot/dexpler/instructions/InvokeStaticInstruction:37
 COVERAGE:soot/dexpler/instructions/ConditionalJumpInstruction:54
 COVERAGE:soot/dexpler/instructions/JumpInstruction:45
 COVERAGE:soot/dexpler/instructions/JumpInstruction:46
@@ -12641,25 +12634,6 @@ COVERAGE:soot/dexpler/instructions/ConditionalJumpInstruction:61
 COVERAGE:soot/dexpler/instructions/ConditionalJumpInstruction:62
 COVERAGE:soot/dexpler/instructions/ConditionalJumpInstruction:66
 COVERAGE:soot/dexpler/instructions/ConditionalJumpInstruction:71
-COVERAGE:soot/dexpler/instructions/ConstStringInstruction:51
-COVERAGE:soot/dexpler/instructions/ConstStringInstruction:53
-COVERAGE:soot/dexpler/instructions/ConstStringInstruction:54
-COVERAGE:soot/dexpler/instructions/ConstStringInstruction:55
-COVERAGE:soot/dexpler/instructions/ConstStringInstruction:56
-COVERAGE:soot/dexpler/instructions/ConstStringInstruction:62
-COVERAGE:soot/dexpler/instructions/ConstStringInstruction:63
-COVERAGE:soot/dexpler/instructions/ConstStringInstruction:64
-COVERAGE:soot/dexpler/instructions/ConstStringInstruction:65
-COVERAGE:soot/dexpler/instructions/ConstStringInstruction:66
-COVERAGE:soot/dexpler/instructions/ConstStringInstruction:71
-COVERAGE:soot/dexpler/instructions/InvokeStaticInstruction:46
-COVERAGE:soot/dexpler/instructions/MethodInvocationInstruction:421
-COVERAGE:soot/dexpler/instructions/MethodInvocationInstruction:422
-COVERAGE:soot/dexpler/instructions/MethodInvocationInstruction:219
-COVERAGE:soot/dexpler/instructions/MethodInvocationInstruction:423
-COVERAGE:soot/dexpler/instructions/MethodInvocationInstruction:424
-COVERAGE:soot/dexpler/instructions/MethodInvocationInstruction:425
-COVERAGE:soot/dexpler/instructions/InvokeStaticInstruction:47
 COVERAGE:soot/dexpler/DexBody:536
 COVERAGE:soot/dexpler/instructions/ConditionalJumpInstruction:76
 COVERAGE:soot/dexpler/instructions/IfTestzInstruction:47
@@ -12711,12 +12685,6 @@ COVERAGE:soot/jimple/internal/AbstractBinopExpr:70
 COVERAGE:soot/jimple/internal/AbstractBinopExpr:72
 COVERAGE:soot/jimple/internal/JIfStmt:135
 COVERAGE:soot/jimple/internal/JIfStmt:137
-COVERAGE:soot/jimple/internal/AbstractInvokeExpr:93
-COVERAGE:soot/jimple/internal/AbstractInvokeExpr:97
-COVERAGE:soot/jimple/internal/AbstractInvokeExpr:98
-COVERAGE:soot/jimple/internal/AbstractInvokeExpr:100
-COVERAGE:soot/jimple/internal/AbstractInvokeExpr:101
-COVERAGE:soot/jimple/internal/AbstractInvokeExpr:104
 COVERAGE:soot/dexpler/DexNumTransformer$2:248
 COVERAGE:soot/dexpler/DexNumTransformer$2:249
 COVERAGE:soot/dexpler/DexNumTransformer$2:250
@@ -12810,11 +12778,6 @@ COVERAGE:soot/toolkits/scalar/ArraySparseSet:152
 COVERAGE:soot/toolkits/scalar/ArraySparseSet:155
 COVERAGE:soot/toolkits/scalar/AbstractFlowSet:77
 COVERAGE:soot/toolkits/scalar/SimpleLiveLocals$Analysis:127
-COVERAGE:soot/jimple/toolkits/scalar/MethodStaticnessCorrector:73
-COVERAGE:soot/jimple/toolkits/scalar/MethodStaticnessCorrector:74
-COVERAGE:soot/SootMethodRefImpl:135
-COVERAGE:soot/SootMethod:647
-COVERAGE:soot/jimple/toolkits/scalar/MethodStaticnessCorrector:75
 COVERAGE:soot/jimple/toolkits/scalar/ConditionalBranchFolder:67
 COVERAGE:soot/jimple/toolkits/scalar/ConditionalBranchFolder:69
 COVERAGE:soot/jimple/toolkits/scalar/ConditionalBranchFolder:70
@@ -12829,6 +12792,11 @@ COVERAGE:soot/jimple/toolkits/scalar/Evaluator:82
 COVERAGE:soot/jimple/toolkits/scalar/Evaluator:63
 COVERAGE:soot/jimple/toolkits/scalar/Evaluator:85
 COVERAGE:soot/jimple/toolkits/scalar/Evaluator:99
+COVERAGE:soot/dexpler/DexReturnPacker:80
+COVERAGE:soot/dexpler/DexReturnPacker:85
+COVERAGE:soot/dexpler/DexReturnPacker:86
+COVERAGE:soot/dexpler/DexReturnPacker:88
+COVERAGE:soot/dexpler/DexReturnPacker:89
 COVERAGE:soot/jimple/infoflow/android/callbacks/AbstractCallbackAnalyzer:523
 COVERAGE:soot/SootMethodRefImpl:197
 COVERAGE:soot/SootMethodRefImpl:203
@@ -12844,6 +12812,9 @@ COVERAGE:soot/jimple/infoflow/values/SimpleConstantValueProvider:26
 COVERAGE:soot/jimple/infoflow/android/callbacks/FastCallbackAnalyzer:80
 COVERAGE:soot/jimple/infoflow/android/callbacks/FastCallbackAnalyzer:81
 COVERAGE:soot/jimple/infoflow/android/callbacks/FastCallbackAnalyzer:82
+COVERAGE:soot/dexpler/instructions/InstructionFactory:111
+COVERAGE:soot/dexpler/instructions/ConstStringInstruction:46
+COVERAGE:soot/dexpler/instructions/ConstStringInstruction:47
 COVERAGE:soot/dexpler/instructions/InstructionFactory:129
 COVERAGE:soot/dexpler/instructions/ArrayLengthInstruction:46
 COVERAGE:soot/dexpler/instructions/ArrayLengthInstruction:47
@@ -12862,9 +12833,23 @@ COVERAGE:soot/dexpler/instructions/BinopLitInstruction:49
 COVERAGE:soot/dexpler/instructions/InstructionFactory:152
 COVERAGE:soot/dexpler/instructions/GotoInstruction:38
 COVERAGE:soot/dexpler/instructions/GotoInstruction:39
+COVERAGE:soot/dexpler/instructions/InstructionFactory:252
+COVERAGE:soot/dexpler/instructions/InvokeStaticInstruction:36
+COVERAGE:soot/dexpler/instructions/InvokeStaticInstruction:37
 COVERAGE:soot/dexpler/instructions/InstructionFactory:82
 COVERAGE:soot/dexpler/instructions/MoveInstruction:42
 COVERAGE:soot/dexpler/instructions/MoveInstruction:43
+COVERAGE:soot/dexpler/instructions/ConstStringInstruction:51
+COVERAGE:soot/dexpler/instructions/ConstStringInstruction:53
+COVERAGE:soot/dexpler/instructions/ConstStringInstruction:54
+COVERAGE:soot/dexpler/instructions/ConstStringInstruction:55
+COVERAGE:soot/dexpler/instructions/ConstStringInstruction:56
+COVERAGE:soot/dexpler/instructions/ConstStringInstruction:62
+COVERAGE:soot/dexpler/instructions/ConstStringInstruction:63
+COVERAGE:soot/dexpler/instructions/ConstStringInstruction:64
+COVERAGE:soot/dexpler/instructions/ConstStringInstruction:65
+COVERAGE:soot/dexpler/instructions/ConstStringInstruction:66
+COVERAGE:soot/dexpler/instructions/ConstStringInstruction:71
 COVERAGE:soot/dexpler/instructions/ArrayLengthInstruction:51
 COVERAGE:soot/dexpler/instructions/ArrayLengthInstruction:55
 COVERAGE:soot/dexpler/instructions/ArrayLengthInstruction:56
@@ -12950,6 +12935,14 @@ COVERAGE:soot/dexpler/instructions/GotoInstruction:61
 COVERAGE:soot/dexpler/instructions/GotoInstruction:62
 COVERAGE:soot/dexpler/instructions/GotoInstruction:63
 COVERAGE:soot/dexpler/instructions/GotoInstruction:45
+COVERAGE:soot/dexpler/instructions/InvokeStaticInstruction:46
+COVERAGE:soot/dexpler/instructions/MethodInvocationInstruction:421
+COVERAGE:soot/dexpler/instructions/MethodInvocationInstruction:422
+COVERAGE:soot/dexpler/instructions/MethodInvocationInstruction:219
+COVERAGE:soot/dexpler/instructions/MethodInvocationInstruction:423
+COVERAGE:soot/dexpler/instructions/MethodInvocationInstruction:424
+COVERAGE:soot/dexpler/instructions/MethodInvocationInstruction:425
+COVERAGE:soot/dexpler/instructions/InvokeStaticInstruction:47
 COVERAGE:soot/dexpler/instructions/MoveInstruction:48
 COVERAGE:soot/dexpler/instructions/MoveInstruction:50
 COVERAGE:soot/dexpler/instructions/MoveInstruction:51
@@ -13011,6 +13004,7 @@ COVERAGE:soot/jimple/internal/JArrayRef:115
 COVERAGE:soot/jimple/internal/JArrayRef:117
 COVERAGE:soot/jimple/internal/JArrayRef:118
 COVERAGE:soot/jimple/internal/JArrayRef:120
+COVERAGE:soot/jimple/internal/AbstractInvokeExpr:93
 COVERAGE:soot/jimple/internal/AbstractInvokeExpr:94
 COVERAGE:soot/jimple/internal/JGotoStmt:97
 COVERAGE:soot/jimple/internal/JGotoStmt:101
@@ -13025,12 +13019,10 @@ COVERAGE:soot/toolkits/scalar/SimpleLocalDefs$FlowAssignment$FlowBitSet:131
 COVERAGE:soot/toolkits/scalar/LocalSplitter:194
 COVERAGE:soot/toolkits/scalar/LocalSplitter:169
 COVERAGE:soot/toolkits/scalar/SimpleLocalDefs$FlowAssignment:163
-COVERAGE:soot/dexpler/DexNumTransformer$2:217
-COVERAGE:soot/dexpler/DexNumTransformer:275
-COVERAGE:soot/dexpler/tags/IntOpTag:49
-COVERAGE:soot/dexpler/DexNumTransformer:278
-COVERAGE:soot/dexpler/DexNumTransformer$2:218
-COVERAGE:soot/dexpler/DexNumTransformer$2:219
+COVERAGE:soot/dexpler/DexNumTransformer$2:208
+COVERAGE:soot/jimple/internal/JArrayRef:100
+COVERAGE:soot/dexpler/DexNumTransformer$2:209
+COVERAGE:soot/dexpler/DexNumTransformer$2:210
 COVERAGE:soot/jimple/toolkits/scalar/CopyPropagator:123
 COVERAGE:soot/jimple/toolkits/scalar/CopyPropagator:173
 COVERAGE:soot/jimple/toolkits/scalar/CopyPropagator:174
@@ -13054,15 +13046,12 @@ COVERAGE:soot/dexpler/DexNullTransformer$2:198
 COVERAGE:soot/dexpler/DexNullTransformer$2:208
 COVERAGE:soot/dexpler/DexNullTransformer$2:235
 COVERAGE:soot/dexpler/DexNullTransformer$2:240
-COVERAGE:soot/dexpler/DexNullTransformer$2:249
-COVERAGE:soot/dexpler/DexNullTransformer$2:251
-COVERAGE:soot/dexpler/DexNullTransformer$2:255
-COVERAGE:soot/dexpler/DexNullTransformer$2:259
-COVERAGE:soot/dexpler/DexNullTransformer$2:263
-COVERAGE:soot/dexpler/DexNullTransformer$2:267
-COVERAGE:soot/dexpler/DexNullTransformer$2:268
-COVERAGE:soot/dexpler/DexNullTransformer$2:269
-COVERAGE:soot/dexpler/DexNullTransformer$2:270
+COVERAGE:soot/dexpler/DexNullTransformer$2:241
+COVERAGE:soot/dexpler/DexNullTransformer$2:242
+COVERAGE:soot/jimple/internal/JArrayRef:88
+COVERAGE:soot/dexpler/DexNullTransformer$2:245
+COVERAGE:soot/dexpler/DexNullTransformer$2:247
+COVERAGE:soot/dexpler/DexNullTransformer$2:248
 COVERAGE:soot/dexpler/DexNullTransformer:334
 COVERAGE:soot/dexpler/DexNullTransformer:335
 COVERAGE:soot/dexpler/DexNullTransformer:340
@@ -13088,7 +13077,6 @@ COVERAGE:soot/dexpler/DexNullArrayRefTransformer:100
 COVERAGE:soot/jimple/internal/JAssignStmt:153
 COVERAGE:soot/jimple/internal/JAssignStmt:157
 COVERAGE:soot/jimple/internal/JAssignStmt:160
-COVERAGE:soot/jimple/internal/JArrayRef:88
 COVERAGE:soot/dexpler/DexNullArrayRefTransformer:101
 COVERAGE:soot/dexpler/DexNullArrayRefTransformer:105
 COVERAGE:soot/jimple/toolkits/typing/fast/TypeResolver:128
@@ -13149,7 +13137,6 @@ COVERAGE:soot/jimple/toolkits/typing/fast/UseChecker:258
 COVERAGE:soot/jimple/toolkits/typing/fast/UseChecker:339
 COVERAGE:soot/jimple/toolkits/typing/fast/UseChecker:341
 COVERAGE:soot/jimple/toolkits/typing/fast/UseChecker:171
-COVERAGE:soot/jimple/internal/JArrayRef:100
 COVERAGE:soot/jimple/internal/JArrayRef:104
 COVERAGE:soot/jimple/internal/JArrayRef:105
 COVERAGE:soot/jimple/toolkits/typing/fast/UseChecker:172
@@ -13175,6 +13162,11 @@ COVERAGE:soot/toolkits/scalar/ArraySparseSet:149
 COVERAGE:soot/toolkits/scalar/ArraySparseSet:239
 COVERAGE:soot/jimple/toolkits/scalar/LocalNameStandardizer:180
 COVERAGE:soot/jimple/toolkits/scalar/LocalNameStandardizer:178
+COVERAGE:soot/jimple/toolkits/scalar/MethodStaticnessCorrector:73
+COVERAGE:soot/jimple/toolkits/scalar/MethodStaticnessCorrector:74
+COVERAGE:soot/SootMethodRefImpl:135
+COVERAGE:soot/SootMethod:647
+COVERAGE:soot/jimple/toolkits/scalar/MethodStaticnessCorrector:75
 COVERAGE:soot/toolkits/scalar/SimpleLocalDefs$FlowAssignment$FlowBitSet:137
 COVERAGE:soot/toolkits/graph/UnitGraph:299
 COVERAGE:soot/jimple/toolkits/base/Aggregator:204
@@ -13197,9 +13189,6 @@ COVERAGE:soot/jimple/toolkits/scalar/IdentityOperationEliminator:166
 COVERAGE:soot/jimple/toolkits/scalar/IdentityOperationEliminator:84
 COVERAGE:soot/jimple/toolkits/scalar/IdentityOperationEliminator:163
 COVERAGE:soot/jimple/toolkits/scalar/IdentityOperationEliminator:164
-COVERAGE:soot/dexpler/DexReturnPacker:80
-COVERAGE:soot/dexpler/DexReturnPacker:85
-COVERAGE:soot/dexpler/DexReturnPacker:86
 COVERAGE:soot/dexpler/DexReturnPacker:87
 COVERAGE:soot/dexpler/DexReturnPacker:57
 COVERAGE:soot/dexpler/DexReturnPacker:58
@@ -13216,6 +13205,11 @@ COVERAGE:soot/dexpler/instructions/SputInstruction:58
 COVERAGE:soot/dexpler/instructions/SputInstruction:59
 COVERAGE:soot/dexpler/instructions/SputInstruction:60
 COVERAGE:soot/dexpler/instructions/SputInstruction:65
+COVERAGE:soot/jimple/internal/AbstractInvokeExpr:97
+COVERAGE:soot/jimple/internal/AbstractInvokeExpr:98
+COVERAGE:soot/jimple/internal/AbstractInvokeExpr:100
+COVERAGE:soot/jimple/internal/AbstractInvokeExpr:101
+COVERAGE:soot/jimple/internal/AbstractInvokeExpr:104
 COVERAGE:soot/jimple/StaticFieldRef:79
 COVERAGE:soot/jimple/StaticFieldRef:62
 COVERAGE:soot/jimple/toolkits/scalar/LocalNameStandardizer:172
@@ -14163,8 +14157,8 @@ COVERAGE:soot/jimple/infoflow/android/resources/LayoutFileParser:367
 COVERAGE:soot/jimple/infoflow/android/resources/LayoutFileParser:368
 COVERAGE:soot/jimple/infoflow/android/resources/LayoutFileParser:369
 COVERAGE:soot/jimple/infoflow/android/resources/controls/AndroidLayoutControl:50
-COVERAGE:soot/jimple/infoflow/android/resources/LayoutFileParser:370
 COVERAGE:soot/jimple/infoflow/android/resources/LayoutFileParser:371
+COVERAGE:soot/jimple/infoflow/android/resources/LayoutFileParser:370
 COVERAGE:soot/jimple/infoflow/android/resources/LayoutFileParser:372
 COVERAGE:soot/jimple/infoflow/android/source/AccessPathBasedSourceSinkManager:76
 COVERAGE:soot/jimple/infoflow/android/source/AndroidSourceSinkManager:215
@@ -14222,7 +14216,7 @@ COVERAGE:soot/jimple/infoflow/android/SetupApplication:1397
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1398
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1399
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1400
-[main] INFO soot.jimple.infoflow.android.SetupApplication - Collecting callbacks and building a callgraph took 17 seconds
+[main] INFO soot.jimple.infoflow.android.SetupApplication - Collecting callbacks and building a callgraph took 14 seconds
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1402
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:327
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1403
@@ -14231,7 +14225,7 @@ COVERAGE:soot/jimple/infoflow/android/SetupApplication:1404
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1405
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1410
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1411
-[main] INFO soot.jimple.infoflow.android.SetupApplication - Running data flow analysis on /home/asm140830/Documents/git/AndroidTA_FaultLocalization/fuzzing/checkmate/resources/minimized_apks/minimized_apks/january_real_AndroidSpecific_PrivateDataLeak1_a838a81a7ff63391bcfe03253fc27b8e_e5613aad75bc3bad53f848ba14482c54.apk with 39 sources and 126 sinks...
+[main] INFO soot.jimple.infoflow.android.SetupApplication - Running data flow analysis on /home/asm140830/Documents/git/AndroidTA_FaultLocalization/fuzzing/checkmate/resources/minimized_apks/minimized_apks/january_real_no_opt_droidbench_soundness_AndroidSpecific_PrivateDataLeak1_a838a81a7ff63391bcfe03253fc27b8e_e5613aad75bc3bad53f848ba14482c54.apk with 39 sources and 126 sinks...
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1416
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1422
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1489
@@ -14962,12 +14956,12 @@ COVERAGE:soot/jimple/infoflow/codeOptimization/DeadCodeEliminator:82
 COVERAGE:soot/jimple/infoflow/codeOptimization/DeadCodeEliminator:99
 COVERAGE:soot/jimple/infoflow/Infoflow:1028
 COVERAGE:soot/jimple/infoflow/Infoflow:285
-[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Dead code elimination took 0.845345747 seconds
+[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Dead code elimination took 0.630548151 seconds
 COVERAGE:soot/jimple/infoflow/Infoflow:290
 COVERAGE:soot/jimple/infoflow/Infoflow:295
 COVERAGE:soot/jimple/infoflow/Infoflow:296
 COVERAGE:soot/jimple/toolkits/callgraph/CallGraph:353
-[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Callgraph has 41 edges
+[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Callgraph has 38 edges
 COVERAGE:soot/jimple/infoflow/Infoflow:298
 COVERAGE:soot/jimple/infoflow/InfoflowConfiguration:1491
 COVERAGE:soot/jimple/infoflow/Infoflow:302
@@ -15793,7 +15787,7 @@ COVERAGE:soot/jimple/infoflow/Infoflow:438
 COVERAGE:soot/jimple/infoflow/Infoflow:442
 COVERAGE:soot/jimple/infoflow/Infoflow:443
 COVERAGE:soot/jimple/infoflow/problems/AbstractInfoflowProblem:213
-[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Source lookup done, found 1 sources and 3 sinks.
+[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Source lookup done, found 1 sources and 1 sinks.
 COVERAGE:soot/jimple/infoflow/Infoflow:446
 COVERAGE:soot/jimple/infoflow/results/InfoflowPerformanceData:224
 COVERAGE:soot/jimple/infoflow/results/InfoflowPerformanceData:225
@@ -15909,11 +15903,11 @@ COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:205
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:206
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:187
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:215
+COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver$PathEdgeProcessingTask:733
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:242
 COVERAGE:soot/jimple/infoflow/solver/executors/InterruptableExecutor:67
-COVERAGE:soot/jimple/infoflow/solver/executors/InterruptableExecutor:71
-COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver$PathEdgeProcessingTask:733
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:277
+COVERAGE:soot/jimple/infoflow/solver/executors/InterruptableExecutor:71
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:278
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:280
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:281
@@ -16106,10 +16100,10 @@ COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:341
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:342
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver$PathEdgeProcessingTask:742
 COVERAGE:soot/jimple/infoflow/solver/executors/SetPoolExecutor:36
-COVERAGE:soot/jimple/infoflow/solver/executors/SetPoolExecutor:37
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver$PathEdgeProcessingTask:737
-COVERAGE:soot/jimple/infoflow/solver/executors/SetPoolExecutor:38
+COVERAGE:soot/jimple/infoflow/solver/executors/SetPoolExecutor:37
 COVERAGE:soot/jimple/infoflow/solver/cfg/InfoflowCFG:162
+COVERAGE:soot/jimple/infoflow/solver/executors/SetPoolExecutor:38
 COVERAGE:soot/jimple/toolkits/ide/icfg/AbstractJimpleBasedICFG:138
 COVERAGE:soot/jimple/toolkits/ide/icfg/AbstractJimpleBasedICFG:139
 COVERAGE:soot/jimple/toolkits/ide/icfg/AbstractJimpleBasedICFG:140
@@ -16237,7 +16231,6 @@ COVERAGE:soot/jimple/toolkits/pointer/LocalMustAliasAnalysis:267
 COVERAGE:soot/jimple/toolkits/pointer/LocalMustAliasAnalysis:297
 COVERAGE:soot/jimple/toolkits/pointer/LocalMustAliasAnalysis:276
 COVERAGE:soot/jimple/toolkits/pointer/LocalMustAliasAnalysis:280
-COVERAGE:soot/jimple/toolkits/pointer/LocalMustAliasAnalysis:278
 COVERAGE:soot/jimple/toolkits/pointer/LocalMustAliasAnalysis:268
 COVERAGE:soot/jimple/toolkits/pointer/LocalMustAliasAnalysis:273
 COVERAGE:soot/jimple/toolkits/pointer/LocalMustAliasAnalysis:283
@@ -16266,6 +16259,7 @@ COVERAGE:soot/jimple/toolkits/pointer/LocalMustAliasAnalysis:262
 COVERAGE:soot/jimple/toolkits/pointer/LocalMustAliasAnalysis:263
 COVERAGE:soot/jimple/toolkits/pointer/LocalMustAliasAnalysis:265
 COVERAGE:soot/jimple/internal/AbstractNewExpr:51
+COVERAGE:soot/jimple/toolkits/pointer/LocalMustAliasAnalysis:278
 COVERAGE:soot/jimple/internal/AbstractInstanceFieldRef:127
 COVERAGE:soot/SootField:61
 COVERAGE:soot/jimple/toolkits/pointer/LocalMustAliasAnalysis:135
@@ -16481,8 +16475,6 @@ COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:568
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:570
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:571
 COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:572
-COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:574
-COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:575
 COVERAGE:soot/jimple/infoflow/problems/rules/SkipSystemClassRule:74
 COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:791
 COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:792
@@ -16503,6 +16495,8 @@ COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:876
 COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:902
 COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:903
 COVERAGE:soot/jimple/infoflow/problems/InfoflowProblem$1$4:906
+COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:574
+COVERAGE:soot/jimple/infoflow/solver/fastSolver/IFDSSolver:575
 COVERAGE:soot/jimple/infoflow/problems/rules/SinkPropagationRule:128
 COVERAGE:soot/jimple/infoflow/problems/rules/SinkPropagationRule:142
 COVERAGE:soot/jimple/infoflow/problems/rules/SinkPropagationRule:144
@@ -16807,7 +16801,7 @@ COVERAGE:soot/jimple/infoflow/Infoflow:538
 COVERAGE:soot/jimple/infoflow/Infoflow:551
 COVERAGE:soot/jimple/infoflow/results/InfoflowPerformanceData:201
 COVERAGE:soot/jimple/infoflow/Infoflow:552
-[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Current memory consumption: 122 MB
+[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Current memory consumption: 474 MB
 COVERAGE:soot/jimple/infoflow/Infoflow:554
 COVERAGE:soot/jimple/infoflow/Infoflow:556
 COVERAGE:soot/jimple/infoflow/memory/FlowDroidMemoryWatcher:96
@@ -16848,7 +16842,7 @@ COVERAGE:soot/jimple/infoflow/Infoflow:576
 COVERAGE:soot/jimple/infoflow/Infoflow:579
 COVERAGE:soot/jimple/infoflow/Infoflow:580
 COVERAGE:soot/jimple/infoflow/Infoflow:581
-[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Memory consumption after cleanup: 49 MB
+[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Memory consumption after cleanup: 52 MB
 COVERAGE:soot/jimple/infoflow/Infoflow:584
 COVERAGE:soot/jimple/infoflow/InfoflowConfiguration$PathConfiguration:393
 COVERAGE:soot/jimple/infoflow/Infoflow:590
@@ -16912,7 +16906,7 @@ COVERAGE:soot/jimple/infoflow/Infoflow:679
 COVERAGE:soot/jimple/infoflow/results/InfoflowPerformanceData:84
 COVERAGE:soot/jimple/infoflow/results/InfoflowPerformanceData:85
 COVERAGE:soot/jimple/infoflow/Infoflow:681
-[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Memory consumption after path building: 49 MB
+[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Memory consumption after path building: 51 MB
 COVERAGE:soot/jimple/infoflow/Infoflow:682
 COVERAGE:soot/jimple/infoflow/Infoflow:683
 COVERAGE:soot/jimple/infoflow/results/InfoflowPerformanceData:73
@@ -16935,7 +16929,7 @@ COVERAGE:soot/jimple/infoflow/Infoflow:712
 COVERAGE:soot/jimple/infoflow/Infoflow:713
 COVERAGE:soot/jimple/infoflow/results/InfoflowPerformanceData:95
 COVERAGE:soot/jimple/infoflow/results/InfoflowPerformanceData:118
-[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Data flow solver took 3 seconds. Maximum memory consumption: 49 MB
+[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Data flow solver took 3 seconds. Maximum memory consumption: 51 MB
 COVERAGE:soot/jimple/infoflow/Infoflow:716
 COVERAGE:soot/jimple/infoflow/results/InfoflowResults:495
 COVERAGE:soot/jimple/infoflow/results/InfoflowResults:496

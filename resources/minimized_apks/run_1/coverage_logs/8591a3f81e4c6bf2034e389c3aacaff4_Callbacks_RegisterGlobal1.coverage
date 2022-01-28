@@ -481,7 +481,7 @@ COVERAGE:soot/jimple/infoflow/cmd/MainClass:304
 COVERAGE:soot/jimple/infoflow/cmd/MainClass:305
 COVERAGE:soot/jimple/infoflow/cmd/MainClass:310
 COVERAGE:soot/jimple/infoflow/cmd/MainClass:311
-[main] INFO soot.jimple.infoflow.cmd.MainClass - Analyzing app /home/asm140830/Documents/git/AndroidTA_FaultLocalization/fuzzing/checkmate/resources/minimized_apks/minimized_apks/january_real_Callbacks_RegisterGlobal1_8591a3f81e4c6bf2034e389c3aacaff4_1ef9d1d10bc982ab49d3b8eaf4409c05.apk (1 of 1)...
+[main] INFO soot.jimple.infoflow.cmd.MainClass - Analyzing app /home/asm140830/Documents/git/AndroidTA_FaultLocalization/fuzzing/checkmate/resources/minimized_apks/minimized_apks/january_real_no_opt_droidbench_soundness_Callbacks_RegisterGlobal1_8591a3f81e4c6bf2034e389c3aacaff4_1ef9d1d10bc982ab49d3b8eaf4409c05.apk (1 of 1)...
 COVERAGE:soot/jimple/infoflow/cmd/MainClass:314
 COVERAGE:soot/jimple/infoflow/cmd/MainClass:315
 COVERAGE:soot/jimple/infoflow/cmd/MainClass:329
@@ -5953,7 +5953,7 @@ COVERAGE:soot/jimple/infoflow/android/resources/AbstractResourceParser:77
 COVERAGE:soot/jimple/infoflow/android/resources/AbstractResourceParser:78
 COVERAGE:soot/jimple/infoflow/android/resources/ARSCFileParser:1992
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:430
-[main] INFO soot.jimple.infoflow.android.SetupApplication - ARSC file parsing took 0.090166201 seconds
+[main] INFO soot.jimple.infoflow.android.SetupApplication - ARSC file parsing took 0.055436836 seconds
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:431
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1340
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1342
@@ -6310,15 +6310,15 @@ COVERAGE:soot/FastHierarchy:321
 COVERAGE:soot/FastHierarchy$Interval:95
 COVERAGE:soot/FastHierarchy$Interval:98
 COVERAGE:soot/FastHierarchy$Interval:101
-COVERAGE:soot/FastHierarchy$Interval:104
-COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointUtils:75
-COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointUtils:112
-COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointUtils:113
-COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:140
 COVERAGE:soot/FastHierarchy$Interval:102
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointUtils:77
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointUtils:78
+COVERAGE:soot/FastHierarchy$Interval:104
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointUtils:79
+COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointUtils:112
+COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointUtils:113
+COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:140
+COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointUtils:75
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:143
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:149
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:307
@@ -6327,6 +6327,7 @@ COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreato
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:314
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointUtils:125
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointUtils:126
+COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:320
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:315
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:317
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:318
@@ -6459,18 +6460,6 @@ COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreato
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:228
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:229
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator$1:229
-COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:250
-COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:255
-COVERAGE:soot/jimple/infoflow/entryPointCreators/BaseEntryPointCreator:948
-COVERAGE:soot/jimple/infoflow/entryPointCreators/BaseEntryPointCreator:951
-COVERAGE:soot/jimple/infoflow/entryPointCreators/BaseEntryPointCreator:952
-COVERAGE:soot/jimple/infoflow/entryPointCreators/BaseEntryPointCreator:953
-COVERAGE:soot/jimple/infoflow/entryPointCreators/BaseEntryPointCreator:954
-COVERAGE:soot/jimple/infoflow/entryPointCreators/BaseEntryPointCreator:955
-COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:258
-COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:270
-COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:271
-COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:272
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:231
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:232
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/components/ActivityEntryPointCreator:50
@@ -6489,6 +6478,14 @@ COVERAGE:soot/jimple/infoflow/android/entryPointCreators/components/ActivityEntr
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/components/ActivityEntryPointCreator:53
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/components/ActivityEntryPointCreator:54
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:234
+COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:255
+COVERAGE:soot/jimple/infoflow/entryPointCreators/BaseEntryPointCreator:948
+COVERAGE:soot/jimple/infoflow/entryPointCreators/BaseEntryPointCreator:951
+COVERAGE:soot/jimple/infoflow/entryPointCreators/BaseEntryPointCreator:952
+COVERAGE:soot/jimple/infoflow/entryPointCreators/BaseEntryPointCreator:953
+COVERAGE:soot/jimple/infoflow/entryPointCreators/BaseEntryPointCreator:954
+COVERAGE:soot/jimple/infoflow/entryPointCreators/BaseEntryPointCreator:955
+COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:258
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:259
 COVERAGE:soot/jimple/infoflow/entryPointCreators/BaseEntryPointCreator:817
 COVERAGE:soot/jimple/infoflow/entryPointCreators/BaseEntryPointCreator:818
@@ -6770,6 +6767,10 @@ COVERAGE:soot/jimple/internal/AbstractStaticInvokeExpr:85
 COVERAGE:soot/jimple/internal/JStaticInvokeExpr:38
 COVERAGE:soot/jimple/internal/JStaticInvokeExpr:39
 COVERAGE:soot/jimple/internal/JStaticInvokeExpr:42
+COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:270
+COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:271
+COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:272
+COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:250
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:275
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:276
 COVERAGE:soot/jimple/infoflow/android/entryPointCreators/AndroidEntryPointCreator:277
@@ -12584,11 +12585,6 @@ COVERAGE:soot/dexpler/instructions/CheckCastInstruction:71
 COVERAGE:soot/dexpler/instructions/CheckCastInstruction:72
 COVERAGE:soot/dexpler/instructions/CheckCastInstruction:73
 COVERAGE:soot/dexpler/instructions/CheckCastInstruction:79
-COVERAGE:soot/jimple/internal/AbstractInvokeExpr:97
-COVERAGE:soot/jimple/internal/AbstractInvokeExpr:98
-COVERAGE:soot/jimple/internal/AbstractInvokeExpr:100
-COVERAGE:soot/jimple/internal/AbstractInvokeExpr:101
-COVERAGE:soot/jimple/internal/AbstractInvokeExpr:104
 COVERAGE:soot/jimple/internal/AbstractCastExpr:107
 COVERAGE:soot/jimple/internal/AbstractCastExpr:109
 COVERAGE:soot/jimple/internal/AbstractCastExpr:110
@@ -12614,8 +12610,8 @@ COVERAGE:soot/toolkits/scalar/SimpleLocalDefs$FlowAssignment$FlowBitSet:129
 COVERAGE:soot/toolkits/scalar/SimpleLocalDefs$FlowAssignment$FlowBitSet:130
 COVERAGE:soot/toolkits/scalar/SimpleLocalDefs$FlowAssignment$FlowBitSet:133
 COVERAGE:soot/toolkits/scalar/SimpleLocalDefs$FlowAssignment$FlowBitSet:134
-COVERAGE:soot/toolkits/scalar/SimpleLocalDefs$FlowAssignment$FlowBitSet:135
 COVERAGE:soot/toolkits/scalar/SimpleLocalDefs$FlowAssignment$FlowBitSet:138
+COVERAGE:soot/toolkits/scalar/SimpleLocalDefs$FlowAssignment$FlowBitSet:135
 COVERAGE:soot/toolkits/scalar/SimpleLocalDefs$FlowAssignment$FlowBitSet:120
 COVERAGE:soot/toolkits/scalar/LocalSplitter:147
 COVERAGE:soot/toolkits/scalar/LocalSplitter:179
@@ -12692,6 +12688,11 @@ COVERAGE:soot/dexpler/instructions/SputInstruction:58
 COVERAGE:soot/dexpler/instructions/SputInstruction:59
 COVERAGE:soot/dexpler/instructions/SputInstruction:60
 COVERAGE:soot/dexpler/instructions/SputInstruction:65
+COVERAGE:soot/jimple/internal/AbstractInvokeExpr:97
+COVERAGE:soot/jimple/internal/AbstractInvokeExpr:98
+COVERAGE:soot/jimple/internal/AbstractInvokeExpr:100
+COVERAGE:soot/jimple/internal/AbstractInvokeExpr:101
+COVERAGE:soot/jimple/internal/AbstractInvokeExpr:104
 COVERAGE:soot/BooleanType:40
 COVERAGE:soot/jimple/toolkits/typing/fast/TypeResolver:165
 COVERAGE:soot/jimple/toolkits/typing/fast/TypeResolver:166
@@ -13510,7 +13511,7 @@ COVERAGE:soot/jimple/infoflow/android/SetupApplication:1397
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1398
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1399
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1400
-[main] INFO soot.jimple.infoflow.android.SetupApplication - Collecting callbacks and building a callgraph took 11 seconds
+[main] INFO soot.jimple.infoflow.android.SetupApplication - Collecting callbacks and building a callgraph took 12 seconds
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1402
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:327
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1403
@@ -13519,7 +13520,7 @@ COVERAGE:soot/jimple/infoflow/android/SetupApplication:1404
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1405
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1410
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1411
-[main] INFO soot.jimple.infoflow.android.SetupApplication - Running data flow analysis on /home/asm140830/Documents/git/AndroidTA_FaultLocalization/fuzzing/checkmate/resources/minimized_apks/minimized_apks/january_real_Callbacks_RegisterGlobal1_8591a3f81e4c6bf2034e389c3aacaff4_1ef9d1d10bc982ab49d3b8eaf4409c05.apk with 39 sources and 126 sinks...
+[main] INFO soot.jimple.infoflow.android.SetupApplication - Running data flow analysis on /home/asm140830/Documents/git/AndroidTA_FaultLocalization/fuzzing/checkmate/resources/minimized_apks/minimized_apks/january_real_no_opt_droidbench_soundness_Callbacks_RegisterGlobal1_8591a3f81e4c6bf2034e389c3aacaff4_1ef9d1d10bc982ab49d3b8eaf4409c05.apk with 39 sources and 126 sinks...
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1416
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1422
 COVERAGE:soot/jimple/infoflow/android/SetupApplication:1489
@@ -14254,7 +14255,7 @@ COVERAGE:soot/jimple/infoflow/codeOptimization/DeadCodeEliminator:85
 COVERAGE:soot/jimple/infoflow/codeOptimization/DeadCodeEliminator:99
 COVERAGE:soot/jimple/infoflow/Infoflow:1028
 COVERAGE:soot/jimple/infoflow/Infoflow:285
-[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Dead code elimination took 0.380680604 seconds
+[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Dead code elimination took 0.309079788 seconds
 COVERAGE:soot/jimple/infoflow/Infoflow:290
 COVERAGE:soot/jimple/infoflow/Infoflow:295
 COVERAGE:soot/jimple/infoflow/Infoflow:296
@@ -14909,7 +14910,7 @@ COVERAGE:soot/jimple/infoflow/Infoflow:712
 COVERAGE:soot/jimple/infoflow/Infoflow:713
 COVERAGE:soot/jimple/infoflow/results/InfoflowPerformanceData:95
 COVERAGE:soot/jimple/infoflow/results/InfoflowPerformanceData:118
-[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Data flow solver took 1 seconds. Maximum memory consumption: 699 MB
+[main] INFO soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow - Data flow solver took 1 seconds. Maximum memory consumption: 928 MB
 COVERAGE:soot/jimple/infoflow/Infoflow:716
 COVERAGE:soot/jimple/infoflow/results/InfoflowResults:495
 COVERAGE:soot/jimple/infoflow/results/InfoflowResults:496
