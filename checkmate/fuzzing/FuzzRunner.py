@@ -178,10 +178,10 @@ def num_tp_fp_fn(output_file: str, apk_name: str) -> Dict[str, Set[Flow]]:
     except AttributeError:
         output_flows = []
 
-    logging.warning("Made a change for Fossdroid -- make sure to revert if you need to do Droidbench!")
+    logging.warning("Made a change for DroidBench -- make sure to revert if you need to do FossDroid!")
     gt_flows = list(
         filter(
-            lambda f: os.path.basename(apk_name) == f.get_file(),
+            lambda f: category_and_apk(apk_name) == category_and_apk(f.get_full_file()),
             [Flow(f) for f in
              ElementTree.parse(config.configuration['ground_truth_location']).getroot().findall('flow')]
         )
