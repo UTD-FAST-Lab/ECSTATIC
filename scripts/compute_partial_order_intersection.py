@@ -20,7 +20,7 @@ def main():
             if partial_order not in partial_order_to_files:
                 partial_order_to_files[partial_order] = None
             for fi in os.listdir('.'):
-                if violation in fi and fi.endswith('.classes.sorted'):
+                if violation in fi and fi.endswith('.diff'):
                     with open(fi) as f_prime:
                         content = set([l.strip() for l in f_prime.readlines()])
                     if partial_order_to_files[partial_order] is None:
@@ -31,6 +31,8 @@ def main():
 
     # Compute intersection
     for po, content in partial_order_to_files.items():
+        if content is None:
+            continue
         if not os.path.exists(args.output):
             os.mkdir(args.output)
         with open(os.path.join(args.output, po), 'w') as f:

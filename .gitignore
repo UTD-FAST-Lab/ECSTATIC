@@ -140,3 +140,5 @@ resources/do_not_commit/*
 # Don't add .idea files
 .idea/*
 
+*.sorted
+*.intersection
