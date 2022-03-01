@@ -56,3 +56,4 @@ class DOOPConfigurationSpace(AbstractConfigurationSpaceSpecification):
         analysis.set_more_precise_than('3-object-sensitive+3-heap', '2-object-sensitive+2-heap')
         analysis.set_more_precise_than('3-object-sensitive+3-heap', '3-type-sensitive+3-heap')
         analysis.set_more_precise_than('1-call-site-sensitive', 'context-insensitive')
+        analysis.set_more_precise_than('1-type-sensitive', 'context-insensitive')
