@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "configuration_space.schema.json",
+  "title": "Configuration Space",
+  "description": "A configuration space for a tool.",
+  "type": "object",
+  "properties": {
+    "name": {
+      "description": "the name of the tool",
+      "type": "string"
+    },
+    "options": {
+      "description": "Configuration options and their settings.",
+      "type": "array",
+      "items": {
+        "$ref": "option.schema.json"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  }
+}
