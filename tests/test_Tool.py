@@ -1,6 +1,6 @@
-from checkmate.checkmate.models.Tool import Tool
-from checkmate.checkmate.models.Option import Option
-from checkmate.checkmate.models.Constraint import Constraint
+from src.checkmate import Tool
+from src.checkmate import Option
+from src.checkmate import Constraint
 
 
 def test_constructor():

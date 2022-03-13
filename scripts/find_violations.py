@@ -2,12 +2,10 @@ import logging
 logging.basicConfig(level = logging.CRITICAL)
 
 import xml.etree.ElementTree as ET
-from checkmate.models.Flow import Flow
-from checkmate.models.Configuration import Configuration
-from checkmate.models.Constraint import Constraint 
-from checkmate.models.Option import Option
-from checkmate.models.Level import Level
-from checkmate.models.Tool import Tool
+from src.checkmate import Flow
+from src.checkmate import Configuration
+from src.checkmate.models.Option import Option
+from src.checkmate.models.Tool import Tool
 from typing import List, Dict
 from csv import DictReader
 import pickle

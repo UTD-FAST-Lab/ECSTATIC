@@ -1,0 +1,13 @@
+{
+  "flowdroid_root": "/Users/austin/git/FlowDroid",
+  "aql_root": "/Users/austin/git/AndroidTAEnvironment/AQL-System",
+  "source_sink_location": "$(FLOWDROID_ROOT)/soot-infoflow-android/SourcesAndSinks.txt",
+  "android_platforms_location": "/Users/austin/Library/Android/sdk/platforms",
+  "apk_location": "/Users/austin/Downloads/DroidBench30/benchmark/apks",
+  "aql_location": "$(AQL_ROOT)/target/build/AQL-System-1.1.0-SNAPSHOT.jar",
+  "taintwrapper_easy_location": "$(FLOWDROID_ROOT)/soot-infoflow/EasyTaintWrapperSource.txt",
+  "variables": {
+    "$(AQL_ROOT)": "aql_root",
+    "$(FLOWDROID_ROOT)": "flowdroid_root"
+  }
+}

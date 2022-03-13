@@ -1,0 +1,40 @@
+{
+  "name": "SampleTool",
+  "options": [
+    {
+      "name": "A",
+      "levels": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "partial_orders": [
+        {
+          "left": "A3",
+          "partial_order": "MPT",
+          "right": "A2"
+        },{
+          "left": "A2",
+          "partial_order": "MPT",
+          "right": "A1"
+        }
+      ]
+    },
+    {
+      "name": "B",
+      "levels": ["-1", "i", "i-1"],
+      "partial_orders": [
+        {
+          "left": "-1",
+          "partial_order": "MST",
+          "right": "i"
+        },
+        {
+          "left": "i",
+          "partial_order": "MST",
+          "right": "i-1"
+        }
+      ]
+    }
+  ]
+}

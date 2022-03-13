@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "level.schema.json",
+  "title": "Level",
+  "description": "An level in a configuration space.",
+  "type": "object",
+  "required": ["name"],
+  "properties": {
+    "name": {
+      "description": "The name of the level.",
+      "type": "string"
+    },
+    "type": {
+      "description": "The type of data the level can accept.",
+      "type": "string",
+      "enum": ["integer", "enum"]
+    }
+  }
+}

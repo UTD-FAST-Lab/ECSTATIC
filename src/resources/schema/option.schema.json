@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "option.schema.json",
+  "title": "Option",
+  "description": "An option in a configuration space.",
+  "type": "object",
+  "required": ["name"],
+  "properties": {
+    "name": {
+      "description": "The name of the option.",
+      "type": "string"
+    },
+    "levels": {
+      "description": "The levels in the option.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "unique": true
+    },
+    "partial_orders": {
+      "description": "The partial orders in the option.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "left": {
+            "description": "The first level.",
+            "type": "string"
+          },
+          "partial_order": {
+            "description": "The partial order relationship.",
+            "type": "string",
+            "enum": ["MST", "MPT"]
+          },
+          "right": {
+            "description": "The second level.",
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

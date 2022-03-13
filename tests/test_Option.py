@@ -1,4 +1,4 @@
-from checkmate.checkmate.models.Option import Option
+from src.checkmate import Option
 
 
 def test_add_item():

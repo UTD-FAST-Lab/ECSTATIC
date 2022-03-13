@@ -1,7 +1,7 @@
 from xml.etree import ElementTree
 import argparse
 
-from checkmate.models.Flow import Flow
+from src.checkmate import Flow
 
 p = argparse.ArgumentParser()
 p.add_argument('groundtruths')

@@ -4,7 +4,7 @@ import subprocess
 import time
 import random
 
-from checkmate.util import config
+from src.checkmate.util import config
 
 p = argparse.ArgumentParser()
 p.add_argument('apk', help='apk to determine coverage of.')
@@ -14,7 +14,7 @@ p.add_argument('-f', '--force', help='overwrite records.', action='store_true')
 p.add_argument('-d', '--diffs_location', help='where to store diffs', default='./diffs')
 args = p.parse_args()
 
-from typing import Tuple, List, Set
+from typing import Tuple, Set
 from pathlib import Path
 import logging
 logging.basicConfig(level=logging.DEBUG)
