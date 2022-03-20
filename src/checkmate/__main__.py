@@ -4,7 +4,7 @@ import logging
 import os.path
 from typing import List
 
-from src.checkmate.fuzzing.fuzzer import Fuzzer
+from src.checkmate.fuzzing.tooltester import ToolTester
 from src.checkmate.readers.callgraph.AbstractCallGraphReader import AbstractCallGraphTransformer
 from src.checkmate.readers.callgraph.DOOPCallGraphReader import DOOPCallGraphTransformer
 from src.checkmate.readers.callgraph.WALACallGraphReader import WALACallGraphTransformer
@@ -16,7 +16,7 @@ parser.add_argument("-v", dest='verbosity', action='count', default=0)
 subparsers = parser.add_subparsers()
 fuzz_parser = subparsers.add_parser('fuzz', help='fuzzing control.')
 fuzz_parser.set_defaults(
-    func=lambda r: Fuzzer(r.model_location, r.processes, r.number_campaigns, not r.no_validate).main())
+    func=lambda r: ToolTester(r.model_location, r.processes, r.number_campaigns, not r.no_validate).main())
 fuzz_parser.add_argument('-m', '--model_location', help='the location of the model to use.',
                          default='data/flowdroid.model')
 fuzz_parser.add_argument('-p', '--processes', help='the number of processes to generate.',

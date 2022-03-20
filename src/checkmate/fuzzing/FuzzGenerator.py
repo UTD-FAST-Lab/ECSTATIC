@@ -84,9 +84,10 @@ def get_apks(directory: str) -> List[str]:
 class FuzzGenerator:
     FIRST_RUN = True
 
-    def __init__(self, model_location: str):
+    def __init__(self, model_location: str, grammar_location: str, benchmark_location: List[str]):
         self.flowdroid_ebnf_grammar: Grammar = FlowdroidGrammar.get_grammar()
         self.flowdroid_grammar = convert_ebnf_grammar(self.flowdroid_ebnf_grammar)
+        self.benchmarks = benchmark_location
         self.fuzzer = GrammarCoverageFuzzer(self.flowdroid_grammar)
         random.seed(2001)
         with open(model_location, 'rb') as f:
@@ -119,7 +120,7 @@ class FuzzGenerator:
         for candidate in candidates:
             choice = candidate.config
             option_under_investigation = candidate.option
-            apks = [a for a in get_apks(configuration['apk_location'])]
+            apks = [a for a in self.benchmarks] # TODO: Replace with iterate through benchmark location
             for a in apks:
                 results.append(FuzzingJob(choice, option_under_investigation, a))
 

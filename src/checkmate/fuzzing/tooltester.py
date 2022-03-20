@@ -18,10 +18,7 @@ from ..util.UtilClasses import FuzzingCampaign, FinishedFuzzingJob, FinishedCamp
 logger = logging.getLogger(__name__)
 
 
-class Fuzzer:
-    generator: FuzzGenerator
-    runner: FlowdroidRunnerAbstract
-    unverified_violations: List[Tuple[FuzzingJob.FuzzingJob, FuzzingJob.FuzzingJob]]
+class ToolTester:
 
     def __init__(self, generator, runner: AbstractBaseCommandLineToolRunner,
                  num_processes: int, num_campaigns: int, validate: bool):
@@ -49,28 +46,6 @@ class Fuzzer:
             self.print_output(FinishedCampaign(results), campaign_index)
             print('Done!')
 
-    def fuzz_configurations(self, generator: FuzzGenerator, scheduler: FuzzScheduler):
-        while True:
-            logger.info("Generating new fuzzing campaign.")
-            scheduler.add_new_job(generator.generate_campaign())
-            logger.info("New fuzzing campaign generated.")
-
-    def run_submitted_jobs(self, scheduler: FuzzScheduler, runner: FlowdroidRunnerAbstract, results_queue: JoinableQueue,
-                           num_processes: int):
-        while True:
-            try:
-                campaign: FuzzingCampaign = scheduler.get_next_job_blocking()
-                campaign_result: List[FuzzingJob] = list()
-                print(f"Starting fuzzing campaign with {len(campaign.jobs)}")
-                with Pool(max(1,
-                              num_processes - 2)) as p:  # -2 because of the other two processes we spawn (parent and the generator)
-                    results = list(p.imap_unordered(runner.run_job, campaign.jobs, chunksize=100))
-                campaign_results = list(filter(lambda x: x is not None, results))
-                print("Finished fuzzing campaign.")
-                results_queue.put(FinishedCampaign(campaign_results))
-                scheduler.set_job_as_done()
-            except Exception as ex:
-                logger.exception('Run failed')
 
     def write_flowset(self, relation_type: str,
                       violated: bool,
