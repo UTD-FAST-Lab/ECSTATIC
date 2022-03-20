@@ -1,4 +1,3 @@
-art
 fuzzingbook~=1.0.3
 
 checkmate~=0.0.0

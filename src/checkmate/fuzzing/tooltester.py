@@ -1,3 +1,4 @@
+import argparse
 import os.path
 import time
 from multiprocessing import JoinableQueue
@@ -16,6 +17,7 @@ from ..util import config, FuzzingJob
 from ..util.UtilClasses import FuzzingCampaign, FinishedFuzzingJob, FinishedCampaign
 
 logger = logging.getLogger(__name__)
+
 
 
 class ToolTester:
@@ -180,3 +182,15 @@ class ToolTester:
                                        campaign_index=campaign_index)
         print('Campaign value processing done.')
         # results_queue.task_done()
+
+
+def main():
+    p = argparse.ArgumentParser()
+    p.add_argument()
+    p.add_argument()
+    # TODO: Setup tool tester
+    t = ToolTester()
+    t.main()
+
+if __name__ == '__main__':
+    main()
