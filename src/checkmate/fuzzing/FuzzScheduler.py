@@ -1,6 +1,6 @@
 from multiprocessing import JoinableQueue
 
-from src.checkmate.util.NamedTuples import FuzzingCampaign
+from src.checkmate.util.UtilClasses import FuzzingCampaign
 
 
 class FuzzScheduler:

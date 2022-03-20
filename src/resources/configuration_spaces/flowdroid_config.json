@@ -1,0 +1,163 @@
+{
+  "name": "FlowDroid",
+  "options": [
+    {
+      "name": "aplength",
+      "levels": [
+        "i",
+        "i-1"
+      ],
+      "default": 5,
+      "partial_orders": [
+        {
+          "left": "i",
+          "partial_order": "MPT",
+          "right": "i-1"
+        }
+      ]
+    },
+    {
+      "name": "cgalgo",
+      "levels": [
+        "CHA",
+        "RTA",
+        "VTA",
+        "GEOM",
+        "SPARK"
+      ],
+      "default": "SPARK",
+      "partial_orders": [
+        {
+          "left": "RTA",
+          "partial_order": "MPT",
+          "right": "CHA"
+        },
+        {
+          "left": "VTA",
+          "partial_order": "MPT",
+          "right": "RTA"
+        }
+      ]
+    },
+    {
+      "name": "nothischainreduction",
+      "levels": [
+        "FALSE",
+        "TRUE"
+      ],
+      "default": "FALSE",
+      "partial_orders": [
+        {
+          "left": "FALSE",
+          "partial_order": "MPT",
+          "right": "TRUE"
+        }
+      ]
+    },
+    {
+      "name": "onesourceatatime",
+      "levels": [
+        "FALSE",
+        "TRUE"
+      ],
+      "default": "FALSE",
+      "partial_orders": [
+        {
+          "left": "TRUE",
+          "partial_order": "MPT",
+          "right": "FALSE"
+        }
+      ]
+    },
+    {
+      "name": "dataflowsolver",
+      "levels": [
+        "DEFAULT",
+        "FLOWINSENSITIVE"
+      ],
+      "default": "DEFAULT",
+      "partial_orders": [
+        {
+          "left": "DEFAULT",
+          "partial_order": "MPT",
+          "right": "FLOWINSENSITIVE"
+        }
+      ]
+    },
+    {
+      "name": "aliasflowins",
+      "levels": [
+        "FALSE",
+        "TRUE"
+      ],
+      "default": "FALSE",
+      "partial_orders": [
+        {
+          "left": "FALSE",
+          "partial_order": "MST",
+          "right": "TRUE"
+        }
+      ]
+    },
+    {
+      "name": "singlejoinpointabstraction",
+      "levels": [
+        "FALSE",
+        "TRUE"
+      ],
+      "default": "FALSE",
+      "partial_orders": [
+        {
+          "left": "FALSE",
+          "partial_order": "MST",
+          "right": "TRUE"
+        }
+      ]
+    },
+    {
+      "name": "onecomponentatatime",
+      "levels": [
+        "FALSE",
+        "TRUE"
+      ],
+      "default": "FALSE",
+      "partial_orders": [
+        {
+          "left": "FALSE",
+          "partial_order": "MST",
+          "right": "TRUE"
+        }
+      ]
+    },
+    {
+      "name": "staticmode",
+      "levels": [
+        "DEFAULT",
+        "CONTEXTFLOWINSENSITIVE",
+        "NONE"
+      ],
+      "default": "DEFAULT",
+      "partial_orders": [
+        {
+          "left": "DEFAULT",
+          "partial_order": "MPT",
+          "right": "CONTEXTFLOWINSENSITIVE"
+        },
+        {
+          "left": "DEFAULT",
+          "partial_order": "MST",
+          "right": "NONE"
+        },
+        {
+          "left": "CONTEXTFLOWINSENSITIVE",
+          "partial_order": "MST",
+          "right": "NONE"
+        }
+      ]
+    },
+    {
+      "name": "nostatic",
+      "partial_order":
+    }
+  ]
+}

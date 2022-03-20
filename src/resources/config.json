@@ -1,5 +1,8 @@
 {
   "flowdroid_root": "/Users/austin/git/FlowDroid",
+  "soot_location": "/",
+  "doop_location": "/",
+  "wala_location": "/",
   "aql_root": "/Users/austin/git/AndroidTAEnvironment/AQL-System",
   "source_sink_location": "$(FLOWDROID_ROOT)/soot-infoflow-android/SourcesAndSinks.txt",
   "android_platforms_location": "/Users/austin/Library/Android/sdk/platforms",

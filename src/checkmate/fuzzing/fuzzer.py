@@ -7,24 +7,26 @@ from typing import List, Tuple
 from xml.etree.ElementTree import ElementTree, Element
 
 from src.checkmate.fuzzing.FuzzGenerator import FuzzGenerator
-from src.checkmate.fuzzing.FuzzRunner import FuzzRunner
+from src.checkmate.runners.FlowdroidRunner import FlowdroidRunnerAbstract
 from src.checkmate.fuzzing.FuzzScheduler import FuzzScheduler
 from ..models.Flow import Flow
 from ..models.Option import Option
+from ..runners.AbstractBaseCommandLineToolRunner import AbstractBaseCommandLineToolRunner
 from ..util import config, FuzzingJob
-from ..util.NamedTuples import FuzzingCampaign, FinishedFuzzingJob, FinishedCampaign
+from ..util.UtilClasses import FuzzingCampaign, FinishedFuzzingJob, FinishedCampaign
 
 logger = logging.getLogger(__name__)
 
 
 class Fuzzer:
     generator: FuzzGenerator
-    runner: FuzzRunner
+    runner: FlowdroidRunnerAbstract
     unverified_violations: List[Tuple[FuzzingJob.FuzzingJob, FuzzingJob.FuzzingJob]]
 
-    def __init__(self, model_location: str, num_processes: int, num_campaigns: int, validate: bool):
-        self.generator = FuzzGenerator(model_location)
-        self.runner = FuzzRunner(config.configuration['apk_location'])
+    def __init__(self, generator, runner: AbstractBaseCommandLineToolRunner,
+                 num_processes: int, num_campaigns: int, validate: bool):
+        self.generator = generator
+        self.runner = runner
         self.unverified_violations = list()
         self.num_processes = num_processes
         self.num_campaigns = num_campaigns
@@ -53,7 +55,7 @@ class Fuzzer:
             scheduler.add_new_job(generator.generate_campaign())
             logger.info("New fuzzing campaign generated.")
 
-    def run_submitted_jobs(self, scheduler: FuzzScheduler, runner: FuzzRunner, results_queue: JoinableQueue,
+    def run_submitted_jobs(self, scheduler: FuzzScheduler, runner: FlowdroidRunnerAbstract, results_queue: JoinableQueue,
                            num_processes: int):
         while True:
             try:
