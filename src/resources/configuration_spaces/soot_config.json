@@ -1,0 +1,35 @@
+{
+  "name": "SOOT",
+  "options": [
+    {
+      "name": "optimize",
+      "default": "FALSE",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "partial_orders": [
+        {
+          "left": "TRUE",
+          "partial_order": "MPT",
+          "right": "FALSE"
+        }
+      ]
+    },
+    {
+      "name": "omit-excepting-unit-edges",
+      "default": "FALSE",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "partial_orders": [
+      {
+        "left": "TRUE",
+        "partial_order": "MPT",
+        "right": "FALSE"
+      }
+      ]
+    }
+  ]
+}

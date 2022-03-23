@@ -1,0 +1,29 @@
+{
+  "name": "WALA",
+  "options": [
+    {
+      "name": "handleStaticInit",
+      "levels": ["TRUE", "FALSE"],
+      "default": "FALSE",
+      "partial_orders": [
+        {
+          "left": "TRUE",
+          "partial_order": "MST",
+          "right": "FALSE"
+        }
+      ]
+    },
+    {
+      "name": "ignoreMethodInvoke",
+      "levels": ["TRUE","FALSE"],
+      "default": "FALSE",
+      "partial_orders": [
+        {
+          "left": "FALSE",
+          "partial_order": "MST",
+          "right": "TRUE"
+        }
+      ]
+    }
+  ]
+}

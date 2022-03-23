@@ -24,20 +24,14 @@ class FinishedFuzzingJob:
     job: FuzzingJob
     execution_time: float
     results_location: str
-    detected_flows: Dict[str, Set[Flow]]
 
 
 @dataclass
 class FlowdroidFinishedFuzzingJob(FinishedFuzzingJob):
-    results_location: str
+    configuration_location: str
+    detected_flows: Dict[str, Set[Flow]]
 
 
 @dataclass
 class FinishedCampaign:
     finished_jobs: List[FinishedFuzzingJob]
-
-
-@dataclass
-class XmlLocationAndFlowDroidOutput():
-    xml_location: str
-    flowdroid_output: str

@@ -25,80 +25,13 @@ from networkx import DiGraph
 
 from src.checkmate.models.Level import Level
 
-
-# def convert_to_int(i: str):
-#     """
-#     Converts string to int if possible.
-#     param i: the string to try to convert.
-#     :return: the int representation if possible, otherwise the string.
-#     """
-#     if i.isdigit():
-#         return int(i)
-#     if i[0] == '-' and i[1:].isdigit():
-#         return int(i)
-#     else:
-#         return i
-#
-#
-# def compare_helper(level, o1: Level, o2: Level):
-#     # If both are the same, don't compare them
-#     if (o1, o2) in level:
-#         # o1 is more precise/sound as o2
-#         return 1
-#     if (o2, o1) in level:
-#         return -1
-#
-#     return 0
-#
-#
-# def add_partial_order(level, o1: Level, o2: Level):
-#     """Helper function to add to any of the partial order lists"""
-#     if (o1, o2) not in level:
-#         level.append((o1, o2))
-#
-#
-# def get_index(level, o):
-#     """
-#     recursively find the index of level in o
-#
-#     l could be:
-#     1. a list with nested sets
-#     2. a set
-#     3. a level, either an int or string.
-#     """
-#     # if we've matched, return 0 (treat o as the first
-#     #  element in the singleton list l
-#     print(f'Getting index of {o} in {level}')
-#     if level == o:
-#         logging.info(f'__get_index: returning 0 for arguments {level} and {o}')
-#         return 0
-#     else:
-#         for i, r in enumerate(level):
-#             if str(o) in r:
-#                 logging.info(f'__get_index: returning {i} for arguments {level} and {o}')
-#                 return i
-#
-#     logging.info(f'__get_index: returning -1 for arguments {level} and {o}')
-#     return -1
-#
-#
-# def more_precise_or_sound_levels(list_of_levels: List[tuple[Level, Level]], level):
-#     """Returns the more precise/sound levels of a level.
-#     (depending on the value of list_of_levels)"""
-#     ix = get_index(list_of_levels, level)
-#     if ix < 0:
-#         raise ValueError(f"{level} is not in {list_of_levels}")
-#     else:
-#         try:
-#             return list_of_levels[ix + 1:]
-#         except IndexError:
-#             return []
-
-
 class Option:
     """ A single configuration option. """
     soundness = 0
     precision = 0
+
+    def __hash__(self) -> int:
+        return hash((self.name, self.precision, self.soundness, frozenset(self.all)))
 
     def __init__(self, name):
         self.name = name
@@ -108,7 +41,12 @@ class Option:
         self.constraints = list()
         self.tags = set()
         self.default = None
-        self.options_involved_in_partial_orders = set()
+
+    def get_options_involved_in_partial_orders(self):
+        opts = set()
+        [opts.add(n) for n in self.precision.nodes]
+        [opts.add(n) for n in self.soundness.nodes]
+        return opts
 
     def set_default(self, default: str):
         """Set default value."""
@@ -118,20 +56,12 @@ class Option:
         """Return default setting."""
         return self.default
 
-    # def add_tag(self, t):
-    #     """Adds a tag."""
-    #     self.tags.add(t)
-    #
-    # def get_tags(self):
-    #     """Returns tags"""
-    #     return self.tags
-    #
-    # def add_constraint(self, o1, o2):
-    #     """Add a disability constraint between two levels."""
-    #
     def add_level(self, level):
         """Add a level of the option to the master list."""
-        self.all.add(Level(self.name, level))
+        if isinstance(level, Level):
+            self.all.add(level)
+        else:
+            self.all.add(Level(self.name, level))
 
     def get_levels(self):
         """Returns list of all registered levels"""
@@ -217,7 +147,8 @@ class Option:
         return isinstance(other, Option) and \
                self.precision == other.precision and \
                self.soundness == other.soundness and \
-               self.name == other.name
+               self.name == other.name and \
+               self.all == other.all
     #
     # def __hash__(self):
     #     return hash((frozenset(self.all),
@@ -251,6 +182,8 @@ class Option:
         o = Option(d['name'])
         for level in d['levels']:
             o.add_level(Level(o.name, level))
+        if 'default' in d:
+            o.set_default(d['default'])
         for p in d['partial_orders']:
             if p['partial_order'] == 'MST':
                 o.set_more_sound_than(p['left'], p['right'])

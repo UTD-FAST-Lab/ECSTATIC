@@ -1,0 +1,17 @@
+{
+  "<start>": ["<options>"],
+  "<options>": ["<option>", "<options> <option>"],
+  "<option>": [
+    "--analysis <analysisopts>",
+    "--coarse-grained-allocation-sites <coarseallocopts>"
+  ],
+  "<analysisopts>": [
+    "context-insensitive",
+    "1-object-sensitive",
+    "2-object-sensitive"
+  ],
+  "<coarseallocopts>": [
+    "TRUE",
+    "FALSE"
+  ]
+}

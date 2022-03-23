@@ -1,19 +1,16 @@
-import hashlib
-import json
 import logging
 import os
 import subprocess
 import time
 import xml.etree.ElementTree as ElementTree
-from typing import Dict, Union, Set, Any
+from typing import Dict, Set
 
 from src.checkmate.models.Flow import Flow
 from src.checkmate.models.Level import Level
 from src.checkmate.models.Option import Option
-from src.checkmate.runners.AbstractBaseCommandLineToolRunner import AbstractBaseCommandLineToolRunner
+from src.checkmate.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
 from src.checkmate.util import FuzzingJob, config
-from src.checkmate.util.UtilClasses import FinishedFuzzingJob, XmlLocationAndFlowDroidOutput, \
-    FlowdroidFinishedFuzzingJob
+from src.checkmate.util.UtilClasses import FlowdroidFinishedFuzzingJob
 
 RUN_THRESHOLD = 2  # how many times to try to reattempt running AQL
 logger = logging.getLogger(__name__)
@@ -81,7 +78,7 @@ def run_aql(apk: str,
         return None
 
 
-def create_xml_config_file(shell_file_path: str, apk: str, verify: bool) -> XmlLocationAndFlowDroidOutput:
+def create_xml_config_file(shell_file_path: str, apk: str, verify: bool) -> FlowdroidFinishedFuzzingJob:
     """Fill out the template file with information from checkmate's config."""
     prefix = os.path.basename(shell_file_path).replace('.sh', '')
     xml_output_file = os.path.join(config.configuration['output_directory'],
@@ -114,23 +111,10 @@ def create_xml_config_file(shell_file_path: str, apk: str, verify: bool) -> XmlL
     return xml_output_file
 
 
-def dict_hash(dictionary: Dict[str, Any]) -> str:
-    """MD5 hash of a dictionary.
-    Coopied from https://www.doc.ic.ac.uk/~nuric/coding/how-to-hash-a-dictionary-in-python.html
-    """
-    dhash = hashlib.md5()
-    clone = {str(k): str(v) for k, v in dictionary.items()}
-    # We need to sort arguments so {'a': 1, 'b': 2} is
-    # the same as {'b': 2, 'a': 1}
-    encoded = json.dumps(clone, sort_keys=True).encode()
-    dhash.update(encoded)
-    return dhash.hexdigest()
-
-3
 def create_shell_file(configuration: Dict[Option, Level]) -> str:
     """Create a shell script file with the configuration the fuzzer is generating."""
     config_str = FlowdroidRunnerAbstract.dict_to_config_str(configuration)
-    hash_value = dict_hash(configuration)
+    hash_value = AbstractCommandLineToolRunner.dict_hash(configuration)
     shell_file_name = os.path.join(config.configuration['output_directory'],
                                    f"{hash_value}.sh")
     if not os.path.exists(shell_file_name):
@@ -187,7 +171,7 @@ def num_tp_fp_fn(output_file: str, apk_name: str) -> Dict[str, Set[Flow]]:
     return result
 
 
-class FlowdroidRunnerAbstract(AbstractBaseCommandLineToolRunner):
+class FlowdroidRunnerAbstract(AbstractCommandLineToolRunner):
 
     @staticmethod
     def dict_to_config_str(config_as_dict: Dict[Option, Level]) -> str:

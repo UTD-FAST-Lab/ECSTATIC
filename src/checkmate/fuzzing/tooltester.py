@@ -1,4 +1,5 @@
 import argparse
+import importlib
 import os.path
 import time
 from multiprocessing import JoinableQueue
@@ -8,21 +9,23 @@ from typing import List, Tuple
 from xml.etree.ElementTree import ElementTree, Element
 
 from src.checkmate.fuzzing.FuzzGenerator import FuzzGenerator
+from src.checkmate.runners.DOOPRunner import DOOPRunner
 from src.checkmate.runners.FlowdroidRunner import FlowdroidRunnerAbstract
 from src.checkmate.fuzzing.FuzzScheduler import FuzzScheduler
-from ..models.Flow import Flow
-from ..models.Option import Option
-from ..runners.AbstractBaseCommandLineToolRunner import AbstractBaseCommandLineToolRunner
-from ..util import config, FuzzingJob
-from ..util.UtilClasses import FuzzingCampaign, FinishedFuzzingJob, FinishedCampaign
+from src.checkmate.models.Flow import Flow
+from src.checkmate.models.Option import Option
+from src.checkmate.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
+from src.checkmate.runners.SOOTRunner import SOOTRunner
+from src.checkmate.runners.WALARunner import WALARunner
+from src.checkmate.util import config, FuzzingJob
+from src.checkmate.util.UtilClasses import FuzzingCampaign, FinishedFuzzingJob, FinishedCampaign
 
 logger = logging.getLogger(__name__)
 
 
-
 class ToolTester:
 
-    def __init__(self, generator, runner: AbstractBaseCommandLineToolRunner,
+    def __init__(self, generator, runner: AbstractCommandLineToolRunner,
                  num_processes: int, num_campaigns: int, validate: bool):
         self.generator = generator
         self.runner = runner
@@ -45,9 +48,8 @@ class ToolTester:
                 results = list(p.map(self.runner.run_job, campaign.jobs))
             results = [r for r in results if r is not None]
             print(f'Campaign {campaign_index} finished (time {time.time() - start} seconds)')
-            self.print_output(FinishedCampaign(results), campaign_index)
+            self.print_output(FinishedCampaign(results), campaign_index)  # TODO: Replace with generate_report
             print('Done!')
-
 
     def write_flowset(self, relation_type: str,
                       violated: bool,
@@ -134,7 +136,7 @@ class ToolTester:
                         try:
                             violated = (verify[0].detected_flows['tp'].difference(verify[1].detected_flows['tp'])) == \
                                        (candidate.detected_flows['tp'].difference(finished_run.detected_flows['tp']))
-                        except AttributeError: # in case one of the jobs is None
+                        except AttributeError:  # in case one of the jobs is None
                             violated = False
 
                     if violated:
@@ -164,7 +166,7 @@ class ToolTester:
                         try:
                             violated = (verify[1].detected_flows['fp'].difference(verify[0].detected_flows['fp'])) == \
                                        (finished_run.detected_flows['fp'].difference(candidate.detected_flows['fp']))
-                        except AttributeError: # in case one of the jobs is None
+                        except AttributeError:  # in case one of the jobs is None
                             violated = False
 
                     if violated:
@@ -186,11 +188,24 @@ class ToolTester:
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument()
-    p.add_argument()
-    # TODO: Setup tool tester
-    t = ToolTester()
+    p.add_argument("tool", choices=["soot","doop","wala"])
+    p.add_argument("benchmarks", choices=["dacapo","droidbench","sample"])
+    p.add_argument("--task", choices=["cg"], default="cg")
+    args = p.parse_args()
+
+    model_location = importlib.resources.path("src.resources.configuration_spaces", f"{args.tool}_config.json")
+    grammar = importlib.resources.path("src.resources.grammars",f"{args.tool}_grammar.json")
+
+    if args.tool == "soot":
+        runner = SOOTRunner()
+    elif args.tool == "wala":
+        runner = WALARunner()
+    else:
+        runner = DOOPRunner()
+
+    t = ToolTester(FuzzGenerator(model_location, grammar, "/Users/austin/git/sa-framework-benchmarks/SampleInterprocProgram/out/artifacts/SampleInterprocProgram_jar"), runner, 1, 1, False)
     t.main()
+
 
 if __name__ == '__main__':
     main()

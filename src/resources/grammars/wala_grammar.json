@@ -1,0 +1,10 @@
+{
+  "<start>": ["<options>"],
+  "<options>": ["<option>", "<options> <option>"],
+  "<option>": [
+    "--handleStaticInit <staticinitopts>",
+    "--ignoreMethodInvoke <ignoremethodinvokeoptions>"
+  ],
+  "<staticinitopts>": ["TRUE", "FALSE"],
+  "<ignoremethodinvokeoptions>": ["TRUE", "FALSE"]
+}

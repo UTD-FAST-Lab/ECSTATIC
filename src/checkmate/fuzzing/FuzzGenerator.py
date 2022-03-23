@@ -1,4 +1,5 @@
 import copy
+import json
 import logging
 import os
 import pickle
@@ -13,6 +14,7 @@ from src.checkmate.fuzzing.flowdroid_grammar import FlowdroidGrammar
 from src.checkmate.models.Level import Level
 from src.checkmate.models.Option import Option
 from src.checkmate.models.Tool import Tool
+from src.checkmate.util.ConfigurationSpaceReader import ConfigurationSpaceReader
 from src.checkmate.util.FuzzingJob import FuzzingJob
 from src.checkmate.util.UtilClasses import ConfigWithMutatedOption, FuzzingCampaign
 from src.checkmate.util.config import configuration
@@ -36,7 +38,7 @@ def mutate_config(model: Tool, config: Dict[Option, Level]) -> List[ConfigWithMu
     candidates: List[Dict[Option, Level]] = list()
     options: List[Option] = model.get_options()
     for o in options:
-        for level in o.options_involved_in_partial_orders:
+        for level in o.get_options_involved_in_partial_orders():
             if o not in config:
                 config[o] = o.get_default()
             if level == config[o]:
@@ -85,13 +87,13 @@ class FuzzGenerator:
     FIRST_RUN = True
 
     def __init__(self, model_location: str, grammar_location: str, benchmark_location: List[str]):
-        self.flowdroid_ebnf_grammar: Grammar = FlowdroidGrammar.get_grammar()
-        self.flowdroid_grammar = convert_ebnf_grammar(self.flowdroid_ebnf_grammar)
+        with open(grammar_location) as f:
+            self.json_grammar = json.load(f)
+        self.grammar = convert_ebnf_grammar(self.json_grammar)
         self.benchmarks = benchmark_location
-        self.fuzzer = GrammarCoverageFuzzer(self.flowdroid_grammar)
+        self.fuzzer = GrammarCoverageFuzzer(self.grammar)
         random.seed(2001)
-        with open(model_location, 'rb') as f:
-            self.model = pickle.load(f)
+        self.model = ConfigurationSpaceReader().read_configuration_space(model_location)
 
     def generate_campaign(self) -> FuzzingCampaign:
         """
@@ -99,7 +101,10 @@ class FuzzGenerator:
         """
         if not FuzzGenerator.FIRST_RUN:
             logger.info("First run, returning default configuration.")
-            fuzzed_config = process_config(self.model, FlowdroidGrammar.get_default())
+            fuzzed_config = dict()
+            for o in self.model.get_options():
+                o: Option
+                fuzzed_config[o.name] = o.get_default().level_name()
             FuzzGenerator.FIRST_RUN = False
         else:
             while True:
@@ -120,7 +125,9 @@ class FuzzGenerator:
         for candidate in candidates:
             choice = candidate.config
             option_under_investigation = candidate.option
-            apks = [a for a in self.benchmarks] # TODO: Replace with iterate through benchmark location
+            apks = [os.path.abspath(a) for a in
+                    [os.path.join(self.benchmarks, b) for b
+                     in os.listdir(self.benchmarks) if (b.endswith(".jar") or b.endswith(".apk"))]] # TODO: Replace with iterate through benchmark location
             for a in apks:
                 results.append(FuzzingJob(choice, option_under_investigation, a))
 

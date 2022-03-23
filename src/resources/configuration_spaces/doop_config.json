@@ -1,0 +1,26 @@
+{
+  "name": "DOOP",
+  "options": [
+    {
+      "name": "analysis",
+      "default": "context-insensitive",
+      "levels": [
+        "context-insensitive",
+        "1-object-sensitive",
+        "2-object-sensitive"
+      ],
+      "partial_orders": [
+        {
+          "left": "1-object-sensitive",
+          "partial_order": "MPT",
+          "right": "context-insensitive"
+        },
+        {
+          "left": "2-object-sensitive",
+          "partial_order": "MPT",
+          "right": "1-object-sensitive"
+        }
+      ]
+    }
+  ]
+}

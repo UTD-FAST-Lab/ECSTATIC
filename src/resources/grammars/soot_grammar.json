@@ -1,0 +1,10 @@
+{
+ "<start>": ["<options>"],
+  "<options>": ["<option>", "<options> <option>"],
+  "<option>" : [
+    "--optimize <optimizeopts>",
+    "--omit-excepting-unit-edges <omitcfgopts>"
+  ],
+  "<optimizeopts>": ["TRUE","FALSE"],
+  "<omitcfgopts>": ["TRUE", "FALSE"]
+}
