@@ -1,0 +1,4 @@
+{
+    "bechmarks": ["test"],
+    "tasks": ["taint"]
+}
