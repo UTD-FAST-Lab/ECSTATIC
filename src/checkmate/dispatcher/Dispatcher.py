@@ -41,11 +41,10 @@ def main():
 
     if args.build:
         for t in args.tools:
-            DockerManager.build_image('base')
             DockerManager.build_image(t)
+    # rebuild base image every time we run dispatcher
+    DockerManager.build_image('base')
 
-    if not DockerManager.check_image('base'):
-        DockerManager.build_image('base')
     for t in args.tools:
         if not DockerManager.check_image(t):
             DockerManager.build_image(t)

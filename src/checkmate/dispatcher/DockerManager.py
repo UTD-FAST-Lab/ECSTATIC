@@ -25,7 +25,8 @@ def check_image(tool: str):
         return False
 
 def start_runner(tool: str, benchmarks: list, tasks: list):
-    return
+    command = 'python3 -h'
+    client.create_container(image=get_image_name(tool), command=command)
 
 def get_image_name(tool: str):
     if tool == 'base':
