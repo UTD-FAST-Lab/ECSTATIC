@@ -16,7 +16,7 @@ def parse_args():
         choices=tools)
     parser.add_argument('-b',
         '--benchmarks',
-        help='benchmark programs to run, incompatible tool and benchmark pairs will be skipped'
+        help=('benchmark programs to run, incompatible tool and benchmark pairs will be skipped'
             'all benchmarks by default'),
         nargs='+',
         required=False,
@@ -53,6 +53,9 @@ def main():
         comp_benchmarks, comp_tasks = sanity_check(t, args.benchmarks, args.tasks)
 
         DockerManager.start_runner(t, comp_benchmarks, comp_tasks)
+
+if __name__ == '__main__':
+    main()
 
 
 

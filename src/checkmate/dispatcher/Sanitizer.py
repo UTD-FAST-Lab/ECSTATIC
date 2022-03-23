@@ -1,18 +1,18 @@
 import os
-import importlib
+from importlib.resources import path
 import logging
 import json
 
-tools_dir = importlib.resources.path('src.resources', 'tools')
-tools = [t for t in os.lsdir(tools_dir) if os.path.isdir(os.path.join(tools_dir, t))]
+with path('src.resources', 'tools') as tools_dir:
+    tools = [t for t in os.listdir(tools_dir) if os.path.isdir(os.path.join(tools_dir, t))]
 
-benchmarks_dir = importlib.resources.path('src.resources', 'benchamrks')
-benchmarks = [b for b in os.lsdir(benchmarks_dir) if os.path.isdir(os.path.join(benchmarks_dir, b))]
+with path('src.resources', 'benchmarks') as benchmarks_dir:
+    benchmarks = [b for b in os.listdir(benchmarks_dir) if os.path.isdir(os.path.join(benchmarks_dir, b))]
 
 tasks = ['cg', 'taint']
 
 def sanity_check(tool, benchmarks, tasks):
-    comp_json = os.path.join(tools_dir, 'compatibility.json');
+    comp_json = os.path.join(tools_dir, tool, 'compatibility.json');
     if not os.path.exists(comp_json):
         logging.error(f'compatibility.json not found for tool {tool}')
         exit(0)

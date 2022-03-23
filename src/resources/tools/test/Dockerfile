@@ -1,0 +1,4 @@
+FROM ubuntu:20.04
+
+ARG PHASAR=/phasar
+WORKDIR $PHASAR
