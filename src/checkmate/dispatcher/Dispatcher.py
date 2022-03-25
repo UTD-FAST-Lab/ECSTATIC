@@ -23,11 +23,6 @@ def parse_args():
         default=benchmarks,
         choices=benchmarks)
     parser.add_argument(
-        '--build',
-        help='(re)build base images and tool runners',
-        action='store_true',
-        required=False)
-    parser.add_argument(
         '--tasks',
         help=('tasks to run, incompatible tool and task pairs will be skipped'
             'all tasks by default'),
@@ -39,16 +34,11 @@ def parse_args():
 def main():
     args = parse_args()
 
-    if args.build:
-        for t in args.tools:
-            DockerManager.build_image(t)
-    # rebuild base image every time we run dispatcher
     DockerManager.build_image('base')
+    for t in args.tools:
+        DockerManager.build_image(t)
 
     for t in args.tools:
-        if not DockerManager.check_image(t):
-            DockerManager.build_image(t)
-
         comp_benchmarks, comp_tasks = sanity_check(t, args.benchmarks, args.tasks)
 
         DockerManager.start_runner(t, comp_benchmarks, comp_tasks)
