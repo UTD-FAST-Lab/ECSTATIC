@@ -20,7 +20,7 @@ def build_image(tool: str):
 def start_runner(tool: str, benchmarks: list, tasks: list):
     # PYTHONENV=/checkmate
     # run build benchmark script
-    command = f'python3 /checkmate/src/checkmate/fuzzing/tooltester.py {tool} {' '.join(benchmarks)} -t {' '.join(tasks)}'
+    command = f'python3.10 /checkmate/src/checkmate/fuzzing/tooltester.py {tool} {" ".join(benchmarks)} -t {" ".join(tasks)}'
     client.create_container(image=get_image_name(tool), command=command)
 
 def get_image_name(tool: str):
