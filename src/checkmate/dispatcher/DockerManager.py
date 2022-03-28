@@ -17,15 +17,10 @@ def build_image(tool: str):
     response = [line for line in image]
     print(response)
 
-def check_image(tool: str):
-    try:
-        image_info = client.inspect_image(get_image_name(tool))
-        return True
-    except docker.errors.ImageNotFound:
-        return False
-
 def start_runner(tool: str, benchmarks: list, tasks: list):
-    command = 'python3 -h'
+    # PYTHONENV=/checkmate
+    # run build benchmark script
+    command = f'python3.10 /checkmate/src/checkmate/fuzzing/tooltester.py {tool} {" ".join(benchmarks)} -t {" ".join(tasks)}'
     client.create_container(image=get_image_name(tool), command=command)
 
 def get_image_name(tool: str):

@@ -1,4 +1,4 @@
-FROM ubuntu:focal
+FROM checkmate/base-image
 
 USER root
 

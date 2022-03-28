@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM checkmate/base-image
 
 ARG PHASAR=/phasar
 ARG PHASAR_INSTALL_DIR=/usr/local/phasar
