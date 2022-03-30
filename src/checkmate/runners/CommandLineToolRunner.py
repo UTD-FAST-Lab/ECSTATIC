@@ -37,7 +37,8 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
 
     def run_job(self, job: FuzzingJob) -> FinishedFuzzingJob:
         config_as_str = self.dict_to_config_str(job.configuration)
-        cmd = [self.get_base_command()].extend(config_as_str)
+        cmd = [self.get_base_command()]
+        cmd.extend(config_as_str.split(" "))
         output_file = f'{self.dict_hash(job.configuration)}_{job.apk}.result'
         cmd.extend([self.get_input_option(), job.apk, self.get_output_option(), output_file])
         start_time: float = time.time()
