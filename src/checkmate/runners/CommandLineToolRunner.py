@@ -45,7 +45,7 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         output_file = f'{self.dict_hash(job.configuration)}_{os.path.basename(job.apk)}.result'
         cmd.extend([self.get_input_option(), job.apk, self.get_output_option(), output_file])
         start_time: float = time.time()
-        logging.info(f"Cmd is {cmd}")
+        logging.info(f"Cmd is {' '.join(cmd)}")
         subprocess.run(cmd)
         total_time: float = time.time() - start_time
         self.transform(output_file)
