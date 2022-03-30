@@ -1,3 +1,5 @@
+from typing import List
+
 from src.checkmate.runners.CommandLineToolRunner import CommandLineToolRunner
 
 
@@ -12,7 +14,7 @@ class WALARunner(CommandLineToolRunner):
         if task == 'cg':
             pass
         else:
-            raise NotImplementedError(f'DOOP does not support task {task}.')
+            raise NotImplementedError(f'WALA does not support task {task}.')
 
-    def get_base_command(self) -> str:
-        return "java -jar "
+    def get_base_command(self) -> List[str]:
+        return "java -jar /WALAInterface/target/WALAInterface-1.0-jar-with-dependencies.jar".split(" ")

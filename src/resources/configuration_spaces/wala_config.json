@@ -14,14 +14,14 @@
       ]
     },
     {
-      "name": "ignoreMethodInvoke",
+      "name": "useConstantSpecificKeys",
       "levels": ["TRUE","FALSE"],
       "default": "FALSE",
       "partial_orders": [
         {
-          "left": "FALSE",
-          "partial_order": "MST",
-          "right": "TRUE"
+          "left": "TRUE",
+          "partial_order": "MPT",
+          "right": "FALSE"
         }
       ]
     }

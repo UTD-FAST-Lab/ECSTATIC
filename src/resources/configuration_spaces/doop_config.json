@@ -3,11 +3,12 @@
   "options": [
     {
       "name": "analysis",
-      "default": "context-insensitive",
+      "default": "DUMMY",
       "levels": [
+        "DUMMY",
         "context-insensitive",
         "1-object-sensitive",
-        "2-object-sensitive"
+        "2-object-sensitive+heap"
       ],
       "partial_orders": [
         {
@@ -16,7 +17,7 @@
           "right": "context-insensitive"
         },
         {
-          "left": "2-object-sensitive",
+          "left": "2-object-sensitive+heap",
           "partial_order": "MPT",
           "right": "1-object-sensitive"
         }

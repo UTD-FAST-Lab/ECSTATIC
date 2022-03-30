@@ -1,6 +1,9 @@
 import hashlib
 import json
+import os
+import shutil
 from abc import ABC, abstractmethod
+from pathlib import Path
 from typing import Dict, Any
 
 from src.checkmate.models.Level import Level
@@ -26,11 +29,21 @@ class AbstractCommandLineToolRunner(ABC):
                 result += f'--{k.name} {v.level_name} '
             elif v.level_name.lower() == 'true':
                 result += f'--{k.name} '
-        return result
+        return result.strip()
 
     @abstractmethod
     def run_job(self, job: FuzzingJob) -> FinishedFuzzingJob:
         pass
+
+    @abstractmethod
+    def transform(self, output: str) -> str:
+        pass
+
+    def move_to_output(self, output: str) -> str:
+        output = self.transform(output)
+        Path('/results').mkdir(exist_ok=True)
+        shutil.move(output, '/results')
+        return output
 
     @staticmethod
     def dict_hash(dictionary: Dict[str, Any]) -> str:

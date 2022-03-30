@@ -8,7 +8,7 @@
   "<analysisopts>": [
     "context-insensitive",
     "1-object-sensitive",
-    "2-object-sensitive"
+    "2-object-sensitive+heap"
   ],
   "<coarseallocopts>": [
     "TRUE",
