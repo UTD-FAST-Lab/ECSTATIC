@@ -46,7 +46,7 @@ class ToolTester:
                 results = list(p.map(self.runner.run_job, campaign.jobs))
             results = [r for r in results if r is not None]
             print(f'Campaign {campaign_index} finished (time {time.time() - start} seconds)')
-            self.print_output(FinishedCampaign(results), campaign_index)  # TODO: Replace with generate_report
+            #self.print_output(FinishedCampaign(results), campaign_index)  # TODO: Replace with generate_report
             print('Done!')
 
     def write_flowset(self, relation_type: str,
