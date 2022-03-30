@@ -59,7 +59,7 @@ ENV DOOP_CACHE=/data/cache
 ENV DOOP_OUT=/data/out
 
 WORKDIR /
-RUN git clone git@bitbucket.org:yanniss/doop.git
+RUN git clone https://bitbucket.org/yanniss/doop.git
 WORKDIR /doop
 RUN ./gradlew installDist
 ENV DOOP_HOME=/doop/build/install/doop
