@@ -1,3 +1,5 @@
+from typing import List
+
 from src.checkmate.runners.CommandLineToolRunner import CommandLineToolRunner
 
 
@@ -14,5 +16,5 @@ class WALARunner(CommandLineToolRunner):
         else:
             raise NotImplementedError(f'WALA does not support task {task}.')
 
-    def get_base_command(self) -> str:
-        return "java -jar /WALA/target/WALAInterface-1.0-jar-with-dependencies.jar"
+    def get_base_command(self) -> List[str]:
+        return "java -jar /WALA/target/WALAInterface-1.0-jar-with-dependencies.jar".split(" ")

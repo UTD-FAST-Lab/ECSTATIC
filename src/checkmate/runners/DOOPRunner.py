@@ -14,5 +14,5 @@ class DOOPRunner(CommandLineToolRunner):
         else:
             raise NotImplementedError(f'DOOP does not support task {task}.')
 
-    def get_base_command(self) -> str:
-        return "doop"
+    def get_base_command(self) -> List[str]:
+        return ["doop"]
