@@ -13,5 +13,5 @@ RUN apt-get update && apt-get install -y openjdk-11-jdk openjdk-11-jre openjdk-1
 
 WORKDIR /
 RUN git clone https://github.com/amordahl/WALAInterface
-WORKDIR /WALA
+WORKDIR /WALAInterface
 RUN mvn compile package
