@@ -1,4 +1,4 @@
-FROM checkmate/base-image
+FROM base_image
 
 USER root
 
@@ -11,6 +11,7 @@ RUN echo "America/Chicago" > /etc/timezone
 RUN dpkg-reconfigure -f noninteractive tzdata
 RUN apt-get update && apt-get install -y openjdk-11-jdk openjdk-11-jre openjdk-11-jdk-headless git gcc g++
 
+WORKDIR /
 RUN git clone https://github.com/amordahl/WALA
 WORKDIR /WALA
 RUN ./gradlew assemble
