@@ -1,6 +1,7 @@
 import argparse
 import importlib
 import logging
+logging.basicConfig(level=logging.DEBUG)
 import os.path
 import time
 from multiprocessing.pool import Pool
