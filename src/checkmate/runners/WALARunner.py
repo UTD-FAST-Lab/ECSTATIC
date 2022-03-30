@@ -12,7 +12,7 @@ class WALARunner(CommandLineToolRunner):
         if task == 'cg':
             pass
         else:
-            raise NotImplementedError(f'DOOP does not support task {task}.')
+            raise NotImplementedError(f'WALA does not support task {task}.')
 
     def get_base_command(self) -> str:
-        return "java -jar "
+        return "java -jar /WALA/target/WALAInterface-1.0-jar-with-dependencies.jar"
