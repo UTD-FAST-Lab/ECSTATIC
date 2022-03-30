@@ -25,3 +25,7 @@ COPY --from=dep-build /venv /venv
 
 ADD . /checkmate
 WORKDIR /checkmate
+RUN source /venv/bin/activate
+RUN python -m pip build
+RUN deactivate
+WORKDIR /
