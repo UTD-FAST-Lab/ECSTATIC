@@ -200,7 +200,7 @@ def main():
     else:
         runner = DOOPRunner()
 
-    t = ToolTester(FuzzGenerator(model_location, grammar, "/benchmarks/"), runner, 1, 1, False)
+    t = ToolTester(FuzzGenerator(model_location, grammar, "/checkmate/benchmarks/"), runner, 1, 1, False)
     t.main()
 
 
