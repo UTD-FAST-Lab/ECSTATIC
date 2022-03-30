@@ -13,6 +13,8 @@ from src.checkmate.util.UtilClasses import FinishedFuzzingJob
 This class supports the basics of running a command line tool,
 which allows setting input and output via a command line option.
 """
+
+
 class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
 
     @abstractmethod
@@ -34,9 +36,8 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         """Given a task, sets the appropriate option."""
         pass
 
-    def transform(self, result_path: str):
-        """Applies a transformation to the results before returning."""
-        pass
+    def transform(self, output: str) -> str:
+        return output
 
     def run_job(self, job: FuzzingJob) -> FinishedFuzzingJob:
         logging.info(f'Job configuration is {[(str(k), str(v)) for k, v in job.configuration.items()]}')
@@ -49,12 +50,9 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         logging.info(f"Cmd is {cmd}")
         subprocess.run(cmd)
         total_time: float = time.time() - start_time
-        self.transform(output_file)
+        self.move_to_output(output_file)
         return FinishedFuzzingJob(
             job=job,
             execution_time=total_time,
             results_location=output_file
         )
-
-
-
