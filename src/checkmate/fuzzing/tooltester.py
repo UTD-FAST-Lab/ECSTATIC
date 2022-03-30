@@ -189,6 +189,8 @@ def main():
     p.add_argument("tool", choices=["soot","doop","wala"])
     p.add_argument("benchmarks", choices=["dacapo","droidbench","sample"])
     p.add_argument("-t", "--task", choices=["cg"], default="cg")
+    p.add_argument("-c", "--campaigns", type=int, default=1)
+    p.add_argument("-j", "--jobs", type=int, default=1)
     args = p.parse_args()
 
     model_location = importlib.resources.path("src.resources.configuration_spaces", f"{args.tool}_config.json")
@@ -201,7 +203,8 @@ def main():
     else:
         runner = DOOPRunner()
 
-    t = ToolTester(FuzzGenerator(model_location, grammar, "/checkmate/benchmarks/"), runner, 1, 1, False)
+    t = ToolTester(FuzzGenerator(model_location, grammar, "/checkmate/benchmarks/"), runner,
+                   num_processes=args.jobs, num_campaigns=args.campaigns, validate=False)
     t.main()
 
 
