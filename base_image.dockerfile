@@ -1,4 +1,5 @@
 FROM ubuntu:20.04 as python-build
+SHELL ["/bin/bash", "-c"]
 RUN apt-get update && apt-get install -y software-properties-common gcc && \
     add-apt-repository -y ppa:deadsnakes/ppa
 
@@ -25,7 +26,10 @@ COPY --from=dep-build /venv /venv
 
 ADD . /checkmate
 WORKDIR /checkmate
-RUN source /venv/bin/activate
-RUN python -m pip build
-RUN deactivate
+
+ENV VIRTUAL_ENV=/venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+RUN python -m pip install -r requirements.txt
+RUN python -m pip install -e .
 WORKDIR /
