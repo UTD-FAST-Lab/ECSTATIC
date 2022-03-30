@@ -43,6 +43,7 @@ class AbstractCommandLineToolRunner(ABC):
         output = self.transform(output)
         Path('/results').mkdir(exist_ok=True)
         shutil.move(output, '/results')
+        return output
 
     @staticmethod
     def dict_hash(dictionary: Dict[str, Any]) -> str:
