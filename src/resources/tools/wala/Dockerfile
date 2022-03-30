@@ -1,4 +1,4 @@
-FROM base_image
+FROM checkmate/base-image
 
 USER root
 
