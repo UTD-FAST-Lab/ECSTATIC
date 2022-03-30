@@ -39,7 +39,7 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         pass
 
     def run_job(self, job: FuzzingJob) -> FinishedFuzzingJob:
-        logging.info(f'Job configuration is {job.configuration}')
+        logging.info(f'Job configuration is {[(str(k), str(v)) for k, v in job.configuration.items()]}')
         config_as_str = self.dict_to_config_str(job.configuration)
         cmd = self.get_base_command()
         cmd.extend(config_as_str.split(" "))
