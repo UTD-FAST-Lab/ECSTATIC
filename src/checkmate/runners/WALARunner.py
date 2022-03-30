@@ -17,4 +17,4 @@ class WALARunner(CommandLineToolRunner):
             raise NotImplementedError(f'WALA does not support task {task}.')
 
     def get_base_command(self) -> List[str]:
-        return "java -jar /WALA/target/WALAInterface-1.0-jar-with-dependencies.jar".split(" ")
+        return "java -jar /WALAInterface/target/WALAInterface-1.0-jar-with-dependencies.jar".split(" ")
