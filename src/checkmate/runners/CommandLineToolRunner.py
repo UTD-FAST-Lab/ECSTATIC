@@ -2,6 +2,7 @@ import logging
 import subprocess
 import time
 from abc import ABC, abstractmethod
+from typing import List
 
 from src.checkmate.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
 from src.checkmate.util.FuzzingJob import FuzzingJob
@@ -14,7 +15,7 @@ which allows setting input and output via a command line option.
 class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
 
     @abstractmethod
-    def get_base_command(self) -> str:
+    def get_base_command(self) -> List[str]:
         pass
 
     @abstractmethod
@@ -38,7 +39,7 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
 
     def run_job(self, job: FuzzingJob) -> FinishedFuzzingJob:
         config_as_str = self.dict_to_config_str(job.configuration)
-        cmd = [self.get_base_command()]
+        cmd = self.get_base_command()
         cmd.extend(config_as_str.split(" "))
         output_file = f'{self.dict_hash(job.configuration)}_{job.apk}.result'
         cmd.extend([self.get_input_option(), job.apk, self.get_output_option(), output_file])
