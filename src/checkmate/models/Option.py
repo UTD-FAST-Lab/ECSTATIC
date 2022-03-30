@@ -159,8 +159,8 @@ class Option:
     #                  self.name,
     #                  frozenset(self.tags)))
     #
-    # def __str__(self):
-    #     return self.name
+    def __str__(self):
+        return self.name
     #
     # def as_dict(self):
     #     return {'name': self.name,
