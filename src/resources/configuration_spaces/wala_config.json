@@ -14,14 +14,14 @@
       ]
     },
     {
-      "name": "ignoreMethodInvoke",
+      "name": "handleStaticInit",
       "levels": ["TRUE","FALSE"],
       "default": "FALSE",
       "partial_orders": [
         {
-          "left": "FALSE",
+          "left": "TRUE",
           "partial_order": "MST",
-          "right": "TRUE"
+          "right": "FALSE"
         }
       ]
     }
