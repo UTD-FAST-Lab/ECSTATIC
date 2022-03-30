@@ -1,3 +1,4 @@
+import logging
 import subprocess
 import time
 from abc import ABC, abstractmethod
@@ -42,6 +43,7 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         output_file = f'{self.dict_hash(job.configuration)}_{job.apk}.result'
         cmd.extend([self.get_input_option(), job.apk, self.get_output_option(), output_file])
         start_time: float = time.time()
+        logging.info(f"Cmd is {cmd}")
         subprocess.run(cmd)
         total_time: float = time.time() - start_time
         self.transform(output_file)
