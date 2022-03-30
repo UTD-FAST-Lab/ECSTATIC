@@ -26,7 +26,7 @@ class AbstractCommandLineToolRunner(ABC):
                 result += f'--{k.name} {v.level_name} '
             elif v.level_name.lower() == 'true':
                 result += f'--{k.name} '
-        return result
+        return result.strip()
 
     @abstractmethod
     def run_job(self, job: FuzzingJob) -> FinishedFuzzingJob:
