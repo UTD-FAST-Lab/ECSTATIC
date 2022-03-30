@@ -14,13 +14,13 @@
       ]
     },
     {
-      "name": "handleStaticInit",
+      "name": "useConstantSpecificKeys",
       "levels": ["TRUE","FALSE"],
       "default": "FALSE",
       "partial_orders": [
         {
           "left": "TRUE",
-          "partial_order": "MST",
+          "partial_order": "MPT",
           "right": "FALSE"
         }
       ]

@@ -3,8 +3,8 @@
   "<options>": ["<option>", "<options> <option>"],
   "<option>": [
     "--handleStaticInit <staticinitopts>",
-    "--ignoreMethodInvoke <ignoremethodinvokeoptions>"
+    "--useConstantSpecificKeys <constantspecifickeysopts>"
   ],
   "<staticinitopts>": ["TRUE", "FALSE"],
-  "<ignoremethodinvokeoptions>": ["TRUE", "FALSE"]
+  "<constantspecifickeysopts>": ["TRUE", "FALSE"]
 }
