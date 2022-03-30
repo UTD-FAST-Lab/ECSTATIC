@@ -1,8 +1,8 @@
 import argparse
 import logging
 
-from Sanitizer import sanity_check, tools, benchmarks, tasks
-import DockerManager
+from src.checkmate.dispatcher.Sanitizer import sanity_check, tools, benchmarks, tasks
+from src.checkmate.dispatcher import DockerManager
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Just a fuzzing benchmark for static analyzers')

@@ -13,7 +13,7 @@ which allows setting input and output via a command line option.
 class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
 
     @abstractmethod
-    def get_tool_path(self) -> str:
+    def get_base_command(self) -> str:
         pass
 
     @abstractmethod
@@ -37,7 +37,7 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
 
     def run_job(self, job: FuzzingJob) -> FinishedFuzzingJob:
         config_as_str = self.dict_to_config_str(job.configuration)
-        cmd = [self.get_tool_path()].extend(config_as_str)
+        cmd = [self.get_base_command()].extend(config_as_str)
         output_file = f'{self.dict_hash()}_{job.apk}.result'
         cmd.extend([self.get_input_option(), job.apk, self.get_output_option(), output_file])
         start_time: float = time.time()

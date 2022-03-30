@@ -190,7 +190,7 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("tool", choices=["soot","doop","wala"])
     p.add_argument("benchmarks", choices=["dacapo","droidbench","sample"])
-    p.add_argument("--task", choices=["cg"], default="cg")
+    p.add_argument("-t", "--task", choices=["cg"], default="cg")
     args = p.parse_args()
 
     model_location = importlib.resources.path("src.resources.configuration_spaces", f"{args.tool}_config.json")

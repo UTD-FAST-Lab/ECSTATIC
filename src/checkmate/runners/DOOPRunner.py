@@ -3,7 +3,7 @@ from src.checkmate.runners.CommandLineToolRunner import CommandLineToolRunner
 
 class DOOPRunner(CommandLineToolRunner):
     def get_input_option(self) -> str:
-        pass
+        return "-i"
 
     def get_output_option(self) -> str:
         pass
@@ -14,5 +14,5 @@ class DOOPRunner(CommandLineToolRunner):
         else:
             raise NotImplementedError(f'DOOP does not support task {task}.')
 
-    def get_tool_path(self) -> str:
-        pass
+    def get_base_command(self) -> str:
+        return "doop"

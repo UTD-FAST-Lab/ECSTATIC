@@ -5,9 +5,6 @@ import os.path
 from typing import List
 
 from src.checkmate.fuzzing.tooltester import ToolTester
-from src.checkmate.readers.callgraph.AbstractCallGraphReader import AbstractCallGraphTransformer
-from src.checkmate.readers.callgraph.DOOPCallGraphReader import DOOPCallGraphTransformer
-from src.checkmate.readers.callgraph.WALACallGraphReader import WALACallGraphTransformer
 
 logging.basicConfig(format='%(levelname)s[%(asctime)s]: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
