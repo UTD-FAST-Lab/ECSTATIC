@@ -1,23 +1,20 @@
 import argparse
 import importlib
+import logging
 import os.path
 import time
-from multiprocessing import JoinableQueue
-import logging
 from multiprocessing.pool import Pool
-from typing import List, Tuple
+from typing import List
 from xml.etree.ElementTree import ElementTree, Element
 
 from src.checkmate.fuzzing.FuzzGenerator import FuzzGenerator
-from src.checkmate.runners.DOOPRunner import DOOPRunner
-from src.checkmate.runners.FlowdroidRunner import FlowdroidRunnerAbstract
-from src.checkmate.fuzzing.FuzzScheduler import FuzzScheduler
 from src.checkmate.models.Flow import Flow
 from src.checkmate.models.Option import Option
 from src.checkmate.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
+from src.checkmate.runners.DOOPRunner import DOOPRunner
 from src.checkmate.runners.SOOTRunner import SOOTRunner
 from src.checkmate.runners.WALARunner import WALARunner
-from src.checkmate.util import config, FuzzingJob
+from src.checkmate.util import config
 from src.checkmate.util.UtilClasses import FuzzingCampaign, FinishedFuzzingJob, FinishedCampaign
 
 logger = logging.getLogger(__name__)
@@ -203,7 +200,7 @@ def main():
     else:
         runner = DOOPRunner()
 
-    t = ToolTester(FuzzGenerator(model_location, grammar, "/Users/austin/git/sa-framework-benchmarks/SampleInterprocProgram/out/artifacts/SampleInterprocProgram_jar"), runner, 1, 1, False)
+    t = ToolTester(FuzzGenerator(model_location, grammar, "/benchmarks/"), runner, 1, 1, False)
     t.main()
 
 
