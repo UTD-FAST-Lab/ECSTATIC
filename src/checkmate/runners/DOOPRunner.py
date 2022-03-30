@@ -1,9 +1,10 @@
 import logging
 import os
+import re
 import shutil
 import subprocess
 import time
-from typing import List, re
+from typing import List
 
 from src.checkmate.runners.CommandLineToolRunner import CommandLineToolRunner
 from src.checkmate.util.FuzzingJob import FuzzingJob
