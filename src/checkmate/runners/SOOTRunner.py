@@ -5,7 +5,7 @@ from src.checkmate.runners.CommandLineToolRunner import CommandLineToolRunner
 
 class SOOTRunner(CommandLineToolRunner):
     def get_input_option(self) -> str:
-        return "--app-dir"
+        return "--process-dir"
 
     def get_output_option(self) -> str:
         return "--callgraph-output"
