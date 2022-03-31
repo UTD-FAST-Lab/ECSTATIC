@@ -3,7 +3,9 @@
   "options": [
     {
       "name": "analysis",
+      "default": "DUMMY",
       "levels": [
+        "DUMMY",
         "context-insensitive",
         "1-object-sensitive",
         "2-object-sensitive+heap"
