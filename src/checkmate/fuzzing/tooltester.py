@@ -1,6 +1,7 @@
 import argparse
 import importlib
 import logging
+import subprocess
 
 from src.checkmate.dispatcher import Sanitizer
 
@@ -49,7 +50,7 @@ class ToolTester:
                 results = list(p.map(self.runner.run_job, campaign.jobs))
             results = [r for r in results if r is not None]
             print(f'Campaign {campaign_index} finished (time {time.time() - start} seconds)')
-            #self.print_output(FinishedCampaign(results), campaign_index)  # TODO: Replace with generate_report
+            # self.print_output(FinishedCampaign(results), campaign_index)  # TODO: Replace with generate_report
             print('Done!')
 
     def write_flowset(self, relation_type: str,
@@ -190,14 +191,14 @@ class ToolTester:
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("tool", choices=Sanitizer.tools)
-    p.add_argument("benchmarks", choices=Sanitizer.benchmarks)
+    p.add_argument("benchmark", choices=Sanitizer.benchmarks)
     p.add_argument("-t", "--task", choices=Sanitizer.tasks, default="cg")
     p.add_argument("-c", "--campaigns", type=int, default=1)
     p.add_argument("-j", "--jobs", type=int, default=1)
     args = p.parse_args()
 
     model_location = importlib.resources.path("src.resources.configuration_spaces", f"{args.tool}_config.json")
-    grammar = importlib.resources.path("src.resources.grammars",f"{args.tool}_grammar.json")
+    grammar = importlib.resources.path("src.resources.grammars", f"{args.tool}_grammar.json")
 
     if args.tool == "soot":
         runner = SOOTRunner()
@@ -207,8 +208,16 @@ def main():
         runner = DOOPRunner()
 
     # TODO: Check that benchmarks are loaded. If not, load from git.
+    build = importlib.resources.path(f"src.resources/benchmarks/{args.benchmark}", "build.sh")
+    os.chmod(build, 555)
+    logging.info(f"Building benchmark....")
+    subprocess.run(build)
+    benchmark_list = []
+    for root, dirs, files in os.path.walk("/benchmarks"):
+        benchmark_list.extend([os.path.join(root, f) for f in files if
+                               (f.endswith(".jar") or f.endswith(".apk"))])  # TODO more dynamic extensions?
 
-    t = ToolTester(FuzzGenerator(model_location, grammar, importlib.resources.path("src.resources.tools", args.tool)),
+    t = ToolTester(FuzzGenerator(model_location, grammar, benchmark_list),
                    num_processes=args.jobs, num_campaigns=args.campaigns, validate=False)
     t.main()
 

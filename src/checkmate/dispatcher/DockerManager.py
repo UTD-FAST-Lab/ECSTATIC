@@ -8,10 +8,10 @@ from importlib.resources import path
 client = docker.APIClient(base_url='unix://var/run/docker.sock')
 
 
-def build_image(tool: str):
+def build_image(tool: str, nocache=False):
     if tool == 'base':
         logging.info("Creating base image")
-        image = client.build(path=".", dockerfile="base_image.dockerfile", tag=get_image_name(tool))
+        image = client.build(path=".", dockerfile="base_image.dockerfile", tag=get_image_name(tool), nocache=nocache)
         # with open('base_image.dockerfile', 'rb') as df:
         #     logging.info("Building base image.")
         #     image = client.build(fileobj=df, tag=get_image_name(tool))

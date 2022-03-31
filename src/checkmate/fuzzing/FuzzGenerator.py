@@ -86,11 +86,11 @@ def get_apks(directory: str) -> List[str]:
 class FuzzGenerator:
     FIRST_RUN = True
 
-    def __init__(self, model_location: str, grammar_location: str, benchmark_location: List[str]):
+    def __init__(self, model_location: str, grammar_location: str, benchmarks: List[str]):
         with open(grammar_location) as f:
             self.json_grammar = json.load(f)
         self.grammar = convert_ebnf_grammar(self.json_grammar)
-        self.benchmarks = benchmark_location
+        self.benchmarks = benchmarks
         self.fuzzer = GrammarCoverageFuzzer(self.grammar)
         random.seed(2001)
         self.model = ConfigurationSpaceReader().read_configuration_space(model_location)
@@ -125,10 +125,7 @@ class FuzzGenerator:
         for candidate in candidates:
             choice = candidate.config
             option_under_investigation = candidate.option
-            apks = [os.path.abspath(a) for a in
-                    [os.path.join(self.benchmarks, b) for b
-                     in os.listdir(self.benchmarks) if (b.endswith(".jar") or b.endswith(".apk"))]] # TODO: Replace with iterate through benchmark location
-            for a in apks:
+            for a in self.benchmarks:
                 results.append(FuzzingJob(choice, option_under_investigation, a))
 
         return FuzzingCampaign(results)
