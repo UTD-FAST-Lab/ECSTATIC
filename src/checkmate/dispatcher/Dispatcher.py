@@ -30,6 +30,12 @@ def parse_args():
         required=False,
         default=tasks,
         choices=tasks)
+    parser.add_argument(
+        '--force_build',
+        '-f',
+        action='store_true',
+        help='Force rebuild of image'
+    )
     return parser.parse_args()
 
 def main():
@@ -37,7 +43,7 @@ def main():
 
     DockerManager.build_image('base')
     for t in args.tools:
-        DockerManager.build_image(t)
+        DockerManager.build_image(t, args.force_build)
 
     for t in args.tools:
         # comp_benchmarks, comp_tasks = sanity_check(t, args.benchmarks, args.tasks)
