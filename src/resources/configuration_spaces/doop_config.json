@@ -3,7 +3,6 @@
   "options": [
     {
       "name": "analysis",
-      "default": "context-insensitive",
       "levels": [
         "context-insensitive",
         "1-object-sensitive",
