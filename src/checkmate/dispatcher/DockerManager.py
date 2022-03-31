@@ -1,3 +1,4 @@
+import logging
 import os
 from typing import List
 
@@ -10,10 +11,12 @@ client = docker.APIClient(base_url='unix://var/run/docker.sock')
 def build_image(tool: str):
     if tool == 'base':
         with open('base_image.dockerfile', 'rb') as df:
+            logging.info("Building base image.")
             image = client.build(fileobj=df, tag=get_image_name(tool))
     else:
         with path('src.resources', 'tools') as tools_dir:
             with open(os.path.join(tools_dir, tool, 'Dockerfile'), 'rb') as df:
+                logging.info(f"Building image for {tool}")
                 image = client.build(fileobj=df, tag=get_image_name(tool))
 
     response = [line for line in image]
