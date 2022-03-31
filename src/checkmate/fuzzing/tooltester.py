@@ -208,7 +208,7 @@ def main():
         runner = DOOPRunner()
 
     # TODO: Check that benchmarks are loaded. If not, load from git.
-    build = importlib.resources.path(f"src.resources/benchmarks/{args.benchmark}", "build.sh")
+    build = importlib.resources.path(f"src.resources.benchmarks.{args.benchmark}", "build.sh")
     os.chmod(build, 555)
     logging.info(f"Building benchmark....")
     subprocess.run(build)
