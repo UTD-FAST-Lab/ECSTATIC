@@ -213,7 +213,7 @@ def main():
     logging.info(f"Building benchmark....")
     subprocess.run(build)
     benchmark_list = []
-    for root, dirs, files in os.path.walk("/benchmarks"):
+    for root, dirs, files in os.walk("/benchmarks"):
         benchmark_list.extend([os.path.join(root, f) for f in files if
                                (f.endswith(".jar") or f.endswith(".apk"))])  # TODO more dynamic extensions?
 
