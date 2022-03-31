@@ -54,8 +54,8 @@ class DOOPRunner(CommandLineToolRunner):
         start_time: float = time.time()
         logging.info(f"Cmd is {cmd}")
         ps = subprocess.run(cmd, capture_output=True)
-        for l in ps.stdout.decode().split("\n"):
-            print(l)
+        for l in ps.stderr.decode().split("\n"):
+            print(f"Log: {l}")
             if l.startswith("Making database available"):
                 output_dir = l.split(" ")[-1]
                 break
