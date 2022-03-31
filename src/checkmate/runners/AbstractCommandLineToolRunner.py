@@ -42,7 +42,7 @@ class AbstractCommandLineToolRunner(ABC):
     def move_to_output(self, output: str) -> str:
         output = self.transform(output)
         Path('/results').mkdir(exist_ok=True)
-        shutil.move(output, '/results')
+        shutil.move(output, f'/results/{os.path.basename(output)}')
         return output
 
     @staticmethod
