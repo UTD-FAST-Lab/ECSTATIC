@@ -217,7 +217,7 @@ def main():
         benchmark_list.extend([os.path.join(root, f) for f in files if
                                (f.endswith(".jar") or f.endswith(".apk"))])  # TODO more dynamic extensions?
 
-    t = ToolTester(FuzzGenerator(model_location, grammar, benchmark_list),
+    t = ToolTester(FuzzGenerator(model_location, grammar, benchmark_list), runner,
                    num_processes=args.jobs, num_campaigns=args.campaigns, validate=False)
     t.main()
 
