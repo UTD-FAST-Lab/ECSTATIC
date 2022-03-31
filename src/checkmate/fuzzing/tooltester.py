@@ -1,6 +1,9 @@
 import argparse
 import importlib
 import logging
+
+from src.checkmate.dispatcher import Sanitizer
+
 logging.basicConfig(level=logging.DEBUG)
 import os.path
 import time
@@ -186,9 +189,9 @@ class ToolTester:
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("tool", choices=["soot","doop","wala"])
-    p.add_argument("benchmarks", choices=["dacapo","droidbench","sample"])
-    p.add_argument("-t", "--task", choices=["cg"], default="cg")
+    p.add_argument("tool", choices=Sanitizer.tools)
+    p.add_argument("benchmarks", choices=Sanitizer.benchmarks)
+    p.add_argument("-t", "--task", choices=Sanitizer.tasks, default="cg")
     p.add_argument("-c", "--campaigns", type=int, default=1)
     p.add_argument("-j", "--jobs", type=int, default=1)
     args = p.parse_args()
@@ -203,7 +206,9 @@ def main():
     else:
         runner = DOOPRunner()
 
-    t = ToolTester(FuzzGenerator(model_location, grammar, "/checkmate/benchmarks/"), runner,
+    # TODO: Check that benchmarks are loaded. If not, load from git.
+
+    t = ToolTester(FuzzGenerator(model_location, grammar, importlib.resources.path("src.resources.tools", args.tool)),
                    num_processes=args.jobs, num_campaigns=args.campaigns, validate=False)
     t.main()
 
