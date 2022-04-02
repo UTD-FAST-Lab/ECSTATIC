@@ -11,5 +11,5 @@ mvn clean compile package
 
 # Move outputs
 mkdir -p /benchmarks
-mv ./outputs /benchmarks/sa_microbenchmarks
+mv -f ./outputs /benchmarks/sa_microbenchmarks
 cd $CUR
