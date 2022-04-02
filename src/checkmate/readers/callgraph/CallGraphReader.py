@@ -6,7 +6,7 @@ from networkx import DiGraph
 from src.checkmate.readers.callgraph.CGNode import CGNode
 
 
-class CallGraphReader(ABC):
+class CallGraphReader():
 
     def import_graph(self, file: str) -> DiGraph:
         callgraph = DiGraph()

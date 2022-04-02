@@ -41,4 +41,4 @@ class CallgraphViolationChecker(AbstractViolationChecker):
         return Violation(len(all_differences) > 0, "soundness", job1, job2, all_differences)
 
     def read_from_input(self, file: str) -> DiGraph:
-        return CallGraphReader.import_graph(file)
+        return CallGraphReader().import_graph(file)
