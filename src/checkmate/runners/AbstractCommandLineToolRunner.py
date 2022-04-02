@@ -1,5 +1,6 @@
 import hashlib
 import json
+import logging
 import os
 import shutil
 from abc import ABC, abstractmethod
@@ -21,7 +22,6 @@ class AbstractCommandLineToolRunner(ABC):
     @staticmethod
     def dict_to_config_str(config_as_dict: Dict[Option, Level]) -> str:
         """Transforms a dictionary to a config string"""
-        import pdb; pdb.set_trace()
         result = ""
         for k, v in config_as_dict.items():
             k: Option
@@ -30,6 +30,7 @@ class AbstractCommandLineToolRunner(ABC):
                 result += f'--{k.name} {v.level_name} '
             elif v.level_name.lower() == 'true':
                 result += f'--{k.name} '
+        logging.info(f"Result is {result}")
         return result.strip()
 
     @abstractmethod
