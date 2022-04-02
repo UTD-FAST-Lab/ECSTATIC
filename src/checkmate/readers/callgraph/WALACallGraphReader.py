@@ -1,6 +1,6 @@
-from src.checkmate.readers.callgraph.AbstractCallGraphReader import AbstractCallGraphReader
+from src.checkmate.readers.callgraph.CallGraphReader import CallGraphReader
 
 
-class WALACallGraphReader(AbstractCallGraphReader):
+class WALACallGraphReader(CallGraphReader):
     def _AbstractCallGraphReader__transform(self, line: str) -> str:
         return super()._AbstractCallGraphReader__transform(line)

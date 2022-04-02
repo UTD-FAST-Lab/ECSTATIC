@@ -44,8 +44,8 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         config_as_str = self.dict_to_config_str(job.configuration)
         cmd = self.get_base_command()
         cmd.extend(config_as_str.split(" "))
-        output_file = f'{self.dict_hash(job.configuration)}_{os.path.basename(job.apk)}.result'
-        cmd.extend([self.get_input_option(), job.apk, self.get_output_option(), output_file])
+        output_file = f'{self.dict_hash(job.configuration)}_{os.path.basename(job.target)}.result'
+        cmd.extend([self.get_input_option(), job.target, self.get_output_option(), output_file])
         start_time: float = time.time()
         logging.info(f"Cmd is {cmd}")
         subprocess.run(cmd)

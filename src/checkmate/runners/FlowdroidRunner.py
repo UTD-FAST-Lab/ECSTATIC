@@ -193,11 +193,11 @@ class FlowdroidRunnerAbstract(AbstractCommandLineToolRunner):
             start_time: float = time.time()
             result_location: str
             shell_location: str = create_shell_file(job.configuration)
-            xml_location: str = create_xml_config_file(shell_location, job.apk, verify)
-            print(f'Running job with configuration {xml_location} on apk {job.apk}')
-            result_location = run_aql(job.apk, xml_location, verify)
-            print(f'Job on configuration {xml_location} on apk {job.apk} done.')
-            classified: Dict[str, Set[Flow]] = num_tp_fp_fn(result_location, job.apk)
+            xml_location: str = create_xml_config_file(shell_location, job.target, verify)
+            print(f'Running job with configuration {xml_location} on apk {job.target}')
+            result_location = run_aql(job.target, xml_location, verify)
+            print(f'Job on configuration {xml_location} on apk {job.target} done.')
+            classified: Dict[str, Set[Flow]] = num_tp_fp_fn(result_location, job.target)
 
             end_time: float = time.time()
 

@@ -4,6 +4,7 @@ import logging
 import subprocess
 
 from src.checkmate.dispatcher import Sanitizer
+from src.checkmate.violation_checkers.AbstractViolationChecker import AbstractViolationChecker
 
 logging.basicConfig(level=logging.DEBUG)
 import os.path
@@ -28,13 +29,13 @@ logger = logging.getLogger(__name__)
 class ToolTester:
 
     def __init__(self, generator, runner: AbstractCommandLineToolRunner,
-                 num_processes: int, num_campaigns: int, validate: bool):
+                 num_processes: int, num_campaigns: int, checker: AbstractViolationChecker):
         self.generator = generator
         self.runner = runner
         self.unverified_violations = list()
         self.num_processes = num_processes
         self.num_campaigns = num_campaigns
-        self.validate = validate
+        self.checker = checker
 
     def main(self):
         campaign_index = 0
@@ -50,6 +51,7 @@ class ToolTester:
                 results = list(p.map(self.runner.run_job, campaign.jobs))
             results = [r for r in results if r is not None]
             print(f'Campaign {campaign_index} finished (time {time.time() - start} seconds)')
+            self.checker.check_violations(results, "/results/violation.json")
             # self.print_output(FinishedCampaign(results), campaign_index)  # TODO: Replace with generate_report
             print('Done!')
 
@@ -91,8 +93,8 @@ class ToolTester:
             pass  # silently ignore, we don't care
 
         output_file = os.path.join(output_dir, f'flowset_violation-{violated}_'
-                                               f'{os.path.basename(os.path.dirname(run1.job.apk))}_'
-                                               f'{os.path.basename(run1.job.apk)}.xml')
+                                               f'{os.path.basename(os.path.dirname(run1.job.target))}_'
+                                               f'{os.path.basename(run1.job.target)}.xml')
         tree.write(output_file)
         print(f'Wrote flowset to {os.path.abspath(output_file)}')
 
@@ -105,13 +107,13 @@ class ToolTester:
             candidates: List[FinishedFuzzingJob]
             if option_under_investigation is None:
                 candidates = [f for f in result.finished_jobs if
-                              f.job.apk == finished_run.job.apk and
+                              f.job.target == finished_run.job.target and
                               f.results_location != finished_run.results_location]
             else:
                 candidates = [f for f in result.finished_jobs if
                               (f.job.option_under_investigation is None or
                                f.job.option_under_investigation == option_under_investigation) and
-                              f.job.apk == finished_run.job.apk and
+                              f.job.target == finished_run.job.target and
                               f.results_location != finished_run.results_location]
             logger.info(f'Found {len(candidates)} candidates for job {finished_run.results_location}')
             for candidate in candidates:
