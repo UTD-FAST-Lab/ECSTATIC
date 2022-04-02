@@ -32,5 +32,6 @@ class ConfigurationSpaceReader:
             config_space = json.load(f)
 
         self.validator.validate(config_space)
+        logging.info(f"Config space is {config_space}")
         tool = Tool.from_dict(config_space)
         return tool
