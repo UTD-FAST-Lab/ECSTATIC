@@ -24,9 +24,11 @@ logger = logging.getLogger(__name__)
 
 def fill_out_defaults(model: Tool, config: Dict[Option, Level]) -> Dict[Option, Level]:
     for o in model.get_options():
+        logger.info(f"Config that we are filling out is {config}")
         if o not in config:
             config[o] = o.get_default()
 
+    logger.info(f"Filled out config is {config}")
     return config
 
 
