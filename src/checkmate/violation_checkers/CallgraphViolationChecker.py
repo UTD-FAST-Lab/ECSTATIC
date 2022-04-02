@@ -18,11 +18,11 @@ class CallgraphViolationChecker(AbstractViolationChecker):
         all_differences = list()
         for k, v in adj1.items():
             if k not in adj2:
-                all_differences.extend([f'{k} -> {v1.content}' for v1 in v])
+                all_differences.extend([f'{k} -> {v1}' for v1 in v])
             else:
-                differences = set(adj2[k]) - set(v)
+                differences = adj2[k] - v
                 if len(differences) > 0:
-                    all_differences.extend([f'{k} -> {v1.content}' for v1 in differences])
+                    all_differences.extend([f'{k} -> {v1}' for v1 in differences])
         return Violation(len(all_differences) > 0, "precision", dataclasses.asdict(job1), dataclasses.asdict(job2),
                          all_differences)
 
@@ -34,11 +34,11 @@ class CallgraphViolationChecker(AbstractViolationChecker):
         all_differences = list()
         for k, v in adj1.items():
             if k not in adj2:
-                all_differences.extend([f'{k} -> {v1.content}' for v1 in v])
+                all_differences.extend([f'{k} -> {v1}' for v1 in v])
             else:
-                differences = set(v) - set(adj2[k])
+                differences = v - adj2[k]
                 if len(differences) > 0:
-                    all_differences.extend([f'{k} -> {v1.content}' for v1 in differences])
+                    all_differences.extend([f'{k} -> {v1}' for v1 in differences])
         return Violation(len(all_differences) > 0, "soundness", dataclasses.asdict(job1), dataclasses.asdict(job2),
                          all_differences)
 
