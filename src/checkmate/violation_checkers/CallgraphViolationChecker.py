@@ -24,9 +24,11 @@ class CallgraphViolationChecker(AbstractViolationChecker):
                 differences = adj2[k] - v
                 if len(differences) > 0:
                     all_differences.extend([f'{k} -> {v1}' for v1 in differences])
-        job1.job = job1.job.as_dict() if isinstance(job1.job, FuzzingJob) else job1.job
-        job2.job = job2.job.as_dict() if isinstance(job2.job, FuzzingJob) else job2.job
-        return Violation(len(all_differences) > 0, "precision", dataclasses.asdict(job1), dataclasses.asdict(job2),
+        return Violation(len(all_differences) > 0,
+                         "soundness", FinishedFuzzingJob(job=job1.job.as_dict(), execution_time=job1.execution_time,
+                                                         results_location=job1.results_location),
+                         FinishedFuzzingJob(job=job2.job.as_dict(), execution_time=job2.execution_time,
+                                            results_location=job2.results_location),
                          all_differences)
 
     def is_more_sound(self, job1: FinishedFuzzingJob, job2: FinishedFuzzingJob) -> Violation:
@@ -42,9 +44,11 @@ class CallgraphViolationChecker(AbstractViolationChecker):
                 differences = v - adj2[k]
                 if len(differences) > 0:
                     all_differences.extend([f'{k} -> {v1}' for v1 in differences])
-        job1.job = job1.job.as_dict() if isinstance(job1.job, FuzzingJob) else job1.job
-        job2.job = job2.job.as_dict() if isinstance(job2.job, FuzzingJob) else job2.job
-        return Violation(len(all_differences) > 0, "soundness", dataclasses.asdict(job1), dataclasses.asdict(job2),
+        return Violation(len(all_differences) > 0,
+                         "soundness", FinishedFuzzingJob(job=job1.job.as_dict(), execution_time=job1.execution_time,
+                                                         results_location=job1.results_location),
+                         FinishedFuzzingJob(job=job2.job.as_dict(), execution_time=job2.execution_time,
+                                            results_location=job2.results_location),
                          all_differences)
 
     def read_from_input(self, file: str) -> DiGraph:
