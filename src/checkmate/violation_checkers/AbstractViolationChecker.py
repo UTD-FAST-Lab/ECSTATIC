@@ -60,7 +60,7 @@ class AbstractViolationChecker(ABC):
                                 f'equal to {candidate.job.configuration[option_under_investigation]}')
                     violations.append(self.is_more_precise(finished_run, candidate))
         with open(self.output, 'w') as f:
-            json.dump(violations, f)
+            json.dump([v.asdict() for v in violations], f)
         print('Campaign value processing done.')
         # results_queue.task_done()
 
