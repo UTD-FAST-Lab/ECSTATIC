@@ -31,7 +31,7 @@ class Option:
     precision = 0
 
     def __hash__(self) -> int:
-        return hash((self.name, self.precision, self.soundness, frozenset(self.all)))
+        return hash((self.name, frozenset(self.all)))
 
     def __init__(self, name):
         self.name = name
@@ -145,8 +145,6 @@ class Option:
     #
     def __eq__(self, other):
         return isinstance(other, Option) and \
-               self.precision == other.precision and \
-               self.soundness == other.soundness and \
                self.name == other.name and \
                self.all == other.all
     #
