@@ -39,6 +39,7 @@ def mutate_config(model: Tool, config: Dict[Option, Level]) -> List[ConfigWithMu
     """
     candidates: List[Dict[Option, Level]] = list()
     options: List[Option] = model.get_options()
+    import pdb; pdb.set_trace()
     for o in options:
         for level in o.get_options_involved_in_partial_orders():
             if o not in config:
