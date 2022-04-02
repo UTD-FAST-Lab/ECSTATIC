@@ -24,8 +24,8 @@ class CallgraphViolationChecker(AbstractViolationChecker):
                 differences = adj2[k] - v
                 if len(differences) > 0:
                     all_differences.extend([f'{k} -> {v1}' for v1 in differences])
-        job1.job = dataclasses.asdict(job1.job) if isinstance(job1.job, FuzzingJob) else job1.job
-        job2.job = dataclasses.asdict(job2.job) if isinstance(job2.job, FuzzingJob) else job2.job
+        job1.job = job1.job.as_dict() if isinstance(job1.job, FuzzingJob) else job1.job
+        job2.job = job2.job.as_dict() if isinstance(job2.job, FuzzingJob) else job2.job
         return Violation(len(all_differences) > 0, "precision", dataclasses.asdict(job1), dataclasses.asdict(job2),
                          all_differences)
 
@@ -42,8 +42,8 @@ class CallgraphViolationChecker(AbstractViolationChecker):
                 differences = v - adj2[k]
                 if len(differences) > 0:
                     all_differences.extend([f'{k} -> {v1}' for v1 in differences])
-        job1.job = dataclasses.asdict(job1.job) if isinstance(job1.job, FuzzingJob) else job1.job
-        job2.job = dataclasses.asdict(job2.job) if isinstance(job2.job, FuzzingJob) else job2.job
+        job1.job = job1.job.as_dict() if isinstance(job1.job, FuzzingJob) else job1.job
+        job2.job = job2.job.as_dict() if isinstance(job2.job, FuzzingJob) else job2.job
         return Violation(len(all_differences) > 0, "soundness", dataclasses.asdict(job1), dataclasses.asdict(job2),
                          all_differences)
 
