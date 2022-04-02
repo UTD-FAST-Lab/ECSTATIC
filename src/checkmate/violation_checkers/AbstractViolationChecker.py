@@ -12,8 +12,7 @@ logger = logging.getLogger("AbstractViolationChecker")
 
 class AbstractViolationChecker(ABC):
 
-    def __init__(self, model: Tool, output: str):
-        self.model: Tool = model
+    def __init__(self, output: str):
         self.output: str = output
 
     def check_violations(self, results: List[FinishedFuzzingJob]):
