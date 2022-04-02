@@ -25,10 +25,7 @@ class CallgraphViolationChecker(AbstractViolationChecker):
                 if len(differences) > 0:
                     all_differences.extend([f'{k} -> {v1}' for v1 in differences])
         return Violation(len(all_differences) > 0,
-                         "soundness", FinishedFuzzingJob(job=job1.job.as_dict(), execution_time=job1.execution_time,
-                                                         results_location=job1.results_location),
-                         FinishedFuzzingJob(job=job2.job.as_dict(), execution_time=job2.execution_time,
-                                            results_location=job2.results_location),
+                         "soundness", None, None,
                          all_differences)
 
     def is_more_sound(self, job1: FinishedFuzzingJob, job2: FinishedFuzzingJob) -> Violation:
@@ -45,10 +42,7 @@ class CallgraphViolationChecker(AbstractViolationChecker):
                 if len(differences) > 0:
                     all_differences.extend([f'{k} -> {v1}' for v1 in differences])
         return Violation(len(all_differences) > 0,
-                         "soundness", FinishedFuzzingJob(job=job1.job.as_dict(), execution_time=job1.execution_time,
-                                                         results_location=job1.results_location),
-                         FinishedFuzzingJob(job=job2.job.as_dict(), execution_time=job2.execution_time,
-                                            results_location=job2.results_location),
+                         "soundness", None, None,
                          all_differences)
 
     def read_from_input(self, file: str) -> DiGraph:
