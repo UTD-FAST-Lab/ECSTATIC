@@ -42,6 +42,7 @@ class AbstractViolationChecker(ABC):
                         raise RuntimeError('Trying to compare two configurations with None as the option '
                                            'under investigation. This should never happen.')
 
+                logger.info(f"option_under_investigation: {option_under_investigation.name}")
                 candidate: FinishedFuzzingJob
                 if option_under_investigation.is_more_sound(
                         finished_run.job.configuration[option_under_investigation].level_name,
