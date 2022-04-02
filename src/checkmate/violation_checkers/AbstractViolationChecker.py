@@ -59,7 +59,7 @@ class AbstractViolationChecker(ABC):
                     logger.info(f'{finished_run.job.configuration[option_under_investigation]} is more precise than or '
                                 f'equal to {candidate.job.configuration[option_under_investigation]}')
                     violations.append(self.is_more_precise(finished_run, candidate))
-        with open(self.output) as f:
+        with open(self.output, 'w') as f:
             json.dump(f, violations)
         print('Campaign value processing done.')
         # results_queue.task_done()
