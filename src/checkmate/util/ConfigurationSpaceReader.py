@@ -1,5 +1,6 @@
 import importlib.resources
 import json
+import logging
 import os
 
 from jsonschema.validators import RefResolver, Draft7Validator
