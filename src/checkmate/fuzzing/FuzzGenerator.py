@@ -53,6 +53,7 @@ def process_config(model: Tool, config: str) -> Dict[str, str]:
     """
     Converts the string config produced by the fuzzer to a dictionary mapping options to settings.
     """
+    logger.info(f"Fuzzed config is {config}")
     i = 0
     tokens: List[str] = config.split(' ')
     result: Dict[str, str] = {}
