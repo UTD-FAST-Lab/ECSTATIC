@@ -35,4 +35,5 @@ class ConfigurationSpaceReader:
         self.validator.validate(config_space)
         logging.info(f"Config space is {config_space}")
         tool = Tool.from_dict(config_space)
+        logging.info(tool.get_options())
         return tool
