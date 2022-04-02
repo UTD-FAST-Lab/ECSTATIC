@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import NamedTuple, Dict, Set, List
+from typing import NamedTuple, Dict, Set, List, Any
 
 from frozendict import frozendict
 
@@ -35,3 +35,11 @@ class FlowdroidFinishedFuzzingJob(FinishedFuzzingJob):
 @dataclass
 class FinishedCampaign:
     finished_jobs: List[FinishedFuzzingJob]
+
+@dataclass
+class Violation:
+    violated: bool
+    type: str
+    job1: Dict
+    job2: Dict
+    differences: List[str]

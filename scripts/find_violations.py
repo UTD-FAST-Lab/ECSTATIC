@@ -300,7 +300,7 @@ def check_for_violations(configurations_to_flows: Dict[Configuration, List[Flow]
             if config1 == config2:
                 continue
             elif config1.config_file != config2.config_file and\
-                 config1.apk == config2.apk and\
+                 config1.target == config2.target and\
                  (config1.option_under_investigation == config2.option_under_investigation or\
                   (config1.config_file == DEFAULT_CONFIG[tool] or\
                  config2.config_file == DEFAULT_CONFIG[tool])):
@@ -362,7 +362,7 @@ def check_for_violations(configurations_to_flows: Dict[Configuration, List[Flow]
                             if not os.path.exists(os.path.join(violation_directory, subpath)):
                                 os.makedirs(os.path.join(violation_directory, subpath))
                             violation.append(preserve)
-                            fname = f'flowset_violation-true_{config1.apk}'\
+                            fname = f'flowset_violation-true_{config1.target}'\
                                     f'_{suffix}.xml'
                             # Output to file.
                             tree = ET.ElementTree(violation)
@@ -403,7 +403,7 @@ def check_for_violations(configurations_to_flows: Dict[Configuration, List[Flow]
                             if not os.path.exists(os.path.join(violation_directory, subpath)):
                                 os.makedirs(os.path.join(violation_directory, subpath))
                             violation.append(preserve)
-                            fname = f'flowset_violation-false_{config1.apk}'\
+                            fname = f'flowset_violation-false_{config1.target}'\
                                     f'_{suffix}.xml'
                             # Output to file.
                             tree = ET.ElementTree(violation)
