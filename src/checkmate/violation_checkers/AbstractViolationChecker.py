@@ -33,30 +33,31 @@ class AbstractViolationChecker(ABC):
                               f.job.target == finished_run.job.target and
                               f.results_location != finished_run.results_location]
             logger.info(f'Found {len(candidates)} candidates for job {finished_run.results_location}')
-            candidate: FinishedFuzzingJob
-            if finished_run.job.option_under_investigation is None:
-                # switch to the other candidate's
-                option_under_investigation = candidate.job.option_under_investigation
-                if option_under_investigation is None:
-                    raise RuntimeError('Trying to compare two configurations with None as the option '
-                                       'under investigation. This should never happen.')
+            for candidate in candidates:
+                candidate: FinishedFuzzingJob
+                if finished_run.job.option_under_investigation is None:
+                    # switch to the other candidate's
+                    option_under_investigation = candidate.job.option_under_investigation
+                    if option_under_investigation is None:
+                        raise RuntimeError('Trying to compare two configurations with None as the option '
+                                           'under investigation. This should never happen.')
 
-            candidate: FinishedFuzzingJob
-            if option_under_investigation.is_more_sound(
-                    finished_run.job.configuration[option_under_investigation].level_name,
-                    candidate.job.configuration[
-                        option_under_investigation].level_name):  # left side is less sound than right side
-                violations.append(self.is_more_sound(self.read_from_input(finished_run.results_location),
-                                                     self.read_from_input(candidate.results_location)))
+                candidate: FinishedFuzzingJob
+                if option_under_investigation.is_more_sound(
+                        finished_run.job.configuration[option_under_investigation].level_name,
+                        candidate.job.configuration[
+                            option_under_investigation].level_name):  # left side is less sound than right side
+                    violations.append(self.is_more_sound(self.read_from_input(finished_run.results_location),
+                                                         self.read_from_input(candidate.results_location)))
 
-            if option_under_investigation.is_more_precise(
-                    finished_run.job.configuration[option_under_investigation].level_name,
-                    candidate.job.configuration[
-                        option_under_investigation].level_name):  # left side is less precise than right side
-                logger.info(f'{finished_run.job.configuration[option_under_investigation]} is more precise than or '
-                            f'equal to {candidate.job.configuration[option_under_investigation]}')
-                violations.append(self.is_more_precise(self.read_from_input(finished_run.results_location),
-                                                       self.read_from_input(candidate.results_location)))
+                if option_under_investigation.is_more_precise(
+                        finished_run.job.configuration[option_under_investigation].level_name,
+                        candidate.job.configuration[
+                            option_under_investigation].level_name):  # left side is less precise than right side
+                    logger.info(f'{finished_run.job.configuration[option_under_investigation]} is more precise than or '
+                                f'equal to {candidate.job.configuration[option_under_investigation]}')
+                    violations.append(self.is_more_precise(self.read_from_input(finished_run.results_location),
+                                                           self.read_from_input(candidate.results_location)))
         with open(self.output) as f:
             json.dump(f, violations)
         print('Campaign value processing done.')
