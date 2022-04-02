@@ -51,7 +51,7 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         logging.info(f"Cmd is {cmd}")
         subprocess.run(cmd)
         total_time: float = time.time() - start_time
-        self.move_to_output(output_file)
+        output_file = self.move_to_output(output_file)
         return FinishedFuzzingJob(
             job=job,
             execution_time=total_time,
