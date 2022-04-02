@@ -124,6 +124,7 @@ class FuzzGenerator:
 
         for candidate in candidates:
             choice = candidate.config
+            logger.info(f"Chosen config: {choice}")
             option_under_investigation = candidate.option
             for a in self.benchmarks:
                 results.append(FuzzingJob(choice, option_under_investigation, a))
