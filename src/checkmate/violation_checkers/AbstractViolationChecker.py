@@ -46,16 +46,16 @@ class AbstractViolationChecker(ABC):
                 candidate: FinishedFuzzingJob
                 logger.info(f"candidate is {[f'{k}:{v}' for k, v in candidate.job.configuration.items()]}")
                 if option_under_investigation.is_more_sound(
-                        finished_run.job.configuration[option_under_investigation].level_name,
+                        finished_run.job.configuration[option_under_investigation.name].level_name,
                         candidate.job.configuration[
-                            option_under_investigation].level_name):  # left side is less sound than right side
+                            option_under_investigation.name].level_name):  # left side is less sound than right side
                     violations.append(self.is_more_sound(self.read_from_input(finished_run.results_location),
                                                          self.read_from_input(candidate.results_location)))
 
                 if option_under_investigation.is_more_precise(
-                        finished_run.job.configuration[option_under_investigation].level_name,
+                        finished_run.job.configuration[option_under_investigation.name].level_name,
                         candidate.job.configuration[
-                            option_under_investigation].level_name):  # left side is less precise than right side
+                            option_under_investigation.name].level_name):  # left side is less precise than right side
                     logger.info(f'{finished_run.job.configuration[option_under_investigation]} is more precise than or '
                                 f'equal to {candidate.job.configuration[option_under_investigation]}')
                     violations.append(self.is_more_precise(self.read_from_input(finished_run.results_location),
