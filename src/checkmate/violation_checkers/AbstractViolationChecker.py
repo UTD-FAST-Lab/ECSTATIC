@@ -44,8 +44,8 @@ class AbstractViolationChecker(ABC):
 
                 logger.info(f"option_under_investigation: {option_under_investigation.name}")
                 candidate: FinishedFuzzingJob
-                logger.info(f"finshed_run's config is {finished_run.job.configuration}")
-                logger.info(f"candidate config is {candidate.job.configuration}")
+                logger.info(f"finshed_run's config is {finished_run.job.configuration} {[f'{k}:{v}' for k, v in finished_run.job.configuration.items()]}")
+                logger.info(f"candidate config is {candidate.job.configuration} {[f'{k}:{v}' for k, v in candidate.job.configuration.items()]}")
                 if option_under_investigation.is_more_sound(
                         finished_run.job.configuration[option_under_investigation.name].level_name,
                         candidate.job.configuration[
