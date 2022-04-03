@@ -16,8 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with checkmate.  If not, see <https://www.gnu.org/licenses/>.
 ###
-
-
+import logging
 from typing import Tuple
 
 import networkx
@@ -125,12 +124,21 @@ class Option:
         return node1, node2
 
     def is_more_sound(self, o1: str, o2: str) -> bool:
-        (node1, node2) = self.resolve_nodes(self.soundness, o1, o2)
-        return node2 in networkx.descendants(self.soundness, node1)
+        try:
+            (node1, node2) = self.resolve_nodes(self.soundness, o1, o2)
+            return node2 in networkx.descendants(self.soundness, node1)
+        except ValueError as ve:
+            logging.exception(ve)
+            return False
 
     def is_more_precise(self, o1: str, o2: str) -> bool:
-        (node1, node2) = self.resolve_nodes(self.precision, o1, o2)
-        return node2 in networkx.descendants(self.precision, node1)
+        try:
+            (node1, node2) = self.resolve_nodes(self.precision, o1, o2)
+            return node2 in networkx.descendants(self.precision, node1)
+        except ValueError as ve:
+            logging.exception(ve)
+            return False
+
 
     # def precision_compare(self, o1: Level, o2: Level):
     #     """
