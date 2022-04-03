@@ -32,10 +32,10 @@ def parse_args():
         default=tasks,
         choices=tasks)
     parser.add_argument(
-        '--force_build',
-        '-f',
+        '--nocache',
+        '-n',
         action='store_true',
-        help='Force rebuild of image'
+        help='Build images without cache'
     )
     return parser.parse_args()
 
@@ -44,7 +44,7 @@ def main():
 
     DockerManager.build_image('base')
     for t in args.tools:
-        DockerManager.build_image(t, args.force_build)
+        DockerManager.build_image(t, args.nocache)
 
     for t in args.tools:
         for b in args.benchmarks:
