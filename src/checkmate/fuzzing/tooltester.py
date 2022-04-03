@@ -196,8 +196,8 @@ def main():
     p.add_argument("tool", choices=Sanitizer.tools)
     p.add_argument("benchmark", choices=Sanitizer.benchmarks)
     p.add_argument("-t", "--task", choices=Sanitizer.tasks, default="cg")
-    p.add_argument("-c", "--campaigns", type=int, default=1)
-    p.add_argument("-j", "--jobs", type=int, default=1)
+    p.add_argument("-c", "--campaigns", type=int, default=5)
+    p.add_argument("-j", "--jobs", type=int, default=32)
     args = p.parse_args()
 
     model_location = importlib.resources.path("src.resources.configuration_spaces", f"{args.tool}_config.json")
