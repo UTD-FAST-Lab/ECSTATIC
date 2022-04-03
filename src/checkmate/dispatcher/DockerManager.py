@@ -35,7 +35,7 @@ def start_runner(tool: str, benchmarks: List[str], tasks: List[str]):
     command = f'tester {tool} {" ".join(benchmarks)} -t {" ".join(tasks)}'
     cntr = client.create_container(image=get_image_name(tool), command=command)
     logging.info(f"Cntr is {cntr}")
-    strm, stat = cntr.get_archive(cntr, "/results")
+    strm, stat = client.get_archive(cntr, "/results")
     with open(os.path.join(importlib.resources.path("results", ""),
                            f"{tool}_{'-'.join(benchmarks)}_{'-'.join(tasks)}_{time.time()}.tar")) as f:
         for s in strm:
