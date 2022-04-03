@@ -1,5 +1,9 @@
+import importlib
+import io
 import logging
 import os
+import tarfile
+import time
 from typing import List
 
 import docker
@@ -29,7 +33,14 @@ def start_runner(tool: str, benchmarks: List[str], tasks: List[str]):
     # PYTHONENV=/checkmate
     # run build benchmark script
     command = f'tester {tool} {" ".join(benchmarks)} -t {" ".join(tasks)}'
-    client.create_container(image=get_image_name(tool), command=command)
+    cntr = client.create_container(image=get_image_name(tool), command=command)
+    strm, stat = cntr.get_archive(cntr, "/results")
+    with open(os.path.join(importlib.resources.path("results", ""),
+                           f"{tool}_{'-'.join(benchmarks)}_{'-'.join(tasks)}_{time.time()}.tar")) as f:
+        for s in strm:
+            f.write(s)
+
+
 
 
 def get_image_name(tool: str):
