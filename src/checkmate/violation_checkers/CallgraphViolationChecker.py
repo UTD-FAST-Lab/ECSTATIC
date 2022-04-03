@@ -1,11 +1,8 @@
-import dataclasses
-from typing import Any
-
 from networkx import DiGraph
 
 from src.checkmate.readers.callgraph.CallGraphReader import CallGraphReader
+from src.checkmate.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
 from src.checkmate.transformers.callgraphs import CallgraphTransformations
-from src.checkmate.util.FuzzingJob import FuzzingJob
 from src.checkmate.util.UtilClasses import Violation, FinishedFuzzingJob
 from src.checkmate.violation_checkers.AbstractViolationChecker import AbstractViolationChecker
 
@@ -25,7 +22,12 @@ class CallgraphViolationChecker(AbstractViolationChecker):
                 if len(differences) > 0:
                     all_differences.extend([f'{k} -> {v1}' for v1 in differences])
         return Violation(len(all_differences) > 0,
-                         "soundness", None, None,
+                         "precision",
+                         AbstractCommandLineToolRunner.dict_to_config_str(job1.job.configuration),
+                         job1.results_location,
+                         AbstractCommandLineToolRunner.dict_to_config_str(job2.job.configuration),
+                         job2.results_location,
+                         job1.job.option_under_investigation,
                          all_differences)
 
     def is_more_sound(self, job1: FinishedFuzzingJob, job2: FinishedFuzzingJob) -> Violation:
@@ -42,7 +44,12 @@ class CallgraphViolationChecker(AbstractViolationChecker):
                 if len(differences) > 0:
                     all_differences.extend([f'{k} -> {v1}' for v1 in differences])
         return Violation(len(all_differences) > 0,
-                         "soundness", None, None,
+                         "soundness",
+                         AbstractCommandLineToolRunner.dict_to_config_str(job1.job.configuration),
+                         job1.results_location,
+                         AbstractCommandLineToolRunner.dict_to_config_str(job2.job.configuration),
+                         job2.results_location,
+                         job1.job.option_under_investigation,
                          all_differences)
 
     def read_from_input(self, file: str) -> DiGraph:
