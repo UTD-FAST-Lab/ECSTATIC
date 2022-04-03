@@ -5,8 +5,8 @@ from abc import ABC, abstractmethod
 from typing import List, Any
 
 from src.checkmate.models.Option import Option
-from src.checkmate.models.Tool import Tool
-from src.checkmate.util.UtilClasses import FinishedFuzzingJob, Violation
+from src.checkmate.util.UtilClasses import FinishedFuzzingJob
+from src.checkmate.util.Violation import Violation
 
 logger = logging.getLogger("AbstractViolationChecker")
 
@@ -61,7 +61,7 @@ class AbstractViolationChecker(ABC):
                                 f'equal to {candidate.job.configuration[option_under_investigation]}')
                     violations.append(self.is_more_precise(finished_run, candidate))
         with open(self.output, 'w') as f:
-            json.dump([dataclasses.asdict(v) for v in violations], f)
+            json.dump([v.as_dict() for v in violations], f)
         print(f'Finished checking violations. {len([v for v in violations if v.violated])} violations detected.')
         print('Campaign value processing done.')
         # results_queue.task_done()
