@@ -40,9 +40,9 @@ def start_runner(tool: str, benchmark: str, task: str):
     cntr: Container = client.containers.run(image=get_image_name(tool), command=command, detach=True)
     cntr.wait()
     logging.info('Container finished!')
-    print(cntr.logs())
+    [print(l) for l in cntr.logs().split('\n')]
     with open(os.path.join(importlib.resources.path("results", ""),
-                           f"{tool}_{benchmark}_{task}_{time.time()}.tar"), 'w') as f:
+                           f"{tool}_{benchmark}_{task}_{time.time()}.tar"), 'wb') as f:
         stream, stat = cntr.get_archive("/results")
         for s in stream:
             f.write(s)
