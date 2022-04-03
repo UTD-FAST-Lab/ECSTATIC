@@ -1,5 +1,6 @@
 import hashlib
 import json
+import logging
 import os
 import shutil
 from abc import ABC, abstractmethod
@@ -29,6 +30,7 @@ class AbstractCommandLineToolRunner(ABC):
                 result += f'--{k.name} {v.level_name} '
             elif v.level_name.lower() == 'true':
                 result += f'--{k.name} '
+        logging.info(f"Result is {result}")
         return result.strip()
 
     @abstractmethod
@@ -43,7 +45,7 @@ class AbstractCommandLineToolRunner(ABC):
         output = self.transform(output)
         Path('/results').mkdir(exist_ok=True)
         shutil.move(os.path.abspath(output), f'/results/{os.path.basename(output)}')
-        return output
+        return f'/results/{os.path.basename(output)}'
 
     @staticmethod
     def dict_hash(dictionary: Dict[str, Any]) -> str:

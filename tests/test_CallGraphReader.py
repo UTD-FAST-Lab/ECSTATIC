@@ -4,6 +4,7 @@ from networkx import DiGraph
 
 from src.checkmate.readers.callgraph.CallGraphReader import CallGraphReader
 from src.checkmate.readers.callgraph.DOOPCallGraphReader import DOOPCallGraphReader
+import src.checkmate.transformers.callgraphs.CallgraphTransformations
 
 def test_wala_contextins():
     wr = CallGraphReader()

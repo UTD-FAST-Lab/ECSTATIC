@@ -1,5 +1,6 @@
 import importlib.resources
 import json
+import logging
 import os
 
 from jsonschema.validators import RefResolver, Draft7Validator
@@ -32,5 +33,7 @@ class ConfigurationSpaceReader:
             config_space = json.load(f)
 
         self.validator.validate(config_space)
+        logging.info(f"Config space is {config_space}")
         tool = Tool.from_dict(config_space)
+        logging.info(tool.get_options())
         return tool

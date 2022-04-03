@@ -5,6 +5,7 @@ import subprocess
 
 from src.checkmate.dispatcher import Sanitizer
 from src.checkmate.violation_checkers.AbstractViolationChecker import AbstractViolationChecker
+from src.checkmate.violation_checkers.CallgraphViolationChecker import CallgraphViolationChecker
 
 logging.basicConfig(level=logging.DEBUG)
 import os.path
@@ -51,7 +52,7 @@ class ToolTester:
                 results = list(p.map(self.runner.run_job, campaign.jobs))
             results = [r for r in results if r is not None]
             print(f'Campaign {campaign_index} finished (time {time.time() - start} seconds)')
-            self.checker.check_violations(results, "/results/violation.json")
+            self.checker.check_violations(results)
             # self.print_output(FinishedCampaign(results), campaign_index)  # TODO: Replace with generate_report
             print('Done!')
 
@@ -220,7 +221,8 @@ def main():
                                (f.endswith(".jar") or f.endswith(".apk"))])  # TODO more dynamic extensions?
 
     t = ToolTester(FuzzGenerator(model_location, grammar, benchmark_list), runner,
-                   num_processes=args.jobs, num_campaigns=args.campaigns, validate=False)
+                   num_processes=args.jobs, num_campaigns=args.campaigns,
+                   checker=CallgraphViolationChecker("/results/violations.json"))
     t.main()
 
 

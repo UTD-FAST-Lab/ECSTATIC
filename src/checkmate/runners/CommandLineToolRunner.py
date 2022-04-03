@@ -46,11 +46,12 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         cmd.extend(config_as_str.split(" "))
         output_file = f'{self.dict_hash(job.configuration)}_{os.path.basename(job.target)}.result'
         cmd.extend([self.get_input_option(), job.target, self.get_output_option(), output_file])
+        cmd = [c for c in cmd if c != '']
         start_time: float = time.time()
         logging.info(f"Cmd is {cmd}")
         subprocess.run(cmd)
         total_time: float = time.time() - start_time
-        self.move_to_output(output_file)
+        output_file = self.move_to_output(output_file)
         return FinishedFuzzingJob(
             job=job,
             execution_time=total_time,
