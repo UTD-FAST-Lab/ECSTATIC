@@ -37,7 +37,7 @@ def start_runner(tool: str, benchmarks: List[str], tasks: List[str]):
     cntr = client.create_container(image=get_image_name(tool), command=command)
     logging.info(f"Cntr is {cntr}")
     id = cntr['Id']
-    subprocess.run(cmd=['docker', 'cp', f'{id}/results', os.path.join(importlib.resources.path("results", ""),
+    subprocess.run(['docker', 'cp', f'{id}/results', os.path.join(importlib.resources.path("results", ""),
                            f"{tool}_{'-'.join(benchmarks)}_{'-'.join(tasks)}_{time.time()}")])
 
 
