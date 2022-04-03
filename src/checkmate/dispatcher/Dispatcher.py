@@ -1,6 +1,6 @@
 import argparse
 import logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 from src.checkmate.dispatcher.Sanitizer import sanity_check, tools, benchmarks, tasks
 from src.checkmate.dispatcher import DockerManager
