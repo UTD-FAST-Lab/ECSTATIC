@@ -18,7 +18,7 @@ client = docker.from_env()
 def build_image(tool: str, nocache=False):
     if tool == 'base':
         logging.info("Creating base image")
-        image = client.images.build(path=".", dockerfile="base_image.dockerfile", tag=get_image_name(tool), nocache=nocache, rm=nocache, forcerm=nocache)
+        image = client.images.build(path=".", dockerfile="base_image.dockerfile", tag=get_image_name(tool))
         # with open('base_image.dockerfile', 'rb') as df:
         #     logging.info("Building base image.")
         #     image = client.build(fileobj=df, tag=get_image_name(tool))
