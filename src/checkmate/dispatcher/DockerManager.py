@@ -23,10 +23,10 @@ def build_image(tool: str, nocache=False):
         #     logging.info("Building base image.")
         #     image = client.build(fileobj=df, tag=get_image_name(tool))
     else:
-        with path('src.resources', 'tools') as tools_dir:
-            with open(os.path.join(tools_dir, tool, 'Dockerfile'), 'rb') as df:
-                logging.info(f"Building image for {tool}")
-                image = client.images.build(fileobj=df, tag=get_image_name(tool))
+        logging.info(f"Building image for {tool}")
+        image = client.images.build(path=".",
+                                    dockerfile=importlib.resources.path(f"src.resources.tools.{tool}", "Dockerfile"),
+                                    tag=get_image_name(tool))
 
     response = [line for line in image]
     print(response)
@@ -40,7 +40,7 @@ def start_runner(tool: str, benchmark: str, task: str):
     cntr: Container = client.containers.run(image=get_image_name(tool), command=command, detach=True)
     cntr.wait()
     logging.info('Container finished!')
-    [print(l) for l in cntr.logs().split('\n')]
+    [print(l) for l in cntr.logs().decode("utf-8").split('\n')]
     with open(os.path.join(importlib.resources.path("results", ""),
                            f"{tool}_{benchmark}_{task}_{time.time()}.tar"), 'wb') as f:
         stream, stat = cntr.get_archive("/results")
