@@ -38,6 +38,8 @@ def start_runner(tool: str, benchmark: str, task: str):
     command = f'tester {tool} {benchmark} -t {task}'
     logging.info(f'Starting container with command {command}')
     cntr: Container = client.containers.run(image=get_image_name(tool), command=command, detach=False)
+    logging.info('Container finished!')
+    print(cntr.logs())
     with open(os.path.join(importlib.resources.path("results", ""),
                            f"{tool}_{benchmark}_{task}_{time.time()}.tar"), 'w') as f:
         stream, stat = cntr.get_archive("/results")

@@ -40,6 +40,10 @@ class FinishedCampaign:
 class Violation:
     violated: bool
     type: str
-    job1: Dict
-    job2: Dict
+    config1: str
+    results1: str
+    config2: str
+    results2: str
+    option_under_investigation: str
+    target: str
     differences: List[str]

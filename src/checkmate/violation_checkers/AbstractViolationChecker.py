@@ -62,6 +62,7 @@ class AbstractViolationChecker(ABC):
                     violations.append(self.is_more_precise(finished_run, candidate))
         with open(self.output, 'w') as f:
             json.dump([dataclasses.asdict(v) for v in violations], f)
+        print(f'Finished checking violations. {len([v for v in violations if v.violated])} violations detected.')
         print('Campaign value processing done.')
         # results_queue.task_done()
 
