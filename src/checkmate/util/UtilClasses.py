@@ -35,15 +35,3 @@ class FlowdroidFinishedFuzzingJob(FinishedFuzzingJob):
 @dataclass
 class FinishedCampaign:
     finished_jobs: List[FinishedFuzzingJob]
-
-@dataclass
-class Violation:
-    violated: bool
-    type: str
-    config1: str
-    results1: str
-    config2: str
-    results2: str
-    option_under_investigation: str
-    target: str
-    differences: List[str]
