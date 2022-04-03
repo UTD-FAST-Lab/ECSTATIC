@@ -49,6 +49,7 @@ def main():
     for t in args.tools:
         for b in args.benchmarks:
             for task in args.tasks:
+                # TODO: Add sanity check back in
                 DockerManager.start_runner(t, b, task)
 
         # comp_benchmarks, comp_tasks = sanity_check(t, args.benchmarks, args.tasks)

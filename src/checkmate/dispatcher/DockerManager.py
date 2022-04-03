@@ -35,7 +35,7 @@ def start_runner(tool: str, benchmark: str, task: str):
     # run build benchmark script
     command = f'tester {tool} {benchmark} -t {task}'
     logging.info(f'Starting container with command {command}')
-    cntr = client.create_container(image=get_image_name(tool), command=command)
+    cntr = client.containers.run(image=get_image_name(tool), command=command, detach=False)
     logging.info(f"Cntr is {cntr}")
     id = cntr['Id']
     cmd =['docker', 'cp', f'{id}:/results', os.path.join(importlib.resources.path("results", ""),
