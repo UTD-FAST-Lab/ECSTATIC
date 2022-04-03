@@ -47,9 +47,12 @@ def main():
         DockerManager.build_image(t, args.force_build)
 
     for t in args.tools:
-        # comp_benchmarks, comp_tasks = sanity_check(t, args.benchmarks, args.tasks)
+        for b in args.benchmarks:
+            for task in args.tasks:
+                DockerManager.start_runner(t, b, task)
 
-        DockerManager.start_runner(t, args.benchmarks, args.tasks)
+        # comp_benchmarks, comp_tasks = sanity_check(t, args.benchmarks, args.tasks)
+        # DockerManager.start_runner(t, args.benchmarks, args.tasks)
 
 if __name__ == '__main__':
     main()
