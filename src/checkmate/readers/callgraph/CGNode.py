@@ -1,12 +1,13 @@
 class CGNode:
 
     def __init__(self, content: str, site: str, context: str):
-        self.content = content
-        self.site = site
-        self.context = context
+        self.content = str(content).strip()
+        self.site = str(site).strip()
+        self.context = str(context).strip()
 
     def __eq__(self, other):
-        return isinstance(other, CGNode) and self.content == other.content and self.context == other.context
+        return isinstance(other, CGNode) and self.content == other.content and self.context == other.context \
+    and self.site == other.site
 
     def __hash__(self):
         return hash((self.content, self.context))
