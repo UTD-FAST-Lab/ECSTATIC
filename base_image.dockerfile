@@ -1,16 +1,17 @@
 FROM ubuntu:20.04 as python-build
 SHELL ["/bin/bash", "-c"]
-RUN apt-get update && apt-get install -y software-properties-common gcc && \
+RUN apt-get update -y && apt-get upgrade -y
+
+RUN apt-get install -y software-properties-common gcc apt-transport-https && \
     add-apt-repository -y ppa:deadsnakes/ppa
 
-RUN apt-get update && apt-get install -y cmake z3 python3.10 python3-distutils python3-pip python3-apt \
-    python3.10-venv openjdk-11-jdk openjdk-11-jre openjdk-11-jdk-headless git mvn wget
+RUN apt-get install -y cmake z3 python3.10 python3-distutils python3-pip python3-apt python3.10-venv openjdk-11-jdk openjdk-11-jre openjdk-11-jdk-headless git maven wget
 
 FROM python-build AS dep-build
 
-RUN apt-get update \
+RUN apt-get update -y \
  && DEBIAN_FRONTEND=noninteractive \
-    apt-get install --no-install-recommends --assume-yes \
+    apt-get install -y --no-install-recommends --assume-yes \
       build-essential \
       libpq-dev
 
