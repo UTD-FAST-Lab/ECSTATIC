@@ -62,8 +62,8 @@ class DOOPRunner(CommandLineToolRunner):
         try:
             intermediate_file = os.path.join(output_dir, "CallGraphEdge.csv")
         except UnboundLocalError as ule:
-            logging.exception()
-            logging.info(ps.stdout.decode().split("\n"))
+            logging.exception(ps.stdout.decode().split("\n"))
+            
         shutil.move(intermediate_file, output_file)
         total_time: float = time.time() - start_time
         output_file = self.move_to_output(output_file)
