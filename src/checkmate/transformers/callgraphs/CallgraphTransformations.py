@@ -20,7 +20,8 @@ def call_site_to_targets(graph: DiGraph) -> Dict[str, Set[str]]:
     for caller, targets in graph.adjacency():
         caller: CGNode
         targets: List[CGNode]
-        if caller.site not in result:
-            result[caller.site] = set()
-        result[caller.site].update([k.content for k in targets])
+        full_call_site = f"{caller.content}:{caller.site}"
+        if full_call_site not in result:
+            result[full_call_site] = set()
+        result[full_call_site].update([k.content for k in targets])
     return result
