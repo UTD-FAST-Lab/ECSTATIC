@@ -55,12 +55,15 @@ class DOOPRunner(CommandLineToolRunner):
         logging.info(f"Cmd is {cmd}")
         ps = subprocess.run(cmd, capture_output=True)
         for l in ps.stdout.decode().split("\n"):
-            logging.info(f"DOOP: {l}")
             if l.startswith("Making database available"):
                 output_dir = l.split(" ")[-1]
                 logging.info(f"Output directory: {output_dir}")
                 break
-        intermediate_file = os.path.join(output_dir, "CallGraphEdge.csv")
+        try:
+            intermediate_file = os.path.join(output_dir, "CallGraphEdge.csv")
+        except UnboundLocalError as ule:
+            logging.exception()
+            logging.info(ps.stdout.decode().split("\n"))
         shutil.move(intermediate_file, output_file)
         total_time: float = time.time() - start_time
         output_file = self.move_to_output(output_file)
