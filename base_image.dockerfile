@@ -3,7 +3,8 @@ SHELL ["/bin/bash", "-c"]
 RUN apt-get update && apt-get install -y software-properties-common gcc && \
     add-apt-repository -y ppa:deadsnakes/ppa
 
-RUN apt-get update && apt-get install -y cmake z3 python3.10 python3-distutils python3-pip python3-apt python3.10-venv
+RUN apt-get update && apt-get install -y cmake z3 python3.10 python3-distutils python3-pip python3-apt \
+    python3.10-venv openjdk-11-jdk openjdk-11-jre openjdk-11-jdk-headless git mvn wget
 
 FROM python-build AS dep-build
 

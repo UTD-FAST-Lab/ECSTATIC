@@ -9,7 +9,6 @@ RUN apt-get update
  RUN apt-get install tzdata
  RUN echo "America/Chicago" > /etc/timezone
  RUN dpkg-reconfigure -f noninteractive tzdata
-RUN apt-get install -y openjdk-11-jdk openjdk-11-jre openjdk-11-jdk-headless git wget maven
 
 WORKDIR /
 RUN git clone https://github.com/amordahl/SootInterface.git
