@@ -26,7 +26,8 @@ FROM python-build
 
 COPY --from=dep-build /venv /venv
 
-ADD . /checkmate
+WORKDIR /
+RUN git clone https://github.com/amordahl/checkmate.git
 WORKDIR /checkmate
 
 ENV VIRTUAL_ENV=/venv
