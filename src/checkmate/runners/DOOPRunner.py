@@ -63,7 +63,7 @@ class DOOPRunner(CommandLineToolRunner):
         intermediate_file = os.path.join(output_dir, "CallGraphEdge.csv")
         shutil.move(intermediate_file, output_file)
         total_time: float = time.time() - start_time
-        self.move_to_output(output_file)
+        output_file = self.move_to_output(output_file)
         return FinishedFuzzingJob(
             job=job,
             execution_time=total_time,
