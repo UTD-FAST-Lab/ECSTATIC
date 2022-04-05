@@ -17,17 +17,17 @@
       ]
     },
     {
-      "name": "omit-excepting-unit-edges",
-      "default": "FALSE",
+      "name": "throw-analysis",
+      "default": "pedantic",
       "levels": [
-        "TRUE",
-        "FALSE"
+        "pedantic",
+        "unit"
       ],
       "partial_orders": [
       {
-        "left": "TRUE",
-        "partial_order": "MPT",
-        "right": "FALSE"
+        "left": "pedantic",
+        "partial_order": "MST",
+        "right": "unit"
       }
       ]
     }

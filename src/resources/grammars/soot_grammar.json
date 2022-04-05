@@ -3,8 +3,8 @@
   "<options>": ["<option>", "<options> <option>"],
   "<option>" : [
     "--optimize <optimizeopts>",
-    "--omit-excepting-unit-edges <omitcfgopts>"
+    "--throw-analysis <throwanalysisopts>"
   ],
   "<optimizeopts>": ["TRUE","FALSE"],
-  "<omitcfgopts>": ["TRUE", "FALSE"]
+  "<throwanalysisopts>": ["pedantic", "unit"]
 }
