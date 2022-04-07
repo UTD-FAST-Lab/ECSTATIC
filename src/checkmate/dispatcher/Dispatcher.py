@@ -28,7 +28,7 @@ def parse_args():
         help=('tasks to run, incompatible tool and task pairs will be skipped'
             'all tasks by default'),
         nargs='+',
-        required=False,
+        required=True,
         default=tasks,
         choices=tasks)
     parser.add_argument(
