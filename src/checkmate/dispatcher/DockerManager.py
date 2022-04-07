@@ -32,10 +32,10 @@ def build_image(tool: str, nocache=False):
     print(response)
 
 
-def start_runner(tool: str, benchmark: str, task: str):
+def start_runner(tool: str, benchmark: str, task: str, jobs: int, campaigns: int):
     # PYTHONENV=/checkmate
     # run build benchmark script
-    command = f'tester {tool} {benchmark} -t {task}'
+    command = f'tester {tool} {benchmark} -t {task} -j {jobs} -c {campaigns}'
     logging.info(f'Starting container with command {command}')
     cntr: Container = client.containers.run(image=get_image_name(tool), command=command, detach=True)
     cntr.wait()
