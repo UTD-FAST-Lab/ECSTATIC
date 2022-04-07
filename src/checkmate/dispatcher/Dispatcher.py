@@ -12,7 +12,7 @@ def parse_args():
         help=('static analysis tools to run'
             'all tools by default'),
         nargs='+',
-        required=False,
+        required=True,
         default=tools,
         choices=tools)
     parser.add_argument('-b',
@@ -20,7 +20,7 @@ def parse_args():
         help=('benchmark programs to run, incompatible tool and benchmark pairs will be skipped'
             'all benchmarks by default'),
         nargs='+',
-        required=False,
+        required=True,
         default=benchmarks,
         choices=benchmarks)
     parser.add_argument(
