@@ -33,7 +33,6 @@ class AbstractCommandLineToolRunner(ABC):
         logging.info(f"Result is {result}")
         return result.strip()
 
-    @abstractmethod
     def run_job(self, job: FuzzingJob) -> FinishedFuzzingJob:
         num_runs = 0;
         ex: Exception = None
