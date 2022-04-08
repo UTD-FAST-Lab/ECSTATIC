@@ -1,13 +1,13 @@
 import argparse
 import importlib
 import logging
+logging.basicConfig(level=logging.INFO)
 import subprocess
 
 from src.checkmate.dispatcher import Sanitizer
 from src.checkmate.violation_checkers.AbstractViolationChecker import AbstractViolationChecker
 from src.checkmate.violation_checkers.CallgraphViolationChecker import CallgraphViolationChecker
 
-logging.basicConfig(level=logging.DEBUG)
 import os.path
 import time
 from multiprocessing.pool import Pool
