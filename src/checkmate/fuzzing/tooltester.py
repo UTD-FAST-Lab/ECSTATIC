@@ -49,7 +49,7 @@ class ToolTester:
                 continue
             start = time.time()
             with Pool(self.num_processes) as p:
-                results = list(p.map(self.runner.run_job, campaign.jobs))
+                results = list(p.map(self.runner.try_run_job, campaign.jobs))
             results = [r for r in results if r is not None]
             print(f'Campaign {campaign_index} finished (time {time.time() - start} seconds)')
             self.checker.check_violations(results)
@@ -137,7 +137,7 @@ class ToolTester:
                     if violated and self.validate:
                         # Run again to check.
                         print('Verifying violation.')
-                        verify = (self.runner.run_job(candidate.job, True), self.runner.run_job(finished_run.job, True))
+                        verify = (self.runner.try_run_job(candidate.job, True), self.runner.try_run_job(finished_run.job, True))
                         try:
                             violated = (verify[0].detected_flows['tp'].difference(verify[1].detected_flows['tp'])) == \
                                        (candidate.detected_flows['tp'].difference(finished_run.detected_flows['tp']))
@@ -167,7 +167,7 @@ class ToolTester:
                     if violated and self.validate:
                         # Run again to check.
                         print('Verifying violation.')
-                        verify = (self.runner.run_job(candidate.job, True), self.runner.run_job(finished_run.job, True))
+                        verify = (self.runner.try_run_job(candidate.job, True), self.runner.try_run_job(finished_run.job, True))
                         try:
                             violated = (verify[1].detected_flows['fp'].difference(verify[0].detected_flows['fp'])) == \
                                        (finished_run.detected_flows['fp'].difference(candidate.detected_flows['fp']))

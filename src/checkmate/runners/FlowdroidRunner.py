@@ -188,7 +188,7 @@ class FlowdroidRunnerAbstract(AbstractCommandLineToolRunner):
                 result += f'--{k.name} '
         return result
 
-    def run_job(self, job: FuzzingJob, verify: bool = False) -> FlowdroidFinishedFuzzingJob:
+    def try_run_job(self, job: FuzzingJob, verify: bool = False) -> FlowdroidFinishedFuzzingJob:
         try:
             start_time: float = time.time()
             result_location: str

@@ -35,6 +35,19 @@ class AbstractCommandLineToolRunner(ABC):
 
     @abstractmethod
     def run_job(self, job: FuzzingJob) -> FinishedFuzzingJob:
+        num_runs = 0;
+        ex: Exception = None
+        while (num_runs < 3):  # TODO: Have this number configurable.
+            try:
+                return self.try_run_job(job)
+            except Exception as e:
+                ex = e
+            num_runs += 1
+        # If we get here we failed too many times and we just abort.
+        raise ex
+
+    @abstractmethod
+    def try_run_job(self, job: FuzzingJob) -> FinishedFuzzingJob:
         pass
 
     @abstractmethod
