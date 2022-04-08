@@ -41,9 +41,12 @@ class AbstractCommandLineToolRunner(ABC):
             try:
                 return self.try_run_job(job)
             except Exception as e:
+                num_runs += 1
+                logging.warning(f"Failed running job {num_runs} time(s). Trying again...")
                 ex = e
-            num_runs += 1
+
         # If we get here we failed too many times and we just abort.
+        logging.critical("Failed running job maximum number of times. Sorry!")
         raise ex
 
     @abstractmethod
