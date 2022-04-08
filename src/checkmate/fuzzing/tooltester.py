@@ -49,7 +49,7 @@ class ToolTester:
                 continue
             start = time.time()
             with Pool(self.num_processes) as p:
-                results = list(p.map(self.runner.try_run_job, campaign.jobs))
+                results = list(p.map(self.runner.run_job, campaign.jobs))
             results = [r for r in results if r is not None]
             print(f'Campaign {campaign_index} finished (time {time.time() - start} seconds)')
             self.checker.check_violations(results)
