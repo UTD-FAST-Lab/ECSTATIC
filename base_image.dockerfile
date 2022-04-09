@@ -26,5 +26,6 @@ WORKDIR /
 COPY . /checkmate
 WORKDIR /checkmate
 
+ENV PATH=/venv/bin:$PATH
 RUN python -m pip install -e .
 WORKDIR /
