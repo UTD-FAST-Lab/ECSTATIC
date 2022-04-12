@@ -24,8 +24,7 @@ def build_image(tool: str, nocache=False):
         #     image = client.build(fileobj=df, tag=get_image_name(tool))
     else:
         logging.info(f"Building image for {tool}")
-        image = client.images.build(path=".",
-                                    dockerfile=importlib.resources.path(f"src.resources.tools.{tool}", "Dockerfile"),
+        image = client.images.build(path=importlib.resources.path(f"src.resources.tools", tool),
                                     tag=get_image_name(tool), nocache=nocache)
 
     response = [line for line in image]

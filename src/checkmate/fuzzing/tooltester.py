@@ -1,6 +1,9 @@
 import argparse
 import importlib
 import logging
+
+from src.checkmate.util.Violation import Violation
+
 logging.basicConfig(level=logging.INFO)
 import subprocess
 
@@ -31,8 +34,8 @@ class ToolTester:
 
     def __init__(self, generator, runner: AbstractCommandLineToolRunner,
                  num_processes: int, num_campaigns: int, checker: AbstractViolationChecker):
-        self.generator = generator
-        self.runner = runner
+        self.generator: FuzzGenerator = generator
+        self.runner: AbstractCommandLineToolRunner = runner
         self.unverified_violations = list()
         self.num_processes = num_processes
         self.num_campaigns = num_campaigns
@@ -52,7 +55,8 @@ class ToolTester:
                 results = list(p.map(self.runner.run_job, campaign.jobs))
             results = [r for r in results if r is not None]
             print(f'Campaign {campaign_index} finished (time {time.time() - start} seconds)')
-            self.checker.check_violations(results)
+            violations: List[Violation] = self.checker.check_violations(results)
+            self.generator.update_exclusions(violations)
             # self.print_output(FinishedCampaign(results), campaign_index)  # TODO: Replace with generate_report
             print('Done!')
 
@@ -193,11 +197,19 @@ class ToolTester:
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("tool", choices=Sanitizer.tools)
-    p.add_argument("benchmark", choices=Sanitizer.benchmarks)
-    p.add_argument("-t", "--task", choices=Sanitizer.tasks, default="cg")
-    p.add_argument("-c", "--campaigns", type=int, default=5)
-    p.add_argument("-j", "--jobs", type=int, default=32)
+    p.add_argument("tool", choices=Sanitizer.tools,
+                   help="Tool to run.")
+    p.add_argument("benchmark", choices=Sanitizer.benchmarks,
+                   help="Benchmark to download and evaluate on.")
+    p.add_argument("-t", "--task", choices=Sanitizer.tasks, default="cg",
+                   help="Task to run.")
+    p.add_argument("-c", "--campaigns", type=int, default=5,
+                   help="Number of fuzzing campaigns (i.e., one seed, all of its mutants, and violation detection)")
+    p.add_argument("-j", "--jobs", type=int, default=32,
+                   help="Number of parallel jobs to do at once.")
+    p.add_argument("--no-adaptive", help="Do not remove configuration option settings that have already "
+                                         "exhibited violations from future fuzzing campaigns.",
+                   action="store_true")
     args = p.parse_args()
 
     model_location = importlib.resources.path("src.resources.configuration_spaces", f"{args.tool}_config.json")
@@ -207,11 +219,22 @@ def main():
         runner = SOOTRunner()
     elif args.tool == "wala":
         runner = WALARunner()
-    else:
+    elif args.tool == "doop":
         runner = DOOPRunner()
+    else:
+        raise RuntimeError(f"Tool {args.tool} is not supported.")
 
+    benchmark_list = build_benchmark(args.benchmark)
+
+    t = ToolTester(FuzzGenerator(model_location, grammar, benchmark_list, args.no_adaptive), runner,
+                   num_processes=args.jobs, num_campaigns=args.campaigns,
+                   checker=CallgraphViolationChecker("/results/violations.json"))
+    t.main()
+
+
+def build_benchmark(benchmark: str) -> List[str]:
     # TODO: Check that benchmarks are loaded. If not, load from git.
-    build = importlib.resources.path(f"src.resources.benchmarks.{args.benchmark}", "build.sh")
+    build = importlib.resources.path(f"src.resources.benchmarks.{benchmark}", "build.sh")
     os.chmod(build, 555)
     logging.info(f"Building benchmark....")
     subprocess.run(build)
@@ -219,11 +242,7 @@ def main():
     for root, dirs, files in os.walk("/benchmarks"):
         benchmark_list.extend([os.path.join(root, f) for f in files if
                                (f.endswith(".jar") or f.endswith(".apk"))])  # TODO more dynamic extensions?
-
-    t = ToolTester(FuzzGenerator(model_location, grammar, benchmark_list), runner,
-                   num_processes=args.jobs, num_campaigns=args.campaigns,
-                   checker=CallgraphViolationChecker("/results/violations.json"))
-    t.main()
+    return benchmark_list
 
 
 if __name__ == '__main__':

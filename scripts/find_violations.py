@@ -53,7 +53,7 @@ TIMEOUTS = {'fossdroid': 7200000, 'droidbench': 600000}
 
 def check_args():
     """
-    Sanity checks for arguments. Throws exceptions if any arguments are
+    Sanity checks for arguments. Throws exceptions.py if any arguments are
     incorrect.
     """
     if len(args.files_list) < 1:

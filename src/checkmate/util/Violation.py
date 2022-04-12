@@ -31,6 +31,12 @@ class Violation:
                 'differences': sorted(self.differences)
                 }
 
+    def get_option_under_investigation(self):
+        if self.job1.job.option_under_investigation is None:
+            return self.job2.job.option_under_investigation
+        else:
+            return self.job1.job.option_under_investigation
+
     def __init__(self, violated: bool, type: str,
                  job1: FinishedFuzzingJob, job2: FinishedFuzzingJob,
                  differences: List[str]):

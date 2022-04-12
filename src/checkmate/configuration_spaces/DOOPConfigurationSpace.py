@@ -76,7 +76,7 @@ class DOOPConfigurationSpace(AbstractConfigurationSpaceSpecification):
         doop.add_option(cs_library)
 
         """Do not merge exception objects"""
-        disable_merge_exceptions = self.make_binary_option('disable-merge-exceptions')
+        disable_merge_exceptions = self.make_binary_option('disable-merge-exceptions.py')
         disable_merge_exceptions.set_more_precise_than('TRUE', 'FALSE')
         doop.add_option(disable_merge_exceptions)
 

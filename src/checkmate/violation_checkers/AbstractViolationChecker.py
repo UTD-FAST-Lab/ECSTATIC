@@ -16,7 +16,7 @@ class AbstractViolationChecker(ABC):
     def __init__(self, output: str):
         self.output: str = output
 
-    def check_violations(self, results: List[FinishedFuzzingJob]):
+    def check_violations(self, results: List[FinishedFuzzingJob]) -> List[Violation]:
         violations: List[Violation] = []
         for finished_run in results:
             finished_run: FinishedFuzzingJob
@@ -64,6 +64,7 @@ class AbstractViolationChecker(ABC):
             json.dump([v.as_dict() for v in violations], f)
         print(f'Finished checking violations. {len([v for v in violations if v.violated])} violations detected.')
         print('Campaign value processing done.')
+        return violations
         # results_queue.task_done()
 
     @abstractmethod
