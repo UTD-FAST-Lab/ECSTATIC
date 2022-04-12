@@ -1,3 +1,4 @@
+import datetime
 import importlib
 import io
 import logging
@@ -11,6 +12,7 @@ import docker
 from importlib.resources import path
 
 from docker.models.containers import Container
+from docker.types import Mount
 
 client = docker.from_env()
 
@@ -35,17 +37,19 @@ def start_runner(tool: str, benchmark: str, task: str, jobs: int, campaigns: int
     # PYTHONENV=/checkmate
     # run build benchmark script
     command = f'tester {tool} {benchmark} -t {task} -j {jobs} -c {campaigns}'
-    logging.info(f'Starting container with command {command}')
-    cntr: Container = client.containers.run(image=get_image_name(tool), command=command, detach=True)
+    print(f'Starting container with command {command}')
+    resources_folder = os.path.abspath(importlib.resources.path("resources", ""))
+    output_folder = os.path.join(resources_folder, f"{tool}-{benchmark}-{task}-{datetime.datetime.strftime('%Y-%m-%d_%H-%M-%S-%f')}")
+    os.mkdir(output_folder)
+    cntr: Container = client.containers.run(
+        image=get_image_name(tool),
+        command=command,
+        detach=True,
+        volumes={os.path.abspath(output_folder) : {"bind": "/results", "mode": "rw"}})
     cntr.wait()
-    logging.info('Container finished!')
+    print('Container finished!')
     [print(l) for l in cntr.logs().decode("utf-8").split('\n')]
-    with open(os.path.join(importlib.resources.path("results", ""),
-                           f"{tool}_{benchmark}_{task}_{time.time()}.tar"), 'wb') as f:
-        stream, stat = cntr.get_archive("/results")
-        for s in stream:
-            f.write(s)
-
+    print(f"Results are in {output_folder}")
 
 
 def get_image_name(tool: str):
