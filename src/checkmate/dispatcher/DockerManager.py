@@ -38,8 +38,8 @@ def start_runner(tool: str, benchmark: str, task: str, jobs: int, campaigns: int
     # run build benchmark script
     command = f'tester {tool} {benchmark} -t {task} -j {jobs} -c {campaigns}'
     print(f'Starting container with command {command}')
-    resources_folder = os.path.abspath(importlib.resources.path("resources", ""))
-    output_folder = os.path.join(resources_folder, f"{tool}-{benchmark}-{task}-{datetime.datetime.strftime('%Y-%m-%d_%H-%M-%S-%f')}")
+    results_folder = os.path.abspath(importlib.resources.path("results", ""))
+    output_folder = os.path.join(results_folder, f"{tool}-{benchmark}-{task}-{datetime.datetime.strftime('%Y-%m-%d_%H-%M-%S-%f')}")
     os.mkdir(output_folder)
     cntr: Container = client.containers.run(
         image=get_image_name(tool),
