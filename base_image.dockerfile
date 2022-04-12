@@ -6,7 +6,7 @@ RUN apt-get update -y && apt-get upgrade -y && \
     apt-get install -y cmake z3 python3.10 python3-distutils python3-pip python3-apt python3.10-venv  \
     openjdk-11-jdk openjdk-11-jre openjdk-11-jdk-headless git maven wget && \
     DEBIAN_FRONTEND=noninteractive  \
-    apt-get install -y --no-install-recommends --assume-yes build-essential libpq-dev
+    apt-get install -y --no-install-recommends --assume-yes build-essential libpq-dev unzip
 
 
 FROM python-build AS dep-build
