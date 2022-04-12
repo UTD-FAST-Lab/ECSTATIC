@@ -4,3 +4,4 @@ resources/**/*
 resources/
 tests/**/*
 tests/
+results/
