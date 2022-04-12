@@ -52,16 +52,13 @@ ENV DDLOG_DIR=/differential-datalog/
 
 ## Doop
 RUN apt-get install -y openjdk-8-jdk openjdk-8-jre openjdk-8-jdk-headless radare2 unzip time
-RUN git clone https://bitbucket.org/yanniss/doop-benchmarks.git
-ENV DOOP_BENCHMARKS=/doop-benchmarks
-ENV DOOP_PLATFORMS_LIB=/doop-benchmarks
-ENV DOOP_CACHE=/data/cache
-ENV DOOP_OUT=/data/out
 
 WORKDIR /
-RUN git clone https://bitbucket.org/yanniss/doop.git
+RUN git clone https://bitbucket.org/yanniss/doop.git --depth 1
 WORKDIR /doop
 RUN ./gradlew installDist
+ENV DOOP_CACHE=/data/cache
+ENV DOOP_OUT=/data/out
 ENV DOOP_HOME=/doop/build/install/doop
 ENV PATH="$PATH:$DOOP_HOME/bin"
 

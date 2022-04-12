@@ -11,7 +11,7 @@ RUN apt-get update
  RUN dpkg-reconfigure -f noninteractive tzdata
 
 WORKDIR /
-RUN git clone https://github.com/amordahl/SootInterface.git
+RUN git clone https://github.com/amordahl/SootInterface.git --depth 1
 WORKDIR /SootInterface
 RUN mvn compile package
 WORKDIR /

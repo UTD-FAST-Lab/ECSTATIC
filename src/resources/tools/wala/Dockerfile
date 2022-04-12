@@ -12,6 +12,6 @@ RUN dpkg-reconfigure -f noninteractive tzdata
 RUN apt-get update && apt-get install -y gcc g++
 
 WORKDIR /
-RUN git clone https://github.com/amordahl/WALAInterface
+RUN git clone https://github.com/amordahl/WALAInterface --depth 1
 WORKDIR /WALAInterface
 RUN mvn compile package
