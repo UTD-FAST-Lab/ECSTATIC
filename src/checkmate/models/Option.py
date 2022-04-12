@@ -17,7 +17,7 @@
 # along with checkmate.  If not, see <https://www.gnu.org/licenses/>.
 ###
 import logging
-from typing import Tuple
+from typing import Tuple, List, Set
 
 import networkx
 from networkx import DiGraph
@@ -41,7 +41,7 @@ class Option:
         self.tags = set()
         self.default = None
 
-    def get_options_involved_in_partial_orders(self):
+    def get_levels_involved_in_partial_orders(self) -> Set[Level]:
         opts = set()
         [opts.add(n) for n in self.precision.nodes]
         [opts.add(n) for n in self.soundness.nodes]
