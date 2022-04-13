@@ -29,6 +29,5 @@ class SOOTFuzzGenerator(FuzzGenerator):
         for j in range(len(tokens)):
             if j not in where_to_remove:
                 rest_of_config_string = rest_of_config_string + tokens[j] + " "
-        rest_of_config_string = " ".join(tokens[:where_to_remove]) + " " + " ".join(tokens[where_to_remove+3:])
         rest_of_config: Dict[Option, Level] = super().process_config(rest_of_config_string)
         return {**config_as_dict, **rest_of_config}
