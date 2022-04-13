@@ -30,6 +30,366 @@
         "right": "unit"
       }
       ]
+    },
+    {
+      "name": "ignore-types",
+      "tags": [
+        "phase cg.spark"
+      ],
+      "levels": [
+        "true",
+        "false"
+      ],
+      "default": "false",
+      "partial_orders": [
+        {
+          "left": "false",
+          "partial_order": "MPT",
+          "right": "true"
+        }
+      ]
+    },
+    {
+      "name": "vta",
+      "tags": [
+        "phase cg.spark"
+      ],
+      "levels": [
+        "true",
+        "false"
+      ],
+      "default": "false",
+      "partial_orders": [
+        {
+          "left": "true",
+          "partial_order": "MPT",
+          "right": "false"
+        }
+      ]
+    },
+        {
+      "name": "rta",
+      "tags": [
+        "phase cg.spark"
+      ],
+      "levels": [
+        "true",
+        "false"
+      ],
+      "default": "false",
+      "partial_orders": [
+        {
+          "left": "true",
+          "partial_order": "MPT",
+          "right": "false"
+        }
+      ]
+    },
+    {
+      "name": "field-based",
+      "tags": [
+        "phase cg.spark"
+      ],
+      "levels": [
+        "true",
+        "false"
+      ],
+      "default": "false",
+      "partial_orders": [
+        {
+          "left": "false",
+          "partial_order": "MPT",
+          "right": "true"
+        }
+      ]
+    },
+    {
+      "name": "types-for-sites",
+      "tags": [
+        "phase cg.spark"
+      ],
+      "levels": [
+        "true",
+        "false"
+      ],
+      "default": "false",
+      "partial_orders": [
+        {
+          "left": "false",
+          "partial_order": "MPT",
+          "right": "true"
+        }
+      ]
+    },
+    {
+      "name": "merge-stringbuffer",
+      "tags": [
+        "phase cg.spark"
+      ],
+      "levels": [
+        "true",
+        "false"
+      ],
+      "default": "true",
+      "partial_orders": [
+        {
+          "left": "false",
+          "partial_order": "MPT",
+          "right": "true"
+        }
+      ]
+    },
+    {
+      "name": "string-constants",
+      "tags": [
+        "phase cg.spark"
+      ],
+      "levels": [
+        "true",
+        "false"
+      ],
+      "default": "false",
+      "partial_orders": [
+        {
+          "left": "true",
+          "partial_order": "MPT",
+          "right": "false"
+        }
+      ]
+    },
+    {
+      "name": "simulate-natives",
+      "tags": [
+        "phase cg.spark"
+      ],
+      "levels": [
+        "true",
+        "false"
+      ],
+      "default": "true",
+      "partial_orders": [
+        {
+          "left": "true",
+          "partial_order": "MST",
+          "right": "false"
+        }
+      ]
+    },
+    {
+      "name": "empties-as-allocs",
+      "tags": [
+        "phase cg.spark"
+      ],
+      "levels": [
+        "true",
+        "false"
+      ],
+      "default": "false",
+      "partial_orders": [
+        {
+          "left": "true",
+          "partial_order": "MST",
+          "right": "false"
+        }
+      ]
+    },
+    {
+      "name": "simple-edges-bidirectional",
+      "tags": [
+        "phase cg.spark"
+      ],
+      "levels": [
+        "true",
+        "false"
+      ],
+      "default": "false",
+      "partial_orders": [
+        {
+          "left": "false",
+          "partial_order": "MPT",
+          "right": "true"
+        }
+      ]
+    },
+    {
+      "name": "simplify-offline",
+      "tags": [
+        "phase cg.spark"
+      ],
+      "levels": [
+        "true",
+        "false"
+      ],
+      "default": "false",
+      "partial_orders": [
+        {
+          "left": "false",
+          "partial_order": "MPT",
+          "right": "true"
+        }
+      ]
+    },
+    {
+      "name": "simplify-sccs",
+      "tags": [
+        "phase cg.spark"
+      ],
+      "levels": [
+        "true",
+        "false"
+      ],
+      "default": "false",
+      "partial_orders": [
+        {
+          "left": "false",
+          "partial_order": "MPT",
+          "right": "true"
+        }
+      ]
+    },
+    {
+      "name": "ignore-types-for-sccs",
+      "tags": [
+        "phase cg.spark"
+      ],
+      "levels": [
+        "true",
+        "false"
+      ],
+      "default": "false",
+      "partial_orders": [
+        {
+          "left": "false",
+          "partial_order": "MPT",
+          "right": "true"
+        }
+      ]
+    },
+    {
+      "name": "cs-demand",
+      "tags": [
+        "phase cg.spark"
+      ],
+      "levels": [
+        "true",
+        "false"
+      ],
+      "default": "false",
+      "partial_orders": [
+        {
+          "left": "true",
+          "partial_order": "MPT",
+          "right": "false"
+        }
+      ]
+    },
+    {
+      "name": "lazy-pts",
+      "tags": [
+        "phase cg.spark"
+      ],
+      "levels": [
+        "true",
+        "false"
+      ],
+      "default": "true",
+      "partial_orders": [
+        {
+          "left": "false",
+          "partial_order": "MPT",
+          "right": "true"
+        }
+      ]
+    },
+    {
+      "name": "safe-forname",
+      "tags": [
+        "phase cg"
+      ],
+      "levels": [
+        "true",
+        "false"
+      ],
+      "default": "false",
+      "partial_orders": [
+        {
+          "left": "true",
+          "partial_order": "MST",
+          "right": "false"
+        }
+      ]
+    },
+    {
+      "name": "safe-newinstance",
+      "tags": [
+        "phase cg"
+      ],
+      "levels": [
+        "true",
+        "false"
+      ],
+      "default": "false",
+      "partial_orders": [
+        {
+          "left": "true",
+          "partial_order": "MST",
+          "right": "false"
+        }
+      ]
+    },
+    {
+      "name":"all-reachable",
+      "tags": [
+        "phase cg"
+      ],
+      "levels": [
+        "true",
+        "false"
+      ],
+      "default": "false",
+      "partial_orders": [
+        {
+          "left": "true",
+          "partial_order": "MST",
+          "right": "false"
+        }
+      ]
+    },
+    {
+      "name": "implicit-entry",
+      "tags": [
+        "phase cg"
+      ],
+      "levels": [
+        "true",
+        "false"
+      ],
+      "default": "false",
+      "partial_orders": [
+        {
+          "left": "true",
+          "partial_order": "MST",
+          "right": "false"
+        }
+      ]
+    },
+    {
+      "name": "trim-clinit",
+      "tags": [
+        "phase cg"
+      ],
+      "levels": [
+        "true",
+        "false"
+      ],
+      "default": "true",
+      "partial_orders": [
+        {
+          "left": "true",
+          "partial_order": "MPT",
+          "right": "false"
+        }
+      ]
     }
   ]
 }

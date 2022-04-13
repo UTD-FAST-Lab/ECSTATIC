@@ -2,6 +2,7 @@ import argparse
 import importlib
 import logging
 
+from src.checkmate.fuzzing.generators.SOOTFuzzGenerator import SOOTFuzzGenerator
 from src.checkmate.util.Violation import Violation
 
 logging.basicConfig(level=logging.INFO)
@@ -17,7 +18,7 @@ from multiprocessing.pool import Pool
 from typing import List
 from xml.etree.ElementTree import ElementTree, Element
 
-from src.checkmate.fuzzing.FuzzGenerator import FuzzGenerator
+from src.checkmate.fuzzing.generators.FuzzGenerator import FuzzGenerator
 from src.checkmate.models.Flow import Flow
 from src.checkmate.models.Option import Option
 from src.checkmate.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
@@ -141,7 +142,8 @@ class ToolTester:
                     if violated and self.validate:
                         # Run again to check.
                         print('Verifying violation.')
-                        verify = (self.runner.try_run_job(candidate.job, True), self.runner.try_run_job(finished_run.job, True))
+                        verify = (
+                        self.runner.try_run_job(candidate.job, True), self.runner.try_run_job(finished_run.job, True))
                         try:
                             violated = (verify[0].detected_flows['tp'].difference(verify[1].detected_flows['tp'])) == \
                                        (candidate.detected_flows['tp'].difference(finished_run.detected_flows['tp']))
@@ -171,7 +173,8 @@ class ToolTester:
                     if violated and self.validate:
                         # Run again to check.
                         print('Verifying violation.')
-                        verify = (self.runner.try_run_job(candidate.job, True), self.runner.try_run_job(finished_run.job, True))
+                        verify = (
+                        self.runner.try_run_job(candidate.job, True), self.runner.try_run_job(finished_run.job, True))
                         try:
                             violated = (verify[1].detected_flows['fp'].difference(verify[0].detected_flows['fp'])) == \
                                        (finished_run.detected_flows['fp'].difference(candidate.detected_flows['fp']))
@@ -215,18 +218,21 @@ def main():
     model_location = importlib.resources.path("src.resources.configuration_spaces", f"{args.tool}_config.json")
     grammar = importlib.resources.path("src.resources.grammars", f"{args.tool}_grammar.json")
 
+    benchmark_list = build_benchmark(args.benchmark)
+
     if args.tool == "soot":
         runner = SOOTRunner()
+        generator = SOOTFuzzGenerator(model_location, grammar, benchmark_list, args.no_adaptive)
     elif args.tool == "wala":
         runner = WALARunner()
+        generator = FuzzGenerator(model_location, grammar, benchmark_list, args.no_adaptive)
     elif args.tool == "doop":
         runner = DOOPRunner()
+        generator = FuzzGenerator(model_location, grammar, benchmark_list, args.no_adaptive)
     else:
         raise RuntimeError(f"Tool {args.tool} is not supported.")
 
-    benchmark_list = build_benchmark(args.benchmark)
-
-    t = ToolTester(FuzzGenerator(model_location, grammar, benchmark_list, args.no_adaptive), runner,
+    t = ToolTester(generator, runner,
                    num_processes=args.jobs, num_campaigns=args.campaigns,
                    checker=CallgraphViolationChecker("/results/violations.json"))
     t.main()

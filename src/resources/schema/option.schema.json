@@ -44,6 +44,13 @@
           }
         }
       }
+    },
+    "tags": {
+      "description": "Optional tags that can be used when constructing or selecting configurations.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     }
   }
 }

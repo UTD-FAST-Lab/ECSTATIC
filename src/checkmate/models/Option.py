@@ -38,8 +38,11 @@ class Option:
         self.soundness = DiGraph()
         self.all = set()
         self.constraints = list()
-        self.tags = set()
+        self.tags = list()
         self.default = None
+
+    def add_tag(self, tag: str):
+        self.tags.append(tag)
 
     def get_levels_involved_in_partial_orders(self) -> Set[Level]:
         opts = set()
@@ -69,7 +72,7 @@ class Option:
     def get_level(self, name: str) -> Level:
         for l in self.all:
             l: Level
-            if l.level_name == name:
+            if l.level_name.lower() == name.lower():
                 return l
         raise ValueError(f'Level {name} has not been added to option {self.name}.')
 
@@ -190,6 +193,8 @@ class Option:
             o.add_level(Level(o.name, level))
         if 'default' in d:
             o.set_default(d['default'])
+        if 'tags' in d:
+            [o.add_tag(t) for t in d['tags']]
         for p in d['partial_orders']:
             if p['partial_order'] == 'MST':
                 o.set_more_sound_than(p['left'], p['right'])
