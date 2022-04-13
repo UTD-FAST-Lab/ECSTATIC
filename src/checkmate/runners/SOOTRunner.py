@@ -32,8 +32,9 @@ class SOOTRunner(CommandLineToolRunner):
                 if t.startswith('phase'):
                     config_as_str = config_as_str + f"-p {t.split(' ')[1]} {k.name}:{v.level_name} "
 
+        # Compute string for the rest of the options who don't have an associated phase.
         rest_of_config = super().dict_to_config_str({k: v for k, v in config_as_dict.items() if
-                                                     len([t for t in k.tags if not t.startswith('phase') == 0])})
+                                                     len([t for t in k.tags if t.startswith('phase')]) == 0})
         if config_as_str != "":
             return config_as_str.strip() + rest_of_config
         else:
