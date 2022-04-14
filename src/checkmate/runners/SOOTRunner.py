@@ -36,7 +36,7 @@ class SOOTRunner(CommandLineToolRunner):
         rest_of_config = super().dict_to_config_str({k: v for k, v in config_as_dict.items() if
                                                      len([t for t in k.tags if t.startswith('phase')]) == 0})
         if config_as_str != "":
-            return config_as_str.strip() + rest_of_config
+            return config_as_str + rest_of_config
         else:
             return rest_of_config
 
