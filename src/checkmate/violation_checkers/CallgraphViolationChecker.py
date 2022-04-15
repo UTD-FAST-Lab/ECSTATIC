@@ -17,7 +17,7 @@ class CallgraphViolationChecker(AbstractViolationChecker):
 
     def __init__(self, output: str, reader: AbstractCallGraphReader):
         self.reader = reader
-        super.__init__(output)
+        super().__init__(output)
 
     def is_more_precise(self, job1: FinishedFuzzingJob, job2: FinishedFuzzingJob) -> Violation:
         result1 = self.read_from_input(job1.results_location)
