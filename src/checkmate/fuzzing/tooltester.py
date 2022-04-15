@@ -222,6 +222,8 @@ def main():
     p.add_argument("--no-adaptive", help="Do not remove configuration option settings that have already "
                                          "exhibited violations from future fuzzing campaigns.",
                    action="store_true")
+    p.add_argument('--limit', help='Limit the number of executions to run in a campaign (useful for testing)',
+                   type=int)
     args = p.parse_args()
 
     model_location = importlib.resources.path("src.resources.configuration_spaces", f"{args.tool}_config.json")
@@ -248,7 +250,8 @@ def main():
 
     t = ToolTester(generator, runner,
                    num_processes=args.jobs, num_campaigns=args.campaigns,
-                   checker=CallgraphViolationChecker(os.path.join(results_location, "violations.json"), reader))
+                   checker=CallgraphViolationChecker(os.path.join(results_location, "violations.json"), reader),
+                   limit=args.limit)
     t.main()
 
 
