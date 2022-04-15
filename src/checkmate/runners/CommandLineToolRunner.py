@@ -63,11 +63,16 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
             results_location=output_file
         )
 
+    @abstractmethod
+    def check_for_errors(self, lines: List[str]):
+        pass
+
     def run_from_cmd(self, cmd, job, output_file):
         cmd.extend([self.get_input_option(), job.target, self.get_output_option(), output_file])
         cmd = [c for c in cmd if c != '']
         start_time: float = time.time()
         logging.info(f"Cmd is {cmd}")
-        subprocess.run(cmd)
+        ps = subprocess.run(cmd, capture_output=True, stderr=subprocess.PIPE)
+        self.check_for_errors(ps.stdout.decode())
         total_time: float = time.time() - start_time
         return total_time

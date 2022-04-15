@@ -6,6 +6,10 @@ from src.checkmate.runners.CommandLineToolRunner import CommandLineToolRunner
 
 
 class SOOTRunner(CommandLineToolRunner):
+    def check_for_errors(self, lines: str):
+        if "Ouuups... something went wrong! Sorry about that." in lines:
+            raise RuntimeError("Failed to run.")
+
     def get_input_option(self) -> str:
         return "--process-dir"
 
