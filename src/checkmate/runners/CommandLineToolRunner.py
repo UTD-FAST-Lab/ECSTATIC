@@ -72,7 +72,7 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         cmd = [c for c in cmd if c != '']
         start_time: float = time.time()
         logging.info(f"Cmd is {cmd}")
-        ps = subprocess.run(cmd, capture_output=True, stderr=subprocess.PIPE)
-        self.check_for_errors(ps.stdout.decode())
+        ps = subprocess.run(cmd, capture_output=True)
+        self.check_for_errors(ps.stdout.decode() + ps.stderr.decode())
         total_time: float = time.time() - start_time
         return total_time
