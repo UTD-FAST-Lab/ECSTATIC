@@ -19,7 +19,7 @@ class AbstractCallGraphReader(ABC):
             if callsite not in callgraph:
                 callgraph[callsite] = []
             callgraph[callsite].append(target)
-        return callgraph
+        return {str(k): [str(v1) for v1 in v] for k, v in callgraph.items()}
 
     """
     Creates call graph nodes from input line.
