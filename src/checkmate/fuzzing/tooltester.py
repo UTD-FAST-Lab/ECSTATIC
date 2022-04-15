@@ -38,13 +38,15 @@ logger = logging.getLogger(__name__)
 class ToolTester:
 
     def __init__(self, generator, runner: AbstractCommandLineToolRunner,
-                 num_processes: int, num_campaigns: int, checker: AbstractViolationChecker):
+                 num_processes: int, num_campaigns: int, checker: AbstractViolationChecker,
+                 limit=None):
         self.generator: FuzzGenerator = generator
         self.runner: AbstractCommandLineToolRunner = runner
         self.unverified_violations = list()
         self.num_processes = num_processes
         self.num_campaigns = num_campaigns
         self.checker = checker
+        self.limit = limit
 
     def main(self):
         campaign_index = 0
@@ -57,7 +59,8 @@ class ToolTester:
                 continue
             start = time.time()
             with Pool(self.num_processes) as p:
-                results = list(p.map(self.runner.run_job, campaign.jobs))
+                results = list(p.map(self.runner.run_job,
+                                     campaign.jobs if self.limit is None else campaign.jobs[:self.limit - 1]))
             results = [r for r in results if r is not None]
             print(f'Campaign {campaign_index} finished (time {time.time() - start} seconds)')
             violations: List[Violation] = self.checker.check_violations(results)
@@ -147,7 +150,8 @@ class ToolTester:
                         # Run again to check.
                         print('Verifying violation.')
                         verify = (
-                        self.runner.try_run_job(candidate.job, True), self.runner.try_run_job(finished_run.job, True))
+                            self.runner.try_run_job(candidate.job, True),
+                            self.runner.try_run_job(finished_run.job, True))
                         try:
                             violated = (verify[0].detected_flows['tp'].difference(verify[1].detected_flows['tp'])) == \
                                        (candidate.detected_flows['tp'].difference(finished_run.detected_flows['tp']))
@@ -178,7 +182,8 @@ class ToolTester:
                         # Run again to check.
                         print('Verifying violation.')
                         verify = (
-                        self.runner.try_run_job(candidate.job, True), self.runner.try_run_job(finished_run.job, True))
+                            self.runner.try_run_job(candidate.job, True),
+                            self.runner.try_run_job(finished_run.job, True))
                         try:
                             violated = (verify[1].detected_flows['fp'].difference(verify[0].detected_flows['fp'])) == \
                                        (finished_run.detected_flows['fp'].difference(candidate.detected_flows['fp']))
