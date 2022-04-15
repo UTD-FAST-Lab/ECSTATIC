@@ -19,6 +19,9 @@ Base class for command line tool runners.
 
 class AbstractCommandLineToolRunner(ABC):
 
+    def __init__(self, output: str):
+        self.output = output
+
     @staticmethod
     def dict_to_config_str(config_as_dict: Dict[Option, Level]) -> str:
         """Transforms a dictionary to a config string"""

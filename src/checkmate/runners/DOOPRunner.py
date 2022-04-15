@@ -44,31 +44,20 @@ class DOOPRunner(CommandLineToolRunner):
             f.writelines(transformed)
         return output
 
-    def try_run_job(self, job: FuzzingJob) -> FinishedFuzzingJob:
-        logging.info(f'Job configuration is {[(str(k), str(v)) for k, v in job.configuration.items()]}')
-        config_as_str = self.dict_to_config_str(job.configuration)
-        cmd = self.get_base_command()
-        cmd.extend(config_as_str.split(" "))
-        output_file = f'{self.dict_hash(job.configuration)}_{os.path.basename(job.target)}.result'
+    def run_from_cmd(self, cmd, job, output_file):
         cmd.extend([self.get_input_option(), job.target])
         start_time: float = time.time()
         logging.info(f"Cmd is {cmd}")
         ps = subprocess.run(cmd, capture_output=True)
-        for l in ps.stdout.decode().split("\n"):
-            if l.startswith("Making database available"):
-                output_dir = l.split(" ")[-1]
+        for line in ps.stdout.decode().split("\n"):
+            if line.startswith("Making database available"):
+                output_dir = line.split(" ")[-1]
                 logging.info(f"Output directory: {output_dir}")
                 break
         try:
             intermediate_file = os.path.join(output_dir, "CallGraphEdge.csv")
         except UnboundLocalError as ule:
             logging.exception(ps.stdout.decode().split("\n"))
-
         shutil.move(intermediate_file, output_file)
         total_time: float = time.time() - start_time
-        output_file = self.move_to_output(output_file)
-        return FinishedFuzzingJob(
-            job=job,
-            execution_time=total_time,
-            results_location=output_file
-        )
+        return total_time

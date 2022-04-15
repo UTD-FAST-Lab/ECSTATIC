@@ -3,6 +3,9 @@ import importlib
 import logging
 
 from src.checkmate.fuzzing.generators.SOOTFuzzGenerator import SOOTFuzzGenerator
+from src.checkmate.readers.callgraph.DOOPCallGraphReader import DOOPCallGraphReader
+from src.checkmate.readers.callgraph.SOOTCallGraphReader import SOOTCallGraphReader
+from src.checkmate.readers.callgraph.WALACallGraphReader import WALACallGraphReader
 from src.checkmate.util.Violation import Violation
 
 logging.basicConfig(level=logging.INFO)
@@ -220,21 +223,25 @@ def main():
 
     benchmark_list = build_benchmark(args.benchmark)
 
+    results_location = f'/results/{args.tool}/{args.benchmark}'
     if args.tool == "soot":
-        runner = SOOTRunner()
+        runner = SOOTRunner(results_location)
         generator = SOOTFuzzGenerator(model_location, grammar, benchmark_list, args.no_adaptive)
+        reader = SOOTCallGraphReader()
     elif args.tool == "wala":
-        runner = WALARunner()
+        runner = WALARunner(results_location)
         generator = FuzzGenerator(model_location, grammar, benchmark_list, args.no_adaptive)
+        reader = WALACallGraphReader()
     elif args.tool == "doop":
-        runner = DOOPRunner()
+        runner = DOOPRunner(results_location)
         generator = FuzzGenerator(model_location, grammar, benchmark_list, args.no_adaptive)
+        reader = DOOPCallGraphReader()
     else:
         raise RuntimeError(f"Tool {args.tool} is not supported.")
 
     t = ToolTester(generator, runner,
                    num_processes=args.jobs, num_campaigns=args.campaigns,
-                   checker=CallgraphViolationChecker("/results/violations.json"))
+                   checker=CallgraphViolationChecker(os.path.join(results_location, "violations.json"), reader))
     t.main()
 
 

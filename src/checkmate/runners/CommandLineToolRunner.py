@@ -36,24 +36,37 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         """Given a task, sets the appropriate option."""
         pass
 
-    def transform(self, output: str) -> str:
-        return output
+    def transform(self, output: str):
+        """
+        If necessary, apply any transformations to the output file.
+        @param output: The output file.
+        @return:
+        """
+        pass
 
     def try_run_job(self, job: FuzzingJob) -> FinishedFuzzingJob:
         logging.info(f'Job configuration is {[(str(k), str(v)) for k, v in job.configuration.items()]}')
         config_as_str = self.dict_to_config_str(job.configuration)
         cmd = self.get_base_command()
         cmd.extend(config_as_str.split(" "))
-        output_file = f'{self.dict_hash(job.configuration)}_{os.path.basename(job.target)}.result'
+        output_file = os.path.join(self.output,
+                                   f'{self.dict_hash(job.configuration)}_{os.path.basename(job.target)}.raw')
+        if not os.path.exists(output_file):
+            total_time = self.run_from_cmd(cmd, job, output_file)
+            self.transform(output_file)
+        else:
+            logging.info(f'File {output_file} already exists. Not overwriting.')
+        return FinishedFuzzingJob(
+            job=job,
+            execution_time=total_time,
+            results_location=output_file
+        )
+
+    def run_from_cmd(self, cmd, job, output_file):
         cmd.extend([self.get_input_option(), job.target, self.get_output_option(), output_file])
         cmd = [c for c in cmd if c != '']
         start_time: float = time.time()
         logging.info(f"Cmd is {cmd}")
         subprocess.run(cmd)
         total_time: float = time.time() - start_time
-        output_file = self.move_to_output(output_file)
-        return FinishedFuzzingJob(
-            job=job,
-            execution_time=total_time,
-            results_location=output_file
-        )
+        return total_time
