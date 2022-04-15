@@ -55,6 +55,7 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
             total_time = self.run_from_cmd(cmd, job, output_file)
             self.transform(output_file)
         else:
+            total_time = 0
             logging.info(f'File {output_file} already exists. Not overwriting.')
         return FinishedFuzzingJob(
             job=job,
