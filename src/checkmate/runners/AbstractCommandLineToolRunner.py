@@ -59,12 +59,6 @@ class AbstractCommandLineToolRunner(ABC):
     def transform(self, output: str) -> str:
         pass
 
-    def move_to_output(self, output: str) -> str:
-        output = self.transform(output)
-        Path('/results').mkdir(exist_ok=True)
-        shutil.move(os.path.abspath(output), f'/results/{os.path.basename(output)}')
-        return f'/results/{os.path.basename(output)}'
-
     @staticmethod
     def dict_hash(dictionary: Dict[str, Any]) -> str:
         """MD5 hash of a dictionary.

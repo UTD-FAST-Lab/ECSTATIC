@@ -61,5 +61,5 @@ class CallgraphViolationChecker(AbstractViolationChecker):
                 return {CGCallSite(**k): [CGTarget(**v1) for v1 in v] for k, v in json.load(f)}
         else:
             callgraph: Dict[CGCallSite, CGTarget] = self.reader.import_graph(file)
-            with open(file.replace('.raw', '.cg.json')) as f:
+            with open(file.replace('.raw', '.cg.json'), 'w') as f:
                 json.dump(callgraph, f, default=lambda x: x.__dict__)
