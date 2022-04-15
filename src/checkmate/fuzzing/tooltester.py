@@ -1,6 +1,7 @@
 import argparse
 import importlib
 import logging
+from pathlib import Path
 
 from src.checkmate.fuzzing.generators.SOOTFuzzGenerator import SOOTFuzzGenerator
 from src.checkmate.readers.callgraph.DOOPCallGraphReader import DOOPCallGraphReader
@@ -224,6 +225,7 @@ def main():
     benchmark_list = build_benchmark(args.benchmark)
 
     results_location = f'/results/{args.tool}/{args.benchmark}'
+    Path(results_location).mkdir(parents=True, exist_ok=True)
     if args.tool == "soot":
         runner = SOOTRunner(results_location)
         generator = SOOTFuzzGenerator(model_location, grammar, benchmark_list, args.no_adaptive)
