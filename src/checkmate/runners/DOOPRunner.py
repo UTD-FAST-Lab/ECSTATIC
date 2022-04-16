@@ -44,7 +44,7 @@ class DOOPRunner(CommandLineToolRunner):
         return output
 
     def run_from_cmd(self, cmd, job, output_file):
-        cmd.extend([self.get_input_option(), job.target])
+        cmd.extend([self.get_input_option(job.target), job.target])
         start_time: float = time.time()
         logging.info(f"Cmd is {cmd}")
         ps = subprocess.run(cmd, capture_output=True)
