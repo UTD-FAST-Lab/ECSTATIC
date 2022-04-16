@@ -55,7 +55,7 @@ class AbstractCommandLineToolRunner(ABC):
 
     def get_output(self, job: FuzzingJob):
         return os.path.join(self.output,
-                                   f'{self.dict_hash(job.configuration)}_{os.path.basename(job.target)}.raw')
+                                   f'{self.dict_hash(job.configuration)}_{os.path.basename(job.target.name)}.raw')
 
     @abstractmethod
     def try_run_job(self, job: FuzzingJob) -> FinishedFuzzingJob:
