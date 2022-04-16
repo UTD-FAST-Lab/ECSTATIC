@@ -63,3 +63,4 @@ class CallgraphViolationChecker(AbstractViolationChecker):
             callgraph: Dict[CGCallSite, CGTarget] = self.reader.import_graph(file)
             with open(file.replace('.raw', '.cg.json'), 'w') as f:
                 json.dump(callgraph, f)
+            return callgraph
