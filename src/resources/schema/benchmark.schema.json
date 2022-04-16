@@ -17,7 +17,7 @@
             "description": "The name of the benchmark",
             "type": "string"
           },
-          "depends-on": {
+          "depends_on": {
             "description": "List of any artifacts this benchmark depends on.",
             "type": "array",
             "items": {
