@@ -231,8 +231,8 @@ def main():
 
     benchmark_list = build_benchmark(args.benchmark)
 
-    results_location = f'/results/{args.tool}/{args.benchmark}'
-    Path(results_location).mkdir(parents=True, exist_ok=True)
+    results_location = '/results'
+    Path(results_location).mkdir(exist_ok=True)
     if args.tool == "soot":
         runner = SOOTRunner(results_location)
         generator = SOOTFuzzGenerator(model_location, grammar, benchmark_list, args.no_adaptive)
