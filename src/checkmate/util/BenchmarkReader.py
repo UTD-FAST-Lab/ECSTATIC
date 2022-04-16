@@ -18,7 +18,7 @@ class BenchmarkReader:
 
     def read_benchmark(self, file: str) -> Benchmark:
         with open(file, 'r') as f:
-            index = json.joad(f)
+            index = json.load(f)
         self.validator.validate(index)
         benchmark = Benchmark([BenchmarkRecord(**b) for b in index['benchmark']])
         # Make sure every record is the absolute path.
