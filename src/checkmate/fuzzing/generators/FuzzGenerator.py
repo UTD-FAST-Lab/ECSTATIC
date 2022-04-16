@@ -151,6 +151,12 @@ class FuzzGenerator:
                         config[o] = o.get_default()
                     if level == config[o]:
                         continue
+                    if o.type == 'int':
+                        if 'i' in level.level_name:
+                            random.seed(2001)
+                            level = Level(o.name, random.randint(o.min_value, o.max_value))
+                        else:
+                            level = Level(o.name, int(level.level_name))
                     config_copy = copy.deepcopy(config)
                     config_copy[o] = level
                     for _, v in config_copy.items():

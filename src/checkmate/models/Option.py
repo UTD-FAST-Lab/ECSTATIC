@@ -32,7 +32,8 @@ class Option:
     def __hash__(self) -> int:
         return hash((self.name, frozenset(self.all)))
 
-    def __init__(self, name):
+    def __init__(self, name, type="enum",
+                 min_value=-2147483648, max_value=2147483647):
         self.name = name
         self.precision = DiGraph()
         self.soundness = DiGraph()
@@ -40,6 +41,9 @@ class Option:
         self.constraints = list()
         self.tags = list()
         self.default = None
+        self.type: str = type
+        self.min_value: int = min_value
+        self.max_value: int = max_value
 
     def add_tag(self, tag: str):
         self.tags.append(tag)
@@ -193,6 +197,12 @@ class Option:
             o.add_level(Level(o.name, level))
         if 'default' in d:
             o.set_default(d['default'])
+        if 'type' in d:
+            o.type = d['type']
+        if 'min_value' in d:
+            o.min_value = d['min_value']
+        if 'max_value' in d:
+            o.max_value = d['max_value']
         if 'tags' in d:
             [o.add_tag(t) for t in d['tags']]
         for p in d['partial_orders']:
