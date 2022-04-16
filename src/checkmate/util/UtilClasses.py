@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import NamedTuple, Dict, Set, List, Any
 
 from frozendict import frozendict
@@ -11,13 +11,8 @@ from src.checkmate.models.Option import Option
 @dataclass
 class BenchmarkRecord:
     name: str
-    depends_on: List[str]
-    sources: str
-
-    def __init__(self, name: str, depends_on: List[str] = [], sources: str = None):
-        self.name == name
-        self.depends_on == depends_on
-        self.sources == sources
+    depends_on: List[str] = field(kw_only=True, default_factory=list)
+    sources: str = field(kw_only=True, default=None)
 
 
 @dataclass
