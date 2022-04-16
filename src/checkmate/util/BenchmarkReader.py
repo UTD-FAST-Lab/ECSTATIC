@@ -22,7 +22,7 @@ class BenchmarkReader:
         self.validator.validate(index)
         benchmark = Benchmark([BenchmarkRecord(**b) for b in index['benchmark']])
         # Make sure every record is the absolute path.
-        for b in benchmark:
+        for b in benchmark.benchmarks:
             b: BenchmarkRecord
             b.name = os.path.join(os.path.dirname(file), os.path.basename(b.name))
             b.depends_on = [os.path.abspath(os.path.dirname(file), os.path.basename(d)) for d in b.depends_on]

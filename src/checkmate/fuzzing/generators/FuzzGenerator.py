@@ -49,7 +49,7 @@ class FuzzGenerator:
         with open(grammar_location) as f:
             self.json_grammar = json.load(f)
         self.grammar = convert_ebnf_grammar(self.json_grammar)
-        self.benchmark = benchmark
+        self.benchmark: Benchmark = benchmark
         self.fuzzer = GrammarCoverageFuzzer(self.grammar)
         random.seed(2001)
         self.model = ConfigurationSpaceReader().read_configuration_space(model_location)
@@ -131,7 +131,7 @@ class FuzzGenerator:
             choice = candidate.config
             logger.info(f"Chosen config: {choice}")
             option_under_investigation = candidate.option
-            for benchmark_record in self.benchmarks:
+            for benchmark_record in self.benchmark.benchmarks:
                 benchmark_record: BenchmarkRecord
                 results.append(FuzzingJob(choice, option_under_investigation, benchmark_record))
 
