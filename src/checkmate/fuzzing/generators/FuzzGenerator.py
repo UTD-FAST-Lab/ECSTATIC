@@ -44,12 +44,12 @@ class OptionExcludedError(Exception):
 class FuzzGenerator:
     FIRST_RUN = True
 
-    def __init__(self, model_location: str, grammar_location: str, benchmarks: List[str],
+    def __init__(self, model_location: str, grammar_location: str, benchmark_index_file: str,
                  no_adaptive: bool):
         with open(grammar_location) as f:
             self.json_grammar = json.load(f)
         self.grammar = convert_ebnf_grammar(self.json_grammar)
-        self.benchmarks = benchmarks
+        self.benchmark_index_file = benchmark_index_file
         self.fuzzer = GrammarCoverageFuzzer(self.grammar)
         random.seed(2001)
         self.model = ConfigurationSpaceReader().read_configuration_space(model_location)

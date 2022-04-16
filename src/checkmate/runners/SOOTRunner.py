@@ -1,3 +1,4 @@
+import os.path
 from typing import List, Dict
 
 from src.checkmate.models.Level import Level
@@ -13,8 +14,12 @@ class SOOTRunner(CommandLineToolRunner):
     def get_input_option(self) -> str:
         return "--process-dir"
 
-    def get_output_option(self) -> str:
-        return "--callgraph-output"
+    def get_output_option(self, benchmark: str, dependencies: List[str]) -> str:
+        output_str = f'--callgraph-output {os.path.abspath(benchmark)}'
+        if len(dependencies) > 0:
+            soot_class_path = f'--soot-class-path {":".join([os.path.abspath(d) for d in dependencies])}'
+            output_str = output_str + " " + soot_class_path
+        return output_str
 
     def get_task_option(self, task: str) -> str:
         if task == 'cg':

@@ -27,7 +27,7 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         pass
 
     @abstractmethod
-    def get_output_option(self) -> str:
+    def get_output_option(self, benchmark: str, dependencies: List[str]) -> str:
         """Returns option that should prepend the output."""
         pass
 
@@ -67,7 +67,7 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         pass
 
     def run_from_cmd(self, cmd, job, output_file):
-        cmd.extend([self.get_input_option(), job.target, self.get_output_option(), output_file])
+        cmd.extend([self.get_input_option(), job.target, self.get_output_option(output_file)])
         cmd = [c for c in cmd if c != '']
         start_time: float = time.time()
         logging.info(f"Cmd is {cmd}")
