@@ -49,7 +49,7 @@ class AbstractCommandLineToolRunner(ABC):
         # If we get here we failed too many times and we just abort.
         logging.critical("Failed running job maximum number of times. Sorry!")
         # Create a file so we know not to retry this job in the future.
-        with open(self.get_output() + '.error', 'w') as f:
+        with open(self.get_output(job) + '.error', 'w') as f:
             pass
         return None
 
