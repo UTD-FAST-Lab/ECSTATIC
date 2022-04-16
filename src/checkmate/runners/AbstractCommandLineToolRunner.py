@@ -9,8 +9,7 @@ from typing import Dict, Any
 
 from src.checkmate.models.Level import Level
 from src.checkmate.models.Option import Option
-from src.checkmate.util.FuzzingJob import FuzzingJob
-from src.checkmate.util.UtilClasses import FinishedFuzzingJob
+from src.checkmate.util.UtilClasses import FinishedFuzzingJob, FuzzingJob
 
 """
 Base class for command line tool runners.

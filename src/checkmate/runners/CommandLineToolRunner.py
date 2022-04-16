@@ -6,8 +6,7 @@ from abc import ABC, abstractmethod
 from typing import List, overload
 
 from src.checkmate.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
-from src.checkmate.util.FuzzingJob import FuzzingJob
-from src.checkmate.util.UtilClasses import FinishedFuzzingJob, BenchmarkRecord
+from src.checkmate.util.UtilClasses import FinishedFuzzingJob, BenchmarkRecord, FuzzingJob
 
 """
 This class supports the basics of running a command line tool,

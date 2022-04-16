@@ -7,8 +7,7 @@ import time
 from typing import List
 
 from src.checkmate.runners.CommandLineToolRunner import CommandLineToolRunner
-from src.checkmate.util.FuzzingJob import FuzzingJob
-from src.checkmate.util.UtilClasses import FinishedFuzzingJob, BenchmarkRecord
+from src.checkmate.util.UtilClasses import FinishedFuzzingJob, BenchmarkRecord, FuzzingJob
 
 
 class DOOPRunner(CommandLineToolRunner):

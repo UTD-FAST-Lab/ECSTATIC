@@ -15,8 +15,8 @@ from src.checkmate.models.Level import Level
 from src.checkmate.models.Option import Option
 from src.checkmate.models.Tool import Tool
 from src.checkmate.util.ConfigurationSpaceReader import ConfigurationSpaceReader
-from src.checkmate.util.FuzzingJob import FuzzingJob
-from src.checkmate.util.UtilClasses import ConfigWithMutatedOption, FuzzingCampaign, Benchmark, BenchmarkRecord
+from src.checkmate.util.UtilClasses import ConfigWithMutatedOption, FuzzingCampaign, Benchmark, BenchmarkRecord, \
+    FuzzingJob
 from src.checkmate.util.Violation import Violation
 from src.checkmate.util.config import configuration
 
