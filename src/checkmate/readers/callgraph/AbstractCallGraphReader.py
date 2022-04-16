@@ -1,3 +1,4 @@
+import logging
 from abc import ABC, abstractmethod
 from typing import Tuple, Dict
 
@@ -11,6 +12,7 @@ from src.checkmate.util.CGTarget import CGTarget
 class AbstractCallGraphReader(ABC):
 
     def import_graph(self, file: str) -> DiGraph:
+        logging.info(f'Reading callgraph from {file}')
         callgraph: Dict[CGCallSite, CGTarget] = {}
         with open(file) as f:
             lines = f.readlines()
