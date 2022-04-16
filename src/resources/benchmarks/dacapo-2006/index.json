@@ -1,5 +1,5 @@
 {
-  "benchmarks": [
+  "benchmark": [
     {
       "name": "antlr.jar",
       "depends_on": [
