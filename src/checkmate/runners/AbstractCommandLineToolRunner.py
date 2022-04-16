@@ -39,7 +39,7 @@ class AbstractCommandLineToolRunner(ABC):
     def run_job(self, job: FuzzingJob) -> FinishedFuzzingJob:
         num_runs = 0;
         ex: Exception = None
-        while (num_runs < 3):  # TODO: Have this number configurable.
+        while num_runs < 3 and not os.path.exists(self.get_output() + '.error'):  # TODO: Have this number configurable.
             try:
                 return self.try_run_job(job)
             except Exception as e:
@@ -49,7 +49,14 @@ class AbstractCommandLineToolRunner(ABC):
 
         # If we get here we failed too many times and we just abort.
         logging.critical("Failed running job maximum number of times. Sorry!")
-        raise ex
+        # Create a file so we know not to retry this job in the future.
+        with open(self.get_output() + '.error', 'w') as f:
+            pass
+        return None
+
+    def get_output(self, job: FuzzingJob):
+        return os.path.join(self.output,
+                                   f'{self.dict_hash(job.configuration)}_{os.path.basename(job.target)}.raw')
 
     @abstractmethod
     def try_run_job(self, job: FuzzingJob) -> FinishedFuzzingJob:
