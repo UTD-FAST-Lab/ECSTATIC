@@ -66,7 +66,8 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         pass
 
     def run_from_cmd(self, cmd: List[str], job: FuzzingJob, output_file: str):
-        cmd.extend([self.get_input_option(job.target), self.get_output_option(output_file)])
+        cmd.extend(self.get_input_option(job.target).split(" "))
+        cmd.extend(self.get_output_option(output_file).split(" "))
         cmd = [c for c in cmd if c != '']
         start_time: float = time.time()
         logging.info(f"Cmd is {' '.join(cmd)}")
