@@ -35,3 +35,18 @@ class FlowdroidFinishedFuzzingJob(FinishedFuzzingJob):
 @dataclass
 class FinishedCampaign:
     finished_jobs: List[FinishedFuzzingJob]
+
+@dataclass
+class BenchmarkRecord:
+    name: str
+    depends_on: List[str]
+    sources: str
+
+    def __init__(self, name: str, depends_on: List[str] = [], sources: str = None):
+        self.name == name
+        self.depends_on == depends_on
+        self.sources == sources
+
+@dataclass
+class Benchmark:
+    benchmarks: List[BenchmarkRecord]

@@ -3,11 +3,11 @@ import os
 import subprocess
 import time
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, overload
 
 from src.checkmate.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
 from src.checkmate.util.FuzzingJob import FuzzingJob
-from src.checkmate.util.UtilClasses import FinishedFuzzingJob
+from src.checkmate.util.UtilClasses import FinishedFuzzingJob, BenchmarkRecord
 
 """
 This class supports the basics of running a command line tool,
@@ -22,7 +22,7 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         pass
 
     @abstractmethod
-    def get_input_option(self) -> str:
+    def get_input_option(self, benchmark_record: BenchmarkRecord) -> str:
         """Returns option that should prepend the input program."""
         pass
 
@@ -66,7 +66,7 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
     def check_for_errors(self, lines: List[str]):
         pass
 
-    def run_from_cmd(self, cmd, job, output_file):
+    def run_from_cmd(self, cmd: List[str], job: FuzzingJob, output_file: str):
         cmd.extend([self.get_input_option(), job.target, self.get_output_option(output_file)])
         cmd = [c for c in cmd if c != '']
         start_time: float = time.time()

@@ -2,6 +2,7 @@ from typing import Dict, List
 
 from src.checkmate.models.Level import Level
 from src.checkmate.models.Option import Option
+from src.checkmate.util.UtilClasses import BenchmarkRecord
 
 
 class FuzzingJob:
@@ -9,12 +10,11 @@ class FuzzingJob:
     def __init__(self,
                  configuration: Dict[Option, Level],
                  option_under_investigation: Option | None,
-                 apk: str,
+                 target: BenchmarkRecord,
                  target_dependencies: List[str] = []):
         self.configuration = configuration
         self.option_under_investigation = option_under_investigation
-        self.target = apk
-        self.target_dependencies = target_dependencies
+        self.target = target
 
     def __eq__(self, other):
         return isinstance(other, FuzzingJob) and self.configuration == other.configuration and \

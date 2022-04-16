@@ -7,6 +7,7 @@ from src.checkmate.fuzzing.generators.SOOTFuzzGenerator import SOOTFuzzGenerator
 from src.checkmate.readers.callgraph.DOOPCallGraphReader import DOOPCallGraphReader
 from src.checkmate.readers.callgraph.SOOTCallGraphReader import SOOTCallGraphReader
 from src.checkmate.readers.callgraph.WALACallGraphReader import WALACallGraphReader
+from src.checkmate.util.BenchmarkReader import BenchmarkReader
 from src.checkmate.util.Violation import Violation
 
 logging.basicConfig(level=logging.INFO)
@@ -30,7 +31,8 @@ from src.checkmate.runners.DOOPRunner import DOOPRunner
 from src.checkmate.runners.SOOTRunner import SOOTRunner
 from src.checkmate.runners.WALARunner import WALARunner
 from src.checkmate.util import config
-from src.checkmate.util.UtilClasses import FuzzingCampaign, FinishedFuzzingJob, FinishedCampaign
+from src.checkmate.util.UtilClasses import FuzzingCampaign, FinishedFuzzingJob, FinishedCampaign, Benchmark, \
+    BenchmarkRecord
 
 logger = logging.getLogger(__name__)
 
@@ -229,21 +231,22 @@ def main():
     model_location = importlib.resources.path("src.resources.configuration_spaces", f"{args.tool}_config.json")
     grammar = importlib.resources.path("src.resources.grammars", f"{args.tool}_grammar.json")
 
-    benchmark_list = build_benchmark(args.benchmark)
-
+    benchmark: Benchmark = build_benchmark(args.benchmark)
+    logger.info(f'Benchmark is {benchmark}')
+    
     results_location = '/results'
     Path(results_location).mkdir(exist_ok=True)
     if args.tool == "soot":
         runner = SOOTRunner(results_location)
-        generator = SOOTFuzzGenerator(model_location, grammar, benchmark_list, args.no_adaptive)
+        generator = SOOTFuzzGenerator(model_location, grammar, benchmark, args.no_adaptive)
         reader = SOOTCallGraphReader()
     elif args.tool == "wala":
         runner = WALARunner(results_location)
-        generator = FuzzGenerator(model_location, grammar, benchmark_list, args.no_adaptive)
+        generator = FuzzGenerator(model_location, grammar, benchmark, args.no_adaptive)
         reader = WALACallGraphReader()
     elif args.tool == "doop":
         runner = DOOPRunner(results_location)
-        generator = FuzzGenerator(model_location, grammar, benchmark_list, args.no_adaptive)
+        generator = FuzzGenerator(model_location, grammar, benchmark, args.no_adaptive)
         reader = DOOPCallGraphReader()
     else:
         raise RuntimeError(f"Tool {args.tool} is not supported.")
@@ -255,17 +258,20 @@ def main():
     t.main()
 
 
-def build_benchmark(benchmark: str) -> List[str]:
+def build_benchmark(benchmark: str) -> Benchmark:
     # TODO: Check that benchmarks are loaded. If not, load from git.
     build = importlib.resources.path(f"src.resources.benchmarks.{benchmark}", "build.sh")
     os.chmod(build, 555)
     logging.info(f"Building benchmark....")
     subprocess.run(build)
-    benchmark_list = []
-    for root, dirs, files in os.walk("/benchmarks"):
-        benchmark_list.extend([os.path.join(root, f) for f in files if
-                               (f.endswith(".jar") or f.endswith(".apk"))])  # TODO more dynamic extensions?
-    return benchmark_list
+    if os.path.exists(f'/benchmarks/{benchmark}/index.json'):
+        return BenchmarkReader().read_benchmark(f'/benchmarks/{benchmark}/index.json')
+    else:
+        benchmark_list = []
+        for root, dirs, files in os.walk("/benchmarks"):
+            benchmark_list.extend([os.path.abspath(os.path.join(root, f)) for f in files if
+                                   (f.endswith(".jar") or f.endswith(".apk"))])  # TODO more dynamic extensions?
+        return Benchmark([BenchmarkRecord(b) for b in benchmark_list])
 
 
 if __name__ == '__main__':

@@ -4,6 +4,7 @@ from typing import List, Dict
 from src.checkmate.models.Level import Level
 from src.checkmate.models.Option import Option
 from src.checkmate.runners.CommandLineToolRunner import CommandLineToolRunner
+from src.checkmate.util.UtilClasses import BenchmarkRecord
 
 
 class SOOTRunner(CommandLineToolRunner):
@@ -11,15 +12,14 @@ class SOOTRunner(CommandLineToolRunner):
         if "Ouuups... something went wrong! Sorry about that." in lines:
             raise RuntimeError("Failed to run.")
 
-    def get_input_option(self) -> str:
-        return "--process-dir"
+    def get_input_option(self, benchmark_record: BenchmarkRecord) -> str:
+        output = f"--process-dir {benchmark_record.name}"
+        if len(benchmark_record.depends_on) > 0:
+            output = output + " " + f"--soot-class-path {':'.join(benchmark_record.depends_on)}"
+        return output
 
-    def get_output_option(self, benchmark: str, dependencies: List[str]) -> str:
-        output_str = f'--callgraph-output {os.path.abspath(benchmark)}'
-        if len(dependencies) > 0:
-            soot_class_path = f'--soot-class-path {":".join([os.path.abspath(d) for d in dependencies])}'
-            output_str = output_str + " " + soot_class_path
-        return output_str
+    def get_output_option(self, output_file: str) -> str:
+        return f'--callgraph-output {os.path.abspath(output_file)}'
 
     def get_task_option(self, task: str) -> str:
         if task == 'cg':

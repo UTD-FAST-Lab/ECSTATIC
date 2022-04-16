@@ -16,7 +16,7 @@ from src.checkmate.models.Option import Option
 from src.checkmate.models.Tool import Tool
 from src.checkmate.util.ConfigurationSpaceReader import ConfigurationSpaceReader
 from src.checkmate.util.FuzzingJob import FuzzingJob
-from src.checkmate.util.UtilClasses import ConfigWithMutatedOption, FuzzingCampaign
+from src.checkmate.util.UtilClasses import ConfigWithMutatedOption, FuzzingCampaign, Benchmark, BenchmarkRecord
 from src.checkmate.util.Violation import Violation
 from src.checkmate.util.config import configuration
 
@@ -44,12 +44,12 @@ class OptionExcludedError(Exception):
 class FuzzGenerator:
     FIRST_RUN = True
 
-    def __init__(self, model_location: str, grammar_location: str, benchmark_index_file: str,
+    def __init__(self, model_location: str, grammar_location: str, benchmark: Benchmark,
                  no_adaptive: bool):
         with open(grammar_location) as f:
             self.json_grammar = json.load(f)
         self.grammar = convert_ebnf_grammar(self.json_grammar)
-        self.benchmark_index_file = benchmark_index_file
+        self.benchmark = benchmark
         self.fuzzer = GrammarCoverageFuzzer(self.grammar)
         random.seed(2001)
         self.model = ConfigurationSpaceReader().read_configuration_space(model_location)
@@ -131,8 +131,9 @@ class FuzzGenerator:
             choice = candidate.config
             logger.info(f"Chosen config: {choice}")
             option_under_investigation = candidate.option
-            for a in self.benchmarks:
-                results.append(FuzzingJob(choice, option_under_investigation, a))
+            for benchmark_record in self.benchmarks:
+                benchmark_record: BenchmarkRecord
+                results.append(FuzzingJob(choice, option_under_investigation, benchmark_record))
 
         return FuzzingCampaign(results)
 

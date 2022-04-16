@@ -1,5 +1,70 @@
 {
   "benchmarks": [
-    ""
+    {
+      "name": "antlr.jar",
+      "depends_on": [
+        "antlr-deps.jar"
+      ]
+    },
+    {
+      "name": "bloat.jar",
+      "depends_on": [
+        "bloat-deps.jar"
+      ]
+    },
+    {
+      "name": "chart.jar",
+      "depends_on": [
+        "chart-deps.jar"
+      ]
+    },
+    {
+      "name": "eclipse.jar",
+      "depends_on": [
+        "eclipse-deps.jar"
+      ]
+    }
+    {
+      "name": "fop.jar",
+      "depends_on": [
+        "fop-deps.jar"
+      ]
+    },
+    {
+      "name": "hsqldb.jar",
+      "depends_on": [
+        "hsqldb-deps.jar"
+      ]
+    },
+    {
+      "name": "jython.jar",
+      "depends_on": [
+        "jython-deps.jar"
+      ]
+    },
+    {
+      "name": "luindex.jar",
+      "depends_on":[
+        "luindex-deps.jar"
+      ]
+    },
+    {
+      "name": "lusearch.jar",
+      "depends_on": [
+        "lusearch-deps.jar"
+      ]
+    },
+    {
+      "name": "pmd.jar",
+      "depends_on": [
+        "pmd-deps.jar"
+      ]
+    },
+    {
+      "name": "xalan.jar",
+      "depends_on": [
+        "xalan-deps.jar"
+      ]
+    }
   ]
 }

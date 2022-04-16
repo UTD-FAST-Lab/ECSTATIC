@@ -8,14 +8,14 @@ from typing import List
 
 from src.checkmate.runners.CommandLineToolRunner import CommandLineToolRunner
 from src.checkmate.util.FuzzingJob import FuzzingJob
-from src.checkmate.util.UtilClasses import FinishedFuzzingJob
+from src.checkmate.util.UtilClasses import FinishedFuzzingJob, BenchmarkRecord
 
 
 class DOOPRunner(CommandLineToolRunner):
-    def get_input_option(self) -> str:
-        return "-i"
+    def get_input_option(self, benchmark_record: BenchmarkRecord) -> str:
+        return f"-i {benchmark_record.name}"
 
-    def get_output_option(self) -> str:
+    def get_output_option(self, output_file: str) -> str:
         pass
 
     def get_task_option(self, task: str) -> str:

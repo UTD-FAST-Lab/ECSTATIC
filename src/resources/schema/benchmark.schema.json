@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "benchmark.schema.json",
+  "title": "Benchmark",
+  "description": "A benchmark specification.",
+  "type": "object",
+  "required": ["benchmark"],
+  "properties": {
+    "benchmarks": {
+      "description": "The name of the level.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "description": "The name of the benchmark",
+            "type": "string"
+          },
+          "depends-on": {
+            "description": "List of any artifacts this benchmark depends on.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sources": {
+            "description": "The location of the sources.",
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
