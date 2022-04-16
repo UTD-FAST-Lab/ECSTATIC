@@ -23,7 +23,7 @@
       "depends_on": [
         "eclipse-deps.jar"
       ]
-    }
+    },
     {
       "name": "fop.jar",
       "depends_on": [
