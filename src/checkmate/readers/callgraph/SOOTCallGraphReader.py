@@ -23,5 +23,5 @@ class SOOTCallGraphReader(AbstractCallGraphReader):
         target_regex = re.compile("<(.*?): (.*?) (.*?)\((.*?)\)>")
         target_matches = target_regex.match(tokens[-2])
         target = CGTarget(clazz=target_matches.group(1), return_type=target_matches.group(2), name=target_matches.group(3), context=tokens[-1],
-                          *(target_matches.group(4).split(',')))
+                          params=target_matches.group(4).split(','))
         return callsite, target
