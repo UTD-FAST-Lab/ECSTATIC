@@ -49,8 +49,7 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         config_as_str = self.dict_to_config_str(job.configuration)
         cmd = self.get_base_command()
         cmd.extend(config_as_str.split(" "))
-        output_file = os.path.join(self.output,
-                                   f'{self.dict_hash(job.configuration)}_{os.path.basename(job.target)}.raw')
+        output_file = self.get_output(job)
         if not os.path.exists(output_file):
             total_time = self.run_from_cmd(cmd, job, output_file)
             self.transform(output_file)
