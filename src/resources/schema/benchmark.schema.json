@@ -4,7 +4,7 @@
   "title": "Benchmark",
   "description": "A benchmark specification.",
   "type": "object",
-  "required": ["benchmark"],
+  "required": ["benchmarks"],
   "properties": {
     "benchmarks": {
       "description": "The name of the level.",
