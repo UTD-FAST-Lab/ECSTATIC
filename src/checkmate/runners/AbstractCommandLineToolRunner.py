@@ -32,7 +32,6 @@ class AbstractCommandLineToolRunner(ABC):
                 result += f'--{k.name} {v.level_name} '
             elif v.level_name.lower() == 'true':
                 result += f'--{k.name} '
-        logging.info(f"Result is {result}")
         return result.strip()
 
     def run_job(self, job: FuzzingJob) -> FinishedFuzzingJob:
