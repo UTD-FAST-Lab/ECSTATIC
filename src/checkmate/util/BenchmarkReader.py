@@ -25,7 +25,7 @@ class BenchmarkReader:
         for b in benchmark.benchmarks:
             b: BenchmarkRecord
             b.name = os.path.join(os.path.dirname(file), os.path.basename(b.name))
-            b.depends_on = [os.path.abspath(os.path.dirname(file), os.path.basename(d)) for d in b.depends_on]
+            b.depends_on = [os.path.abspath(os.path.join(os.path.dirname(file), os.path.basename(d))) for d in b.depends_on]
             if b.sources is not None:
-                b.sources = os.path.abspath(os.path.dirname(file), os.path.basename(b.sources))
+                b.sources = os.path.abspath(os.path.join(os.path.dirname(file), os.path.basename(b.sources)))
         return benchmark
