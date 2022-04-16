@@ -10,7 +10,7 @@ from src.checkmate.readers.callgraph.WALACallGraphReader import WALACallGraphRea
 from src.checkmate.util.BenchmarkReader import BenchmarkReader
 from src.checkmate.util.Violation import Violation
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 import subprocess
 
 from src.checkmate.dispatcher import Sanitizer
