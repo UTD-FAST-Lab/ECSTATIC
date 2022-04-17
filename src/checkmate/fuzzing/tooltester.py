@@ -52,8 +52,9 @@ class ToolTester:
 
     def main(self):
         campaign_index = 0
-
+        results_base_dir = self.runner.output
         while campaign_index < self.num_campaigns:
+            self.runner.output = os.path.join(results_base_dir, f'campaign{campaign_index}')
             campaign_index += 1
             campaign: FuzzingCampaign = self.generator.generate_campaign()
             print(f"Got new fuzzing campaign: {campaign_index}.")
