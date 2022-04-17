@@ -33,8 +33,8 @@ class CallgraphViolationChecker(AbstractViolationChecker):
             sites are violations.
             """
             if k in result2:
-                all_differences.extend([f'{k} -> {v1}' for v1 in v.difference(
-                    (result2[k] if k in result2 else set()))])
+                all_differences.extend([f'{k} -> {v1}' for v1 in set(v).difference(
+                    (set(result2[k]) if k in result2 else set()))])
         return Violation(len(all_differences) > 0, "precision", job1, job2, all_differences)
 
     def is_more_sound(self, job1: FinishedFuzzingJob, job2: FinishedFuzzingJob) -> Violation:
@@ -51,8 +51,8 @@ class CallgraphViolationChecker(AbstractViolationChecker):
             are a violation.
             """
             if k in result1:
-                all_differences.extend([f'{k} -> {v1}' for v1 in v.difference(
-                    (result1[k] if k in result2 else set()))])
+                all_differences.extend([f'{k} -> {v1}' for v1 in set(v).difference(
+                    (set(result1[k]) if k in result2 else set()))])
         return Violation(len(all_differences) > 0, "soundness", job1, job2, all_differences)
 
     def read_from_input(self, file: str) -> Dict[CGCallSite, CGTarget]:

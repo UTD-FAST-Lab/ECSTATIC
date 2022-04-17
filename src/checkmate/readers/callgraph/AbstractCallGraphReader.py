@@ -19,7 +19,7 @@ class AbstractCallGraphReader(ABC):
         for l in lines[1:]:  # skip header line
             callsite, target = self.process_line(l)
             if callsite not in callgraph:
-                callgraph[callsite] = set()
+                callgraph[callsite] = []
             callgraph[callsite].add(target)
         return {str(k): [str(v1) for v1 in v] for k, v in callgraph.items()}
 
