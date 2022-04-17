@@ -50,7 +50,7 @@ def start_runner(tool: str, benchmark: str, task: str, jobs: int, campaigns: int
         volumes={os.path.abspath(output_folder) : {"bind": "/results", "mode": "rw"}})
     _, log_stream = cntr.exec_run(cmd=command, stream=True)
     for l in log_stream:
-        print(l)
+        print(l.decode())
     print('Container finished!')
     print(f"Results are in {output_folder}")
 
