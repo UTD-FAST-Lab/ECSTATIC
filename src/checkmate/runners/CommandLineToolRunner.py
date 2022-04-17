@@ -51,6 +51,8 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         output_file = self.get_output(job)
         if not os.path.exists(output_file):
             total_time = self.run_from_cmd(cmd, job, output_file)
+            if not os.path.exists(output_file):
+                raise RuntimeError(f"Failed to create file {output_file}")
             self.transform(output_file)
         else:
             total_time = 0
