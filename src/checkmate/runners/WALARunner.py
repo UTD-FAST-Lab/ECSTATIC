@@ -5,6 +5,7 @@ from src.checkmate.util.UtilClasses import BenchmarkRecord
 
 
 class WALARunner(CommandLineToolRunner):
+
     def get_input_option(self, benchmark_record: BenchmarkRecord) -> str:
         return f"--appJar {benchmark_record.name}"
 

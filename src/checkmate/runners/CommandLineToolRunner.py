@@ -63,10 +63,6 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
             results_location=output_file
         )
 
-    @abstractmethod
-    def check_for_errors(self, lines: List[str]):
-        pass
-
     def run_from_cmd(self, cmd: List[str], job: FuzzingJob, output_file: str):
         cmd.extend(self.get_input_option(job.target).split(" "))
         cmd.extend(self.get_output_option(output_file).split(" "))

@@ -8,10 +8,6 @@ from src.checkmate.util.UtilClasses import BenchmarkRecord
 
 
 class SOOTRunner(CommandLineToolRunner):
-    def check_for_errors(self, lines: str):
-        if "Ouuups... something went wrong! Sorry about that." in lines:
-            raise RuntimeError("Failed to run.")
-
     def get_input_option(self, benchmark_record: BenchmarkRecord) -> str:
         output = f"--process-dir {benchmark_record.name}"
         if len(benchmark_record.depends_on) > 0:
