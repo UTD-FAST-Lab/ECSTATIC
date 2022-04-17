@@ -21,3 +21,4 @@ ant sources
 
 find . -type f -name "*.tar.gz" | parallel cp -t /benchmarks/dacapo-2006
 find . -type f -name "*.zip" | parallel cp -t /benchmarks/dacapo-2006
+cd $CUR
