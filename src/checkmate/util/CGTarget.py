@@ -3,7 +3,7 @@ from typing import List, Tuple
 
 class CGTarget:
 
-    def __init__(self, clazz: str, name: str, return_type: str, context: str, params: List[str]):
+    def __init__(self, clazz: str, name: str, return_type: str, context: str, params: Tuple[str]):
         self.clazz = clazz
         self.name = name
         self.return_type = return_type
