@@ -27,7 +27,7 @@ class Violation:
                 },
                 'option_under_investigation': self.job1.job.option_under_investigation.name if \
                     self.job1.job.option_under_investigation is not None else self.job2.job.option_under_investigation.name,
-                'target': self.job1.job.target,
+                'target': self.job1.job.target.name,
                 'differences': sorted(self.differences)
                 }
 
