@@ -44,15 +44,13 @@ def start_runner(tool: str, benchmark: str, task: str, jobs: int, campaigns: int
     Path(output_folder).mkdir(parents=True, exist_ok=True)
     cntr: Container = client.containers.run(
         image=get_image_name(tool),
-        command=command,
-        detach=False,
-        volumes={os.path.abspath(output_folder) : {"bind": "/results", "mode": "rw"}},
-        stream=True)
-    log_stream = cntr.logs()
+        command="/bin/bash",
+        detach=True,
+        volumes={os.path.abspath(output_folder) : {"bind": "/results", "mode": "rw"}})
+    _, log_stream = cntr.exec_run(cmd=command, stream=True)
     for l in log_stream:
         print(l)
     print('Container finished!')
-    #[print(l) for l in cntr.logs().decode("utf-8").split('\n')]
     print(f"Results are in {output_folder}")
 
 
