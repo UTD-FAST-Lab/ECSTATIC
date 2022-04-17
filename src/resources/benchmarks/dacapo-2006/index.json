@@ -27,7 +27,8 @@
     {
       "name": "fop.jar",
       "depends_on": [
-        "fop-deps.jar"
+        "fop-deps.jar",
+        "fop-deps.orig.jar"
       ]
     },
     {
