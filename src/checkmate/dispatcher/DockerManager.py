@@ -45,7 +45,7 @@ def start_runner(tool: str, benchmark: str, task: str, jobs: int, campaigns: int
     cntr: Container = client.containers.run(
         image=get_image_name(tool),
         command=command,
-        detach=True,
+        detach=False,
         volumes={os.path.abspath(output_folder) : {"bind": "/results", "mode": "rw"}},
         stream=True)
     log_stream = cntr.logs()
