@@ -20,7 +20,7 @@ class AbstractCallGraphReader(ABC):
             callsite, target = self.process_line(l)
             if callsite not in callgraph:
                 callgraph[callsite] = []
-            callgraph[callsite].add(target)
+            callgraph[callsite].append(target)
         return {str(k): [str(v1) for v1 in v] for k, v in callgraph.items()}
 
     """
