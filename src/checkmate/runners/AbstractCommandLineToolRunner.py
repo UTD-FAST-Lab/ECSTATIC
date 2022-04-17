@@ -37,7 +37,7 @@ class AbstractCommandLineToolRunner(ABC):
     def run_job(self, job: FuzzingJob) -> FinishedFuzzingJob:
         num_runs = 0;
         ex: Exception = None
-        while num_runs < 1 and not os.path.exists(self.get_output(job) + '.error'):  # TODO: Have this number configurable.
+        while num_runs < 3 and not os.path.exists(self.get_output(job) + '.error'):  # TODO: Have this number configurable.
             try:
                 return self.try_run_job(job)
             except Exception as e:
