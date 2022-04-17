@@ -46,6 +46,7 @@ def start_runner(tool: str, benchmark: str, task: str, jobs: int, campaigns: int
         image=get_image_name(tool),
         command="/bin/bash",
         detach=True,
+        tty=True,
         volumes={os.path.abspath(output_folder) : {"bind": "/results", "mode": "rw"}})
     _, log_stream = cntr.exec_run(cmd=command, stream=True)
     for l in log_stream:
