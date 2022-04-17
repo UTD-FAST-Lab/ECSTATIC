@@ -29,7 +29,6 @@
   "<cgsetting>": [
     "safe-forname:<binaryopt>",
     "safe-newinstance:<binaryopt>",
-    "all-reachable:<binaryopt>",
     "implicit-entry:<binaryopt>",
     "trim-clinit:<binaryopt>"
   ],

@@ -338,24 +338,6 @@
       ]
     },
     {
-      "name":"all-reachable",
-      "tags": [
-        "phase cg"
-      ],
-      "levels": [
-        "true",
-        "false"
-      ],
-      "default": "false",
-      "partial_orders": [
-        {
-          "left": "true",
-          "partial_order": "MST",
-          "right": "false"
-        }
-      ]
-    },
-    {
       "name": "implicit-entry",
       "tags": [
         "phase cg"
