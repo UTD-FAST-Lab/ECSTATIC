@@ -85,7 +85,7 @@
         {
           "left": "APPLICATION_GET_METHOD",
           "partial_order": "MST",
-          "right": "MULTI_FLOW_TO_CASTS_APPLICATION_GET_METHOD",
+          "right": "MULTI_FLOW_TO_CASTS_APPLICATION_GET_METHOD"
         },
         {
           "left": "FULL",
