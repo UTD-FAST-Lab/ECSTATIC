@@ -65,7 +65,7 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
                 total_time = float(f.read().strip())
 
             logging.info(f'File {output_file} already exists. Not overwriting.')
-        logging.info(f"Finished running job. It took {total_time/1000}s")
+        logging.info(f"Finished running job. It took {total_time}s")
         return FinishedFuzzingJob(
             job=job,
             execution_time=total_time,
