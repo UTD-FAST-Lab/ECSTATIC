@@ -6,7 +6,6 @@
         "antlr-deps.jar"
       ],
       "sources": "antlr-2.7.2/antlr-2.7.2/antlr"
-      ]
     },
     {
       "name": "bloat.jar",
