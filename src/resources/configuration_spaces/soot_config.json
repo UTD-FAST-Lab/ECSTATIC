@@ -104,24 +104,6 @@
       ]
     },
     {
-      "name": "types-for-sites",
-      "tags": [
-        "phase cg.spark"
-      ],
-      "levels": [
-        "true",
-        "false"
-      ],
-      "default": "false",
-      "partial_orders": [
-        {
-          "left": "false",
-          "partial_order": "MPT",
-          "right": "true"
-        }
-      ]
-    },
-    {
       "name": "merge-stringbuffer",
       "tags": [
         "phase cg.spark"

@@ -13,7 +13,6 @@
     "vta:<binaryopt>",
     "rta:<binaryopt>",
     "field-based:<binaryopt>",
-    "types-for-sites:<binaryopt>",
     "merge-stringbuffer:<binaryopt>",
     "string-constants:<binaryopt>",
     "simulate-natives:<binaryopt>",
