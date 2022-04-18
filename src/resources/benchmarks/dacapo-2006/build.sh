@@ -23,4 +23,9 @@ find . -type f -name "*.tar.gz" | parallel cp -t /benchmarks/dacapo-2006
 find . -type f -name "*.zip" | parallel cp -t /benchmarks/dacapo-2006
 find . -type f -name '*.jar' | parallel cp -t /benchmarks/dacapo-2006
 find . -type f -name '*.tgz' | parallel cp -t /benchmarks/dacapo-2006
+
+cd /benchmarks/dacapo-2006
+parallel "mkdir {1}; mv {2} {1}; cd {1}; tar xzvf {2}; cd .." :::: <(ls | sort | grep '.tar.gz' | sed 's/.tar.gz//g') ::::+ <(ls | sort | grep '.tar.gz')
+parallel "mkdir {1}; mv {2} {1}; cd {1}; tar xzvf {2}; cd .." :::: <(ls | sort | grep '.tgz' | sed 's/.tgz//g') ::::+ <(ls | sort | grep '.tgz')
+parallel "mkdir {1}; mv {2} {1}; cd {1}; unzip {2}; cd .." :::: <(ls | sort | grep '.zip' | sed 's/.zip//g') ::::+ <(ls | sort | grep '.zip')
 cd $CUR
