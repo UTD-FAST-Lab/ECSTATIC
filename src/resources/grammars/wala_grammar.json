@@ -1,15 +1,57 @@
 {
-  "<start>": ["<options>"],
-  "<options>": ["<option>", "<options> <option>"],
+  "<start>": [
+    "<options>"
+  ],
+  "<options>": [
+    "<option>",
+    "<options> <option>"
+  ],
   "<option>": [
     "--maxNumberOfNodes <maxnodesopts>",
     "--reflectionSetting <reflectionopts>",
     "--handleStaticInit <staticinitopts>",
     "--useConstantSpecificKeys <constantspecifickeysopts>"
   ],
-  "<maxnodesopts>": ["-1", "<maxnodesint>"],
-  "<maxnodesint>": ["<digit><maxnodesint>", "<digit>"],
-  "<digit>": ["0","1","2","3","4","5","6","7","8","9"],
-  "<staticinitopts>": ["TRUE", "FALSE"],
-  "<constantspecifickeysopts>": ["TRUE", "FALSE"]
+  "<maxnodesopts>": [
+    "-1",
+    "<maxnodesint>"
+  ],
+  "<maxnodesint>": [
+    "<digit><maxnodesint>",
+    "<digit>"
+  ],
+  "<digit>": [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9"
+  ],
+  "<staticinitopts>": [
+    "TRUE",
+    "FALSE"
+  ],
+  "<constantspecifickeysopts>": [
+    "TRUE",
+    "FALSE"
+  ],
+  "<reflectionopts>": [
+    "FULL",
+    "APPLICATION_GET_METHOD",
+    "NO_FLOW_TO_CASTS",
+    "NO_FLOW_TO_CASTS_APPLICATION_GET_METHOD",
+    "NO_METHOD_INVOKE",
+    "NO_FLOW_TO_CASTS_NO_METHOD_INVOKE",
+    "ONE_FLOW_TO_CASTS_NO_METHOD_INVOKE",
+    "ONE_FLOW_TO_CASTS_APPLICATION_GET_METHOD",
+    "MULTI_FLOW_TO_CASTS_APPLICATION_GET_METHOD",
+    "NO_STRING_CONSTANTS",
+    "STRING_ONLY",
+    "NONE"
+  ]
 }
