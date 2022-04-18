@@ -28,7 +28,7 @@ class AbstractCommandLineToolRunner(ABC):
         for k, v in config_as_dict.items():
             k: Option
             v: Level
-            if isinstance(v.level_name.lower(), int) or \
+            if isinstance(v.level_name, int) or \
                     v.level_name.lower() not in ['false', 'true', 'default',
                                             (k.get_default().level_name.lower() if k.get_default() is not None else None)]:
                 result += f'--{k.name} {v.level_name} '
