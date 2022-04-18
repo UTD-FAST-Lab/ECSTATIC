@@ -1,3 +1,4 @@
+import logging
 import re
 import sre_compile
 from typing import Tuple
@@ -8,6 +9,8 @@ from src.checkmate.util.CGTarget import CGTarget
 
 
 class SOOTCallGraphReader(AbstractCallGraphReader):
+    logger = logging.getLogger("AbstractCallGraphReader")
+
     def process_line(self, line: str) -> Tuple[CGCallSite, CGTarget]:
         """
         A SOOT line looks like:
@@ -17,11 +20,15 @@ class SOOTCallGraphReader(AbstractCallGraphReader):
         @return: The corresponding CGCallSite and CGMethod
         """
 
-        tokens = line.split('\t')
-        callsite_toks = tokens[1].split(' ')[-1].strip('()').split(':')  # Gets the part in parens
-        callsite = CGCallSite(callsite_toks[0], callsite_toks[1], tokens[2])
-        target_regex = re.compile("<(.*?): (.*?) (.*?)\((.*?)\)>")
-        target_matches = target_regex.match(tokens[-2])
-        target = CGTarget(clazz=target_matches.group(1), return_type=target_matches.group(2), name=target_matches.group(3), context=tokens[-1],
-                          params=tuple(target_matches.group(4).split(',')))
-        return callsite, target
+        try:
+            tokens = line.split('\t')
+            callsite_toks = tokens[1].split(' ')[-1].strip('()').split(':')  # Gets the part in parens
+            callsite = CGCallSite(callsite_toks[0], callsite_toks[1], tokens[2])
+            target_regex = re.compile("<(.*?): (.*?) (.*?)\((.*?)\)>")
+            target_matches = target_regex.match(tokens[-2])
+            target = CGTarget(clazz=target_matches.group(1), return_type=target_matches.group(2), name=target_matches.group(3), context=tokens[-1],
+            params=tuple(target_matches.group(4).split(',')))
+            return callsite, target
+        except IndexError as ie:
+            SOOTCallGraphReader.logger.exception(f'Tried to parse line {line}')
+
