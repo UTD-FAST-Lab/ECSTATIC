@@ -53,9 +53,17 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
             total_time = self.run_from_cmd(cmd, job, output_file)
             if not os.path.exists(output_file):
                 raise RuntimeError(f"Failed to create file {output_file}")
+            with open(os.path.join(
+                    os.path.dirname(output_file),
+                    '.' + os.path.basename(output_file) + ".time"), 'w') as f:
+                f.write(total_time)
             self.transform(output_file)
         else:
-            total_time = 0
+            with open(os.path.join(
+                    os.path.dirname(output_file),
+                    '.' + os.path.basename(output_file) + ".time"), 'r') as f:
+                total_time = f.read().strip()
+
             logging.info(f'File {output_file} already exists. Not overwriting.')
         return FinishedFuzzingJob(
             job=job,
