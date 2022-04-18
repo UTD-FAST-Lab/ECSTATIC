@@ -19,13 +19,13 @@
       "name": "chart.jar",
       "depends_on": [
         "chart-deps.jar"
-      ],
+      ]
     },
     {
       "name": "eclipse.jar",
       "depends_on": [
         "eclipse-deps.jar"
-      ],
+      ]
     },
     {
       "name": "fop.jar",
