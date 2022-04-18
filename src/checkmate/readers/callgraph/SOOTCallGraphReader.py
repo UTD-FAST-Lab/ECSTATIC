@@ -22,12 +22,8 @@ class SOOTCallGraphReader(AbstractCallGraphReader):
 
         try:
             tokens = line.split('\t')
-            callsite_toks = tokens[1].split(' ')[-1].strip('()').split(':')  # Gets the part in parens
-            callsite = CGCallSite(callsite_toks[0], callsite_toks[1], tokens[2])
-            target_regex = re.compile("<(.*?): (.*?) (.*?)\((.*?)\)>")
-            target_matches = target_regex.match(tokens[-2])
-            target = CGTarget(clazz=target_matches.group(1), return_type=target_matches.group(2), name=target_matches.group(3), context=tokens[-1],
-            params=tuple(target_matches.group(4).split(',')))
+            callsite = CGCallSite(tokens[0], tokens[1], tokens[2])
+            target = CGTarget(tokens[4], context=tokens[5]),
             return callsite, target
         except IndexError as ie:
             SOOTCallGraphReader.logger.exception(f'Tried to parse line {line}')
