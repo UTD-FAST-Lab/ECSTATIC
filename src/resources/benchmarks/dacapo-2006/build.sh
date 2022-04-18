@@ -14,9 +14,8 @@ cp /checkmate/src/resources/benchmarks/dacapo-2006/index.json /benchmarks/dacapo
 cd /
 wget https://sourceforge.net/projects/dacapobench/files/archive/2006-10-MR2/dacapo-2006-10-MR2-src.zip
 unzip dacapo-2006-10-MR2-src.zip
-cd dacapo-2006-10-MR2-src.zip
-cp /checkmate/src/resources/benchmarks/dacapo-2006/build.xml ./dacapo-2006-10-MR2-src/benchmarks
-cd ./dacapo-2006-10-MR2-src/benchmarks
+cd benchmarks
+cp /checkmate/src/resources/benchmarks/dacapo-2006/build.xml .
 ant sources
 
 find . -type f -name "*.tar.gz" | parallel cp -t /benchmarks/dacapo-2006
