@@ -56,13 +56,13 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
             with open(os.path.join(
                     os.path.dirname(output_file),
                     '.' + os.path.basename(output_file) + ".time"), 'w') as f:
-                f.write(total_time)
+                f.write(str(total_time))
             self.transform(output_file)
         else:
             with open(os.path.join(
                     os.path.dirname(output_file),
                     '.' + os.path.basename(output_file) + ".time"), 'r') as f:
-                total_time = f.read().strip()
+                total_time = float(f.read().strip())
 
             logging.info(f'File {output_file} already exists. Not overwriting.')
         return FinishedFuzzingJob(
