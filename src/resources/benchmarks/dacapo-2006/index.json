@@ -4,38 +4,43 @@
       "name": "antlr.jar",
       "depends_on": [
         "antlr-deps.jar"
+      ],
+      "sources": "antlr-2.7.2/antlr-2.7.2/antlr"
       ]
     },
     {
       "name": "bloat.jar",
       "depends_on": [
         "bloat-deps.jar"
-      ]
+      ],
+      "sources": "bloat-1.0-src/src"
     },
     {
       "name": "chart.jar",
       "depends_on": [
         "chart-deps.jar"
-      ]
+      ],
     },
     {
       "name": "eclipse.jar",
       "depends_on": [
         "eclipse-deps.jar"
-      ]
+      ],
     },
     {
       "name": "fop.jar",
       "depends_on": [
         "fop-deps.jar",
         "fop-deps.orig.jar"
-      ]
+      ],
+      "sources": "fop-0.20.5-src/fop-0.20.5/src"
     },
     {
       "name": "hsqldb.jar",
       "depends_on": [
         "hsqldb-deps.jar"
-      ]
+      ],
+      "sources": "hsqldb_1_8_0_4/hsqldb/src"
     },
     {
       "name": "jython.jar",
@@ -53,19 +58,22 @@
       "name": "lusearch.jar",
       "depends_on": [
         "lusearch-deps.jar"
-      ]
+      ],
+      "sources": "lucene-1.9.1-src/lucene-1.9.1/src"
     },
     {
       "name": "pmd.jar",
       "depends_on": [
         "pmd-deps.jar"
-      ]
+      ],
+      "sources": "lucene-1.9.1-src/lucene-1.9.1/src"
     },
     {
       "name": "xalan.jar",
       "depends_on": [
         "xalan-deps.jar"
-      ]
+      ],
+      "sources": "xalan-j_2_4_1-src/xalan-j_2_4_1/src"
     }
   ]
 }
