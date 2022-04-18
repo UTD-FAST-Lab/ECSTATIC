@@ -17,8 +17,9 @@
     "<maxnodesint>"
   ],
   "<maxnodesint>": [
-    "<digit><maxnodesint>",
-    "<digit>"
+    "<digit>",
+    "<digit><digit>",
+    "<digit><digit><digit>"
   ],
   "<digit>": [
     "0",

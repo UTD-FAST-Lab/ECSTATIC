@@ -72,6 +72,5 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         ps = subprocess.run(cmd, capture_output=True)
         logging.debug(ps.stdout.decode())
         logging.debug(ps.stderr.decode())
-        self.check_for_errors(ps.stdout.decode() + ps.stderr.decode())
         total_time: float = time.time() - start_time
         return total_time

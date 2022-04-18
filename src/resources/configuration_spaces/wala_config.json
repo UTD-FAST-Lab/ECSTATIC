@@ -6,6 +6,7 @@
       "levels": ["-1", "i", "i+1"],
       "type": "int",
       "default": "-1",
+      "max_value": 999,
       "min_value": -1,
       "partial_orders": [
         {
