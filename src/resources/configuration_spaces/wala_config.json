@@ -118,6 +118,45 @@
           "right": "FALSE"
         }
       ]
+    },
+    {
+      "name": "cgalgo",
+      "levels": [
+        "NCFA",
+        "NOBJ",
+        "VANILLA_NCFA",
+        "VANILLA_NOBJ",
+        "RTA",
+        "ZERO_CFA",
+        "ZEROONE_CFA",
+        "VANILLA_ZEROONECFA",
+        "ZEROONE_CONTAINER_CFA",
+        "VANILLA_ZEROONE_CONTAINER_CFA"
+      ],
+      "default": "ZERO_CFA",
+      "partial_orders": [
+        {
+          "right": "NCFA",
+          "partial_order": "MPT",
+          "left": "VANILLA_NCFA"
+        },
+        {
+          "right": "NOBJ",
+          "partial_order": "MPT",
+          "left": "VANILLA_NOBJ"
+        },
+        {
+          "left": "NOBJ",
+          "partial_order": "MPT",
+          "right": "ZEROONE_CFA"
+        },
+        {
+          "left": "NCFA",
+          "partial_order": "MPT",
+          "right": "ZERO"
+        }
+
+      ]
     }
   ]
 }
