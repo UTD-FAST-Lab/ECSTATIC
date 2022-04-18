@@ -7,7 +7,6 @@
     "<options> <option>"
   ],
   "<option>": [
-    "--maxNumberOfNodes <maxnodesopts>",
     "--reflectionSetting <reflectionopts>",
     "--handleStaticInit <staticinitopts>",
     "--useConstantSpecificKeys <constantspecifickeysopts>"

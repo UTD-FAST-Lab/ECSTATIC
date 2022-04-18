@@ -2,26 +2,6 @@
   "name": "WALA",
   "options": [
     {
-      "name": "maxNumberOfNodes",
-      "levels": ["-1", "i", "i+1"],
-      "type": "int",
-      "default": "-1",
-      "max_value": 999,
-      "min_value": -1,
-      "partial_orders": [
-        {
-          "left": "-1",
-          "partial_order": "MST",
-          "right": "i+1"
-        },
-        {
-          "left": "i+1",
-          "partial_order": "MST",
-          "right": "i"
-        }
-      ]
-    },
-    {
       "name": "reflectionSetting",
       "levels": [
         "FULL",
