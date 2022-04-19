@@ -23,7 +23,7 @@ class SOOTCallGraphReader(AbstractCallGraphReader):
         try:
             tokens = line.split('\t')
             callsite = CGCallSite(tokens[0], tokens[1], tokens[2])
-            target = CGTarget(tokens[4], context=tokens[5]),
+            target = CGTarget(tokens[3], context=tokens[4]),
             return callsite, target
         except IndexError as ie:
             SOOTCallGraphReader.logger.exception(f'Tried to parse line {line}')
