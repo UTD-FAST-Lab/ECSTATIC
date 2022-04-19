@@ -162,6 +162,7 @@
       "default": "1",
       "minValue": "1",
       "maxValue": "999",
+      "type": "int",
       "levels": [
         "i",
         "i-1"
