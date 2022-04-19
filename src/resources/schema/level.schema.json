@@ -10,18 +10,6 @@
       "description": "The name of the level.",
       "type": "string"
     },
-    "type": {
-      "description": "The type of data the level can accept.",
-      "type": "string",
-      "enum": ["integer", "enum"]
-    },
-    "min_value": {
-      "description": "If an int, the minimum value it can take on.",
-      "type": "integer"
-    },
-    "max_value": {
-      "description": "The largest value allowed for an int.",
-      "type": "integer"
-    }
+
   }
 }

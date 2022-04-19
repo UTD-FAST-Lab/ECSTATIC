@@ -8,10 +8,10 @@
         "TRUE",
         "FALSE"
       ],
-      "partial_orders": [
+      "orders": [
         {
           "left": "TRUE",
-          "partial_order": "MPT",
+          "order": "MPT",
           "right": "FALSE"
         }
       ]
@@ -23,10 +23,10 @@
         "pedantic",
         "unit"
       ],
-      "partial_orders": [
+      "orders": [
       {
         "left": "pedantic",
-        "partial_order": "MST",
+        "order": "MST",
         "right": "unit"
       }
       ]
@@ -41,10 +41,10 @@
         "false"
       ],
       "default": "false",
-      "partial_orders": [
+      "orders": [
         {
           "left": "false",
-          "partial_order": "MPT",
+          "order": "MPT",
           "right": "true"
         }
       ]
@@ -59,10 +59,10 @@
         "false"
       ],
       "default": "false",
-      "partial_orders": [
+      "orders": [
         {
           "left": "true",
-          "partial_order": "MPT",
+          "order": "MPT",
           "right": "false"
         }
       ]
@@ -77,10 +77,10 @@
         "false"
       ],
       "default": "false",
-      "partial_orders": [
+      "orders": [
         {
           "left": "true",
-          "partial_order": "MPT",
+          "order": "MPT",
           "right": "false"
         }
       ]
@@ -95,10 +95,10 @@
         "false"
       ],
       "default": "false",
-      "partial_orders": [
+      "orders": [
         {
           "left": "false",
-          "partial_order": "MPT",
+          "order": "MPT",
           "right": "true"
         }
       ]
@@ -113,10 +113,10 @@
         "false"
       ],
       "default": "true",
-      "partial_orders": [
+      "orders": [
         {
           "left": "false",
-          "partial_order": "MPT",
+          "order": "MPT",
           "right": "true"
         }
       ]
@@ -131,10 +131,10 @@
         "false"
       ],
       "default": "false",
-      "partial_orders": [
+      "orders": [
         {
           "left": "true",
-          "partial_order": "MPT",
+          "order": "MPT",
           "right": "false"
         }
       ]
@@ -149,10 +149,10 @@
         "false"
       ],
       "default": "true",
-      "partial_orders": [
+      "orders": [
         {
           "left": "true",
-          "partial_order": "MST",
+          "order": "MST",
           "right": "false"
         }
       ]
@@ -167,10 +167,10 @@
         "false"
       ],
       "default": "false",
-      "partial_orders": [
+      "orders": [
         {
           "left": "true",
-          "partial_order": "MST",
+          "order": "MST",
           "right": "false"
         }
       ]
@@ -185,10 +185,10 @@
         "false"
       ],
       "default": "false",
-      "partial_orders": [
+      "orders": [
         {
           "left": "false",
-          "partial_order": "MPT",
+          "order": "MPT",
           "right": "true"
         }
       ]
@@ -203,10 +203,10 @@
         "false"
       ],
       "default": "false",
-      "partial_orders": [
+      "orders": [
         {
           "left": "false",
-          "partial_order": "MPT",
+          "order": "MPT",
           "right": "true"
         }
       ]
@@ -221,10 +221,10 @@
         "false"
       ],
       "default": "false",
-      "partial_orders": [
+      "orders": [
         {
           "left": "false",
-          "partial_order": "MPT",
+          "order": "MPT",
           "right": "true"
         }
       ]
@@ -239,10 +239,10 @@
         "false"
       ],
       "default": "false",
-      "partial_orders": [
+      "orders": [
         {
           "left": "false",
-          "partial_order": "MPT",
+          "order": "MPT",
           "right": "true"
         }
       ]
@@ -257,10 +257,10 @@
         "false"
       ],
       "default": "false",
-      "partial_orders": [
+      "orders": [
         {
           "left": "true",
-          "partial_order": "MPT",
+          "order": "MPT",
           "right": "false"
         }
       ]
@@ -275,10 +275,10 @@
         "false"
       ],
       "default": "true",
-      "partial_orders": [
+      "orders": [
         {
           "left": "false",
-          "partial_order": "MPT",
+          "order": "MPT",
           "right": "true"
         }
       ]
@@ -293,10 +293,10 @@
         "false"
       ],
       "default": "false",
-      "partial_orders": [
+      "orders": [
         {
           "left": "true",
-          "partial_order": "MST",
+          "order": "MST",
           "right": "false"
         }
       ]
@@ -311,10 +311,10 @@
         "false"
       ],
       "default": "false",
-      "partial_orders": [
+      "orders": [
         {
           "left": "true",
-          "partial_order": "MST",
+          "order": "MST",
           "right": "false"
         }
       ]
@@ -329,10 +329,10 @@
         "false"
       ],
       "default": "false",
-      "partial_orders": [
+      "orders": [
         {
           "left": "true",
-          "partial_order": "MST",
+          "order": "MST",
           "right": "false"
         }
       ]
@@ -347,10 +347,10 @@
         "false"
       ],
       "default": "true",
-      "partial_orders": [
+      "orders": [
         {
           "left": "true",
-          "partial_order": "MPT",
+          "order": "MPT",
           "right": "false"
         }
       ]
