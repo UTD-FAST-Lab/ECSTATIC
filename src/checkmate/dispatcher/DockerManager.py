@@ -52,6 +52,10 @@ def start_runner(tool: str, benchmark: str, task: str, jobs: int, campaigns: int
     for l in log_stream:
         print(l.decode())
     print('Container finished!')
+    # print('Removing container....')
+    # cntr.stop()
+    # cntr.remove()
+    # print('Container removed!')
     print(f"Results are in {output_folder}")
 
 
