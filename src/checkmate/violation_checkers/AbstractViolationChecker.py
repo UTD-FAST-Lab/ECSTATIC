@@ -64,8 +64,30 @@ class AbstractViolationChecker(ABC):
             json.dump([v.as_dict() for v in violations], f)
         print(f'Finished checking violations. {len([v for v in violations if v.violated])} violations detected.')
         print('Campaign value processing done.')
+        self.summarize(violations)
         return violations
         # results_queue.task_done()
+
+    def summarize(self, violations: List[Violation]):
+        """
+        Print a summary of the run.
+        @param violations:
+        @return: None
+        """
+        summary_struct = {}
+        for v in violations:
+            if v.get_partial_order() not in summary_struct:
+                summary_struct[v.get_partial_order()] = {'pass': 0, 'fail': 0}
+            if v.violated:
+                summary_struct[v.get_partial_order()]['fail'] += 1
+            else:
+                summary_struct[v.get_partial_order()]['pass'] += 1
+        keys = sorted(summary_struct.keys())
+        print("Campaign Summary")
+        print("------------------------")
+        print("Partial Order\tPassed\tFailed")
+        for k in keys:
+            print(f'{k}\t{summary_struct[k]["pass"]}\t{summary_struct[k]["fail"]}"')
 
     @abstractmethod
     def read_from_input(self, file: str) -> Any:
