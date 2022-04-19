@@ -207,9 +207,9 @@ class Option:
             o.max_value = d['max_value']
         if 'tags' in d:
             [o.add_tag(t) for t in d['tags']]
-        for p in d['partial_orders']:
-            if p['partial_order'] == 'MST':
+        for p in d['orders']:
+            if p['order'] == 'MST':
                 o.set_more_sound_than(p['left'], p['right'])
-            elif p['partial_order'] == 'MPT':
+            elif p['order'] == 'MPT':
                 o.set_more_precise_than(p['left'], p['right'])
         return o
