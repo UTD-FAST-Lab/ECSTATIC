@@ -75,7 +75,7 @@ class Option:
         return self.all
 
     def get_level(self, name: str) -> Level:
-        if self.type == 'int':
+        if self.type == 'integer':
             return Level(self.name, name)
         for l in self.all:
             l: Level
