@@ -24,6 +24,7 @@ from networkx import DiGraph
 
 from src.checkmate.models.Level import Level
 
+
 class Option:
     """ A single configuration option. """
     soundness = 0
@@ -135,7 +136,7 @@ class Option:
             (node1, node2) = self.resolve_nodes(self.soundness, o1, o2)
             return node2 in networkx.descendants(self.soundness, node1)
         except ValueError as ve:
-            logging.exception(ve)
+            logging.debug(ve)
             return False
 
     def is_more_precise(self, o1: str, o2: str) -> bool:
@@ -143,9 +144,8 @@ class Option:
             (node1, node2) = self.resolve_nodes(self.precision, o1, o2)
             return node2 in networkx.descendants(self.precision, node1)
         except ValueError as ve:
-            logging.exception(ve)
+            logging.debug(ve)
             return False
-
 
     # def precision_compare(self, o1: Level, o2: Level):
     #     """
@@ -162,6 +162,7 @@ class Option:
         return isinstance(other, Option) and \
                self.name == other.name and \
                self.all == other.all
+
     #
     # def __hash__(self):
     #     return hash((frozenset(self.all),
@@ -174,6 +175,7 @@ class Option:
     #
     def __str__(self):
         return self.name
+
     #
     # def as_dict(self):
     #     return {'name': self.name,
