@@ -25,9 +25,10 @@ def test_FuzzGenerator_first_run(tool: str):
         val = len([k for k in c.configuration if c.configuration[k] != k.get_default()])
         assert val < 2
 
+
 @pytest.mark.parametrize("tool,excluded_level", [("soot", Level("optimize", "TRUE")),
                                                  ("wala", Level("cgalgo", "ZERO_CFA")),
-                                                  ("doop", Level("analysis", "1-object-sensitive"))])
+                                                 ("doop", Level("analysis", "1-object-sensitive"))])
 def test_FuzzGenerator_exclusion(tool: str, excluded_level: Level):
     fg: FuzzGenerator = FuzzGenerator(
         importlib.resources.path("src.resources.configuration_spaces", f"{tool}_config.json"),
@@ -40,5 +41,3 @@ def test_FuzzGenerator_exclusion(tool: str, excluded_level: Level):
     campaign: FuzzingCampaign = fg.generate_campaign()
     for c in campaign.jobs:
         assert len([v for k, v in c.configuration.items() if v == excluded_level]) == 0
-
-

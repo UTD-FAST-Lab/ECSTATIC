@@ -7,7 +7,8 @@ from src.checkmate.util.UtilClasses import BenchmarkRecord
 class WALARunner(CommandLineToolRunner):
 
     def get_input_option(self, benchmark_record: BenchmarkRecord) -> str:
-        return f"--appJar {benchmark_record.name}"
+        return f"--jars {benchmark_record.name}" \
+               f"{(':'+':'.join(benchmark_record.depends_on)) if len(benchmark_record.depends_on) > 0 else ''}"
 
     def get_output_option(self, output_file: str) -> str:
         return f"-o {output_file}"
