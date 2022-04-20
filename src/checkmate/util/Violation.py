@@ -40,7 +40,7 @@ class Violation:
     def get_partial_order(self):
         option = self.get_option_under_investigation()
         return f'{self.job1.job.configuration[option]} ' \
-               f'{"more sound than" if type == "soundness" else "more precise than"}' \
+               f'{"more sound than" if type == "soundness" else "more precise than"} ' \
                f'{self.job2.job.configuration[option]}'
 
     def __init__(self, violated: bool, type: str,

@@ -31,6 +31,6 @@
     "implicit-entry:<binaryopt>",
     "trim-clinit:<binaryopt>"
   ],
-  "<binaryopt>": ["true, false"],
+  "<binaryopt>": ["true", "false"],
   "<throwanalysisopts>": ["pedantic", "unit"]
 }

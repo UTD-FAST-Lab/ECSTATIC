@@ -87,7 +87,7 @@ class AbstractViolationChecker(ABC):
         print("------------------------")
         print("Partial Order\tPassed\tFailed")
         for k in keys:
-            print(f'{k}\t{summary_struct[k]["pass"]}\t{summary_struct[k]["fail"]}"')
+            print(f'{k}\t{summary_struct[k]["pass"]}\t{summary_struct[k]["fail"]}')
 
     @abstractmethod
     def read_from_input(self, file: str) -> Any:

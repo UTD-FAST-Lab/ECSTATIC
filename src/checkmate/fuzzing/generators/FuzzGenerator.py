@@ -42,10 +42,10 @@ class OptionExcludedError(Exception):
     pass
 
 class FuzzGenerator:
-    FIRST_RUN = True
 
     def __init__(self, model_location: str, grammar_location: str, benchmark: Benchmark,
-                 no_adaptive: bool):
+                 no_adaptive: bool = False):
+        self.first_run = True
         with open(grammar_location) as f:
             self.json_grammar = json.load(f)
         self.grammar = convert_ebnf_grammar(self.json_grammar)
@@ -79,10 +79,6 @@ class FuzzGenerator:
                 else:
                     result[option] = option.get_level(tokens[i + 1])
                     i = i + 2
-                if result[option] in self.exclusions:
-                    """Raise a value error because the caller should handle what happens"""
-                    raise OptionExcludedError(f"Could not add {str(result[option])} "
-                                              f"because it is in the exclusions file.")
             else:
                 i = i + 1  # skip
         return result
@@ -101,19 +97,20 @@ class FuzzGenerator:
         """
         This method generates the next task for the fuzzer.
         """
-        if not FuzzGenerator.FIRST_RUN:
+        if self.first_run:
             logger.info("First run, returning default configuration.")
             fuzzed_config = dict()
-            for o in self.model.get_options():
-                o: Option
-                if o.get_default() is not None:
-                    fuzzed_config[o.name] = o.get_default().level_name()
-            FuzzGenerator.FIRST_RUN = False
+            self.first_run = False
         else:
             while True:
                 try:
                     config_to_try: str = self.fuzzer.fuzz()
+                    if config_to_try == "":
+                        continue
                     fuzzed_config: Dict[Option, Level] = self.process_config(config_to_try)
+                    for _, v in fuzzed_config.items():
+                        if v in self.exclusions:
+                            raise OptionExcludedError()
                     break
                 except ValueError as ve:
                     logger.warning(f'Produced config {config_to_try}, which is invalid. Trying again.')
@@ -129,6 +126,9 @@ class FuzzGenerator:
 
         for candidate in candidates:
             choice = candidate.config
+            excluded = [v for k, v in choice.items() if v in self.exclusions]
+            if len(excluded) > 0:
+                continue
             logger.info(f"Chosen config: {choice}")
             option_under_investigation = candidate.option
             for benchmark_record in self.benchmark.benchmarks:

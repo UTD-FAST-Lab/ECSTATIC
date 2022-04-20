@@ -75,7 +75,7 @@ class Option:
         return self.all
 
     def get_level(self, name: str) -> Level:
-        if self.type == 'integer':
+        if self.type == 'integer' and int(name):
             return Level(self.name, name)
         for l in self.all:
             l: Level
@@ -199,10 +199,10 @@ class Option:
         o = Option(d['name'])
         for level in d['levels']:
             o.add_level(Level(o.name, level))
-        if 'default' in d:
-            o.set_default(d['default'])
         if 'type' in d:
             o.type = d['type']
+        if 'default' in d:
+            o.set_default(d['default'])
         if 'min_value' in d:
             o.min_value = d['min_value']
         if 'max_value' in d:
