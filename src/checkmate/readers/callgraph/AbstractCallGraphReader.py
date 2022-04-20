@@ -28,7 +28,8 @@ class AbstractCallGraphReader(ABC):
     Expects line to have the following format:
     caller\tcallsite\tcalling_context\ttarget\ttarget_context
     """
-
-    @abstractmethod
     def process_line(self, line: str) -> Tuple[CGCallSite, CGTarget]:
-        pass
+        tokens = line.split('\t')
+        callsite = CGCallSite(tokens[0], tokens[1], tokens[2])
+        target = CGCallSite(tokens[3], tokens[4])
+        return callsite, target
