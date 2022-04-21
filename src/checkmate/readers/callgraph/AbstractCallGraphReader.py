@@ -31,5 +31,5 @@ class AbstractCallGraphReader(ABC):
     def process_line(self, line: str) -> Tuple[CGCallSite, CGTarget]:
         tokens = line.split('\t')
         callsite = CGCallSite(tokens[0], tokens[1], tokens[2])
-        target = CGCallSite(tokens[3], tokens[4])
+        target = CGTarget(tokens[3], tokens[4])
         return callsite, target
