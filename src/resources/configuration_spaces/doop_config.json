@@ -3,6 +3,7 @@
   "options": [
     {
       "name": "analysis",
+      "default": "context-insensitive",
       "levels": [
         "1-call-site-sensitive",
         "1-call-site-sensitive+heap",
