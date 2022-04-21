@@ -10,6 +10,7 @@ from src.checkmate.util.CGTarget import CGTarget
 
 logger = logging.getLogger(__name__)
 
+
 class AbstractCallGraphReader(ABC):
 
     def import_graph(self, file: str) -> DiGraph:

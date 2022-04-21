@@ -59,11 +59,7 @@ class CallgraphViolationChecker(AbstractViolationChecker):
         return Violation(len(all_differences) > 0, "soundness", job1, job2, all_differences)
 
     def read_from_input(self, file: str) -> Dict[CGCallSite, CGTarget]:
-        if os.path.exists(file.replace('.raw', '.cg.json')):
-            with open(file.replace('.raw', '.cg.json')) as f:
-                return json.load(f)
-        else:
-            callgraph: Dict[CGCallSite, CGTarget] = self.reader.import_graph(file)
-            with open(file.replace('.raw', '.cg.json'), 'w') as f:
-                json.dump(callgraph, f)
-            return callgraph
+        logger.info(f'Reading callgraph from {file}')
+        callgraph: Dict[CGCallSite, CGTarget] = self.reader.import_graph(file)
+        logger.info(f'Finished reading callgraph.')
+        return callgraph
