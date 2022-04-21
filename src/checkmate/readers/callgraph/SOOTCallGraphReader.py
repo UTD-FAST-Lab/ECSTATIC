@@ -7,6 +7,7 @@ from src.checkmate.readers.callgraph.AbstractCallGraphReader import AbstractCall
 from src.checkmate.util.CGCallSite import CGCallSite
 from src.checkmate.util.CGTarget import CGTarget
 
+logger = logging.getLogger(__name__)
 
 class SOOTCallGraphReader(AbstractCallGraphReader):
     pass

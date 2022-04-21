@@ -8,8 +8,7 @@ from src.checkmate.models.Option import Option
 from src.checkmate.util.UtilClasses import FinishedFuzzingJob
 from src.checkmate.util.Violation import Violation
 
-logger = logging.getLogger("AbstractViolationChecker")
-
+logger = logging.getLogger(__name__)
 
 class AbstractViolationChecker(ABC):
 

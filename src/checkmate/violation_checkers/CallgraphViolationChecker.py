@@ -1,4 +1,5 @@
 import json
+import logging
 import os.path
 from typing import Dict
 
@@ -11,6 +12,8 @@ from src.checkmate.util.CGTarget import CGTarget
 from src.checkmate.util.UtilClasses import FinishedFuzzingJob
 from src.checkmate.util.Violation import Violation
 from src.checkmate.violation_checkers.AbstractViolationChecker import AbstractViolationChecker
+
+logger = logging.getLogger(__name__)
 
 
 class CallgraphViolationChecker(AbstractViolationChecker):
