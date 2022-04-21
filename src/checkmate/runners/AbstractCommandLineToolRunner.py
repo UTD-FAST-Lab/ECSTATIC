@@ -2,15 +2,14 @@ import hashlib
 import json
 import logging
 import os
-import shutil
 from abc import ABC, abstractmethod
-from pathlib import Path
-from typing import Dict, Any
+from typing import Dict
 
 from src.checkmate.models.Level import Level
 from src.checkmate.models.Option import Option
 from src.checkmate.util.UtilClasses import FinishedFuzzingJob, FuzzingJob
 
+logger = logging.getLogger("AbstractCommandLineToolRunner")
 """
 Base class for command line tool runners.
 """
@@ -30,44 +29,41 @@ class AbstractCommandLineToolRunner(ABC):
             v: Level
             if isinstance(v.level_name, int) or \
                     v.level_name.lower() not in ['false', 'true', 'default',
-                                            (k.get_default().level_name.lower() if k.get_default() is not None else None)]:
+                                                 (k.get_default().level_name.lower() if
+                                                  k.get_default() is not None else None)]:
                 result += f'--{k.name} {v.level_name} '
             elif v.level_name.lower() == 'true':
                 result += f'--{k.name} '
         return result.strip()
 
-    def run_job(self, job: FuzzingJob) -> FinishedFuzzingJob:
-        num_runs = 0;
-        ex: Exception = None
-        while num_runs < 3 and not os.path.exists(self.get_output(job) + '.error'):  # TODO: Have this number configurable.
+    def run_job(self, job: FuzzingJob) -> FinishedFuzzingJob | None:
+        num_runs = 0
+        while num_runs < 3 and not os.path.exists(
+                self.get_output(job) + '.error'):  # TODO: Have this number configurable.
+            # noinspection PyBroadException
             try:
                 return self.try_run_job(job)
-            except Exception as e:
+            except Exception:
                 num_runs += 1
-                logging.exception(f"Failed running job {num_runs} time(s). Trying again...")
-                ex = e
+                logger.exception(f"Failed running job {num_runs} time(s). Trying again...")
 
         # If we get here we failed too many times and we just abort.
-        logging.critical("Failed running job maximum number of times. Sorry!")
+        logger.critical("Failed running job maximum number of times. Sorry!")
         # Create a file so we know not to retry this job in the future.
-        with open(self.get_output(job) + '.error', 'w') as f:
+        with open(self.get_output(job) + '.error', 'w'):
             pass
         return None
 
     def get_output(self, job: FuzzingJob):
         return os.path.join(self.output,
-                                   f'{self.dict_hash(job.configuration)}_{os.path.basename(job.target.name)}.raw')
+                            f'{self.dict_hash(job.configuration)}_{os.path.basename(job.target.name)}.raw')
 
     @abstractmethod
     def try_run_job(self, job: FuzzingJob) -> FinishedFuzzingJob:
         pass
 
-    @abstractmethod
-    def transform(self, output: str) -> str:
-        pass
-
     @staticmethod
-    def dict_hash(dictionary: Dict[str, Any]) -> str:
+    def dict_hash(dictionary: Dict[Option, Level]) -> str:
         """MD5 hash of a dictionary.
         Coopied from https://www.doc.ic.ac.uk/~nuric/coding/how-to-hash-a-dictionary-in-python.html
         """
