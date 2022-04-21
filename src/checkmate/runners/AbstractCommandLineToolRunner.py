@@ -28,9 +28,7 @@ class AbstractCommandLineToolRunner(ABC):
             k: Option
             v: Level
             if isinstance(v.level_name, int) or \
-                    v.level_name.lower() not in ['false', 'true', 'default',
-                                                 (k.get_default().level_name.lower() if
-                                                  k.get_default() is not None else None)]:
+                    v.level_name.lower() not in ['false', 'true']:
                 result += f'--{k.name} {v.level_name} '
             elif v.level_name.lower() == 'true':
                 result += f'--{k.name} '
