@@ -10,5 +10,4 @@ from src.checkmate.util.CGTarget import CGTarget
 
 
 class DOOPCallGraphReader(AbstractCallGraphReader):
-    def process_line(self, line: str) -> Tuple[CGCallSite, CGTarget]:
-        pass
+    pass
