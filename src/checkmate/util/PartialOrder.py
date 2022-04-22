@@ -1,8 +1,7 @@
 from dataclasses import dataclass
-from enum import Enum, auto
+from enum import Enum
 
 from src.checkmate.models.Level import Level
-from src.checkmate.models.Option import Option
 
 
 class PartialOrderType(Enum):
