@@ -12,7 +12,7 @@ class AbstractCallGraphReader(ABC):
 
     def import_graph(self, file: str) -> List[Tuple[CGCallSite, CGTarget]]:
         logger.info(f'Reading callgraph from {file}')
-        callgraph: List[Tuple[CGCallSite, CGTarget]] = {}
+        callgraph: List[Tuple[CGCallSite, CGTarget]] = []
         with open(file) as f:
             lines = f.readlines()
         for l in lines[1:]:  # skip header line
