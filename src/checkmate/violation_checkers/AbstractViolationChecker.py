@@ -23,7 +23,7 @@ class AbstractViolationChecker(ABC):
 
     def check_violations(self, results: List[FinishedFuzzingJob]) -> List[Violation]:
         start_time = time.time()
-        pairs = List[Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]]
+        pairs: List[Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]] = []
         for finished_run in results:
             finished_run: FinishedFuzzingJob
             option_under_investigation: Option = finished_run.job.option_under_investigation
