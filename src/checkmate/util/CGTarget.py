@@ -15,3 +15,6 @@ class CGTarget:
     def as_dict(self):
         return {'target': self.target,
                 'context': self.context}
+
+    def __lt__(self, other):
+        return self.target < other.target
