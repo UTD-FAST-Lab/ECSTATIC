@@ -2,6 +2,7 @@ import dataclasses
 import json
 import logging
 from abc import ABC, abstractmethod
+import time
 from typing import List, Any
 
 from src.checkmate.models.Option import Option
@@ -17,6 +18,7 @@ class AbstractViolationChecker(ABC):
         self.output: str = output
 
     def check_violations(self, results: List[FinishedFuzzingJob]) -> List[Violation]:
+        start_time = time.time()
         violations: List[Violation] = []
         for finished_run in results:
             finished_run: FinishedFuzzingJob
@@ -65,7 +67,7 @@ class AbstractViolationChecker(ABC):
         with open(self.output, 'w') as f:
             json.dump([v.as_dict() for v in violations], f, indent=4, sort_keys=True)
         print(f'Finished checking violations. {len([v for v in violations if v.violated])} violations detected.')
-        print('Campaign value processing done.')
+        print(f'Campaign value processing done (took {time.time() - start_time} seconds).')
         self.summarize(violations)
         return violations
         # results_queue.task_done()
@@ -76,8 +78,11 @@ class AbstractViolationChecker(ABC):
         @param violations:
         @return: None
         """
+        time_struct = {}
         summary_struct = {}
         for v in violations:
+            time_struct[v.job1.results_location] = v.job1.execution_time
+            time_struct[v.job2.results_location] = v.job2.execution_time
             if v.get_partial_order() not in summary_struct:
                 summary_struct[v.get_partial_order()] = {'pass': 0, 'fail': 0}
             if v.violated:
@@ -86,10 +91,13 @@ class AbstractViolationChecker(ABC):
                 summary_struct[v.get_partial_order()]['pass'] += 1
         keys = sorted(summary_struct.keys())
         print("Campaign Summary")
+        print(f"Total Time: {sum(time_struct.values())}s")
+        print(f"Average Time: {sum(time_struct.values())/float(len(time_struct.values()))}s")
+        print(f"Max Time: {max(time_struct.values())}s")
         print("------------------------")
-        print("Partial Order\tPassed\tFailed")
+        print("Partial Order (Passed/Failed)")
         for k in keys:
-            print(f'{k}\t{summary_struct[k]["pass"]}\t{summary_struct[k]["fail"]}')
+            print(f'{k} ({summary_struct[k]["pass"]}/{summary_struct[k]["fail"]})')
 
     @abstractmethod
     def read_from_input(self, file: str) -> Any:
