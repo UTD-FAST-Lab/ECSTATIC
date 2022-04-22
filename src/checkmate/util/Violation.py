@@ -18,7 +18,7 @@ class Violation:
 
     def as_dict(self) -> Dict[str, Union[str, Dict[str, str], List[str]]]:
         return {'violated': self.violated,
-                'partial_orders': list(self.partial_orders),
+                'partial_orders': [str(v) for v in self.partial_orders],
                 'job1': {
                     'config': [(str(k), str(v)) for k, v in self.job1.job.configuration.items()],
                     'result': self.job1.results_location
