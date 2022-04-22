@@ -1,10 +1,7 @@
 import logging
-from abc import ABC, abstractmethod
-from typing import Tuple, Dict
+from abc import ABC
+from typing import Tuple, Dict, List
 
-from networkx import DiGraph
-
-from src.checkmate.readers.callgraph.CGNode import CGNode
 from src.checkmate.util.CGCallSite import CGCallSite
 from src.checkmate.util.CGTarget import CGTarget
 
@@ -13,16 +10,13 @@ logger = logging.getLogger(__name__)
 
 class AbstractCallGraphReader(ABC):
 
-    def import_graph(self, file: str) -> DiGraph:
+    def import_graph(self, file: str) -> List[Tuple[CGCallSite, CGTarget]]:
         logger.info(f'Reading callgraph from {file}')
-        callgraph: Dict[CGCallSite, CGTarget] = {}
+        callgraph: List[Tuple[CGCallSite, CGTarget]] = {}
         with open(file) as f:
             lines = f.readlines()
         for l in lines[1:]:  # skip header line
-            callsite, target = self.process_line(l)
-            if callsite not in callgraph:
-                callgraph[callsite] = []
-            callgraph[callsite].append(target)
+            callgraph.append(self.process_line(l))
         return callgraph
 
     def process_line(self, line: str) -> Tuple[CGCallSite, CGTarget]:
