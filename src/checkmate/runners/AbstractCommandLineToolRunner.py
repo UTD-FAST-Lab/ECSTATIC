@@ -63,7 +63,7 @@ class AbstractCommandLineToolRunner(ABC):
     @staticmethod
     def dict_hash(dictionary: Dict[Option, Level]) -> str:
         """MD5 hash of a dictionary.
-        Coopied from https://www.doc.ic.ac.uk/~nuric/coding/how-to-hash-a-dictionary-in-python.html
+        Copied from https://www.doc.ic.ac.uk/~nuric/coding/how-to-hash-a-dictionary-in-python.html
         """
         dhash = hashlib.md5()
         clone = {str(k): str(v) for k, v in dictionary.items()}

@@ -1,6 +1,6 @@
 import logging
 from abc import ABC
-from typing import Tuple, Dict, List
+from typing import Tuple, List
 
 from src.checkmate.util.CGCallSite import CGCallSite
 from src.checkmate.util.CGTarget import CGTarget

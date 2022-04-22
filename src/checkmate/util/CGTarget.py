@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Tuple
+
 
 @dataclass(eq=False, unsafe_hash=False)
 class CGTarget:

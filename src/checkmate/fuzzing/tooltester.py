@@ -255,8 +255,8 @@ def main():
 
     t = ToolTester(generator, runner,
                    num_processes=args.jobs, num_campaigns=args.campaigns,
-                   checker=CallgraphViolationChecker(os.path.join(results_location, "violations.json"), reader,
-                                                     args.jobs),
+                   checker=CallgraphViolationChecker(os.path.join(results_location, "violations.json"),
+                                                     args.jobs, None, reader),
                    limit=args.limit)
     t.main()
 

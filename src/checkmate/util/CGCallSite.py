@@ -1,6 +1,4 @@
 from dataclasses import dataclass
-from json import JSONEncoder
-from typing import Any
 
 
 @dataclass
