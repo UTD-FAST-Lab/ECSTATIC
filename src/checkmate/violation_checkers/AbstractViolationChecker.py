@@ -5,6 +5,8 @@ from abc import ABC, abstractmethod
 from multiprocessing import Pool
 from typing import List, Any, Tuple, Set, Iterable, TypeVar
 
+import jsonpickle as jsonpickle
+
 from src.checkmate.models.Option import Option
 from src.checkmate.util.PartialOrder import PartialOrder, PartialOrderType
 from src.checkmate.util.UtilClasses import FinishedFuzzingJob
@@ -76,7 +78,8 @@ class AbstractViolationChecker(ABC):
             #                 f'equal to {candidate.job.configuration[option_under_investigation]}')
             #     violations.append(self.is_more_precise(finished_run, candidate))
         with open(self.output, 'w') as f:
-            json.dump([v.as_dict() for v in violations], f, indent=4)
+            encoded = jsonpickle.encode(violations)
+            json.dumps(encoded, f, indent=4)
         print(f'Finished checking violations. {len([v for v in violations if v.violated])} violations detected.')
         print(f'Campaign value processing done (took {time.time() - start_time} seconds).')
         self.summarize(violations)
