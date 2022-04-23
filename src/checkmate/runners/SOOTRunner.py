@@ -8,14 +8,14 @@ from src.checkmate.util.UtilClasses import BenchmarkRecord
 
 
 class SOOTRunner(CommandLineToolRunner):
-    def get_input_option(self, benchmark_record: BenchmarkRecord) -> str:
+    def get_input_option(self, benchmark_record: BenchmarkRecord) -> List[str]:
         output = f"--process-dir {benchmark_record.name}"
         if len(benchmark_record.depends_on) > 0:
             output = output + " " + f"--soot-class-path {':'.join(benchmark_record.depends_on)}"
-        return output
+        return output.split(" ")
 
-    def get_output_option(self, output_file: str) -> str:
-        return f'--callgraph-output {os.path.abspath(output_file)}'
+    def get_output_option(self, output_file: str) -> List[str]:
+        return f'--callgraph-output {os.path.abspath(output_file)}'.split(" ")
 
     def get_task_option(self, task: str) -> str:
         if task == 'cg':

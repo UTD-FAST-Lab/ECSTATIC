@@ -6,12 +6,12 @@ from src.checkmate.util.UtilClasses import BenchmarkRecord
 
 class WALARunner(CommandLineToolRunner):
 
-    def get_input_option(self, benchmark_record: BenchmarkRecord) -> str:
+    def get_input_option(self, benchmark_record: BenchmarkRecord) -> List[str]:
         return f"--jars {benchmark_record.name}" \
-               f"{(':'+':'.join(benchmark_record.depends_on)) if len(benchmark_record.depends_on) > 0 else ''}"
+               f"{(':'+':'.join(benchmark_record.depends_on)) if len(benchmark_record.depends_on) > 0 else ''}".split(" ")
 
-    def get_output_option(self, output_file: str) -> str:
-        return f"-o {output_file}"
+    def get_output_option(self, output_file: str) -> List[str]:
+        return f"-o {output_file}".split(" ")
 
     def get_task_option(self, task: str) -> str:
         if task == 'cg':
