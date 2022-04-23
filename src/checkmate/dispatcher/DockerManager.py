@@ -32,14 +32,13 @@ def start_runner(tool: str, benchmark: str, task: str, jobs: int, campaigns: int
     command = f'tester {tool} {benchmark} -t {task} -j {jobs} -c {campaigns}'
     print(f'Starting container with command {command}')
     results_folder = os.path.abspath(importlib.resources.path("results", ""))
-    output_folder = os.path.join(results_folder, tool, benchmark)
-    Path(output_folder).mkdir(parents=True, exist_ok=True)
+    Path(results_folder).mkdir(parents=True, exist_ok=True)
     cntr: Container = client.containers.run(
         image=get_image_name(tool),
         command="/bin/bash",
         detach=True,
         tty=True,
-        volumes={os.path.abspath(output_folder) : {"bind": "/results", "mode": "rw"}},
+        volumes={os.path.abspath(results_folder) : {"bind": "/results", "mode": "rw"}},
         auto_remove=True)
     _, log_stream = cntr.exec_run(cmd=command, stream=True)
     for l in log_stream:

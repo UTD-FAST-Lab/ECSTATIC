@@ -236,7 +236,7 @@ def main():
     benchmark: Benchmark = build_benchmark(args.benchmark)
     logger.info(f'Benchmark is {benchmark}')
 
-    results_location = '/results'
+    results_location = f'/results/{args.tool}/{args.benchmark}'
     Path(results_location).mkdir(exist_ok=True)
     if args.tool == "soot":
         runner = SOOTRunner(results_location)
