@@ -33,8 +33,10 @@ WORKDIR /
 # Copy SSH key for git private repos
 ADD .ssh/id_docker_key /root/.ssh/id_docker_key
 RUN chmod 600 /root/.ssh/id_docker_key && \
-    echo "Host github.com\n HostName github.com\n IdentityFile  \
-    /root/.ssh/id_docker_key\nStrictHostKeyChecking no" > /root/.ssh/config &&\
+    echo "Host github.com" > /root/.ssh/config && \
+    echo " HostName github.com" >> /root/.ssh/config && \
+    echo " IdentityFile /root/.ssh/id_docker_key" >> /root/.ssh/config && \
+    echo "StrictHostKeyChecking no" >> /root/.ssh/config && \
     chmod 600 /root/.ssh/config
 
 # Use git with SSH instead of https
