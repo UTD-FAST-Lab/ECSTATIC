@@ -40,4 +40,4 @@ RUN chmod 600 /root/.ssh/id_docker_key && \
 # RUN echo "[url \"git@github.com:\"]\n\tinsteadOf = https://github.com/" >> /root/.gitconfig
 
 # Skip Host verification for git
-RUN echo "StrictHostKeyChecking no " > /root/.ssh/config
+RUN echo "StrictHostKeyChecking no " >> /root/.ssh/config
