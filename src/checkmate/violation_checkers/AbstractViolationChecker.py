@@ -18,12 +18,11 @@ T = TypeVar('T')  # Indicates the type of content in the results (e.g., call gra
 
 class AbstractViolationChecker(ABC):
 
-    def __init__(self, output: str, jobs: int, groundtruths: str | None = None):
-        self.output: str = output
+    def __init__(self, jobs: int, groundtruths: str | None = None):
         self.jobs: int = jobs
         self.groundtruths = groundtruths
 
-    def check_violations(self, results: List[FinishedFuzzingJob]) -> List[Violation]:
+    def check_violations(self, results: List[FinishedFuzzingJob], output: str) -> List[Violation]:
         start_time = time.time()
         pairs: List[Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]] = []
         for finished_run in results:
@@ -77,7 +76,7 @@ class AbstractViolationChecker(ABC):
             #     logger.info(f'{finished_run.job.configuration[option_under_investigation]} is more precise than or '
             #                 f'equal to {candidate.job.configuration[option_under_investigation]}')
             #     violations.append(self.is_more_precise(finished_run, candidate))
-        with open(self.output, 'w') as f:
+        with open(output, 'w') as f:
             encoded = jsonpickle.encode(violations)
             json.dump(encoded, f, indent=4)
         print(f'Finished checking violations. {len([v for v in violations if v.violated])} violations detected.')

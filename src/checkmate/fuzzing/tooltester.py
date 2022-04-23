@@ -67,7 +67,8 @@ class ToolTester:
                                      campaign.jobs if self.limit is None else campaign.jobs[:self.limit - 1]))
             results = [r for r in results if r is not None]
             print(f'Campaign {campaign_index} finished (time {time.time() - start} seconds)')
-            violations: List[Violation] = self.checker.check_violations(results)
+            violations: List[Violation] = self.checker.check_violations(results,
+                                                                        os.path.join(self.runner.output, "violations.json"))
             self.generator.update_exclusions(violations)
             # self.print_output(FinishedCampaign(results), campaign_index)  # TODO: Replace with generate_report
             print('Done!')
