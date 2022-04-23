@@ -33,7 +33,7 @@ WORKDIR /
 FROM python-build
 
 # Copy SSH key for git private repos
-ADD ~/.ssh/id_docker_key /root/.ssh/id_docker_key
+ADD .ssh/id_docker_key /root/.ssh/id_docker_key
 RUN chmod 600 /root/.ssh/id_docker_key
 
 # Use git with SSH instead of https
