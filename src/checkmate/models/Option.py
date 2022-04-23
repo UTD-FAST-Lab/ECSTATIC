@@ -47,6 +47,9 @@ class Option:
         self.min_value: int = min_value
         self.max_value: int = max_value
 
+    def __lt__(self, other):
+        return self.name < other.name
+
     def add_tag(self, tag: str):
         self.tags.append(tag)
 
