@@ -79,7 +79,7 @@ class AbstractViolationChecker(ABC):
             #     violations.append(self.is_more_precise(finished_run, candidate))
         with open(self.output, 'w') as f:
             encoded = jsonpickle.encode(violations)
-            json.dumps(encoded, f, indent=4)
+            json.dump(encoded, f, indent=4)
         print(f'Finished checking violations. {len([v for v in violations if v.violated])} violations detected.')
         print(f'Campaign value processing done (took {time.time() - start_time} seconds).')
         self.summarize(violations)
