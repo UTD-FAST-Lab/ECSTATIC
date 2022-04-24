@@ -55,7 +55,6 @@ class ToolTester:
     def main(self):
         campaign_index = 0
         while campaign_index < self.num_campaigns:
-            campaign_index += 1
             campaign: FuzzingCampaign = self.generator.generate_campaign()
             print(f"Got new fuzzing campaign: {campaign_index}.")
             if campaign_index == 4:
@@ -77,6 +76,7 @@ class ToolTester:
             self.generator.update_exclusions(violations)
             # self.print_output(FinishedCampaign(results), campaign_index)  # TODO: Replace with generate_report
             print('Done!')
+            campaign_index += 1
 
     def write_flowset(self, relation_type: str,
                       violated: bool,
