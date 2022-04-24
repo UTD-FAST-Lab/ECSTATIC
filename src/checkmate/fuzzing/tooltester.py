@@ -246,15 +246,15 @@ def main():
     results_location = f'/results/{args.tool}/{args.benchmark}'
     Path(results_location).mkdir(exist_ok=True)
     if args.tool == "soot":
-        runner = SOOTRunner(results_location)
+        runner = SOOTRunner()
         generator = SOOTFuzzGenerator(model_location, grammar, benchmark, args.no_adaptive)
         reader = SOOTCallGraphReader()
     elif args.tool == "wala":
-        runner = WALARunner(results_location)
+        runner = WALARunner()
         generator = FuzzGenerator(model_location, grammar, benchmark, args.no_adaptive)
         reader = WALACallGraphReader()
     elif args.tool == "doop":
-        runner = DOOPRunner(results_location)
+        runner = DOOPRunner()
         generator = FuzzGenerator(model_location, grammar, benchmark, args.no_adaptive)
         reader = DOOPCallGraphReader()
     else:

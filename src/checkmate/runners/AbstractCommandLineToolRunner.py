@@ -3,6 +3,7 @@ import json
 import logging
 import os
 from abc import ABC, abstractmethod
+from pathlib import Path
 from typing import Dict
 
 from src.checkmate.models.Level import Level
@@ -33,6 +34,13 @@ class AbstractCommandLineToolRunner(ABC):
 
     def run_job(self, job: FuzzingJob, output_folder: str) -> FinishedFuzzingJob | None:
         num_runs = 0
+        configurations_folder = os.path.join(output_folder, 'configurations')
+        Path(configurations_folder).mkdir(exist_ok=True, parents=True)
+        configuration_file = os.path.join(configurations_folder,
+                                          f'{AbstractCommandLineToolRunner.dict_hash(job.configuration)}.txt')
+        if not os.path.exists(configuration_file):
+            with open(configuration_file, 'w') as f:
+                f.write(self.dict_to_config_str(job.configuration))
         while num_runs < 3 and not os.path.exists(
                 self.get_output(output_folder, job) + '.error'):  # TODO: Have this number configurable.
             # noinspection PyBroadException
