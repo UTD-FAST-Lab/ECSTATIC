@@ -43,12 +43,12 @@ def start_runner(tool: str, benchmark: str, task: str, jobs: int, campaigns: int
     _, log_stream = cntr.exec_run(cmd=command, stream=True)
     for l in log_stream:
         print(l.decode())
-    print('Container finished!')
+    print('Run finished!')
     # print('Removing container....')
     # cntr.stop()
     # cntr.remove()
     # print('Container removed!')
-    print(f"Results are in {output_folder}")
+    print(f"Results are in {results_folder}")
 
 
 def get_image_name(tool: str):
