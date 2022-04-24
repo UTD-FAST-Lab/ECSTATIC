@@ -55,7 +55,6 @@ class ToolTester:
     def main(self):
         campaign_index = 0
         while campaign_index < self.num_campaigns:
-            Path(self.runner.output).mkdir(exist_ok=True, parents=True)
             campaign_index += 1
             campaign: FuzzingCampaign = self.generator.generate_campaign()
             print(f"Got new fuzzing campaign: {campaign_index}.")
