@@ -3,7 +3,7 @@ import os
 import subprocess
 import time
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Tuple
 
 from src.checkmate.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
 from src.checkmate.util.UtilClasses import FinishedFuzzingJob, BenchmarkRecord, FuzzingJob
@@ -52,9 +52,9 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         cmd.extend(config_as_str.split(" "))
         output_file = self.get_output(output_folder, job)
         if not os.path.exists(output_file):
-            total_time = self.run_from_cmd(cmd, job, output_file)
+            total_time, output = self.run_from_cmd(cmd, job, output_file)
             if not os.path.exists(output_file):
-                raise RuntimeError(f"Failed to create file {output_file}")
+                raise RuntimeError(output)
             with open(os.path.join(
                     os.path.dirname(output_file),
                     '.' + os.path.basename(output_file) + ".time"), 'w') as f:
@@ -74,14 +74,13 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
             results_location=output_file
         )
 
-    def run_from_cmd(self, cmd: List[str], job: FuzzingJob, output_file: str):
+    def run_from_cmd(self, cmd: List[str], job: FuzzingJob, output_file: str) -> Tuple[float, str]:
         cmd.extend(self.get_input_option(job.target))
         cmd.extend(self.get_output_option(output_file))
         cmd = [c for c in cmd if c != '']
         start_time: float = time.time()
         logging.info(f"Cmd is {' '.join(cmd)}")
-        ps = subprocess.run(cmd, capture_output=True)
-        logging.debug(ps.stdout.decode())
-        logging.debug(ps.stderr.decode())
+        ps = subprocess.run(cmd, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, text=True)
+        logging.debug(ps.stdout)
         total_time: float = time.time() - start_time
-        return total_time
+        return total_time, ps.stdout

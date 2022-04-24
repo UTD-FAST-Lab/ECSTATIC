@@ -38,6 +38,7 @@ class AbstractCommandLineToolRunner(ABC):
         Path(configurations_folder).mkdir(exist_ok=True, parents=True)
         configuration_file = os.path.join(configurations_folder,
                                           f'{AbstractCommandLineToolRunner.dict_hash(job.configuration)}.txt')
+        exception = None
         if not os.path.exists(configuration_file):
             with open(configuration_file, 'w') as f:
                 f.write(self.dict_to_config_str(job.configuration))
@@ -46,15 +47,16 @@ class AbstractCommandLineToolRunner(ABC):
             # noinspection PyBroadException
             try:
                 return self.try_run_job(job, output_folder)
-            except Exception:
+            except Exception as ex:
+                exception = ex
                 num_runs += 1
                 logger.exception(f"Failed running job {num_runs} time(s). Trying again...")
 
         # If we get here we failed too many times and we just abort.
         logger.critical("Failed running job maximum number of times. Sorry!")
         # Create a file so we know not to retry this job in the future.
-        with open(self.get_output(output_folder, job) + '.error', 'w'):
-            pass
+        with open(self.get_output(output_folder, job) + '.error', 'w') as f:
+            f.write(str(exception))
         return None
 
     def get_output(self, output_folder: str, job: FuzzingJob):
