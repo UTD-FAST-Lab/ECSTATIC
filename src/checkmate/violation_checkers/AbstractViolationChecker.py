@@ -1,13 +1,16 @@
 import json
 import logging
+import os.path
 import time
 from abc import ABC, abstractmethod
 from multiprocessing import Pool
+from pathlib import Path
 from typing import List, Any, Tuple, Set, Iterable, TypeVar
 
 import jsonpickle as jsonpickle
 
 from src.checkmate.models.Option import Option
+from src.checkmate.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
 from src.checkmate.util.PartialOrder import PartialOrder, PartialOrderType
 from src.checkmate.util.UtilClasses import FinishedFuzzingJob
 from src.checkmate.util.Violation import Violation
@@ -22,7 +25,7 @@ class AbstractViolationChecker(ABC):
         self.jobs: int = jobs
         self.groundtruths = groundtruths
 
-    def check_violations(self, results: List[FinishedFuzzingJob], output: str) -> List[Violation]:
+    def check_violations(self, results: List[FinishedFuzzingJob], output_folder: str) -> List[Violation]:
         start_time = time.time()
         pairs: List[Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]] = []
         for finished_run in results:
@@ -57,28 +60,14 @@ class AbstractViolationChecker(ABC):
             print(f'Checking violations with {self.jobs} cores.')
             [violations.extend(v_set) for v_set in p.starmap(self.check_for_violation, pairs)]
 
-            # logger.info(f"option_under_investigation: {option_under_investigation.name}")
-            # candidate: FinishedFuzzingJob
-            # logger.info(
-            #     f"finshed_run's config is {finished_run.job.configuration} {[f'{k}:{v}' for k, v in finished_run.job.configuration.items()]}")
-            # logger.info(
-            #     f"candidate config is {candidate.job.configuration} {[f'{k}:{v}' for k, v in candidate.job.configuration.items()]}")
-            # if option_under_investigation.is_more_sound(
-            #         finished_run.job.configuration[option_under_investigation].level_name,
-            #         candidate.job.configuration[
-            #             option_under_investigation].level_name):  # left side is less sound than right side
-            #     violations.append(self.is_more_sound(finished_run, candidate))
-            #
-            # if option_under_investigation.is_more_precise(
-            #         finished_run.job.configuration[option_under_investigation].level_name,
-            #         candidate.job.configuration[
-            #             option_under_investigation].level_name):  # left side is less precise than right side
-            #     logger.info(f'{finished_run.job.configuration[option_under_investigation]} is more precise than or '
-            #                 f'equal to {candidate.job.configuration[option_under_investigation]}')
-            #     violations.append(self.is_more_precise(finished_run, candidate))
-        with open(output, 'w') as f:
-            encoded = jsonpickle.encode(violations)
-            json.dump(encoded, f, indent=4)
+        for violation in filter(lambda v: v.violated, violations):
+            filename = f'violation_{AbstractCommandLineToolRunner.dict_hash(violation.job1.job.configuration)}_' \
+                       f'{AbstractCommandLineToolRunner.dict_hash(violation.job2.job.configuration)}_' \
+                       f'{violation.get_option_under_investigation().name}_' \
+                       f'{os.path.basename(violation.job1.job.target.name)}.json'
+            with open(os.path.join(output_folder, filename), 'w') as f:
+                encoded = jsonpickle.encode(violation)
+                json.dump(encoded, f, indent=4)
         print(f'Finished checking violations. {len([v for v in violations if v.violated])} violations detected.')
         print(f'Campaign value processing done (took {time.time() - start_time} seconds).')
         self.summarize(violations)
@@ -98,9 +87,6 @@ class AbstractViolationChecker(ABC):
             summary_struct[v.get_option_under_investigation()] += 1
         keys = sorted(summary_struct.keys())
         print("Campaign Summary")
-        # print(f"Total Time: {sum(time_struct.values())}s")
-        # print(f"Average Time: {sum(time_struct.values()) / float(len(time_struct.values()))}s")
-        # print(f"Max Time: {max(time_struct.values())}s")
         print("------------------------")
         print("Option (Number of Violations)")
         for k in keys:

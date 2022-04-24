@@ -17,9 +17,6 @@ Base class for command line tool runners.
 
 class AbstractCommandLineToolRunner(ABC):
 
-    def __init__(self, output: str):
-        self.output = output
-
     @staticmethod
     def dict_to_config_str(config_as_dict: Dict[Option, Level]) -> str:
         """Transforms a dictionary to a config string"""
@@ -34,13 +31,13 @@ class AbstractCommandLineToolRunner(ABC):
                 result += f'--{k.name} '
         return result.strip()
 
-    def run_job(self, job: FuzzingJob) -> FinishedFuzzingJob | None:
+    def run_job(self, job: FuzzingJob, output_folder: str) -> FinishedFuzzingJob | None:
         num_runs = 0
         while num_runs < 3 and not os.path.exists(
-                self.get_output(job) + '.error'):  # TODO: Have this number configurable.
+                self.get_output(output_folder, job) + '.error'):  # TODO: Have this number configurable.
             # noinspection PyBroadException
             try:
-                return self.try_run_job(job)
+                return self.try_run_job(job, output_folder)
             except Exception:
                 num_runs += 1
                 logger.exception(f"Failed running job {num_runs} time(s). Trying again...")
@@ -48,16 +45,16 @@ class AbstractCommandLineToolRunner(ABC):
         # If we get here we failed too many times and we just abort.
         logger.critical("Failed running job maximum number of times. Sorry!")
         # Create a file so we know not to retry this job in the future.
-        with open(self.get_output(job) + '.error', 'w'):
+        with open(self.get_output(output_folder, job) + '.error', 'w'):
             pass
         return None
 
-    def get_output(self, job: FuzzingJob):
-        return os.path.join(self.output,
+    def get_output(self, output_folder: str, job: FuzzingJob):
+        return os.path.join(output_folder,
                             f'{self.dict_hash(job.configuration)}_{os.path.basename(job.target.name)}.raw')
 
     @abstractmethod
-    def try_run_job(self, job: FuzzingJob) -> FinishedFuzzingJob:
+    def try_run_job(self, job: FuzzingJob, output_folder: str) -> FinishedFuzzingJob:
         pass
 
     @staticmethod

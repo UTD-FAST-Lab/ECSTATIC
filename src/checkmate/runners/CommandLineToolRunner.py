@@ -45,12 +45,12 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         """
         pass
 
-    def try_run_job(self, job: FuzzingJob) -> FinishedFuzzingJob:
+    def try_run_job(self, job: FuzzingJob, output_folder: str) -> FinishedFuzzingJob:
         logging.info(f'Job configuration is {[(str(k), str(v)) for k, v in job.configuration.items()]}')
         config_as_str = self.dict_to_config_str(job.configuration)
         cmd = self.get_base_command()
         cmd.extend(config_as_str.split(" "))
-        output_file = self.get_output(job)
+        output_file = self.get_output(output_folder, job)
         if not os.path.exists(output_file):
             total_time = self.run_from_cmd(cmd, job, output_file)
             if not os.path.exists(output_file):

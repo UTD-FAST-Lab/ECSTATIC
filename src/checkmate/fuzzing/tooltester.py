@@ -1,6 +1,7 @@
 import argparse
 import importlib
 import logging
+from functools import partial
 from pathlib import Path
 
 from src.checkmate.fuzzing.generators.SOOTFuzzGenerator import SOOTFuzzGenerator
@@ -39,11 +40,12 @@ logger = logging.getLogger(__name__)
 
 class ToolTester:
 
-    def __init__(self, generator, runner: AbstractCommandLineToolRunner,
+    def __init__(self, generator, runner: AbstractCommandLineToolRunner, results_location: str,
                  num_processes: int, num_campaigns: int, checker: AbstractViolationChecker,
                  limit=None):
         self.generator: FuzzGenerator = generator
         self.runner: AbstractCommandLineToolRunner = runner
+        self.results_location: str = results_location
         self.unverified_violations = list()
         self.num_processes = num_processes
         self.num_campaigns = num_campaigns
@@ -52,9 +54,7 @@ class ToolTester:
 
     def main(self):
         campaign_index = 0
-        results_base_dir = self.runner.output
         while campaign_index < self.num_campaigns:
-            self.runner.output = os.path.join(results_base_dir, f'campaign{campaign_index}')
             Path(self.runner.output).mkdir(exist_ok=True, parents=True)
             campaign_index += 1
             campaign: FuzzingCampaign = self.generator.generate_campaign()
@@ -62,13 +62,19 @@ class ToolTester:
             if campaign_index == 4:
                 continue
             start = time.time()
+
+            # Make campaign folder.
+            campaign_folder = os.path.join(self.results_location, f'campaign{campaign_index}')
+            Path(campaign_folder).mkdir(exist_ok=True, parents=True)
+            partial_run_job = partial(self.runner.run_job, output_folder=campaign_folder)
             with Pool(self.num_processes) as p:
-                results = list(p.map(self.runner.run_job,
+                results = list(p.map(partial_run_job,
                                      campaign.jobs if self.limit is None else campaign.jobs[:self.limit - 1]))
             results = [r for r in results if r is not None]
             print(f'Campaign {campaign_index} finished (time {time.time() - start} seconds)')
-            violations: List[Violation] = self.checker.check_violations(results,
-                                                                        os.path.join(self.runner.output, "violations.json"))
+            violations_folder = os.path.join(campaign_folder, 'violations')
+            Path(violations_folder).mkdir(exist_ok=True, parents=True)
+            violations: List[Violation] = self.checker.check_violations(results, violations_folder)
             self.generator.update_exclusions(violations)
             # self.print_output(FinishedCampaign(results), campaign_index)  # TODO: Replace with generate_report
             print('Done!')
@@ -254,7 +260,7 @@ def main():
     else:
         raise RuntimeError(f"Tool {args.tool} is not supported.")
 
-    t = ToolTester(generator, runner,
+    t = ToolTester(generator, runner, results_location,
                    num_processes=args.jobs, num_campaigns=args.campaigns,
                    checker=CallgraphViolationChecker(args.jobs, None, reader),
                    limit=args.limit)
