@@ -17,9 +17,9 @@ class CallgraphViolationChecker(AbstractViolationChecker):
     def get_true_positives(self, input: Any) -> Set[T]:
         raise NotImplementedError("We do not support classified call graphs yet.")
 
-    def __init__(self, output: str, jobs: int, groundtruths: str, reader: AbstractCallGraphReader):
+    def __init__(self, jobs: int, groundtruths: str, reader: AbstractCallGraphReader):
         self.reader = reader
-        super().__init__(output, jobs, groundtruths)
+        super().__init__(jobs, groundtruths)
 
     def read_from_input(self, file: str) -> List[Tuple[CGCallSite, CGTarget]]:
         logger.info(f'Reading callgraph from {file}')
