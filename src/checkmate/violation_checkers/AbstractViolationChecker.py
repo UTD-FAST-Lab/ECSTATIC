@@ -118,6 +118,8 @@ class AbstractViolationChecker(ABC):
         An iterable containing any violations that were detected (can be empty).
         """
         results = []
+        if job1.job.configuration[option_under_investigation] == job2.job.configuration[option_under_investigation]:
+            return results
         if self.groundtruths is None:
             # In the absence of ground truths, we have to compute violations differently.
             if option_under_investigation.is_more_sound(job1.job.configuration[option_under_investigation],

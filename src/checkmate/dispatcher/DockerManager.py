@@ -1,6 +1,7 @@
 import importlib
 import logging
 import os
+import subprocess
 from importlib.resources import path
 from pathlib import Path
 
@@ -11,19 +12,21 @@ client = docker.from_env()
 
 
 def build_image(tool: str, nocache=False):
+    env = os.environ
+    env['DOCKER_BUILDKIT'] = '1'
     if tool == 'base':
         logging.info("Creating base image")
-        image = client.images.build(path=".", dockerfile="base_image.dockerfile", tag=get_image_name(tool), nocache=nocache)
+        subprocess.run(['docker', 'build', '.', '-f', 'base_image.dockerfile', '-t', get_image_name(tool)])
+        # image = client.images.build(path=".", dockerfile="base_image.dockerfile", tag=get_image_name(tool), nocache=nocache)
         # with open('base_image.dockerfile', 'rb') as df:
         #     logging.info("Building base image.")
         #     image = client.build(fileobj=df, tag=get_image_name(tool))
     else:
         logging.info(f"Building image for {tool}")
-        image = client.images.build(path=os.path.abspath(importlib.resources.path(f"src.resources.tools", tool)),
-                                    tag=get_image_name(tool), nocache=nocache)
-
-    response = [line for line in image]
-    print(response)
+        cmd = ['docker', 'build', os.path.abspath(importlib.resources.path(f"src.resources.tools", tool)),
+                        '-t', get_image_name(tool)]
+        logging.info(cmd)
+        subprocess.run(cmd)
 
 
 def start_runner(tool: str, benchmark: str, task: str, jobs: int, campaigns: int):

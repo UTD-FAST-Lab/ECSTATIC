@@ -31,13 +31,14 @@ RUN python -m pip install -e .
 WORKDIR /
 
 # Copy SSH key for git private repos
-ADD .ssh/id_docker_key /root/.ssh/id_docker_key
-RUN chmod 600 /root/.ssh/id_docker_key && \
+RUN if [ -e "/.ssh/id_docker_key" ]; then \
+    mkdir -p -m 0700 /root/.ssh && mv /.ssh/id_docker_key /root/.ssh && \
+    ssh-keyscan github.com >> /root/.ssh/known_hosts && \
+    chmod 600 /root/.ssh/id_docker_key && \
     echo "Host github.com" > /root/.ssh/config && \
     echo " HostName github.com" >> /root/.ssh/config && \
     echo " IdentityFile /root/.ssh/id_docker_key" >> /root/.ssh/config && \
-    echo "StrictHostKeyChecking no" >> /root/.ssh/config && \
-    chmod 600 /root/.ssh/config
+    chmod 600 /root/.ssh/config; fi
 
 # Use git with SSH instead of https
 # RUN echo "[url \"git@github.com:\"]\n\tinsteadOf = https://github.com/" >> /root/.gitconfig
