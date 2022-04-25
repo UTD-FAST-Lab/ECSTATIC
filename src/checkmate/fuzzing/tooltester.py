@@ -241,7 +241,8 @@ def main():
     results_location = f'/results/{args.tool}/{args.benchmark}'
     Path(results_location).mkdir(exist_ok=True)
     runner = RunnerFactory.get_runner_for_tool(args.tool)
-    generator = FuzzGeneratorFactory.get_runner_for_tool(args.tool, model_location, grammar, benchmark, args.adaptive)
+    generator = FuzzGeneratorFactory.get_fuzz_generator_for_name(args.tool, model_location, grammar,
+                                                                 benchmark, args.adaptive)
     reader = ReaderFactory.get_reader_for_task_and_tool(args.task, args.tool)
     checker = ViolationCheckerFactory.get_violation_checker_for_task(args.task, args.jobs, None, reader)
     t = ToolTester(generator, runner, results_location,
