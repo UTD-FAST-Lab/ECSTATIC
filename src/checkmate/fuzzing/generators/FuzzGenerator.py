@@ -155,7 +155,7 @@ class FuzzGenerator:
                         config[o] = o.get_default()
                     if level == config[o]:
                         continue
-                    if o.type.startwith('int'):
+                    if o.type.startswith('int'):
                         if 'i' in level.level_name:
                             level = Level(o.name, random.randint(o.min_value, o.max_value))
                         else:
