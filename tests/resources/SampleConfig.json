@@ -8,14 +8,14 @@
         "A2",
         "A3"
       ],
-      "partial_orders": [
+      "orders": [
         {
           "left": "A3",
-          "partial_order": "MPT",
+          "order": "MPT",
           "right": "A2"
         },{
           "left": "A2",
-          "partial_order": "MPT",
+          "order": "MPT",
           "right": "A1"
         }
       ]
@@ -23,15 +23,15 @@
     {
       "name": "B",
       "levels": ["-1", "i", "i-1"],
-      "partial_orders": [
+      "orders": [
         {
           "left": "-1",
-          "partial_order": "MST",
+          "order": "MST",
           "right": "i"
         },
         {
           "left": "i",
-          "partial_order": "MST",
+          "order": "MST",
           "right": "i-1"
         }
       ]

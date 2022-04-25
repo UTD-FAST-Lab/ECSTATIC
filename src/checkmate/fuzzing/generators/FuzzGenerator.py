@@ -2,15 +2,13 @@ import copy
 import json
 import logging
 import os
-import pickle
 import random
 from typing import List, Dict
 
 from frozendict import frozendict
 from fuzzingbook.GrammarCoverageFuzzer import GrammarCoverageFuzzer
-from fuzzingbook.Grammars import convert_ebnf_grammar, Grammar
+from fuzzingbook.Grammars import convert_ebnf_grammar
 
-from src.checkmate.fuzzing.flowdroid_grammar import FlowdroidGrammar
 from src.checkmate.models.Level import Level
 from src.checkmate.models.Option import Option
 from src.checkmate.models.Tool import Tool
@@ -18,8 +16,8 @@ from src.checkmate.util.ConfigurationSpaceReader import ConfigurationSpaceReader
 from src.checkmate.util.UtilClasses import ConfigWithMutatedOption, FuzzingCampaign, Benchmark, BenchmarkRecord, \
     FuzzingJob
 from src.checkmate.util.Violation import Violation
-from src.checkmate.util.config import configuration
 
+random.seed(2001)
 logger = logging.getLogger(__name__)
 
 
@@ -32,14 +30,17 @@ def fill_out_defaults(model: Tool, config: Dict[Option, Level]) -> Dict[Option, 
     logger.info(f"Filled out config is {config}")
     return config
 
+
 def get_apks(directory: str) -> List[str]:
     for root, dirs, files in os.walk(directory):
         for f in files:
             if f.endswith('.apk'):
                 yield os.path.join(root, f)
 
+
 class OptionExcludedError(Exception):
     pass
+
 
 class FuzzGenerator:
 
@@ -68,11 +69,14 @@ class FuzzGenerator:
             if tokens[i].startswith('--'):
                 try:
                     option: Option = \
-                        [o for o in self.model.get_options() if o.name.lower() == tokens[i].replace('--', '').lower()][0]
+                        [o for o in self.model.get_options() if o.name.lower() == tokens[i].replace('--', '').lower()][
+                            0]
                 except IndexError:
                     raise ValueError(
                         f'Configuration option {tokens[i].replace("--", "")} is not in the configuration space.')
 
+                if option.type == 'int' and 'i' in tokens[i + 1]:
+                    result[option] = random.randint(option.min_value, option.max_value)
                 if i == (len(tokens) - 1) or tokens[i + 1].startswith('--'):
                     result[option] = option.get_level("TRUE")
                     i = i + 1
@@ -153,7 +157,6 @@ class FuzzGenerator:
                         continue
                     if o.type == 'int':
                         if 'i' in level.level_name:
-                            random.seed(2001)
                             level = Level(o.name, random.randint(o.min_value, o.max_value))
                         else:
                             level = Level(o.name, int(level.level_name))
@@ -166,4 +169,3 @@ class FuzzGenerator:
                 except OptionExcludedError as oee:
                     logger.debug(str(oee))
         return candidates
-
