@@ -128,9 +128,14 @@ class AbstractViolationChecker(ABC):
                                                               job1.job.configuration[option_under_investigation]):
                     # If these are true, and job2 has more stuff than job1, we have a certain violation of one of these
                     # partial orders.
-                    differences: Set[T] = set(self.read_from_input(job2.results_location)).difference(
-                        set(self.read_from_input(job1.results_location)))
+                    job1_input = set(self.read_from_input(job1.results_location))
+                    job2_input = set(self.read_from_input(job2.results_location))
+
+                    differences: Set[T] = job2_input.difference(job1_input)
                     if len(differences) > 0:
+                        logger.info(f'Found {len(differences)} differences between '
+                                    f'{job2.results_location} ({len(job2_input)}) and '
+                                    f'{job1.results_location} ({len(job1_input)})')
                         pos: Set[PartialOrder] = {PartialOrder(job1.job.configuration[option_under_investigation],
                                                                PartialOrderType.MORE_SOUND_THAN,
                                                                job2.job.configuration[option_under_investigation]),
@@ -142,9 +147,16 @@ class AbstractViolationChecker(ABC):
                                                           job2.job.configuration[option_under_investigation]):
                 if option_under_investigation.is_more_sound(job2.job.configuration[option_under_investigation],
                                                             job1.job.configuration[option_under_investigation]):
+                    job1_input = set(self.read_from_input(job1.results_location))
+                    job2_input = set(self.read_from_input(job2.results_location))
+                    differences: Set[T] = job1_input.difference(job2_input)
+
                     differences: Set[T] = set(self.read_from_input(job1.results_location)).difference(
                         set(self.read_from_input(job2.results_location)))
                     if len(differences) > 0:
+                        logger.info(f'Found {len(differences)} differences between '
+                                    f'{job2.results_location} ({len(job2_input)}) and '
+                                    f'{job1.results_location} ({len(job1_input)})')
                         pos: Set[PartialOrder] = {PartialOrder(job1.job.configuration[option_under_investigation],
                                                                PartialOrderType.MORE_PRECISE_THAN,
                                                                job2.job.configuration[option_under_investigation]),
