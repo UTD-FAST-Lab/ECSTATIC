@@ -64,6 +64,8 @@ class AbstractViolationChecker(ABC):
             filename = f'violation_{AbstractCommandLineToolRunner.dict_hash(violation.job1.job.configuration)}_' \
                        f'{AbstractCommandLineToolRunner.dict_hash(violation.job2.job.configuration)}_' \
                        f'{violation.get_option_under_investigation().name}_' \
+                       f'{violation.job1.job.configuration[option_under_investigation].level_name}_' \
+                       f'{violation.job2.job.configuration[option_under_investigation].level_name}_' \
                        f'{os.path.basename(violation.job1.job.target.name)}.json'
             with open(os.path.join(output_folder, filename), 'w') as f:
                 encoded = jsonpickle.encode(violation)
