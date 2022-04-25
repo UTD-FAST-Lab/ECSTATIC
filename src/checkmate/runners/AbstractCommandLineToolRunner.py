@@ -42,7 +42,7 @@ class AbstractCommandLineToolRunner(ABC):
         if not os.path.exists(configuration_file):
             with open(configuration_file, 'w') as f:
                 f.write(self.dict_to_config_str(job.configuration))
-        while num_runs < 3 and not os.path.exists(
+        while num_runs < 1 and not os.path.exists(
                 self.get_output(output_folder, job) + '.error'):  # TODO: Have this number configurable.
             # noinspection PyBroadException
             try:
