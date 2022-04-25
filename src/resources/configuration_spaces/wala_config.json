@@ -17,6 +17,7 @@
         "STRING_ONLY",
         "NONE"
       ],
+      "default": "FULL",
       "orders": [
         {
           "left": "FULL",
