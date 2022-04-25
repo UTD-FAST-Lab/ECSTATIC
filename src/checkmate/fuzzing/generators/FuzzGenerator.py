@@ -44,7 +44,7 @@ class OptionExcludedError(Exception):
 class FuzzGenerator:
 
     def __init__(self, model_location: str, grammar_location: str, benchmark: Benchmark,
-                 no_adaptive: bool = False):
+                 adaptive: bool = False):
         self.first_run = True
         with open(grammar_location) as f:
             self.json_grammar = json.load(f)
@@ -53,7 +53,7 @@ class FuzzGenerator:
         self.fuzzer = GrammarCoverageFuzzer(self.grammar)
         random.seed(2001)
         self.model = ConfigurationSpaceReader().read_configuration_space(model_location)
-        self.no_adaptive = no_adaptive
+        self.adaptive = adaptive
         self.exclusions: List[Level] = []
 
     def process_config(self, config: str) -> Dict[Option, Level]:
@@ -84,7 +84,7 @@ class FuzzGenerator:
         return result
 
     def update_exclusions(self, violations: List[Violation]):
-        if self.no_adaptive:
+        if not self.adaptive:
             return  # Do nothing
         # Else....
         # For every violation, add the responsible option settings into the exclusion list.

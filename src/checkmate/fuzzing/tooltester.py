@@ -223,7 +223,7 @@ def main():
                    help="Number of fuzzing campaigns (i.e., one seed, all of its mutants, and violation detection)")
     p.add_argument("-j", "--jobs", type=int, default=32,
                    help="Number of parallel jobs to do at once.")
-    p.add_argument("--no-adaptive", help="Do not remove configuration option settings that have already "
+    p.add_argument("--adaptive", help="Remove configuration option settings that have already "
                                          "exhibited violations from future fuzzing campaigns.",
                    action="store_true")
     p.add_argument('--limit', help='Limit the number of executions to run in a campaign (useful for testing)',
@@ -240,15 +240,15 @@ def main():
     Path(results_location).mkdir(exist_ok=True)
     if args.tool == "soot":
         runner = SOOTRunner(results_location)
-        generator = SOOTFuzzGenerator(model_location, grammar, benchmark, args.no_adaptive)
+        generator = SOOTFuzzGenerator(model_location, grammar, benchmark, args.adaptive)
         reader = SOOTCallGraphReader()
     elif args.tool == "wala":
         runner = WALARunner(results_location)
-        generator = FuzzGenerator(model_location, grammar, benchmark, args.no_adaptive)
+        generator = FuzzGenerator(model_location, grammar, benchmark, args.adaptive)
         reader = WALACallGraphReader()
     elif args.tool == "doop":
         runner = DOOPRunner(results_location)
-        generator = FuzzGenerator(model_location, grammar, benchmark, args.no_adaptive)
+        generator = FuzzGenerator(model_location, grammar, benchmark, args.adaptive)
         reader = DOOPCallGraphReader()
     else:
         raise RuntimeError(f"Tool {args.tool} is not supported.")
