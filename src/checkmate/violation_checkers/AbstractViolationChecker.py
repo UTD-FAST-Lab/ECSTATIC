@@ -4,10 +4,7 @@ import os.path
 import time
 from abc import ABC, abstractmethod
 from multiprocessing import Pool
-from pathlib import Path
 from typing import List, Any, Tuple, Set, Iterable, TypeVar
-
-import jsonpickle as jsonpickle
 
 from src.checkmate.models.Option import Option
 from src.checkmate.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
@@ -25,7 +22,7 @@ class AbstractViolationChecker(ABC):
         self.jobs: int = jobs
         self.groundtruths = groundtruths
 
-    def check_violations(self, results: List[FinishedFuzzingJob], output_folder: str) -> List[Violation]:
+    def check_violations(self, results: Iterable[FinishedFuzzingJob], output_folder: str) -> List[Violation]:
         start_time = time.time()
         pairs: List[Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]] = []
         for finished_run in results:
@@ -64,12 +61,11 @@ class AbstractViolationChecker(ABC):
             filename = f'violation_{AbstractCommandLineToolRunner.dict_hash(violation.job1.job.configuration)}_' \
                        f'{AbstractCommandLineToolRunner.dict_hash(violation.job2.job.configuration)}_' \
                        f'{violation.get_option_under_investigation().name}_' \
-                       f'{violation.job1.job.configuration[option_under_investigation].level_name}_' \
-                       f'{violation.job2.job.configuration[option_under_investigation].level_name}_' \
+                       f'{violation.job1.job.configuration[violation.get_option_under_investigation()].level_name}_' \
+                       f'{violation.job2.job.configuration[violation.get_option_under_investigation()].level_name}_' \
                        f'{os.path.basename(violation.job1.job.target.name)}.json'
             with open(os.path.join(output_folder, filename), 'w') as f:
-                encoded = jsonpickle.encode(violation)
-                json.dump(encoded, f, indent=4)
+                json.dump(violation, f, indent=4)
         print(f'Finished checking violations. {len([v for v in violations if v.violated])} violations detected.')
         print(f'Campaign value processing done (took {time.time() - start_time} seconds).')
         self.summarize(violations)

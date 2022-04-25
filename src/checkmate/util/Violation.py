@@ -1,10 +1,10 @@
-from typing import List, Dict, Union, Iterable, Set, TypeVar
+from typing import List, Dict, Iterable, Set, TypeVar, Tuple
 
-from src.checkmate.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
 from src.checkmate.util.PartialOrder import PartialOrder
 from src.checkmate.util.UtilClasses import FinishedFuzzingJob
 
 T = TypeVar('T')
+
 
 class Violation:
 
@@ -16,7 +16,7 @@ class Violation:
     def __hash__(self) -> int:
         return hash((self.violated, self.partial_orders, self.job1, self.job2, self.differences))
 
-    def as_dict(self) -> Dict[str, Union[str, Dict[str, str], List[str]]]:
+    def as_dict(self) -> Dict[str, str | List[str] | List[Tuple[str]]]:
         return {'violated': self.violated,
                 'partial_orders': [str(v) for v in self.partial_orders],
                 'job1': {
@@ -28,7 +28,7 @@ class Violation:
                     'result': self.job2.results_location
                 },
                 'target': self.job1.job.target.name,
-                'differences': sorted(self.differences)
+                'differences': sorted([str(d) for d in self.differences])
                 }
 
     def get_option_under_investigation(self):

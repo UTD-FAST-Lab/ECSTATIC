@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import NamedTuple, Dict, Set, List, Any
+from typing import Dict, Set, List, Any
 
 from frozendict import frozendict
 
@@ -32,14 +32,12 @@ class FuzzingJob:
     def __eq__(self, other):
         return isinstance(other, FuzzingJob) and self.configuration == other.configuration and \
                self.option_under_investigation == other.option_under_investigation and \
-               self.target == other.target and \
-               self.target_dependencies == other.target_dependencies
+               self.target == other.target
 
-    def as_dict(self) -> str:
+    def as_dict(self) -> Dict[str, Any]:
         return {"option_under_investigation": self.option_under_investigation,
                 "configuration": {f"{str(k)}: {str(v)}" for k, v in self.configuration.items()},
-                "target": self.target,
-                "target_dependencies": self.target_dependencies}
+                "target": self.target}
 
 
 @dataclass
@@ -49,7 +47,7 @@ class FuzzingCampaign:
 
 @dataclass
 class ConfigWithMutatedOption:
-    config: frozendict[str, str]
+    config: frozendict[Option, Level]
     option: Option | None
 
 

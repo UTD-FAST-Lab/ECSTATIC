@@ -1,9 +1,9 @@
-from dataclasses import field, dataclass
+from dataclasses import dataclass
 
 @dataclass
 class Level:
     option_name: str
-    level_name: str
+    level_name: str | int
 
     def __hash__(self):
         return hash((self.option_name, self.level_name))

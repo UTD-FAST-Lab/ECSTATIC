@@ -64,7 +64,7 @@ class FuzzGenerator:
         logger.info(f"Fuzzed config is {config}")
         i = 0
         tokens: List[str] = config.split(' ')
-        result: Dict[str, str] = {}
+        result: Dict[Option, Level] = {}
         while i < len(tokens):
             if tokens[i].startswith('--'):
                 try:
@@ -76,7 +76,7 @@ class FuzzGenerator:
                         f'Configuration option {tokens[i].replace("--", "")} is not in the configuration space.')
 
                 if option.type.startswith('int') and 'i' in tokens[i + 1]:
-                    result[option] = random.randint(option.min_value, option.max_value)
+                    result[option] = Level(option.name, random.randint(option.min_value, option.max_value))
                 if i == (len(tokens) - 1) or tokens[i + 1].startswith('--'):
                     result[option] = option.get_level("TRUE")
                     i = i + 1
@@ -107,18 +107,18 @@ class FuzzGenerator:
             self.first_run = False
         else:
             while True:
+                config_to_try: str = self.fuzzer.fuzz()
+                if config_to_try == "":
+                    continue
                 try:
-                    config_to_try: str = self.fuzzer.fuzz()
-                    if config_to_try == "":
-                        continue
                     fuzzed_config: Dict[Option, Level] = self.process_config(config_to_try)
                     for _, v in fuzzed_config.items():
                         if v in self.exclusions:
                             raise OptionExcludedError()
                     break
-                except ValueError as ve:
+                except ValueError:
                     logger.warning(f'Produced config {config_to_try}, which is invalid. Trying again.')
-                except OptionExcludedError as oee:
+                except OptionExcludedError:
                     logger.warning("Fuzzer produced a configuration with an excluded value. Fuzzing again....")
 
         fuzzed_config = fill_out_defaults(self.model, fuzzed_config)
@@ -146,7 +146,7 @@ class FuzzGenerator:
         Given a configuration, generate every potential mutant of it that uses a configuration option in a partial
         order.
         """
-        candidates: List[Dict[Option, Level]] = list()
+        candidates: List[ConfigWithMutatedOption] = list()
         options: List[Option] = self.model.get_options()
         for o in options:
             for level in o.get_levels_involved_in_partial_orders():
