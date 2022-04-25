@@ -6,7 +6,7 @@ from src.checkmate import Flow
 from src.checkmate import Configuration
 from src.checkmate.models.Option import Option
 from src.checkmate.models.Tool import Tool
-from typing import List, Dict
+from typing import List, Dict, Set
 from csv import DictReader
 import pickle
 import os

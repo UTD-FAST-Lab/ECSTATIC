@@ -1,6 +1,4 @@
 from dataclasses import dataclass
-from json import JSONEncoder
-from typing import Any
 
 
 @dataclass
@@ -14,3 +12,10 @@ class CGCallSite():
 
     def __eq__(self, other):
         return isinstance(other, CGCallSite) and self.clazz == other.clazz and self.stmt == other.stmt
+
+    def __lt__(self, other):
+        if self.clazz != other.clazz:
+            return self.clazz < other.clazz
+        else:
+            return self.stmt < other.stmt
+

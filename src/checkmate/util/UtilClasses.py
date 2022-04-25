@@ -24,8 +24,7 @@ class FuzzingJob:
     def __init__(self,
                  configuration: Dict[Option, Level],
                  option_under_investigation: Option | None,
-                 target: BenchmarkRecord,
-                 target_dependencies: List[str] = []):
+                 target: BenchmarkRecord):
         self.configuration = configuration
         self.option_under_investigation = option_under_investigation
         self.target = target

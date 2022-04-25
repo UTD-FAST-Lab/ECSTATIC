@@ -23,6 +23,7 @@ import networkx
 from networkx import DiGraph
 
 from src.checkmate.models.Level import Level
+from src.checkmate.util.PartialOrder import PartialOrder, PartialOrderType
 
 
 class Option:
@@ -45,6 +46,9 @@ class Option:
         self.type: str = type
         self.min_value: int = min_value
         self.max_value: int = max_value
+
+    def __lt__(self, other):
+        return self.name < other.name
 
     def add_tag(self, tag: str):
         self.tags.append(tag)
@@ -122,8 +126,10 @@ class Option:
         return node
 
     def resolve_nodes(self, graph: DiGraph, o1: str, o2: str) -> Tuple[Level, Level]:
-        o1 = Level(self.name, str(o1))
-        o2 = Level(self.name, str(o2))
+        if not isinstance(o1, Level):
+            o1 = Level(self.name, str(o1))
+        if not isinstance(o2, Level):
+            o2 = Level(self.name, str(o2))
         node1 = self.resolve_one_node(graph, o1)
         node2 = self.resolve_one_node(graph, o2)
         if node1 == node2 and int(o1.level_name) != int(o2.level_name):
@@ -133,7 +139,24 @@ class Option:
                 node2 = Level(self.name, 'i-1')
         return node1, node2
 
-    def is_more_sound(self, o1: str, o2: str) -> bool:
+    def check_partial_order(self, p: PartialOrder) -> bool:
+        """
+        Parameters
+        ----------
+        p: The partial order
+
+        Returns
+        -------
+        True if the partial order is in the configuration space, else False.
+        """
+        if p.type == PartialOrderType.MORE_PRECISE_THAN:
+            return self.is_more_precise(p.left, p.right)
+        elif p.type == PartialOrderType.MORE_SOUND_THAN:
+            return self.is_more_sound(p.left, p.right)
+        else:
+            raise RuntimeError(f"Can't handle partial order type {p.type}")
+
+    def is_more_sound(self, o1: Level | str, o2: Level | str) -> bool:
         try:
             (node1, node2) = self.resolve_nodes(self.soundness, o1, o2)
             return node2 in networkx.descendants(self.soundness, node1)
@@ -141,7 +164,7 @@ class Option:
             logging.debug(ve)
             return False
 
-    def is_more_precise(self, o1: str, o2: str) -> bool:
+    def is_more_precise(self, o1: Level | str, o2: Level | str) -> bool:
         try:
             (node1, node2) = self.resolve_nodes(self.precision, o1, o2)
             return node2 in networkx.descendants(self.precision, node1)

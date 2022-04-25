@@ -1,6 +1,7 @@
 import argparse
 import importlib
 import logging
+from functools import partial
 from pathlib import Path
 
 from src.checkmate.fuzzing.generators.SOOTFuzzGenerator import SOOTFuzzGenerator
@@ -39,11 +40,12 @@ logger = logging.getLogger(__name__)
 
 class ToolTester:
 
-    def __init__(self, generator, runner: AbstractCommandLineToolRunner,
+    def __init__(self, generator, runner: AbstractCommandLineToolRunner, results_location: str,
                  num_processes: int, num_campaigns: int, checker: AbstractViolationChecker,
                  limit=None):
         self.generator: FuzzGenerator = generator
         self.runner: AbstractCommandLineToolRunner = runner
+        self.results_location: str = results_location
         self.unverified_violations = list()
         self.num_processes = num_processes
         self.num_campaigns = num_campaigns
@@ -52,25 +54,29 @@ class ToolTester:
 
     def main(self):
         campaign_index = 0
-        results_base_dir = self.runner.output
         while campaign_index < self.num_campaigns:
-            self.runner.output = os.path.join(results_base_dir, f'campaign{campaign_index}')
-            Path(self.runner.output).mkdir(exist_ok=True, parents=True)
-            campaign_index += 1
             campaign: FuzzingCampaign = self.generator.generate_campaign()
             print(f"Got new fuzzing campaign: {campaign_index}.")
             if campaign_index == 4:
                 continue
             start = time.time()
+
+            # Make campaign folder.
+            campaign_folder = os.path.join(self.results_location, f'campaign{campaign_index}')
+            Path(campaign_folder).mkdir(exist_ok=True, parents=True)
+            partial_run_job = partial(self.runner.run_job, output_folder=campaign_folder)
             with Pool(self.num_processes) as p:
-                results = list(p.map(self.runner.run_job,
+                results = list(p.map(partial_run_job,
                                      campaign.jobs if self.limit is None else campaign.jobs[:self.limit - 1]))
             results = [r for r in results if r is not None]
             print(f'Campaign {campaign_index} finished (time {time.time() - start} seconds)')
-            violations: List[Violation] = self.checker.check_violations(results)
+            violations_folder = os.path.join(campaign_folder, 'violations')
+            Path(violations_folder).mkdir(exist_ok=True, parents=True)
+            violations: List[Violation] = self.checker.check_violations(results, violations_folder)
             self.generator.update_exclusions(violations)
             # self.print_output(FinishedCampaign(results), campaign_index)  # TODO: Replace with generate_report
             print('Done!')
+            campaign_index += 1
 
     def write_flowset(self, relation_type: str,
                       violated: bool,
@@ -223,7 +229,7 @@ def main():
                    help="Number of fuzzing campaigns (i.e., one seed, all of its mutants, and violation detection)")
     p.add_argument("-j", "--jobs", type=int, default=32,
                    help="Number of parallel jobs to do at once.")
-    p.add_argument("--adaptive", help="Remove configuration option settings that have already "
+    p.add_argument("--no-adaptive", help="Do not remove configuration option settings that have already "
                                          "exhibited violations from future fuzzing campaigns.",
                    action="store_true")
     p.add_argument('--limit', help='Limit the number of executions to run in a campaign (useful for testing)',
@@ -236,26 +242,26 @@ def main():
     benchmark: Benchmark = build_benchmark(args.benchmark)
     logger.info(f'Benchmark is {benchmark}')
 
-    results_location = '/results'
+    results_location = f'/results/{args.tool}/{args.benchmark}'
     Path(results_location).mkdir(exist_ok=True)
     if args.tool == "soot":
-        runner = SOOTRunner(results_location)
-        generator = SOOTFuzzGenerator(model_location, grammar, benchmark, args.adaptive)
+        runner = SOOTRunner()
+        generator = SOOTFuzzGenerator(model_location, grammar, benchmark, args.no_adaptive)
         reader = SOOTCallGraphReader()
     elif args.tool == "wala":
-        runner = WALARunner(results_location)
-        generator = FuzzGenerator(model_location, grammar, benchmark, args.adaptive)
+        runner = WALARunner()
+        generator = FuzzGenerator(model_location, grammar, benchmark, args.no_adaptive)
         reader = WALACallGraphReader()
     elif args.tool == "doop":
-        runner = DOOPRunner(results_location)
-        generator = FuzzGenerator(model_location, grammar, benchmark, args.adaptive)
+        runner = DOOPRunner()
+        generator = FuzzGenerator(model_location, grammar, benchmark, args.no_adaptive)
         reader = DOOPCallGraphReader()
     else:
         raise RuntimeError(f"Tool {args.tool} is not supported.")
 
-    t = ToolTester(generator, runner,
+    t = ToolTester(generator, runner, results_location,
                    num_processes=args.jobs, num_campaigns=args.campaigns,
-                   checker=CallgraphViolationChecker(os.path.join(results_location, "violations.json"), reader),
+                   checker=CallgraphViolationChecker(args.jobs, None, reader),
                    limit=args.limit)
     t.main()
 
