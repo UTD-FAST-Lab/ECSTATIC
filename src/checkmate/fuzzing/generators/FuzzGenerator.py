@@ -75,7 +75,7 @@ class FuzzGenerator:
                     raise ValueError(
                         f'Configuration option {tokens[i].replace("--", "")} is not in the configuration space.')
 
-                if option.type == 'int' and 'i' in tokens[i + 1]:
+                if option.type.startswith('int') and 'i' in tokens[i + 1]:
                     result[option] = random.randint(option.min_value, option.max_value)
                 if i == (len(tokens) - 1) or tokens[i + 1].startswith('--'):
                     result[option] = option.get_level("TRUE")
@@ -155,7 +155,7 @@ class FuzzGenerator:
                         config[o] = o.get_default()
                     if level == config[o]:
                         continue
-                    if o.type == 'int':
+                    if o.type.startwith('int'):
                         if 'i' in level.level_name:
                             level = Level(o.name, random.randint(o.min_value, o.max_value))
                         else:

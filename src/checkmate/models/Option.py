@@ -79,7 +79,7 @@ class Option:
         return self.all
 
     def get_level(self, name: str) -> Level:
-        if self.type == 'integer' and int(name):
+        if self.type.startswith('int') and int(name):
             return Level(self.name, name)
         for l in self.all:
             l: Level
