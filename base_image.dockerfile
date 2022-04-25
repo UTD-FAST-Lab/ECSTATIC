@@ -31,8 +31,8 @@ RUN python -m pip install -e .
 WORKDIR /
 
 # Copy SSH key for git private repos
-RUN if [ -e "/.ssh/id_docker_key" ]; then \
-    mkdir -p -m 0700 /root/.ssh && mv /.ssh/id_docker_key /root/.ssh && \
+RUN if [ -e "/checkmate/.ssh/id_docker_key" ]; then \
+    mkdir -p -m 0700 /root/.ssh && mv /checkmate/.ssh/id_docker_key /root/.ssh && \
     ssh-keyscan github.com >> /root/.ssh/known_hosts && \
     chmod 600 /root/.ssh/id_docker_key && \
     echo "Host github.com" > /root/.ssh/config && \
