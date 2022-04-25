@@ -132,19 +132,20 @@
         "ZEROONE_CFA",
         "VANILLA_ZEROONECFA",
         "ZEROONE_CONTAINER_CFA",
-        "VANILLA_ZEROONE_CONTAINER_CFA"
+        "VANILLA_ZEROONE_CONTAINER_CFA",
+        "ZERO_CONTAINER_CFA"
       ],
       "default": "ZERO_CFA",
       "orders": [
         {
-          "right": "NCFA",
+          "left": "VANILLA_NCFA",
           "order": "MPT",
-          "left": "VANILLA_NCFA"
+          "right": "NCFA"
         },
         {
-          "right": "NOBJ",
+          "left": "VANILLA_NOBJ",
           "order": "MPT",
-          "left": "VANILLA_NOBJ"
+          "right": "NOBJ"
         },
         {
           "left": "NOBJ",
@@ -154,7 +155,32 @@
         {
           "left": "NCFA",
           "order": "MPT",
-          "right": "ZERO"
+          "right": "ZEROONE_CFA"
+        },
+        {
+          "left": "ZEROONE_CFA",
+          "order": "MPT",
+          "right": "ZERO_CFA"
+        },
+        {
+          "left": "ZEROONE_CONTAINER_CFA",
+          "order": "MPT",
+          "right": "ZEROONE_CFA"
+        },
+        {
+          "left": "ZERO_CONTAINER_CFA",
+          "order": "MPT",
+          "right": "ZERO_CFA"
+        },
+        {
+          "left": "ZEROONE_CONTAINER_CFA",
+          "order": "MPT",
+          "right": "ZERO_CONTAINER_CFA"
+        },
+        {
+          "left": "VANILLA_ZEROONE_CONTAINER_CFA",
+          "order": "MPT",
+          "right": "ZEROONE_CONTAINER_CFA"
         }
       ]
     },
