@@ -9,3 +9,4 @@ RUN apt-get update -y && apt-get upgrade -y
 FROM gfour/doop:4.24.9
 COPY --from=base-image /checkmate /checkmate
 COPY --from=base-image /venv /venv
+ENV PATH=/venv/bin:$PATH
