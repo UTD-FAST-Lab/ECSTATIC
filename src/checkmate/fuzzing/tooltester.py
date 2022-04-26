@@ -239,7 +239,7 @@ def main():
     logger.info(f'Benchmark is {benchmark}')
 
     results_location = f'/results/{args.tool}/{args.benchmark}'
-    Path(results_location).mkdir(exist_ok=True)
+    Path(results_location).mkdir(exist_ok=True, parents=True)
     runner = RunnerFactory.get_runner_for_tool(args.tool)
     generator = FuzzGeneratorFactory.get_fuzz_generator_for_name(args.tool, model_location, grammar,
                                                                  benchmark, args.adaptive)
