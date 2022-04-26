@@ -65,7 +65,7 @@ class AbstractViolationChecker(ABC):
                        f'{violation.job2.job.configuration[violation.get_option_under_investigation()].level_name}_' \
                        f'{os.path.basename(violation.job1.job.target.name)}.json'
             with open(os.path.join(output_folder, filename), 'w') as f:
-                json.dump(violation, f, indent=4)
+                json.dump(violation.as_dict(), f, indent=4)
         print(f'Finished checking violations. {len([v for v in violations if v.violated])} violations detected.')
         print(f'Campaign value processing done (took {time.time() - start_time} seconds).')
         self.summarize(violations)
