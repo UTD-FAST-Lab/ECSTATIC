@@ -1,6 +1,6 @@
 import argparse
 import logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
 from src.checkmate.dispatcher.Sanitizer import sanity_check, tools, benchmarks, tasks
 from src.checkmate.dispatcher import DockerManager
