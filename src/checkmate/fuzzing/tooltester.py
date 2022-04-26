@@ -1,8 +1,9 @@
-import argparse
-import importlib
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(message)s')
 
+
+import argparse
+import importlib
 from functools import partial
 from pathlib import Path
 

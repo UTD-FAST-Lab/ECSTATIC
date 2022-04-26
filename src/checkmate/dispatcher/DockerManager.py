@@ -9,23 +9,23 @@ import docker
 from docker.models.containers import Container
 
 client = docker.from_env()
-
+logger = logging.getLogger(__name__)
 
 def build_image(tool: str, nocache=False):
     env = os.environ
     env['DOCKER_BUILDKIT'] = '1'
     if tool == 'base':
-        logging.info("Creating base image")
+        logger.info("Creating base image")
         subprocess.run(['docker', 'build', '.', '-f', 'base_image.dockerfile', '-t', get_image_name(tool)])
         # image = client.images.build(path=".", dockerfile="base_image.dockerfile", tag=get_image_name(tool), nocache=nocache)
         # with open('base_image.dockerfile', 'rb') as df:
         #     logging.info("Building base image.")
         #     image = client.build(fileobj=df, tag=get_image_name(tool))
     else:
-        logging.info(f"Building image for {tool}")
+        logger.info(f"Building image for {tool}")
         cmd = ['docker', 'build', os.path.abspath(importlib.resources.path(f"src.resources.tools", tool)),
                         '-t', get_image_name(tool)]
-        logging.info(cmd)
+        logger.info(cmd)
         subprocess.run(cmd)
 
 
