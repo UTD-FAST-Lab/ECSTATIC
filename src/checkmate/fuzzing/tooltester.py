@@ -11,7 +11,7 @@ from src.checkmate.util.BenchmarkReader import BenchmarkReader
 from src.checkmate.util.Violation import Violation
 from src.checkmate.violation_checkers import ViolationCheckerFactory
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(message)s')
 import subprocess
 
 from src.checkmate.dispatcher import Sanitizer
