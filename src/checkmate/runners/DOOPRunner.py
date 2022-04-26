@@ -25,7 +25,7 @@ class DOOPRunner(CommandLineToolRunner):
             raise NotImplementedError(f'DOOP does not support task {task}.')
 
     def get_base_command(self) -> List[str]:
-        return ["doop"]
+        return ["doop", "-t", "120"]
 
     def run_from_cmd(self, cmd: List[str], job: FuzzingJob, output_file: str):
         cmd.extend(self.get_input_option(job.target))
