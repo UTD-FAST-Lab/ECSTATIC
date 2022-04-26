@@ -1,6 +1,8 @@
 import argparse
 import importlib
 import logging
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(message)s')
+
 from functools import partial
 from pathlib import Path
 
@@ -11,7 +13,6 @@ from src.checkmate.util.BenchmarkReader import BenchmarkReader
 from src.checkmate.util.Violation import Violation
 from src.checkmate.violation_checkers import ViolationCheckerFactory
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(message)s')
 import subprocess
 
 from src.checkmate.dispatcher import Sanitizer
