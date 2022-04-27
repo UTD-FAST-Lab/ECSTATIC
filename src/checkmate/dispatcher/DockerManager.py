@@ -32,7 +32,9 @@ def build_image(tool: str, nocache=False):
 def start_runner(tool: str, benchmark: str, task: str, jobs: int, campaigns: int, timeout: int):
     # PYTHONENV=/checkmate
     # run build benchmark script
-    command = f'tester {tool} {benchmark} -t {task} -j {jobs} -c {campaigns} --timeout {timeout}'
+    command = f'tester {tool} {benchmark} -t {task} -j {jobs} -c {campaigns}'
+    if timeout is not None:
+        command += f' --timeout {timeout}'
     print(f'Starting container with command {command}')
     results_folder = os.path.abspath(importlib.resources.path("results", ""))
     Path(results_folder).mkdir(parents=True, exist_ok=True)

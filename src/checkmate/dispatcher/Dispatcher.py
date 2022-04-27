@@ -55,8 +55,7 @@ def parse_args():
     parser.add_argument(
         '--timeout',
         help='The timeout in minutes.',
-        type=int,
-        default='120'
+        type=int
     )
     return parser.parse_args()
 
@@ -71,7 +70,7 @@ def main():
         for b in args.benchmarks:
             for task in args.tasks:
                 # TODO: Add sanity check back in
-                DockerManager.start_runner(t, b, task, args.jobs, args.campaigns)
+                DockerManager.start_runner(t, b, task, args.jobs, args.campaigns, args.timeout)
 
         # comp_benchmarks, comp_tasks = sanity_check(t, args.benchmarks, args.tasks)
         # DockerManager.start_runner(t, args.benchmarks, args.tasks)

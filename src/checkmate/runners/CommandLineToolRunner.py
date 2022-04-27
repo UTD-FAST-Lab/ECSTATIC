@@ -56,13 +56,24 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         pass
 
     def try_run_job(self, job: FuzzingJob, output_folder: str) -> FinishedFuzzingJob:
+        """
+        Tries to run the job. Judges if a job exists by checking if the partial order exists.
+        Parameters
+        ----------
+        job
+        output_folder
+
+        Returns
+        -------
+
+        """
         logging.info(f'Job configuration is {[(str(k), str(v)) for k, v in job.configuration.items()]}')
         config_as_str = self.dict_to_config_str(job.configuration)
         cmd = self.get_base_command()
         cmd.extend(config_as_str.split(" "))
         output_file = self.get_output(output_folder, job)
         if not os.path.exists(output_file):
-            total_time, output = self.run_from_cmd(cmd, job, output_file)
+            output = self.run_from_cmd(cmd, job, output_file)
             if not os.path.exists(output_file):
                 raise RuntimeError(output)
             self.transform(output_file)
@@ -81,8 +92,21 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         )
 
     def run_from_cmd(self, cmd: List[str], job: FuzzingJob, output_file: str) -> str:
+        """
+        Tries to run the cmd specified in cmd. Returns the output, combined from stdout and stderr.
+        Parameters
+        ----------
+        cmd: The command to run.
+        job: The job we are running.
+        output_file: The output file.
+
+        Returns
+        -------
+        The combined stdout and stderr of running the command.
+        """
         cmd.extend(self.get_input_option(job.target))
         cmd.extend(self.get_output_option(output_file))
+        cmd.extend(self.get_timeout_option())
         cmd = [c for c in cmd if c != '']
         logging.info(f"Cmd is {' '.join(cmd)}")
         ps = subprocess.run(cmd, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, text=True)
