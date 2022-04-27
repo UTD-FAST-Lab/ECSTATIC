@@ -127,7 +127,8 @@ class FlowDroidRunner(AbstractCommandLineToolRunner):
             v: Level
             if k.name == 'taintwrapper' and v.level_name == 'EASY':  # taintwrapper EASY requires an option
                 result += f'--taintwrapper EASY -t /FlowDroid/soot-infoflow/EasyTaintWrapperSource.txt'
-            elif v.level_name.lower() not in ['false', 'true', 'default', k.get_default().level_name.lower()]:
+            elif isinstance(v.level_name, int) or \
+                    v.level_name.lower() not in ['false', 'true', 'default', k.get_default().level_name.lower()]:
                 result += f'--{k.name} {v.level_name} '
             elif v.level_name.lower() == 'true':
                 result += f'--{k.name} '
