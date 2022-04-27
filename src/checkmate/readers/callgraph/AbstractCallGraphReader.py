@@ -1,16 +1,17 @@
 import logging
 from abc import ABC
-from typing import Tuple, List
+from typing import Tuple, List, Any
 
+from src.checkmate.readers.AbstractReader import AbstractReader
 from src.checkmate.util.CGCallSite import CGCallSite
 from src.checkmate.util.CGTarget import CGTarget
 
 logger = logging.getLogger(__name__)
 
 
-class AbstractCallGraphReader(ABC):
+class AbstractCallGraphReader(AbstractReader):
 
-    def import_graph(self, file: str) -> List[Tuple[CGCallSite, CGTarget]]:
+    def import_file(self, file: str) -> Any:
         logger.info(f'Reading callgraph from {file}')
         callgraph: List[Tuple[CGCallSite, CGTarget]] = []
         with open(file) as f:

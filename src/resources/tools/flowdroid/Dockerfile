@@ -17,5 +17,6 @@ WORKDIR /
 RUN wget https://dl.google.com/android/repository/commandlinetools-linux-8092744_latest.zip && \
     unzip commandlinetools-linux-8092744_latest.zip && \
     cd cmdline-tools && \
-    yes | ./bin/sdkmanager --sdk-root=/lib/android-sdk --update --install "platforms;android-25"
+    yes | ./bin/sdkmanager --sdk_root=/lib/android-sdk --update && \
+    ./bin/sdkmanager --sdk_root=/lib/android-sdk --install "platforms;android-25"
 WORKDIR /

@@ -23,6 +23,6 @@ class CallgraphViolationChecker(AbstractViolationChecker):
 
     def read_from_input(self, file: str) -> List[Tuple[CGCallSite, CGTarget]]:
         logger.info(f'Reading callgraph from {file}')
-        callgraph: List[Tuple[CGCallSite, CGTarget]] = self.reader.import_graph(file)
+        callgraph: List[Tuple[CGCallSite, CGTarget]] = self.reader.import_file(file)
         logger.info(f'Finished reading callgraph.')
         return callgraph

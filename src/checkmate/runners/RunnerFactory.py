@@ -2,6 +2,7 @@ import logging
 
 from src.checkmate.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
 from src.checkmate.runners.DOOPRunner import DOOPRunner
+from src.checkmate.runners.FlowDroidRunner import FlowDroidRunner
 from src.checkmate.runners.SOOTRunner import SOOTRunner
 from src.checkmate.runners.WALARunner import WALARunner
 
@@ -15,5 +16,6 @@ def get_runner_for_tool(name: str, *args) -> AbstractCommandLineToolRunner:
         return WALARunner(*args)
     elif name.lower() == "doop":
         return DOOPRunner(*args)
-    else:
+    elif name.lower() == "flowdroid":
+        return FlowDroidRunner(*args)
         raise NotImplementedError(f"No support for runner for {name}")

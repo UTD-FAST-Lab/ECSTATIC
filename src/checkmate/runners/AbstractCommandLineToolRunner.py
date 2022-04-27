@@ -2,6 +2,7 @@ import hashlib
 import json
 import logging
 import os
+import time
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Dict
@@ -46,11 +47,17 @@ class AbstractCommandLineToolRunner(ABC):
                 self.get_output(output_folder, job) + '.error'):  # TODO: Have this number configurable.
             # noinspection PyBroadException
             try:
-                return self.try_run_job(job, output_folder)
+                start = time.time()
+                result = self.try_run_job(job, output_folder)
+                with open(os.path.join(output_folder,
+                                       '.' + os.path.basename(self.get_output(output_folder, job)) + ".time"),
+                          'w') as f:
+                    f.write(f'{str(time.time() - start)}\n')
+                return result
             except Exception as ex:
                 exception = ex
                 num_runs += 1
-                logger.exception(f"Failed running job {num_runs} time(s). Trying again...")
+                logger.exception(f"Failed running job {num_runs} time(s).")
 
         # If we get here we failed too many times and we just abort.
         logger.critical("Failed running job maximum number of times. Sorry!")
