@@ -57,7 +57,7 @@ def create_shell_file(job: FuzzingJob, output_folder: str) -> str:
                                    f"{hash_value}.sh")
     if not os.path.exists(shell_file_name):
         logger.debug(f'Creating shell file {shell_file_name}')
-        with open(importlib.path.resources("src.resources.tools.flowdroid", "flowdroid.sh"), 'r') as infile:
+        with open(importlib.resources.path("src.resources.tools.flowdroid", "flowdroid.sh"), 'r') as infile:
             content = infile.readlines()
 
         content = map(lambda r: r.replace('%CONFIG%', config_str), content)
@@ -92,7 +92,7 @@ def create_xml_config_file(shell_file_path: str, apk: BenchmarkRecord, output_fo
     #     flowdroid_output += '.verify'
     if not os.path.exists(xml_output_file):
         logger.info(f'Creating {xml_output_file}')
-        aql_config = ElementTree.parse(importlib.path.resources("src.resources.tools.flowdroid", "template.xml"))
+        aql_config = ElementTree.parse(importlib.resources.path("src.resources.tools.flowdroid", "template.xml"))
         for element in aql_config.iter():
             if element.tag == 'path':
                 element.text = os.path.abspath("/FlowDroid")
@@ -101,10 +101,10 @@ def create_xml_config_file(shell_file_path: str, apk: BenchmarkRecord, output_fo
                                flowdroid_output
             elif element.tag == 'runOnExit':
                 element.text = os.path.abspath(
-                    importlib.path.resources("src.resources.tools.flowdroid", "flushMemory.sh"))
+                    importlib.resources.path("src.resources.tools.flowdroid", "flushMemory.sh"))
             elif element.tag == 'runOnAbort':
                 element.text = os.path.abspath(
-                    f"{importlib.path.resources('src.resources.tools.flowdroid', 'killpid.sh')} %PID%")
+                    f"{importlib.resources.path('src.resources.tools.flowdroid', 'killpid.sh')} %PID%")
             elif element.tag == 'result':
                 element.text = flowdroid_output
             elif element.tag == 'androidPlatforms':
@@ -166,7 +166,7 @@ class FlowDroidRunner(AbstractCommandLineToolRunner):
         """
         # create output file
         try:
-            cmd = [os.path.abspath(importlib.path.resources("src.resources.tools.flowdroid", "run_aql.sh")),
+            cmd = [os.path.abspath(importlib.resources.path("src.resources.tools.flowdroid", "run_aql.sh")),
                    os.path.abspath(xml_config_file),
                    os.path.abspath(job.target.name), output]
             curdir = os.path.abspath(os.curdir)
