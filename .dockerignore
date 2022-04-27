@@ -1,7 +1,5 @@
 **/.git
 base_image.dockerfile
-resources/**/*
-resources/
 tests/**/*
 tests/
 results/
