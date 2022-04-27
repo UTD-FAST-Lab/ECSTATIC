@@ -15,19 +15,28 @@ logger = logging.getLogger("AbstractCommandLineToolRunner")
 """
 Base class for command line tool runners.
 """
+
+
 class AbstractCommandLineToolRunner(ABC):
     """
     The base class for command-line based tool runners.
     """
+
     # Timeout in Minutes
+
+    def __init__(self):
+        self._timeout = None
+
     @property
     def timeout(self):
         return self._timeout
 
     @timeout.setter
     def timeout(self, value):
-        if value < 0:
-            raise ValueError('Timeout must be positive. Supplied number was {value}')
+        if isinstance(value, int) and value < 0:
+            raise ValueError(f'Timeout must be positive. Supplied number was {value}')
+        elif value != None:
+            raise ValueError(f'Timeout must be an integer or None. Supplied object was {value}')
         self._timeout = value
 
     @staticmethod

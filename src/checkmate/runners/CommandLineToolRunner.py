@@ -18,6 +18,9 @@ which allows setting input and output via a command line option.
 
 class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
 
+    def __init__(self):
+        super().__init__()
+
     @abstractmethod
     def get_timeout_option(self) -> List[str]:
         """Set the timeout, using the self.timeout property."""
@@ -57,15 +60,16 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
 
     def try_run_job(self, job: FuzzingJob, output_folder: str) -> FinishedFuzzingJob:
         """
-        Tries to run the job. Judges if a job exists by checking if the partial order exists.
+        Tries to run the job. Judges if a job exists by checking if the expected output file exists. Throws an exception
+        if the expected output does not exist.
         Parameters
         ----------
-        job
-        output_folder
+        job: The job to run.
+        output_folder: The output folder.
 
         Returns
         -------
-
+        A FinishedFuzzingJob that includes the result, or throws an exception if running the job failed.
         """
         logging.info(f'Job configuration is {[(str(k), str(v)) for k, v in job.configuration.items()]}')
         config_as_str = self.dict_to_config_str(job.configuration)
