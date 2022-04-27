@@ -8,6 +8,13 @@ from src.checkmate.util.UtilClasses import BenchmarkRecord
 
 
 class SOOTRunner(CommandLineToolRunner):
+    def get_timeout_option(self) -> List[str]:
+        # SOOTInterface expects its timeout in milliseconds.
+        if self.timeout is None:
+            return []
+        else:
+            return f"--timeout {self.timeout*60*1000}".split(" ")
+
     def get_input_option(self, benchmark_record: BenchmarkRecord) -> List[str]:
         output = f"--process-dir {benchmark_record.name}"
         if len(benchmark_record.depends_on) > 0:
@@ -26,8 +33,13 @@ class SOOTRunner(CommandLineToolRunner):
     def dict_to_config_str(self, config_as_dict: Dict[Option, Level]) -> str:
         """
         We need special handling of SOOT's options, because of phase options.
-        @param config_as_dict: The dictionary specifying the configuration.
-        @return: The corresponding command-line string.
+        Parameters
+        ----------
+        config_as_dict: The dictionary specifying the configuration.
+
+        Returns
+        -------
+        The corresponding command-line string.
         """
         config_as_str = ""
         for k, v in config_as_dict.items():

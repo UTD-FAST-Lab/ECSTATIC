@@ -168,8 +168,9 @@ class FlowDroidRunner(AbstractCommandLineToolRunner):
         try:
             cmd = [os.path.abspath(importlib.resources.path("src.resources.tools.flowdroid", "run_aql.sh")),
                    os.path.abspath(xml_config_file),
-                   os.path.abspath(job.target.name), output,
-                   self.timeout]
+                   os.path.abspath(job.target.name), output]
+            if self.timeout is not None:
+                cmd.append(self.timeout)
             curdir = os.path.abspath(os.curdir)
             os.chdir(os.path.dirname("/AQL-System/target"))
             logger.info(f'Cmd is {" ".join(cmd)}')
