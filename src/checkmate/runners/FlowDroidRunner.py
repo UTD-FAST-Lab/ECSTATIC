@@ -5,7 +5,7 @@ import subprocess
 import time
 import xml.etree.ElementTree as ElementTree
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List
 
 from src.checkmate.models.Level import Level
 from src.checkmate.models.Option import Option
@@ -168,7 +168,8 @@ class FlowDroidRunner(AbstractCommandLineToolRunner):
         try:
             cmd = [os.path.abspath(importlib.resources.path("src.resources.tools.flowdroid", "run_aql.sh")),
                    os.path.abspath(xml_config_file),
-                   os.path.abspath(job.target.name), output]
+                   os.path.abspath(job.target.name), output,
+                   self.timeout]
             curdir = os.path.abspath(os.curdir)
             os.chdir(os.path.dirname("/AQL-System/target"))
             logger.info(f'Cmd is {" ".join(cmd)}')

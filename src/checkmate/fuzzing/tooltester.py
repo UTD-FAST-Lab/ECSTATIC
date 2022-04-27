@@ -230,8 +230,7 @@ def main():
     p.add_argument("--adaptive", help="Remove configuration option settings that have already "
                                          "exhibited violations from future fuzzing campaigns.",
                    action="store_true")
-    p.add_argument('--limit', help='Limit the number of executions to run in a campaign (useful for testing)',
-                   type=int)
+    p.add_argument('--timeout', help='Timeout in minutes', type=int)
     args = p.parse_args()
 
     model_location = importlib.resources.path("src.resources.configuration_spaces", f"{args.tool}_config.json")
@@ -243,13 +242,18 @@ def main():
     results_location = f'/results/{args.tool}/{args.benchmark}'
     Path(results_location).mkdir(exist_ok=True, parents=True)
     runner = RunnerFactory.get_runner_for_tool(args.tool)
+
+    # Set timeout.
+    if args.timeout is not None:
+        runner.timeout = args.timeout
+
     generator = FuzzGeneratorFactory.get_fuzz_generator_for_name(args.tool, model_location, grammar,
                                                                  benchmark, args.adaptive)
     reader = ReaderFactory.get_reader_for_task_and_tool(args.task, args.tool)
     checker = ViolationCheckerFactory.get_violation_checker_for_task(args.task, args.jobs, None, reader)
     t = ToolTester(generator, runner, results_location,
                    num_processes=args.jobs, num_campaigns=args.campaigns,
-                   checker=checker, limit=args.limit)
+                   checker=checker)
     t.main()
 
 

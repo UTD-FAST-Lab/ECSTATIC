@@ -52,6 +52,12 @@ def parse_args():
         type=int,
         default='1'
     )
+    parser.add_argument(
+        '--timeout',
+        help='The timeout in minutes.',
+        type=int,
+        default='120'
+    )
     return parser.parse_args()
 
 def main():

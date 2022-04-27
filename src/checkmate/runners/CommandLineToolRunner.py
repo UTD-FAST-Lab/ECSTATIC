@@ -19,6 +19,11 @@ which allows setting input and output via a command line option.
 class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
 
     @abstractmethod
+    def get_timeout_option(self) -> List[str]:
+        """Set the timeout, using the self.timeout property."""
+        pass
+
+    @abstractmethod
     def get_base_command(self) -> List[str]:
         pass
 
@@ -35,6 +40,11 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
     @abstractmethod
     def get_task_option(self, task: str) -> str:
         """Given a task, sets the appropriate option."""
+        pass
+
+    @abstractmethod
+    def get_timeout_option(self) -> List[str]:
+        """Add an option to handle timeout, using self.timeout"""
         pass
 
     def transform(self, output: str):
