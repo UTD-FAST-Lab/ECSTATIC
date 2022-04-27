@@ -7,5 +7,5 @@ git clone https://github.com/secure-software-engineering/DroidBench.git
 cd DroidBench
 git checkout develop
 mkdir -p /benchmarks/droidbench
-find . -maxdepth 1 -type d | grep -v InterAppCommunication | parallel mv -t ./benchmarks/droidbench
+find . -maxdepth 1 -type d | grep -v InterAppCommunication | parallel mv -t /benchmarks/droidbench
 cd $CURDIR
