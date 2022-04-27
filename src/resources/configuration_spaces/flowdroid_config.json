@@ -264,6 +264,7 @@
     {
       "name": "maxcallbacksdepth",
       "type": "integer",
+      "default": "-1",
       "minValue": "-1",
       "maxValue": "999",
       "levels": [
@@ -301,7 +302,7 @@
     },
     {
       "name": "pathalgo",
-      "default": "default",
+      "default": "DEFAULT",
       "levels": [
         "DEFAULT",
         "CONTEXTINSENSITIVE",
