@@ -42,5 +42,7 @@ class DOOPRunner(CommandLineToolRunner):
         except UnboundLocalError as ule:
             raise RuntimeError(ps.stdout)
         shutil.move(intermediate_file, output_file)
+        logger.info(f'Now removing directory {output_dir}')
+        shutil.rmtree(output_dir)
         total_time: float = time.time() - start_time
         return total_time, ps.stdout
