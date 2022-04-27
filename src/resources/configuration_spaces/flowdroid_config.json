@@ -8,7 +8,7 @@
         "i",
         "i-1"
       ],
-      "default": 5,
+      "default": "5",
       "orders": [
         {
           "left": "i",
