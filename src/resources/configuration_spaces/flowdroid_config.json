@@ -3,15 +3,16 @@
   "options": [
     {
       "name": "aplength",
+      "type": "integer",
       "levels": [
         "i",
         "i-1"
       ],
       "default": 5,
-      "partial_orders": [
+      "orders": [
         {
           "left": "i",
-          "partial_order": "MPT",
+          "order": "MPT",
           "right": "i-1"
         }
       ]
@@ -26,15 +27,15 @@
         "SPARK"
       ],
       "default": "SPARK",
-      "partial_orders": [
+      "orders": [
         {
           "left": "RTA",
-          "partial_order": "MPT",
+          "order": "MPT",
           "right": "CHA"
         },
         {
           "left": "VTA",
-          "partial_order": "MPT",
+          "order": "MPT",
           "right": "RTA"
         }
       ]
@@ -46,10 +47,10 @@
         "TRUE"
       ],
       "default": "FALSE",
-      "partial_orders": [
+      "orders": [
         {
           "left": "FALSE",
-          "partial_order": "MPT",
+          "order": "MPT",
           "right": "TRUE"
         }
       ]
@@ -61,10 +62,10 @@
         "TRUE"
       ],
       "default": "FALSE",
-      "partial_orders": [
+      "orders": [
         {
           "left": "TRUE",
-          "partial_order": "MPT",
+          "order": "MPT",
           "right": "FALSE"
         }
       ]
@@ -76,10 +77,10 @@
         "FLOWINSENSITIVE"
       ],
       "default": "DEFAULT",
-      "partial_orders": [
+      "orders": [
         {
           "left": "DEFAULT",
-          "partial_order": "MPT",
+          "order": "MPT",
           "right": "FLOWINSENSITIVE"
         }
       ]
@@ -91,10 +92,10 @@
         "TRUE"
       ],
       "default": "FALSE",
-      "partial_orders": [
+      "orders": [
         {
           "left": "FALSE",
-          "partial_order": "MST",
+          "order": "MST",
           "right": "TRUE"
         }
       ]
@@ -106,10 +107,10 @@
         "TRUE"
       ],
       "default": "FALSE",
-      "partial_orders": [
+      "orders": [
         {
           "left": "FALSE",
-          "partial_order": "MST",
+          "order": "MST",
           "right": "TRUE"
         }
       ]
@@ -121,10 +122,10 @@
         "TRUE"
       ],
       "default": "FALSE",
-      "partial_orders": [
+      "orders": [
         {
           "left": "FALSE",
-          "partial_order": "MST",
+          "order": "MST",
           "right": "TRUE"
         }
       ]
@@ -137,27 +138,264 @@
         "NONE"
       ],
       "default": "DEFAULT",
-      "partial_orders": [
+      "orders": [
         {
           "left": "DEFAULT",
-          "partial_order": "MPT",
+          "order": "MPT",
           "right": "CONTEXTFLOWINSENSITIVE"
         },
         {
           "left": "DEFAULT",
-          "partial_order": "MST",
+          "order": "MST",
           "right": "NONE"
         },
         {
           "left": "CONTEXTFLOWINSENSITIVE",
-          "partial_order": "MST",
+          "order": "MST",
           "right": "NONE"
         }
       ]
     },
     {
       "name": "nostatic",
-      "partial_order":
+      "levels": [
+        "FALSE",
+        "TRUE"
+      ],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "FALSE",
+          "order": "MST",
+          "right": "TRUE"
+        }
+      ]
+    },
+    {
+      "name": "codeelimination",
+      "levels": [
+        "DEFAULT",
+        "NONE",
+        "REMOVECODE"
+      ],
+      "default": "DEFAULT",
+      "orders": [
+        {
+          "left": "REMOVECODE",
+          "order": "MPT",
+          "right": "DEFAULT"
+        },
+        {
+          "left": "DEFAULT",
+          "order": "MPT",
+          "right": "NONE"
+        }
+      ]
+    },
+    {
+      "name": "implicit",
+      "levels": [
+        "DEFAULT",
+        "ARRAYONLY",
+        "ALL"
+      ],
+      "default": "DEFAULT",
+      "orders": [
+        {
+          "left": "ARRAYONLY",
+          "order": "MST",
+          "right": "DEFAULT"
+        },
+        {
+          "left": "ALL",
+          "order": "MST",
+          "right": "ARRAYONLY"
+        }
+      ]
+    },
+    {
+      "name": "nocallbacks",
+      "levels": [
+        "FALSE",
+        "TRUE"
+      ],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left":"FALSE",
+          "order": "MST",
+          "right": "TRUE"
+        }
+      ]
+    },
+    {
+      "name": "callbackanalyzer",
+      "levels": [
+        "DEFAULT",
+        "FAST"
+      ],
+      "default": "DEFAULT",
+      "orders": [
+        {
+          "left": "DEFAULT",
+          "order": "MPT",
+          "right": "FAST"
+        }
+      ]
+    },
+    {
+      "name": "maxcallbackspercomponent",
+      "levels": [
+        "i",
+        "i-1"
+      ],
+      "type": "integer",
+      "minValue": "1",
+      "maxValue": "999",
+      "default": "100",
+      "orders": [
+        {
+          "left": "i",
+          "order": "MST",
+          "right": "i-1"
+        }
+      ]
+    },
+    {
+      "name": "maxcallbacksdepth",
+      "type": "integer",
+      "minValue": "-1",
+      "maxValue": "999",
+      "levels": [
+        "-1",
+        "i",
+        "i-1"
+      ],
+      "orders": [
+        {
+         "left": "-1",
+          "order": "MST",
+          "right": "i"
+        },
+        {
+        "left": "i",
+        "order": "MST",
+        "right": "i-1"
+        }
+      ]
+    },
+    {
+      "name": "enablereflection",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "TRUE",
+          "order": "MST",
+          "right": "FALSE"
+        }
+      ]
+    },
+    {
+      "name": "pathalgo",
+      "default": "default",
+      "levels": [
+        "DEFAULT",
+        "CONTEXTINSENSITIVE",
+        "SOURCESONLY"
+      ],
+      "orders": [
+        {
+          "left": "DEFAULT",
+          "order": "MPT",
+          "right": "CONTEXTINSENSITIVE"
+        },
+        {
+          "left": "DEFAULT",
+          "order": "MPT",
+          "right": "SOURCESONLY"
+        }
+      ]
+    },
+    {
+      "name": "pathspecificresults",
+      "default": "FALSE",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "orders": [
+        {
+          "left": "TRUE",
+          "order": "MPT",
+          "right": "FALSE"
+        }
+      ]
+    },
+    {
+      "name": "noexceptions",
+      "default": "FALSE",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "orders": [
+        {
+          "left": "FALSE",
+          "order": "MST",
+          "right": "TRUE"
+        }
+      ]
+    },
+    {
+      "name": "taintwrapper",
+      "levels": [
+        "DEFAULT",
+        "DEFAULTFALLBACK",
+        "EASY",
+        "NONE"
+      ],
+      "default": "DEFAULT",
+      "orders": [
+        {
+          "left": "DEFAULTFALLBACK",
+          "order": "MST",
+          "right": "NONE"
+        },
+        {
+          "left": "DEFAULTFALLBACK",
+          "order": "MST",
+          "right": "DEFAULT"
+        },
+        {
+          "left": "EASY",
+          "order": "MST",
+          "right": "NONE"
+        },
+        {
+          "left": "DEFAULT",
+          "order": "MST",
+          "right": "NONE"
+        }
+      ]
+    },
+    {
+      "name": "analyzeframeworks",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "default": "TRUE",
+      "orders": [
+        {
+          "left": "TRUE",
+          "order": "MST",
+          "right": "FALSE"
+        }
+      ]
     }
   ]
 }
