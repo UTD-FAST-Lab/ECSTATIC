@@ -81,13 +81,13 @@ def main():
 
     DockerManager.build_image('base')
     for t in args.tools:
-        DockerManager.build_image(t, args.nocache)
+        DockerManager.build_image(t)
 
     for t in args.tools:
         for b in args.benchmarks:
             for task in args.tasks:
                 # TODO: Add sanity check back in
-                DockerManager.start_runner(t, b, task, args.jobs, args.campaigns, args.timeout)
+                DockerManager.start_runner(t, b, task, args)
 
         # comp_benchmarks, comp_tasks = sanity_check(t, args.benchmarks, args.tasks)
         # DockerManager.start_runner(t, args.benchmarks, args.tasks)

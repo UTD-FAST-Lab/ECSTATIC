@@ -16,6 +16,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
+from typing import Tuple
 
 from src.checkmate.readers.callgraph.AbstractCallGraphReader import AbstractCallGraphReader
 
@@ -23,4 +24,19 @@ logger = logging.getLogger(__name__)
 
 
 class SOOTCallGraphReader(AbstractCallGraphReader):
-    pass
+    def process_line(self, line: str) -> Tuple[str, str]:
+        """
+        Cleans up SOOT's output. First, removes the line number. Second, cleans up lambdas, by removing any indices
+        that could change as a result of optimizations.
+        Parameters
+        ----------
+        line
+
+        Returns
+        -------
+
+        """
+        edge = line.split("\t")[0]
+        caller = edge.split("==>")[0]
+        target = edge.split("==>")[1]
+        return caller, target

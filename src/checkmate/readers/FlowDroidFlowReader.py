@@ -14,15 +14,20 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
+import logging
 from typing import Iterable
 import xml.etree.ElementTree as ElementTree
 
 from src.checkmate.models.Flow import Flow
 from src.checkmate.readers.AbstractReader import AbstractReader
 
-
+logger = logging.getLogger(__name__)
 class FlowDroidFlowReader(AbstractReader):
 
     def import_file(self, file: str) -> Iterable[Flow]:
-        return [Flow(f) for f in ElementTree.parse(file).getroot().find('flows').findall('flow')]
+        try:
+            result = [Flow(f) for f in ElementTree.parse(file).getroot().find('flows').findall('flow')]
+            logger.info(f'Found {len(result)} flows in file {file}')
+            return result
+        except AttributeError:
+            return []

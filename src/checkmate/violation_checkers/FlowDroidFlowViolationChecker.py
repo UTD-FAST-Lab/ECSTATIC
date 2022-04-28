@@ -14,17 +14,15 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from src.checkmate.readers.AbstractReader import AbstractReader
+from src.checkmate.models.Flow import Flow
 from src.checkmate.violation_checkers.AbstractViolationChecker import AbstractViolationChecker
-from src.checkmate.violation_checkers.CallgraphViolationChecker import CallgraphViolationChecker
-from src.checkmate.violation_checkers.FlowDroidFlowViolationChecker import FlowDroidFlowViolationChecker
 
 
-def get_violation_checker_for_task(task: str, tool: str, jobs: int,
-                                   groundtruths: str, reader: AbstractReader) -> AbstractViolationChecker:
-    if task.lower() == "cg":
-        return CallgraphViolationChecker(jobs, reader, groundtruths)
-    elif task.lower() == "taint" and tool.lower() == "flowdroid":
-        return FlowDroidFlowViolationChecker(jobs, reader, groundtruths)
-    else:
-        raise ValueError(f"No violation checker exists for task {task} on tool {tool}.")
+class FlowDroidFlowViolationChecker(AbstractViolationChecker):
+
+    def is_true_positive(self, groundtruth_record: Flow) -> bool:
+        return groundtruth_record.get_classification() is True
+
+    def is_false_positive(self, groundtruth_record: Flow) -> bool:
+        return groundtruth_record.get_classification().lower() is False
+

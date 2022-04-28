@@ -16,7 +16,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+logging.basicConfig(level=logging.WARNING, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p')
 
 import argparse
@@ -87,6 +87,7 @@ class ToolTester:
             print(f'Campaign {campaign_index} finished (time {time.time() - start} seconds)')
             violations_folder = os.path.join(campaign_folder, 'violations')
             Path(violations_folder).mkdir(exist_ok=True, parents=True)
+            print(f'Now checking for violations.')
             violations: List[Violation] = self.checker.check_violations(results, violations_folder)
             self.generator.update_exclusions(violations)
             # self.print_output(FinishedCampaign(results), campaign_index)  # TODO: Replace with generate_report
@@ -256,6 +257,18 @@ def main():
     benchmark: Benchmark = build_benchmark(args.benchmark)
     logger.info(f'Benchmark is {benchmark}')
 
+    # Check for groundtruths
+    tool_dir = importlib.resources.path(f'src.resources.tools.{args.tool}', '')
+    files = os.listdir(tool_dir)
+    groundtruths = None
+    for f in files:
+        if args.benchmark.lower() in f.lower() and 'groundtruth' in f.lower():
+            groundtruths = os.path.join(tool_dir, f)
+            break
+
+    if groundtruths is not None:
+        logger.info(f'Using {groundtruths} as groundtruths.')
+
     results_location = f'/results/{args.tool}/{args.benchmark}'
     Path(results_location).mkdir(exist_ok=True, parents=True)
     runner = RunnerFactory.get_runner_for_tool(args.tool)
@@ -269,7 +282,8 @@ def main():
     generator = FuzzGeneratorFactory.get_fuzz_generator_for_name(args.tool, model_location, grammar,
                                                                  benchmark, args.adaptive)
     reader = ReaderFactory.get_reader_for_task_and_tool(args.task, args.tool)
-    checker = ViolationCheckerFactory.get_violation_checker_for_task(args.task, args.jobs, None, reader)
+    checker = ViolationCheckerFactory.get_violation_checker_for_task(args.task, args.tool,
+                                                                     args.jobs, groundtruths, reader)
     t = ToolTester(generator, runner, results_location,
                    num_processes=args.jobs, num_campaigns=args.campaigns,
                    checker=checker)

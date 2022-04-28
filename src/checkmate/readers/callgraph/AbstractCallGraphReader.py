@@ -33,11 +33,14 @@ class AbstractCallGraphReader(AbstractReader):
         callgraph: List[Tuple[CGCallSite, CGTarget]] = []
         with open(file) as f:
             lines = f.readlines()
-        for l in lines[1:]:  # skip header line
-            callgraph.append(self.process_line(l))
+        for l in lines:
+            try:
+                callgraph.append(self.process_line(l))
+            except IndexError:
+                logging.critical(f"Could not read line: {l}")
         return callgraph
 
-    def process_line(self, line: str) -> Tuple[CGCallSite, CGTarget]:
+    def process_line(self, line: str) -> Tuple[Any, Any]:
         """
         Creates call graph nodes from input line.
         Expects line to have the following format:

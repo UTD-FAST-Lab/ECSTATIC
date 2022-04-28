@@ -14,13 +14,13 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
+from typing import TypeVar, Iterable
 from abc import ABC, abstractmethod
 from typing import Any
 
-
+T = TypeVar('T')
 class AbstractReader(ABC):
 
     @abstractmethod
-    def import_file(self, file: str) -> Any:
+    def import_file(self, file: str) -> Iterable[T]:
         pass

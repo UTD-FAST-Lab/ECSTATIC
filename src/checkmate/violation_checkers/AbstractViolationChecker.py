@@ -24,6 +24,7 @@ from multiprocessing import Pool
 from typing import List, Any, Tuple, Set, Iterable, TypeVar
 
 from src.checkmate.models.Option import Option
+from src.checkmate.readers.AbstractReader import AbstractReader
 from src.checkmate.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
 from src.checkmate.util.PartialOrder import PartialOrder, PartialOrderType
 from src.checkmate.util.UtilClasses import FinishedFuzzingJob
@@ -35,9 +36,11 @@ T = TypeVar('T')  # Indicates the type of content in the results (e.g., call gra
 
 class AbstractViolationChecker(ABC):
 
-    def __init__(self, jobs: int, groundtruths: str | None = None):
+    def __init__(self, jobs: int, reader: AbstractReader, groundtruths: str | None = None):
         self.jobs: int = jobs
+        self.reader = reader
         self.groundtruths = groundtruths
+        logger.debug(f'Groundtruths are {self.groundtruths}')
 
     def check_violations(self, results: Iterable[FinishedFuzzingJob], output_folder: str) -> List[Violation]:
         start_time = time.time()
@@ -108,16 +111,29 @@ class AbstractViolationChecker(ABC):
             print(f'{k} ({summary_struct[k]})')
 
     @abstractmethod
-    def get_true_positives(self, input: Any) -> Set[T]:
+    def is_true_positive(self, input: T) -> bool:
         pass
 
     @abstractmethod
-    def get_false_positives(self, input: Any) -> Set[T]:
+    def is_false_positive(self, input: T) -> bool:
         pass
 
-    @abstractmethod
+    def get_true_positives(self, input: Iterable[T]) -> Set[T]:
+        tps = [t for t in self.read_from_input(self.groundtruths) if self.is_true_positive(t)]
+        logger.info(f'{len(tps)} true positives in groundtruths.')
+        result = {i for i in input if i in tps}
+        logger.info(f'Out of {len(input)} flows, {len(result)} were true positives.')
+        return {i for i in input if i in tps}
+
+    def get_false_positives(self, input: Iterable[T]) -> Set[T]:
+        fps = [t for t in self.read_from_input(self.groundtruths) if self.is_false_positive(t)]
+        logger.info(f'{len(fps)} false positives in groundtruths.')
+        result = {i for i in input if i in fps}
+        logger.info(f'Out of {len(input)} flows, {len(result)} were true positives.')
+        return {i for i in input if i in fps}
+
     def read_from_input(self, file: str) -> Iterable[T]:
-        pass
+        return self.reader.import_file(file)
 
     def check_for_violation(self, job1: FinishedFuzzingJob,
                             job2: FinishedFuzzingJob,

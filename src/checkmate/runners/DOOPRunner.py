@@ -29,6 +29,9 @@ logger = logging.getLogger("DOOPRunner")
 
 
 class DOOPRunner(CommandLineToolRunner):
+    def get_timeout_option(self) -> List[str]:
+        return f"-t {self.timeout}".split(" ")
+
     def get_whole_program(self) -> List[str]:
         return ["--ignore-main-method"]
 
@@ -45,7 +48,7 @@ class DOOPRunner(CommandLineToolRunner):
             raise NotImplementedError(f'DOOP does not support task {task}.')
 
     def get_base_command(self) -> List[str]:
-        return ["doop", "--ignore-main-method", "-t", "120"]
+        return ["doop", "--dont-cache-facts"]
 
     def run_from_cmd(self, cmd: List[str], job: FuzzingJob, output_file: str) -> str:
         cmd.extend(self.get_input_option(job.target))

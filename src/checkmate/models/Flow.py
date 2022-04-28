@@ -47,7 +47,7 @@ class Flow:
     def get_classification(self) -> Optional[bool]:
         for e in self.element:
             if e.tag == 'classification':
-                self.logger.info(f'Classification is {e.text}')
+                self.logger.debug(f'Classification is {e.text}')
                 return e.text
 
     def add_classification(self, classification: str) -> None:

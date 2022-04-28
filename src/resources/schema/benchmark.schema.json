@@ -4,8 +4,11 @@
   "title": "Benchmark",
   "description": "A benchmark specification.",
   "type": "object",
-  "required": ["benchmark"],
   "properties": {
+    "whole-program": {
+      "description": "Whether to use whole-program mode.",
+      "type": "string"
+    },
     "benchmark": {
       "description": "The name of the level.",
       "type": "array",

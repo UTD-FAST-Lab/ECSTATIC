@@ -71,6 +71,10 @@ class AbstractCommandLineToolRunner(ABC):
                 result += f'--{k.name} '
         return result.strip()
 
+    def get_time_file(self, output_folder: str, job: FuzzingJob):
+        return os.path.join(output_folder,
+                     '.' + os.path.basename(self.get_output(output_folder, job)) + '.time')
+
     def run_job(self, job: FuzzingJob, output_folder: str, num_retries: int = 1) -> FinishedFuzzingJob | None:
         """
         Runs the job, producing outputs in output_folder. Can try to rerun the job if the execution fails
@@ -99,15 +103,21 @@ class AbstractCommandLineToolRunner(ABC):
 
         exception = None
         num_runs = 0
+
+        if os.path.exists(self.get_output(output_folder, job)):
+            logging.info(f'{self.get_output(output_folder, job)} already exists. Returning that.')
+            with open(self.get_time_file(output_folder, job), 'r') as f:
+                execution_time = float(f.read().strip())
+
+            return FinishedFuzzingJob(job, execution_time, self.get_output(output_folder, job))
+
         while num_runs < num_retries and not os.path.exists(
                 self.get_output(output_folder, job) + '.error'):
             # noinspection PyBroadException
             try:
                 start = time.time()
                 result = self.try_run_job(job, output_folder)
-                with open(os.path.join(output_folder,
-                                       '.' + os.path.basename(self.get_output(output_folder, job)) + ".time"),
-                          'w') as f:
+                with open(self.get_time_file(output_folder, job), 'w') as f:
                     f.write(f'{str(time.time() - start)}\n')
                 return result
             except Exception as ex:

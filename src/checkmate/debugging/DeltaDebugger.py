@@ -110,7 +110,8 @@ def main():
     with tempfile.TemporaryDirectory() as tmpdir:
         runner = RunnerFactory.get_runner_for_tool(args.tool)
         reader = ReaderFactory.get_reader_for_task_and_tool(args.task, args.tool)
-        checker = ViolationCheckerFactory.get_violation_checker_for_task(args.task, 2, args.groundtruths, reader)
+        checker = ViolationCheckerFactory.get_violation_checker_for_task(args.task, args.tool,
+                                                                         2, args.groundtruths, reader)
         partial_function = partial(runner.try_run_job, output_folder=tmpdir)
         with Pool(2) as p:
             finishedJobs: Iterable[FinishedFuzzingJob] = p.map(partial_function, [violation.job1, violation.job2])

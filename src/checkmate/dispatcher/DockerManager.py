@@ -28,7 +28,8 @@ from docker.models.containers import Container
 client = docker.from_env()
 logger = logging.getLogger(__name__)
 
-def build_image(tool: str, nocache=False):
+
+def build_image(tool: str):
     env = os.environ
     env['DOCKER_BUILDKIT'] = '1'
     if tool == 'base':
@@ -41,18 +42,18 @@ def build_image(tool: str, nocache=False):
     else:
         logger.info(f"Building image for {tool}")
         cmd = ['docker', 'build', os.path.abspath(importlib.resources.path(f"src.resources.tools", tool)),
-                        '-t', get_image_name(tool)]
+               '-t', get_image_name(tool)]
         logger.info(cmd)
         subprocess.run(cmd)
 
 
-def start_runner(tool: str, benchmark: str, task: str, jobs: int, campaigns: int, timeout: int):
+def start_runner(tool: str, benchmark: str, task: str, args):
     # PYTHONENV=/checkmate
     # run build benchmark script
     # TODO: Can we specify some other way that benchmarks should be run with whole-program mode?
-    command = f'tester {tool} {benchmark} -t {task} -j {jobs} -c {campaigns}'
-    if timeout is not None:
-        command += f' --timeout {timeout}'
+    command = f'tester {tool} {benchmark} -t {task} -j {args.jobs} -c {args.campaigns}'
+    if args.timeout is not None:
+        command += f' --timeout {args.timeout}'
     print(f'Starting container with command {command}')
     results_folder = os.path.abspath(importlib.resources.path("results", ""))
     Path(results_folder).mkdir(parents=True, exist_ok=True)
@@ -61,7 +62,7 @@ def start_runner(tool: str, benchmark: str, task: str, jobs: int, campaigns: int
         command="/bin/bash",
         detach=True,
         tty=True,
-        volumes={os.path.abspath(results_folder) : {"bind": "/results", "mode": "rw"}},
+        volumes={os.path.abspath(results_folder): {"bind": "/results", "mode": "rw"}},
         auto_remove=True)
     _, log_stream = cntr.exec_run(cmd=command, stream=True)
     for l in log_stream:

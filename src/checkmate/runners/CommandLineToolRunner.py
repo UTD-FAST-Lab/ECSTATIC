@@ -71,7 +71,7 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         """Add an option to handle timeout, using self.timeout"""
         pass
 
-    def try_run_job(self, job: FuzzingJob, output_folder: str) -> FinishedFuzzingJob:
+    def try_run_job(self, job: FuzzingJob, output_folder: str) -> str:
         """
         Tries to run the job. Judges if a job exists by checking if the expected output file exists. Throws an exception
         if the expected output does not exist.
@@ -89,29 +89,10 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         cmd = self.get_base_command()
         cmd.extend(config_as_str.split(" "))
         output_file = self.get_output(output_folder, job)
+        output = self.run_from_cmd(cmd, job, output_file)
         if not os.path.exists(output_file):
-            start_time = time.time()
-            output = self.run_from_cmd(cmd, job, output_file)
-            total_time = time.time() - start_time
-            if not os.path.exists(output_file):
-                raise RuntimeError(output)
-            with open(os.path.join(
-                    os.path.dirname(output_file),
-                    '.' + os.path.basename(output_file) + ".time"), 'w') as f:
-                f.write(str(total_time))
-        else:
-            with open(os.path.join(
-                    os.path.dirname(output_file),
-                    '.' + os.path.basename(output_file) + ".time"), 'r') as f:
-                total_time = float(f.read().strip())
-
-            logging.info(f'File {output_file} already exists. Not overwriting.')
-        logging.info(f"Finished running job. It took {total_time}s")
-        return FinishedFuzzingJob(
-            job=job,
-            execution_time=total_time,
-            results_location=output_file
-        )
+            raise RuntimeError(output)
+        return output_file
 
     def run_from_cmd(self, cmd: List[str], job: FuzzingJob, output_file: str) -> str:
         """
