@@ -59,4 +59,4 @@ class SOOTRunner(CommandLineToolRunner):
 
     def get_base_command(self) -> List[str]:
         return "java -jar /SootInterface/target/SootInterface-1.0-SNAPSHOT-jar-with-dependencies.jar --keep-line-number -pp " \
-               "-w -p cg.spark on-fly-cg:false,enabled:true -p cg all-reachable:true".split(" ")
+               "-w -p cg.spark on-fly-cg:false,enabled:true".split(" ")
