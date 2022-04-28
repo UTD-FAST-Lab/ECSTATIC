@@ -27,9 +27,8 @@ class DOOPRunner(CommandLineToolRunner):
     def get_base_command(self) -> List[str]:
         return ["doop", "--ignore-main-method", "-t", "120"]
 
-    def run_from_cmd(self, cmd: List[str], job: FuzzingJob, output_file: str):
+    def run_from_cmd(self, cmd: List[str], job: FuzzingJob, output_file: str) -> str:
         cmd.extend(self.get_input_option(job.target))
-        start_time: float = time.time()
         logger.info(f"Cmd is {cmd}")
         ps = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
         for line in ps.stdout.split("\n"):
@@ -44,5 +43,4 @@ class DOOPRunner(CommandLineToolRunner):
         shutil.move(intermediate_file, output_file)
         logger.info(f'Now removing directory {output_dir}')
         shutil.rmtree(os.path.realpath(output_dir))
-        total_time: float = time.time() - start_time
-        return total_time, ps.stdout
+        return ps.stdout

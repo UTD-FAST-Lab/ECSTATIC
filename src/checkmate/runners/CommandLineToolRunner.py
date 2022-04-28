@@ -8,7 +8,7 @@ from typing import List, Tuple
 from src.checkmate.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
 from src.checkmate.util.UtilClasses import FinishedFuzzingJob, BenchmarkRecord, FuzzingJob
 
-logger = logging.getLogger("CommandLineToolRunner")
+logger = logging.getLogger(__name__)
 
 """
 This class supports the basics of running a command line tool,
@@ -50,14 +50,6 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         """Add an option to handle timeout, using self.timeout"""
         pass
 
-    def transform(self, output: str):
-        """
-        If necessary, apply any transformations to the output file.
-        @param output: The output file.
-        @return:
-        """
-        pass
-
     def try_run_job(self, job: FuzzingJob, output_folder: str) -> FinishedFuzzingJob:
         """
         Tries to run the job. Judges if a job exists by checking if the expected output file exists. Throws an exception
@@ -77,10 +69,15 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         cmd.extend(config_as_str.split(" "))
         output_file = self.get_output(output_folder, job)
         if not os.path.exists(output_file):
+            start_time = time.time()
             output = self.run_from_cmd(cmd, job, output_file)
+            total_time = time.time() - start_time
             if not os.path.exists(output_file):
                 raise RuntimeError(output)
-            self.transform(output_file)
+            with open(os.path.join(
+                    os.path.dirname(output_file),
+                    '.' + os.path.basename(output_file) + ".time"), 'w') as f:
+                f.write(total_time)
         else:
             with open(os.path.join(
                     os.path.dirname(output_file),
