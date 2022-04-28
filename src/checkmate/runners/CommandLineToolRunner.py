@@ -77,7 +77,7 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
             with open(os.path.join(
                     os.path.dirname(output_file),
                     '.' + os.path.basename(output_file) + ".time"), 'w') as f:
-                f.write(total_time)
+                f.write(str(total_time))
         else:
             with open(os.path.join(
                     os.path.dirname(output_file),
