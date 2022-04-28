@@ -75,6 +75,9 @@ class AbstractCommandLineToolRunner(ABC):
         return os.path.join(output_folder,
                      '.' + os.path.basename(self.get_output(output_folder, job)) + '.time')
 
+    def get_error_file(self, output_folder: str, job):
+        return os.path.abspath(self.get_output(output_folder, job) + '.error')
+
     def run_job(self, job: FuzzingJob, output_folder: str, num_retries: int = 1) -> FinishedFuzzingJob | None:
         """
         Runs the job, producing outputs in output_folder. Can try to rerun the job if the execution fails
@@ -126,10 +129,15 @@ class AbstractCommandLineToolRunner(ABC):
                 logger.exception(f"Failed running job {num_runs} time(s).")
 
         # If we get here we failed too many times and we just abort.
-        logger.critical("Failed running job maximum number of times. Sorry!")
-        # Create a file so we know not to retry this job in the future.
-        with open(self.get_output(output_folder, job) + '.error', 'w') as f:
-            f.write(str(exception))
+        if os.path.exists(self.get_error_file(output_folder, job)):
+            logger.critical(f"Error file {self.get_error_file(output_folder, job)} already exists, aborting.")
+        else:
+            logger.critical("Failed running job maximum number of times. Sorry!")
+            # Create a file so we know not to retry this job in the future.
+            if exception is None:
+                raise RuntimeError(f"Job {job} failed, but didn't produce an exception.")
+            with open(self.get_output(output_folder, job) + '.error', 'w') as f:
+                f.write(str(exception))
         return None
 
     def get_output(self, output_folder: str, job: FuzzingJob) -> str:

@@ -136,8 +136,8 @@ def create_xml_config_file(shell_file_path: str, apk: BenchmarkRecord, output_fo
 class FlowDroidRunner(AbstractCommandLineToolRunner):
 
     def get_output(self, output_folder: str, job: FuzzingJob) -> str:
-        return os.path.join(output_folder,
-                            f'{self.dict_hash(job.configuration)}_{category_and_apk(job.target.name)}.raw')
+        return os.path.abspath(os.path.join(output_folder,
+                            f'{self.dict_hash(job.configuration)}_{category_and_apk(job.target.name)}.raw'))
 
     @staticmethod
     def dict_to_config_str(config_as_dict: Dict[Option, Level]) -> str:
