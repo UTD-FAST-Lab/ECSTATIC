@@ -140,10 +140,9 @@ class FlowDroidRunner(AbstractCommandLineToolRunner):
             result_location: str
             shell_location: str = create_shell_file(job, output_folder)
             xml_location: str = create_xml_config_file(shell_location, job.target, output_folder)
-            print(f'Running job with configuration {xml_location} on apk {job.target}')
+            print(f'Running job with configuration {xml_location} on apk {job.target.name}')
             result_location = self.run_aql(job, self.get_output(output_folder, job), xml_location)
             print(f'Job on configuration {xml_location} on apk {job.target} done.')
-
             end_time: float = time.time()
 
             return FinishedFuzzingJob(
@@ -172,7 +171,7 @@ class FlowDroidRunner(AbstractCommandLineToolRunner):
             if self.timeout is not None:
                 cmd.append(self.timeout)
             curdir = os.path.abspath(os.curdir)
-            os.chdir(os.path.dirname("/AQL-System/target/build"))
+            os.chdir("/AQL-System/target/build")
             logger.info(f'Cmd is {" ".join(cmd)}')
             cp = subprocess.run(cmd, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, text=True)
             if 'FlowDroid successfully executed' not in cp.stdout:

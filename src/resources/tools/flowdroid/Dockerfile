@@ -11,7 +11,8 @@ RUN git clone https://github.com/secure-software-engineering/FlowDroid.git && \
     cd FlowDroid && git checkout 72734bd629dfae2aacaf6e6973abfe73d035c979 && mvn clean compile package -DskipTests
 
 WORKDIR /
-RUN git clone https://github.com/amordahl/AQL-System.git && cd AQL-System && mvn clean compile package -DskipTests
+RUN git clone https://github.com/amordahl/AQL-System.git && cd AQL-System && mvn clean compile package -DskipTests && \
+    mkdir -p target/build/data/storage && mkdir -p target/build/answers
 WORKDIR /
 
 RUN wget https://dl.google.com/android/repository/commandlinetools-linux-8092744_latest.zip && \
