@@ -76,7 +76,7 @@ def create_shell_file(job: FuzzingJob, output_folder: str) -> str:
 
 
 def category_and_apk(path: str) -> str:
-    return f'{os.path.basename(os.path.dirname(path))}/{os.path.basename(path)}'
+    return f'{os.path.basename(os.path.dirname(path))}_{os.path.basename(path)}'
 
 
 def create_xml_config_file(shell_file_path: str, apk: BenchmarkRecord, output_folder: str) -> str:
@@ -85,7 +85,7 @@ def create_xml_config_file(shell_file_path: str, apk: BenchmarkRecord, output_fo
     Path(xml_output_folder).mkdir(exist_ok=True)
     prefix = os.path.basename(shell_file_path).replace('.sh', '')
     xml_output_file = os.path.join(xml_output_folder,
-                                   f"{prefix + '_' + category_and_apk(apk.name).replace('/', '_')}.xml")
+                                   f"{prefix + '_' + category_and_apk(apk.name)}.xml")
     flowdroid_output = os.path.abspath(xml_output_file) + ".flowdroid.result"
     # if verify:
     #     xml_output_file += '.verify'
