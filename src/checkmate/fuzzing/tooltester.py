@@ -16,9 +16,6 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
-logging.basicConfig(level=logging.WARNING, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    datefmt='%m/%d/%Y %I:%M:%S %p')
-
 import argparse
 import importlib
 from functools import partial
@@ -249,7 +246,19 @@ def main():
                                          "exhibited violations from future fuzzing campaigns.",
                    action="store_true")
     p.add_argument('--timeout', help='Timeout in minutes', type=int)
+    p.add_argument('--verbose', '-v', action='count', default=0)
     args = p.parse_args()
+
+    if args.verbose > 1:
+        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                            datefmt='%m/%d/%Y %I:%M:%S %p')
+    elif args.verbose > 0:
+        logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                            datefmt='%m/%d/%Y %I:%M:%S %p')
+    else:
+        logging.basicConfig(level=logging.WARNING, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                            datefmt='%m/%d/%Y %I:%M:%S %p')
+
 
     model_location = importlib.resources.path("src.resources.configuration_spaces", f"{args.tool}_config.json")
     grammar = importlib.resources.path("src.resources.grammars", f"{args.tool}_grammar.json")

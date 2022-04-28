@@ -21,8 +21,8 @@ from src.checkmate.violation_checkers.AbstractViolationChecker import AbstractVi
 class FlowDroidFlowViolationChecker(AbstractViolationChecker):
 
     def is_true_positive(self, groundtruth_record: Flow) -> bool:
-        return groundtruth_record.get_classification() is True
+        return groundtruth_record.get_classification().lower() == 'true'
 
     def is_false_positive(self, groundtruth_record: Flow) -> bool:
-        return groundtruth_record.get_classification().lower() is False
+        return groundtruth_record.get_classification().lower() == 'false'
 

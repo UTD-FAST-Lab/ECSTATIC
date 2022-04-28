@@ -44,10 +44,9 @@ class Flow:
         f = f.replace('\\', '/')
         return f
 
-    def get_classification(self) -> Optional[bool]:
+    def get_classification(self) -> Optional[str]:
         for e in self.element:
             if e.tag == 'classification':
-                self.logger.debug(f'Classification is {e.text}')
                 return e.text
 
     def add_classification(self, classification: str) -> None:
@@ -77,7 +76,6 @@ class Flow:
     def get_source_and_sink(self) -> Dict[str, str]:
         result = dict()
         references = self.element.findall("reference")
-        logging.debug(f"References is {references}")
         source = [r for r in references if r.get("type") == "from"][0]
         sink = [r for r in references if r.get("type") == "to"][0]
 
@@ -109,6 +107,11 @@ class Flow:
         if not isinstance(other, Flow):
             return False
         else:
+            if not self.get_file() == other.get_file():
+                logging.debug(f'My file ({self.get_file()}) does not equal the other file ({other.get_file()})')
+            if not self.get_source_and_sink() == other.get_source_and_sink():
+                logging.debug(f'My source and sink ({self.get_source_and_sink()} does not equal the other '
+                              f'source and sink ({other.get_source_and_sink()})')
             return self.get_file() == other.get_file() and self.get_source_and_sink() == other.get_source_and_sink()
 
     def __hash__(self):
