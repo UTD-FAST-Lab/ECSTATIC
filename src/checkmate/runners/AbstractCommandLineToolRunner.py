@@ -35,7 +35,7 @@ class AbstractCommandLineToolRunner(ABC):
     def timeout(self, value):
         if isinstance(value, int) and value < 0:
             raise ValueError(f'Timeout must be positive. Supplied number was {value}')
-        elif value != None:
+        elif not isinstance(value, int) and value != None:
             raise ValueError(f'Timeout must be an integer or None. Supplied object was {value}')
         self._timeout = value
 
