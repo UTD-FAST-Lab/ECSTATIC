@@ -32,6 +32,7 @@ def build_image(tool: str, nocache=False):
 def start_runner(tool: str, benchmark: str, task: str, jobs: int, campaigns: int, timeout: int):
     # PYTHONENV=/checkmate
     # run build benchmark script
+    # TODO: Can we specify some other way that benchmarks should be run with whole-program mode?
     command = f'tester {tool} {benchmark} -t {task} -j {jobs} -c {campaigns}'
     if timeout is not None:
         command += f' --timeout {timeout}'

@@ -26,6 +26,7 @@ class AbstractCommandLineToolRunner(ABC):
 
     def __init__(self):
         self._timeout = None
+        self.whole_program: bool = False
 
     @property
     def timeout(self):

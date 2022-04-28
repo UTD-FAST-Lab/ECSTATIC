@@ -31,6 +31,10 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         pass
 
     @abstractmethod
+    def get_whole_program(self) -> List[str]:
+        pass
+
+    @abstractmethod
     def get_input_option(self, benchmark_record: BenchmarkRecord) -> List[str]:
         """Returns option that should prepend the input program."""
         pass
@@ -107,7 +111,10 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         """
         cmd.extend(self.get_input_option(job.target))
         cmd.extend(self.get_output_option(output_file))
-        cmd.extend(self.get_timeout_option())
+        if self.timeout is not None:
+            cmd.extend(self.get_timeout_option())
+        if self.whole_program:
+            cmd.extend(self.get_whole_program())
         cmd = [c for c in cmd if c != '']
         logging.info(f"Cmd is {' '.join(cmd)}")
         ps = subprocess.run(cmd, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, text=True)

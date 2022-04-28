@@ -6,6 +6,13 @@ from src.checkmate.util.UtilClasses import BenchmarkRecord
 
 class WALARunner(CommandLineToolRunner):
 
+    def get_timeout_option(self) -> List[str]:
+        return f"--timeout {self.timeout*60*1000}".split("")
+
+    def get_whole_program(self) -> List[str]:
+        # WALA does not need a whole-program mode.
+        return []
+
     def get_input_option(self, benchmark_record: BenchmarkRecord) -> List[str]:
         return f"--jars {benchmark_record.name}" \
                f"{(':'+':'.join(benchmark_record.depends_on)) if len(benchmark_record.depends_on) > 0 else ''}".split(" ")

@@ -8,6 +8,9 @@ from src.checkmate.util.UtilClasses import BenchmarkRecord
 
 
 class SOOTRunner(CommandLineToolRunner):
+    def get_whole_program(self) -> List[str]:
+        return "-p cg all-reachable:true".split(" ")
+
     def get_timeout_option(self) -> List[str]:
         # SOOTInterface expects its timeout in milliseconds.
         if self.timeout is None:
@@ -58,5 +61,5 @@ class SOOTRunner(CommandLineToolRunner):
             return rest_of_config
 
     def get_base_command(self) -> List[str]:
-        return "java -jar /SootInterface/target/SootInterface-1.0-SNAPSHOT-jar-with-dependencies.jar --keep-line-number -pp " \
+        return "java -jar /SootInterface/target/SootInterface-1.0-SNAPSHOT-jar-with-dependencies.jar -pp " \
                "-w -p cg.spark on-fly-cg:false,enabled:true".split(" ")

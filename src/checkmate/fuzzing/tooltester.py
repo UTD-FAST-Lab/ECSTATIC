@@ -243,6 +243,8 @@ def main():
     Path(results_location).mkdir(exist_ok=True, parents=True)
     runner = RunnerFactory.get_runner_for_tool(args.tool)
 
+    if "dacapo" in args.benchmark.lower():
+        runner.whole_program = True
     # Set timeout.
     if args.timeout is not None:
         runner.timeout = args.timeout

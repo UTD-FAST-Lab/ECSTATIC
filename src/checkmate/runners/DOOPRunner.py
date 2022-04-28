@@ -12,6 +12,9 @@ logger = logging.getLogger("DOOPRunner")
 
 
 class DOOPRunner(CommandLineToolRunner):
+    def get_whole_program(self) -> List[str]:
+        return ["--ignore-main-method"]
+
     def get_input_option(self, benchmark_record: BenchmarkRecord) -> List[str]:
         return f"-i {benchmark_record.name}".split(" ")
 
