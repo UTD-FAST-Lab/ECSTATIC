@@ -24,7 +24,7 @@ from src.checkmate.util.UtilClasses import BenchmarkRecord
 class WALARunner(CommandLineToolRunner):
 
     def get_timeout_option(self) -> List[str]:
-        return f"--timeout {self.timeout*60*1000}".split("")
+        return f"--timeout {self.timeout*60*1000}".split(" ")
 
     def get_whole_program(self) -> List[str]:
         # WALA does not need a whole-program mode.
