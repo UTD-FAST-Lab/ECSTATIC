@@ -3,7 +3,7 @@ FROM checkmate/base-image
 USER root
 
 ## package update
-RUN apt-get update
+RUN apt-get update && apt-get install -y openjdk-11-jdk
 
 ## timezone
 RUN apt-get install tzdata
