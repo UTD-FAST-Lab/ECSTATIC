@@ -172,7 +172,7 @@ class FlowDroidRunner(AbstractCommandLineToolRunner):
             if self.timeout is not None:
                 cmd.append(self.timeout)
             curdir = os.path.abspath(os.curdir)
-            os.chdir(os.path.dirname("/AQL-System/target"))
+            os.chdir(os.path.dirname("/AQL-System/target/build"))
             logger.info(f'Cmd is {" ".join(cmd)}')
             cp = subprocess.run(cmd, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, text=True)
             if 'FlowDroid successfully executed' not in cp.stdout:
