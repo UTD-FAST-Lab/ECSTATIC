@@ -9,6 +9,8 @@
         "i-1"
       ],
       "default": "5",
+      "minValue": "1",
+      "maxValue": "999",
       "orders": [
         {
           "left": "i",
