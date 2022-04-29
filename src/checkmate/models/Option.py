@@ -128,6 +128,9 @@ class Option:
             o2 = Level(self.name, o2)
         self.soundness.add_edge(o1, o2)
 
+        # Add the implicit precision order that B should be at least as precise as A.
+        self.precision.add_edge(o2, o1)
+
     def resolve_one_node(self, graph: DiGraph, level: Level):
         if graph.has_node(level):
             return level
