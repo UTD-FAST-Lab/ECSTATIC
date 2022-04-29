@@ -74,6 +74,12 @@ def parse_args():
         help='The timeout in minutes.',
         type=int
     )
+    parser.add_argument(
+        '--verbose',
+        '-v',
+        help="Level of verbosity (more v's gives more output)",
+        action='count'
+    )
     return parser.parse_args()
 
 def main():
