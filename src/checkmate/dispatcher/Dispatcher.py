@@ -78,7 +78,8 @@ def parse_args():
         '--verbose',
         '-v',
         help="Level of verbosity (more v's gives more output)",
-        action='count'
+        action='count',
+        default=0
     )
     return parser.parse_args()
 
