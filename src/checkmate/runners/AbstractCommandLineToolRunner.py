@@ -139,6 +139,8 @@ class AbstractCommandLineToolRunner(ABC):
                 raise RuntimeError(f"Job {job} failed, but didn't produce an exception.")
             with open(self.get_output(output_folder, job) + '.error', 'w') as f:
                 f.write(str(exception))
+            with open(self.get_time_file(output_folder, job).replace('.time', '.error.time'), 'w') as f:
+                f.write(f'{str(time.time() - start)}')
         return None
 
     def get_output(self, output_folder: str, job: FuzzingJob) -> str:

@@ -14,7 +14,7 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
+import logging
 import os.path
 import subprocess
 import tempfile
@@ -69,9 +69,9 @@ class DeltaDebugger:
             f.write("CURDIR=$(pwd)\n")
             f.write(f"cd /CATS-Microbenchmark/benchmarks/Reflection/TrivialReflection/TR1/\n")
             f.write("mvn compile package\n")
-            f.write("e=$?")
-            f.write("cd $CURDIR")
-            f.write("exit $e")
+            f.write("e=$?\n")
+            f.write("cd $CURDIR\n")
+            f.write("exit $e\n")
 
         os.chmod(build_script.name, 700)
         os.chmod(script_location, 700)
@@ -118,9 +118,11 @@ class DeltaDebugger:
 
 
 import argparse
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def main():
-    exit(0)
     parser = argparse.ArgumentParser()
     parser.add_argument("--violation", help="The location of the pickled violation.", required=True)
     parser.add_argument("--target", help="The location of the target program.", required=True)
@@ -129,9 +131,11 @@ def main():
     parser.add_argument("--groundtruths", help="Groundtruths (may be None if we are not using ground truths.")
     args = parser.parse_args()
 
+
     with open(args.violation, 'rb') as f:
         violation: Violation = pickle.load(f)
 
+    logger.info(f'Read violation from {args.violation}')
     violation.job1.job.target.name = os.path.abspath(args.target)
     violation.job2.job.target.name = os.path.abspath(args.target)
 
