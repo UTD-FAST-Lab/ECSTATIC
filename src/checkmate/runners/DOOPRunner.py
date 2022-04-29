@@ -52,6 +52,10 @@ class DOOPRunner(CommandLineToolRunner):
 
     def run_from_cmd(self, cmd: List[str], job: FuzzingJob, output_file: str) -> str:
         cmd.extend(self.get_input_option(job.target))
+        if self.timeout is not None:
+            cmd.extend(self.get_timeout_option())
+        if self.whole_program:
+            cmd.extend(self.get_whole_program())
         logger.info(f"Cmd is {cmd}")
         ps = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
         for line in ps.stdout.split("\n"):

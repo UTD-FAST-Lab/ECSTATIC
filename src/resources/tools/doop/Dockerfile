@@ -62,6 +62,7 @@ WORKDIR /
 RUN git clone https://bitbucket.org/yanniss/doop.git --depth 1
 WORKDIR /doop
 RUN ./gradlew installDist
+WORKDIR /
 ENV DOOP_CACHE=/data/cache
 ENV DOOP_OUT=/data/out
 ENV DOOP_HOME=/doop/build/install/doop
