@@ -55,7 +55,7 @@ def start_runner(tool: str, benchmark: str, task: str, args):
     if args.timeout is not None:
         command += f' --timeout {args.timeout}'
     if args.verbose > 0:
-        command += f'-{"".join(["v" for i in range(args.verbose)])}'
+        command += f' -{"".join(["v" for i in range(args.verbose)])}'
     print(f'Starting container with command {command}')
     results_folder = os.path.abspath(importlib.resources.path("results", ""))
     Path(results_folder).mkdir(parents=True, exist_ok=True)
