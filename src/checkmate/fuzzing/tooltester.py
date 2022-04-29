@@ -252,7 +252,7 @@ def main():
                    action="store_true")
     p.add_argument('--timeout', help='Timeout in minutes', type=int)
     p.add_argument('--verbose', '-v', action='count', default=0)
-    p.add_argument('--no-delta-debug', help='Do not delta debug.')
+    p.add_argument('--no-delta-debug', help='Do not delta debug.', action='store_true')
     args = p.parse_args()
 
     if args.verbose > 1:

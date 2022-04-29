@@ -83,7 +83,8 @@ def parse_args():
     ),
     parser.add_argument(
         '--no-delta-debug',
-        help='Disable delta debugging.'
+        help='Disable delta debugging.',
+        action='store_true'
     )
     return parser.parse_args()
 
