@@ -65,10 +65,13 @@ class DeltaDebugger:
         build_script = tempfile.NamedTemporaryFile(delete=False, dir=self.artifacts_folder)
         with open(build_script.name, 'w') as f:
             f.write("#!/bin/bash\n")
+            f.write("set -x\n")
             f.write("CURDIR=$(pwd)\n")
-            f.write(f"cd /CATS-Microbenchmark/benchmarks/Reflection/TrivialReflection/TR1/src/\n")
+            f.write(f"cd /CATS-Microbenchmark/benchmarks/Reflection/TrivialReflection/TR1/\n")
             f.write("mvn compile package\n")
+            f.write("e=$?")
             f.write("cd $CURDIR")
+            f.write("exit $e")
 
         os.chmod(build_script.name, 700)
         os.chmod(script_location, 700)
@@ -80,6 +83,7 @@ class DeltaDebugger:
         cmd.append("/CATS-Microbenchmark/benchmarks/Reflection/TrivialReflection/TR1/target/TR1.jar")
         cmd.append(os.path.abspath(build_script.name))
         cmd.append(os.path.abspath(script_location))
+        cmd.extend(['-hdd'])
 
         print(f"Running delta debugger with cmd {' '.join(cmd)}")
         ps = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
@@ -87,6 +91,7 @@ class DeltaDebugger:
         print(ps.stdout)
 
         return None
+
     def create_script(self, violation_location: str) -> str:
         """
         Given a violation, creates a script that will execute it and return True if the violation is
@@ -102,7 +107,8 @@ class DeltaDebugger:
         """
         with tempfile.NamedTemporaryFile(mode='w', dir=self.artifacts_folder, delete=False) as f:
             f.write("#!/bin/bash\n")
-            cmd = f"deltadebugger --violation {violation_location} --target $1 --tool {self.tool} " \
+            f.write("set -x\n")
+            cmd = f"deltadebugger --violation {violation_location} --target /CATS-Microbenchmark/benchmarks/Reflection/TrivialReflection/TR1/target/TR1.jar --tool {self.tool} " \
                   f"--task {self.task}"
             if self.groundtruths is not None:
                 cmd = f"{cmd} --groundtruths {self.groundtruths}"
@@ -114,6 +120,7 @@ class DeltaDebugger:
 import argparse
 
 def main():
+    exit(0)
     parser = argparse.ArgumentParser()
     parser.add_argument("--violation", help="The location of the pickled violation.", required=True)
     parser.add_argument("--target", help="The location of the target program.", required=True)
@@ -122,7 +129,7 @@ def main():
     parser.add_argument("--groundtruths", help="Groundtruths (may be None if we are not using ground truths.")
     args = parser.parse_args()
 
-    with open(args.violation) as f:
+    with open(args.violation, 'rb') as f:
         violation: Violation = pickle.load(f)
 
     violation.job1.job.target.name = os.path.abspath(args.target)
