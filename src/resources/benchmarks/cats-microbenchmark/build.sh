@@ -12,6 +12,7 @@ mvn clean compile package
 # Move outputs
 mkdir -p /benchmarks
 rm -r /benchmarks/cats-microbenchmark
+mkdir /benchmarks/cats-microbenchmark
 for file in $(find . type f -name '*.jar')
 do
   mv file -t /benchmarks/cats-microbenchmark
