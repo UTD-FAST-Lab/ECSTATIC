@@ -13,5 +13,5 @@ mvn clean compile package
 mkdir -p /benchmarks
 rm -r /benchmarks/cats-microbenchmark
 mkdir /benchmarks/cats-microbenchmark
-find . type f -name '*.jar' -execdir mv '{}' -t /benchmark/cats-microbenchmark \;
+find . type f -name '*.jar' -execdir mv '{}' -t /benchmarks/cats-microbenchmark \;
 cd "$CUR"
