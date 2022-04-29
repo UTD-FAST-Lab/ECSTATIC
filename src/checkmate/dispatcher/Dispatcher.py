@@ -80,6 +80,10 @@ def parse_args():
         help="Level of verbosity (more v's gives more output)",
         action='count',
         default=0
+    ),
+    parser.add_argument(
+        '--no-delta-debug',
+        help='Disable delta debugging.'
     )
     return parser.parse_args()
 

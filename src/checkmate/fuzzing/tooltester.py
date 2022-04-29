@@ -252,6 +252,7 @@ def main():
                    action="store_true")
     p.add_argument('--timeout', help='Timeout in minutes', type=int)
     p.add_argument('--verbose', '-v', action='count', default=0)
+    p.add_argument('--no-delta-debug', help='Do not delta debug.')
     args = p.parse_args()
 
     if args.verbose > 1:
@@ -299,8 +300,11 @@ def main():
     checker = ViolationCheckerFactory.get_violation_checker_for_task(args.task, args.tool,
                                                                      args.jobs, groundtruths, reader)
 
-    Path("/artifacts").mkdir(exist_ok=True)
-    debugger = DeltaDebugger("/artifacts", args.tool, args.task, groundtruths)
+    if not args.no_delta_debug:
+        Path("/artifacts").mkdir(exist_ok=True)
+        debugger = DeltaDebugger("/artifacts", args.tool, args.task, groundtruths)
+    else:
+        debugger = None
 
     t = ToolTester(generator, runner, debugger, results_location,
                    num_processes=args.jobs, num_campaigns=args.campaigns,

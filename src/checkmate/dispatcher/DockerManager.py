@@ -56,6 +56,8 @@ def start_runner(tool: str, benchmark: str, task: str, args):
         command += f' --timeout {args.timeout}'
     if args.verbose > 0:
         command += f' -{"".join(["v" for i in range(args.verbose)])}'
+    if args.no_delta_debug:
+        command += f' --no-delta-debug'
     print(f'Starting container with command {command}')
     results_folder = os.path.abspath(importlib.resources.path("results", ""))
     Path(results_folder).mkdir(parents=True, exist_ok=True)
