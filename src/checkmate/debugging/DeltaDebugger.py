@@ -16,6 +16,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import os.path
+import subprocess
 import tempfile
 from dataclasses import dataclass
 from functools import partial
@@ -56,15 +57,36 @@ class DeltaDebugger:
         """
         # First, create artifacts. We need to pickle the violation, as well as creating the script.
         violation_tmp = tempfile.NamedTemporaryFile(delete=False, dir=self.artifacts_folder)
-        pickle.dump(violation, open(violation_tmp, 'wb'))
+        pickle.dump(violation, open(violation_tmp.name, 'wb'))
 
         # Then, create the script.
-        script_location = self.create_script(violation_tmp)
+        script_location = self.create_script(violation_tmp.name)
 
+        build_script = tempfile.NamedTemporaryFile(delete=False, dir=self.artifacts_folder)
+        with open(build_script.name, 'w') as f:
+            f.write("#!/bin/bash\n")
+            f.write("CURDIR=$(pwd)\n")
+            f.write(f"cd /CATS-Microbenchmark/benchmarks/Reflection/TrivialReflection/TR1/src/\n")
+            f.write("mvn compile package\n")
+            f.write("cd $CURDIR")
+
+        os.chmod(build_script.name, 700)
+        os.chmod(script_location, 700)
+        build_script.close()
+        violation_tmp.close()
         # Then, run the delta debugger
-        # TODO: Run delta debugger.
+        cmd = "java -jar /SADeltaDebugger/ViolationDeltaDebugger/target/ViolationDeltaDebugger-1.0-SNAPSHOT-jar-with-dependencies.jar".split(' ')
+        cmd.append("/CATS-Microbenchmark/benchmarks/Reflection/TrivialReflection/TR1/src/")
+        cmd.append("/CATS-Microbenchmark/benchmarks/Reflection/TrivialReflection/TR1/target/TR1.jar")
+        cmd.append(os.path.abspath(build_script.name))
+        cmd.append(os.path.abspath(script_location))
 
-        return DeltaDebuggingResult
+        print(f"Running delta debugger with cmd {' '.join(cmd)}")
+        ps = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+        print("Delta debugging completed.")
+        print(ps.stdout)
+
+        return None
     def create_script(self, violation_location: str) -> str:
         """
         Given a violation, creates a script that will execute it and return True if the violation is

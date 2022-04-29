@@ -41,9 +41,9 @@ class DOOPRunner(CommandLineToolRunner):
     def get_output_option(self, output_file: str) -> List[str]:
         return []
 
-    def get_task_option(self, task: str) -> str:
+    def get_task_option(self, task: str) -> List[str]:
         if task == 'cg':
-            pass
+            return []
         else:
             raise NotImplementedError(f'DOOP does not support task {task}.')
 

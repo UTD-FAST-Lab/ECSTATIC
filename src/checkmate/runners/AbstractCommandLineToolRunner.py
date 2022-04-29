@@ -22,11 +22,11 @@ import os
 import time
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict
 
 from src.checkmate.models.Level import Level
 from src.checkmate.models.Option import Option
-from src.checkmate.util.UtilClasses import FinishedFuzzingJob, FuzzingJob, BenchmarkRecord
+from src.checkmate.util.UtilClasses import FinishedFuzzingJob, FuzzingJob
 
 logger = logging.getLogger("AbstractCommandLineToolRunner")
 """
@@ -53,7 +53,7 @@ class AbstractCommandLineToolRunner(ABC):
     def timeout(self, value):
         if isinstance(value, int) and value < 0:
             raise ValueError(f'Timeout must be positive. Supplied number was {value}')
-        elif not isinstance(value, int) and value != None:
+        elif not isinstance(value, int) and value is not None:
             raise ValueError(f'Timeout must be an integer or None. Supplied object was {value}')
         self._timeout = value
 
@@ -120,9 +120,10 @@ class AbstractCommandLineToolRunner(ABC):
             try:
                 start = time.time()
                 result = self.try_run_job(job, output_folder)
+                total_time = time.time() - start
                 with open(self.get_time_file(output_folder, job), 'w') as f:
-                    f.write(f'{str(time.time() - start)}\n')
-                return result
+                    f.write(f'{str(total_time)}\n')
+                return FinishedFuzzingJob(job, total_time, result)
             except Exception as ex:
                 exception = ex
                 num_runs += 1

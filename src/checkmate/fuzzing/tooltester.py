@@ -21,6 +21,7 @@ import importlib
 from functools import partial
 from pathlib import Path
 
+from src.checkmate.debugging.DeltaDebugger import DeltaDebugger
 from src.checkmate.fuzzing.generators import FuzzGeneratorFactory
 from src.checkmate.readers import ReaderFactory
 from src.checkmate.runners import RunnerFactory
@@ -52,11 +53,13 @@ logger = logging.getLogger(__name__)
 
 class ToolTester:
 
-    def __init__(self, generator, runner: AbstractCommandLineToolRunner, results_location: str,
+    def __init__(self, generator, runner: AbstractCommandLineToolRunner, debugger: DeltaDebugger | None,
+                 results_location: str,
                  num_processes: int, num_campaigns: int, checker: AbstractViolationChecker,
                  limit=None):
         self.generator: FuzzGenerator = generator
         self.runner: AbstractCommandLineToolRunner = runner
+        self.debugger: DeltaDebugger = debugger
         self.results_location: str = results_location
         self.unverified_violations = list()
         self.num_processes = num_processes
@@ -86,6 +89,8 @@ class ToolTester:
             Path(violations_folder).mkdir(exist_ok=True, parents=True)
             print(f'Now checking for violations.')
             violations: List[Violation] = self.checker.check_violations(results, violations_folder)
+            if self.debugger is not None:
+                [self.debugger.delta_debug(v) for v in violations]
             self.generator.update_exclusions(violations)
             # self.print_output(FinishedCampaign(results), campaign_index)  # TODO: Replace with generate_report
             print('Done!')
@@ -293,7 +298,11 @@ def main():
     reader = ReaderFactory.get_reader_for_task_and_tool(args.task, args.tool)
     checker = ViolationCheckerFactory.get_violation_checker_for_task(args.task, args.tool,
                                                                      args.jobs, groundtruths, reader)
-    t = ToolTester(generator, runner, results_location,
+
+    Path("/artifacts").mkdir(exist_ok=True)
+    debugger = DeltaDebugger("/artifacts", args.tool, args.task, groundtruths)
+
+    t = ToolTester(generator, runner, debugger, results_location,
                    num_processes=args.jobs, num_campaigns=args.campaigns,
                    checker=checker)
     t.main()

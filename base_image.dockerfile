@@ -8,7 +8,6 @@ RUN apt-get update -y && apt-get upgrade -y && \
     DEBIAN_FRONTEND=noninteractive  \
     apt-get install -y --no-install-recommends --assume-yes build-essential libpq-dev unzip
 
-
 FROM python-build AS dep-build
 
 RUN python3.10 -m venv /venv
@@ -18,17 +17,12 @@ WORKDIR /app
 COPY requirements.txt .
 RUN python -m pip install -r requirements.txt
 
-FROM python-build
+FROM python-build AS checkmate-build
 
 COPY --from=dep-build /venv /venv
 
 WORKDIR /
 COPY . /checkmate
-WORKDIR /checkmate
-
-ENV PATH=/venv/bin:$PATH
-RUN python -m pip install -e .
-WORKDIR /
 
 # Copy SSH key for git private repos
 RUN if [ -e "/checkmate/.ssh/id_docker_key" ]; then \
@@ -45,3 +39,24 @@ RUN if [ -e "/checkmate/.ssh/id_docker_key" ]; then \
 
 # Skip Host verification for git
 #RUN echo "StrictHostKeyChecking no " >> /root/.ssh/config
+
+FROM python-build AS delta-debugger-build
+
+COPY --from=checkmate-build /root/.ssh /root/.ssh
+WORKDIR /
+RUN git clone git@github.com:Pancax/SADeltaDebugger.git
+RUN cd SADeltaDebugger/ProjectLineCounter && mvn install && \
+    cd ../ViolationDeltaDebugger && mvn package
+
+FROM python-build
+
+COPY --from=delta-debugger-build /SADeltaDebugger /SADeltaDebugger
+COPY --from=dep-build /venv /venv
+COPY --from=checkmate-build /checkmate /checkmate
+COPY --from=checkmate-build /root/.ssh /root/.ssh
+
+WORKDIR /checkmate
+
+ENV PATH=/venv/bin:$PATH
+RUN python -m pip install -e .
+WORKDIR /

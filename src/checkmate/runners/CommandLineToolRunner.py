@@ -62,7 +62,7 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         pass
 
     @abstractmethod
-    def get_task_option(self, task: str) -> str:
+    def get_task_option(self, task: str) -> List[str]:
         """Given a task, sets the appropriate option."""
         pass
 
