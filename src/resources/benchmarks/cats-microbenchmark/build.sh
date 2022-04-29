@@ -13,8 +13,5 @@ mvn clean compile package
 mkdir -p /benchmarks
 rm -r /benchmarks/cats-microbenchmark
 mkdir /benchmarks/cats-microbenchmark
-for file in $(find . type f -name '*.jar')
-do
-  mv file -t /benchmarks/cats-microbenchmark
-done
-cd $CUR
+find . type f -name '*.jar' -execdir mv '{}' -t /benchmark/cats-microbenchmark \;
+cd "$CUR"
