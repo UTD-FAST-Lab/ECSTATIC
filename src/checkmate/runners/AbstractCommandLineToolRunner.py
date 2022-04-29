@@ -73,7 +73,7 @@ class AbstractCommandLineToolRunner(ABC):
 
     def get_time_file(self, output_folder: str, job: FuzzingJob):
         return os.path.join(output_folder,
-                     '.' + os.path.basename(self.get_output(output_folder, job)) + '.time')
+                            '.' + os.path.basename(self.get_output(output_folder, job)) + '.time')
 
     def get_error_file(self, output_folder: str, job):
         return os.path.abspath(self.get_output(output_folder, job) + '.error')
@@ -160,7 +160,7 @@ class AbstractCommandLineToolRunner(ABC):
                             f'{self.dict_hash(job.configuration)}_{os.path.basename(job.target.name)}.raw')
 
     @abstractmethod
-    def try_run_job(self, job: FuzzingJob, output_folder: str) -> FinishedFuzzingJob:
+    def try_run_job(self, job: FuzzingJob, output_folder: str) -> str:
         """
         Attempt to run the job. Throw an exception if the job fails, otherwise, returns the finished fuzzing job.
         Parameters
@@ -171,7 +171,7 @@ class AbstractCommandLineToolRunner(ABC):
 
         Returns
         -------
-        A finished job if the job was successful, otherwise should throw an exception.
+        The location of the output file.
         """
         pass
 
