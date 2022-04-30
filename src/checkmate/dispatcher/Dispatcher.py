@@ -17,34 +17,36 @@
 
 import argparse
 import logging
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p')
 
 from src.checkmate.dispatcher.Sanitizer import sanity_check, tools, benchmarks, tasks
 from src.checkmate.dispatcher import DockerManager
 
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Just a fuzzing benchmark for static analyzers')
     parser.add_argument('-t',
-        '--tools',
-        help=('static analysis tools to run'
-            'all tools by default'),
-        nargs='+',
-        required=True,
-        default=tools,
-        choices=tools)
+                        '--tools',
+                        help=('static analysis tools to run'
+                              'all tools by default'),
+                        nargs='+',
+                        required=True,
+                        default=tools,
+                        choices=tools)
     parser.add_argument('-b',
-        '--benchmarks',
-        help=('benchmark programs to run, incompatible tool and benchmark pairs will be skipped'
-            'all benchmarks by default'),
-        nargs='+',
-        required=True,
-        default=benchmarks,
-        choices=benchmarks)
+                        '--benchmarks',
+                        help=('benchmark programs to run, incompatible tool and benchmark pairs will be skipped'
+                              'all benchmarks by default'),
+                        nargs='+',
+                        required=True,
+                        default=benchmarks,
+                        choices=benchmarks)
     parser.add_argument(
         '--tasks',
         help=('tasks to run, incompatible tool and task pairs will be skipped'
-            'all tasks by default'),
+              'all tasks by default'),
         nargs='+',
         required=True,
         default=tasks,
@@ -88,6 +90,7 @@ def parse_args():
     )
     return parser.parse_args()
 
+
 def main():
     args = parse_args()
 
@@ -104,11 +107,6 @@ def main():
         # comp_benchmarks, comp_tasks = sanity_check(t, args.benchmarks, args.tasks)
         # DockerManager.start_runner(t, args.benchmarks, args.tasks)
 
+
 if __name__ == '__main__':
     main()
-
-
-
-
-
-  

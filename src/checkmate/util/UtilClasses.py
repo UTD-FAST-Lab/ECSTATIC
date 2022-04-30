@@ -29,7 +29,7 @@ from src.checkmate.models.Option import Option
 class BenchmarkRecord:
     name: str
     depends_on: List[str] = field(kw_only=True, default_factory=list)
-    sources: str = field(kw_only=True, default=None)
+    sources: List[str] = field(kw_only=True, default_factory=list)
 
 
 @dataclass

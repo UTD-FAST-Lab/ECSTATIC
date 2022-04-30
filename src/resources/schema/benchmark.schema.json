@@ -29,7 +29,10 @@
           },
           "sources": {
             "description": "The location of the sources.",
-            "type": "string"
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       }

@@ -82,7 +82,7 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
 
         Returns
         -------
-        A FinishedFuzzingJob that includes the result, or throws an exception if running the job failed.
+        The location of the result, or throws an exception if running the job failed.
         """
         logging.info(f'Job configuration is {[(str(k), str(v)) for k, v in job.configuration.items()]}')
         config_as_str = self.dict_to_config_str(job.configuration)

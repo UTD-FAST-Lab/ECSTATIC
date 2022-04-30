@@ -56,7 +56,7 @@ p.add_argument('--data_directory', default='./checkmate/data',
                are stored.""")
 p.add_argument('--tool', default='flowdroid', choices=['flowdroid','droidsafe'],
                help="""The tool that we are checking for violations in.""")
-p.add_argument('--dataset', default='fossdroid', choices=['fossdroid', 'droidbench'],
+p.add_argument('--dataset', default='test', choices=['test', 'droidbench'],
                help="""The dataset these reports are from.""")
 p.add_argument('--violation_location', default='./violations',
                help="""Where to store violations.""")
@@ -66,7 +66,7 @@ p.add_argument('--no_deltadebugger_output', action='store_true',
 args = p.parse_args()
 
 DEFAULT_CONFIG = {'flowdroid': 'aplength5', 'droidsafe': 'kobjsens3'}
-TIMEOUTS = {'fossdroid': 7200000, 'droidbench': 600000}
+TIMEOUTS = {'test': 7200000, 'droidbench': 600000}
 
 def check_args():
     """
@@ -75,7 +75,7 @@ def check_args():
     """
     if len(args.files_list) < 1:
         raise RuntimeError('Must supply at least one file.')
-    if args.dataset != 'fossdroid':
+    if args.dataset != 'test':
         raise RuntimeError('Currently this tool only supports FossDroid.')
 
 def add_classifications(groundtruths: str, files_list: List[str],

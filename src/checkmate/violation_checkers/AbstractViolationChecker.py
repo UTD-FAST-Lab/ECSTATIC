@@ -18,9 +18,11 @@
 import json
 import logging
 import os.path
+import pickle
 import time
 from abc import ABC, abstractmethod
 from multiprocessing import Pool
+from tempfile import NamedTemporaryFile
 from typing import List, Any, Tuple, Set, Iterable, TypeVar
 
 from src.checkmate.models.Option import Option
@@ -86,6 +88,8 @@ class AbstractViolationChecker(ABC):
                        f'{os.path.basename(violation.job1.job.target.name)}.json'
             with open(os.path.join(output_folder, filename), 'w') as f:
                 json.dump(violation.as_dict(), f, indent=4)
+            with NamedTemporaryFile(dir=output_folder, delete=False, suffix='.pickle') as f:
+                pickle.dump(violation, f)
         print(f'Finished checking violations. {len([v for v in violations if v.violated])} violations detected.')
         print(f'Campaign value processing done (took {time.time() - start_time} seconds).')
         self.summarize(violations)

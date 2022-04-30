@@ -28,7 +28,7 @@ from src.checkmate.models.Level import Level
 from src.checkmate.models.Option import Option
 from src.checkmate.util.UtilClasses import FinishedFuzzingJob, FuzzingJob
 
-logger = logging.getLogger("AbstractCommandLineToolRunner")
+logger = logging.getLogger(__name__)
 """
 Base class for command line tool runners.
 """
@@ -120,6 +120,7 @@ class AbstractCommandLineToolRunner(ABC):
             try:
                 start = time.time()
                 result = self.try_run_job(job, output_folder)
+                logging.info(f'Successfully ran job! Result is in {result}')
                 total_time = time.time() - start
                 with open(self.get_time_file(output_folder, job), 'w') as f:
                     f.write(f'{str(total_time)}\n')

@@ -19,7 +19,7 @@ import argparse
 import logging
 p = argparse.ArgumentParser('Tool to check whether partial orders were violated.')
 p.add_argument("tool", choices=['flowdroid','droidsafe','amandroid'])
-p.add_argument("benchmark", choices=['droidbench', 'fossdroid'])
+p.add_argument("benchmark", choices=['droidbench', 'test'])
 p.add_argument('-j', '--jobs', default=8, type=int)
 p.add_argument('--verbosity', '-v', action='count', default=0)
 p.add_argument("file")
@@ -43,7 +43,7 @@ import pickle
 from typing import Dict, List
 
 timeouts = {'droidbench': 600000,
-           'fossdroid': 7200000}
+           'test': 7200000}
 defaults = {'flowdroid': 'config_FlowDroid_aplength5.xml',
             'droidsafe': 'config_DroidSafe_kobjsens3.xml',
             'amandroid': 'config_Amandroid_default.xml'}
@@ -126,16 +126,16 @@ def compute_violations(records, o) -> List:
                         except KeyError as ke:
                             logging.debug(f'Option {o.name} is not in this result set.')
                             continue
-            else: # fossdroid
+            else: # test
                 for r1 in records:
-                    if float(r1['time']) > timeouts['fossdroid']:
+                    if float(r1['time']) > timeouts['test']:
                         continue # timed out
                     for r2 in [r for r in records if r['generating_script'] != r1['generating_script'] and
                                r['apk'] == r1['apk'] and
                                (r['option_under_investigation'] == r1['option_under_investigation'] or
                                 defaults[args.tool] in r['generating_script'] or
                                 (True if defaults[args.tool] in r1['generating_script'] else False)) and
-                               float(r['time']) < timeouts['fossdroid'] and
+                               float(r['time']) < timeouts['test'] and
                                r['replication'] == r1['replication']]:
                         try:
                            if compare_levels(r1[o.name], r2[o.name]) > 0:
