@@ -16,10 +16,21 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
+from typing import Tuple, Any
 
 from src.checkmate.readers.callgraph.AbstractCallGraphReader import AbstractCallGraphReader
+from src.checkmate.util.CGCallSite import CGCallSite
+from src.checkmate.util.CGTarget import CGTarget
 
 logger = logging.getLogger(__name__)
 
+
 class DOOPCallGraphReader(AbstractCallGraphReader):
-    pass
+    def process_line(self, line: str) -> Tuple[CGCallSite, CGTarget]:
+        tokens = line.split("\t")
+        if len(tokens) == 5:
+            return super().process_line(line)
+        else:
+            return CGCallSite(tokens[0].split('/')[0],
+                              '/'.join(tokens[0].split('/')[1:]),
+                              tokens[1]), CGTarget(tokens[2], tokens[3])
