@@ -36,6 +36,16 @@ logger = logging.getLogger(__name__)
 T = TypeVar('T')  # Indicates the type of content in the results (e.g., call graph edges or flows)
 
 
+def get_file_name(violation: Violation) -> str:
+    filename = f'violation_{AbstractCommandLineToolRunner.dict_hash(violation.job1.job.configuration)}_' \
+               f'{AbstractCommandLineToolRunner.dict_hash(violation.job2.job.configuration)}_' \
+               f'{violation.get_option_under_investigation().name}_' \
+               f'{violation.job1.job.configuration[violation.get_option_under_investigation()].level_name}_' \
+               f'{violation.job2.job.configuration[violation.get_option_under_investigation()].level_name}_' \
+               f'{os.path.basename(violation.job1.job.target.name)}.json'
+    return filename
+
+
 class AbstractViolationChecker(ABC):
 
     def __init__(self, jobs: int, reader: AbstractReader, groundtruths: str | None = None):
@@ -80,12 +90,7 @@ class AbstractViolationChecker(ABC):
             [violations.extend(v_set) for v_set in p.starmap(self.check_for_violation, pairs)]
 
         for violation in filter(lambda v: v.violated, violations):
-            filename = f'violation_{AbstractCommandLineToolRunner.dict_hash(violation.job1.job.configuration)}_' \
-                       f'{AbstractCommandLineToolRunner.dict_hash(violation.job2.job.configuration)}_' \
-                       f'{violation.get_option_under_investigation().name}_' \
-                       f'{violation.job1.job.configuration[violation.get_option_under_investigation()].level_name}_' \
-                       f'{violation.job2.job.configuration[violation.get_option_under_investigation()].level_name}_' \
-                       f'{os.path.basename(violation.job1.job.target.name)}.json'
+            filename = get_file_name(violation)
             with open(os.path.join(output_folder, filename), 'w') as f:
                 json.dump(violation.as_dict(), f, indent=4)
             with NamedTemporaryFile(dir=output_folder, delete=False, suffix='.pickle') as f:

@@ -14,15 +14,18 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import json
 import logging
 import os.path
 import shutil
 import subprocess
 import sys
+import tarfile
 import tempfile
 from dataclasses import dataclass
 from functools import partial
 from multiprocessing import Pool
+from pathlib import Path
 from typing import Iterable, Optional, List
 
 from src.checkmate.readers import ReaderFactory
@@ -33,6 +36,8 @@ from src.checkmate.util.Violation import Violation
 import pickle
 
 from src.checkmate.violation_checkers import ViolationCheckerFactory
+from src.checkmate.violation_checkers.AbstractViolationChecker import get_file_name
+
 
 @dataclass
 class DeltaDebuggingResult:
@@ -47,7 +52,7 @@ class DeltaDebugger:
         self.task = task
         self.groundtruths = groundtruths
 
-    def delta_debug(self, violation: Violation) -> Optional[DeltaDebuggingResult]:
+    def delta_debug(self, violation: Violation, results_directory: str) -> Optional[DeltaDebuggingResult]:
         """
 
         Parameters
@@ -101,8 +106,19 @@ class DeltaDebugger:
         print(f"Running delta debugger with cmd {' '.join(cmd)}")
         ps = subprocess.run(cmd, stdout=sys.stdout, stderr=sys.stderr, text=True)
         print("Delta debugging completed.")
+        delta_debugging_directory = os.path.join(results_directory, "deltadebugging")
+        Path(delta_debugging_directory).mkdir(parents=True, exist_ok=True)
+        tarname = os.path.join(delta_debugging_directory, get_file_name(violation)) + '.tar.gz'
+        with tarfile.open(tarname, 'w:gz') as f:
+            f.add(violation.job1.job.target.name)
+            [f.add(s) for s in violation.job1.job.target.sources]
+            with open(os.path.join(delta_debugging_directory, get_file_name(violation)), 'w') as f1:
+                json.dump(violation.as_dict())
+            f.add(os.path.join(delta_debugging_directory, get_file_name(violation)))
+            os.remove(os.path.join(delta_debugging_directory, get_file_name(violation)))
 
-        return None
+        logging.info(f"Delta debugging result written to {tarname}")
+        return tarname
 
     def create_script(self, violation: Violation, directory: str) -> str:
         """
