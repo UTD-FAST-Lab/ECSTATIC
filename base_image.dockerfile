@@ -27,7 +27,7 @@ COPY . /checkmate
 FROM python-build AS delta-debugger-build
 
 WORKDIR /
-RUN git clone git@github.com:Pancax/SADeltaDebugger.git
+RUN git clone https://github.com/Pancax/SADeltaDebugger.git
 RUN cd SADeltaDebugger/ProjectLineCounter && mvn install && \
     cd ../ViolationDeltaDebugger && mvn package
 
