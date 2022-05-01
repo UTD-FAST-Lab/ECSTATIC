@@ -20,7 +20,8 @@ import json
 import logging
 import os
 import random
-from typing import List, Dict
+from enum import Enum, auto
+from typing import List, Dict, Iterable
 
 from frozendict import frozendict
 from fuzzingbook.GrammarCoverageFuzzer import GrammarCoverageFuzzer
@@ -58,21 +59,39 @@ def get_apks(directory: str) -> List[str]:
 class OptionExcludedError(Exception):
     pass
 
+class SeedGenerationStrategy(Enum):
+    COVERAGE = auto()
+    RANDOM = auto()
+
+class MutantWeighingStrategy(Enum):
+    UNIFORM = auto()
+    FIND_NEW_BUGS = auto()
+    EXPLORE_EXISTING_BUGS = auto()
+
+class BenchmarkSelectionStrategy(Enum):
+    ALL = auto()
+    NEW = auto()
+    BUGGY= auto()
 
 class FuzzGenerator:
 
-    def __init__(self, model_location: str, grammar_location: str, benchmark: Benchmark,
-                 adaptive: bool = False):
+    def __init__(self, model_location: str,
+                 grammar_location: str,
+                 benchmark: Benchmark,
+                 seed_strategy: SeedGenerationStrategy = SeedGenerationStrategy.COVERAGE,
+                 mutant_strategy: MutantWeighingStrategy = MutantWeighingStrategy.UNIFORM,
+                 benchmark_strategy: BenchmarkSelectionStrategy = BenchmarkSelectionStrategy.ALL):
         self.first_run = True
         with open(grammar_location) as f:
             self.json_grammar = json.load(f)
         self.grammar = convert_ebnf_grammar(self.json_grammar)
         self.benchmark: Benchmark = benchmark
         self.fuzzer = GrammarCoverageFuzzer(self.grammar)
-        random.seed(2001)
         self.model = ConfigurationSpaceReader().read_configuration_space(model_location)
-        self.adaptive = adaptive
-        self.exclusions: List[Level] = []
+        self.violations : Iterable[Violation] = []
+        self.seed_strategy = seed_strategy
+        self.mutant_strategy = mutant_strategy
+        self.benchmark_strategy = benchmark_strategy
 
     def process_config(self, config: str) -> Dict[Option, Level]:
         """
@@ -114,36 +133,42 @@ class FuzzGenerator:
             option: Option = v.get_option_under_investigation()
             self.exclusions.extend([v.job1.job.configuration[option], v.job2.job.configuration[option]])
 
+    def make_new_seed(self) -> Dict[Option, Level]:
+        """
+
+        Returns
+        -------
+
+        """
+        if self.first_run:
+            self.first_run = False
+            return dict()
+        if self.seed_strategy == SeedGenerationStrategy.COVERAGE:
+            config = ""
+            while (config != ""):
+                config = self.fuzzer.fuzz()
+            return self.process_config(config)
+        if self.seed_strategy == SeedGenerationStrategy.RANDOM:
+            config = dict()
+            for o in self.model.get_options():
+                o: Option
+                if o.type.startswith("int"):
+                    config[o] = Level(o.name, random.randint(o.min_value, o.max_value))
+                else:
+                    config[o] = random.choice(o.get_levels())
+            return config
+
     def generate_campaign(self) -> FuzzingCampaign:
         """
         This method generates the next task for the fuzzer.
         """
-        if self.first_run:
-            logger.info("First run, returning default configuration.")
-            fuzzed_config = dict()
-            self.first_run = False
-        else:
-            while True:
-                config_to_try: str = self.fuzzer.fuzz()
-                if config_to_try == "":
-                    continue
-                try:
-                    fuzzed_config: Dict[Option, Level] = self.process_config(config_to_try)
-                    for _, v in fuzzed_config.items():
-                        if v in self.exclusions:
-                            raise OptionExcludedError()
-                    break
-                except ValueError:
-                    logger.warning(f'Produced config {config_to_try}, which is invalid. Trying again.')
-                except OptionExcludedError:
-                    logger.warning("Fuzzer produced a configuration with an excluded value. Fuzzing again....")
-
-        fuzzed_config = fill_out_defaults(self.model, fuzzed_config)
-        logger.info(f"Configuration is {[(str(k), str(v)) for k, v in fuzzed_config.items()]}")
-        candidates: List[ConfigWithMutatedOption] = self.mutate_config(fuzzed_config)
+        seed_config = self.make_new_seed()
+        seed_config = fill_out_defaults(self.model, seed_config)
+        logger.info(f"Configuration is {[(str(k), str(v)) for k, v in seed_config.items()]}")
+        candidates: List[ConfigWithMutatedOption] = self.mutate_config(seed_config)
         logger.info(f"Generated {len(candidates)} single-option mutant configurations.")
         results: List[FuzzingJob] = list()
-        candidates.append(ConfigWithMutatedOption(frozendict(fuzzed_config), None))
+        candidates.append(ConfigWithMutatedOption(frozendict(seed_config), None))
 
         for candidate in candidates:
             choice = candidate.config

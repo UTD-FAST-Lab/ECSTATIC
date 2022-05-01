@@ -40,8 +40,7 @@ def get_file_name(violation: Violation) -> str:
     filename = f'violation_{AbstractCommandLineToolRunner.dict_hash(violation.job1.job.configuration)}_' \
                f'{AbstractCommandLineToolRunner.dict_hash(violation.job2.job.configuration)}_' \
                f'{violation.get_option_under_investigation().name}_' \
-               f'{violation.job1.job.configuration[violation.get_option_under_investigation()].level_name}_' \
-               f'{violation.job2.job.configuration[violation.get_option_under_investigation()].level_name}_' \
+               f'{"_".join(violation.partial_orders)}' \
                f'{os.path.basename(violation.job1.job.target.name)}.json'
     return filename
 
@@ -54,9 +53,10 @@ class AbstractViolationChecker(ABC):
         self.groundtruths = groundtruths
         logger.debug(f'Groundtruths are {self.groundtruths}')
 
-    def check_violations(self, results: Iterable[FinishedFuzzingJob], output_folder: str) -> List[Violation]:
+    def check_violations(self, results: Iterable[FinishedFuzzingJob], output_folder: str,
+                         finished_results: Iterable[Violation] = []) -> List[Violation]:
         start_time = time.time()
-        pairs: List[Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]] = []
+        pairs: Iterable[Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]] = {}
         for finished_run in results:
             finished_run: FinishedFuzzingJob
             option_under_investigation: Option = finished_run.job.option_under_investigation
@@ -82,23 +82,28 @@ class AbstractViolationChecker(ABC):
                         raise RuntimeError('Trying to compare two configurations with None as the option '
                                            'under investigation. This should never happen.')
 
-                pairs.append((finished_run, candidate, option_under_investigation))
+                pairs.add((finished_run, candidate, option_under_investigation))
 
-        violations = []
+        already_checked_pairs = {(v.job1, v.job2, v.get_option_under_investigation()) for v in finished_results}
+        if len(already_checked_pairs.difference(pairs)) > 0:
+            for job1, job2, op in already_checked_pairs.difference(pairs):
+                logger.critical(f'Found a violation between {job1.results_location} and {job2.results_location} on '
+                                f'option {op} that is out-of-date or otherwise erroneously included.')
+        pairs = pairs.difference(already_checked_pairs)
         with Pool(self.jobs) as p:
             print(f'Checking violations with {self.jobs} cores.')
-            [violations.extend(v_set) for v_set in p.starmap(self.check_for_violation, pairs)]
+            [finished_results.extend(v_set) for v_set in p.starmap(self.check_for_violation, pairs)]
 
-        for violation in filter(lambda v: v.violated, violations):
+        for violation in filter(lambda v: v.violated, finished_results):
             filename = get_file_name(violation)
             with open(os.path.join(output_folder, filename), 'w') as f:
                 json.dump(violation.as_dict(), f, indent=4)
             with NamedTemporaryFile(dir=output_folder, delete=False, suffix='.pickle') as f:
                 pickle.dump(violation, f)
-        print(f'Finished checking violations. {len([v for v in violations if v.violated])} violations detected.')
+        print(f'Finished checking violations. {len([v for v in finished_results if v.violated])} violations detected.')
         print(f'Campaign value processing done (took {time.time() - start_time} seconds).')
-        self.summarize(violations)
-        return violations
+        self.summarize(finished_results)
+        return finished_results
         # results_queue.task_done()
 
     def summarize(self, violations: Iterable[Violation]):

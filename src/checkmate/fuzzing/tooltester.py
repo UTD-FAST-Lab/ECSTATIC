@@ -86,15 +86,15 @@ class ToolTester:
             print(f'Campaign {campaign_index} finished (time {time.time() - start} seconds)')
             violations_folder = os.path.join(campaign_folder, 'violations')
             print(f'Now checking for violations.')
+            existing_violations = []
             if os.path.exists(violations_folder):
                 logging.warning(f"{violations_folder} exists, so reading existing pickled violations. Please remove "
-                                f"{violations_folder} if you want violations to be regenerated.")
-                violations: List[Violation] = [pickle.load(open(os.path.join(violations_folder, f), 'rb')) for f in
+                                f"{violations_folder} if you want violations to be recomputed.")
+                existing_violations: List[Violation] = [pickle.load(open(os.path.join(violations_folder, f), 'rb')) for f in
                                                [f1 for f1 in os.listdir(violations_folder) if f1.endswith('.pickle')]]
-            else:
-                # Path(violations_folder).mkdir(exist_ok=True, parents=True)
-                Path(violations_folder).mkdir(exist_ok=True)
-                violations: List[Violation] = self.checker.check_violations(results, violations_folder)
+                logging.info(f'Read in {len(existing_violations)} existing violations.')
+            Path(violations_folder).mkdir(exist_ok=True)
+            violations: List[Violation] = self.checker.check_violations(results, violations_folder, existing_violations)
             if self.debugger is not None:
                 delta_debugging_folder = os.path.join(campaign_folder, 'deltadebugging')
                 Path(delta_debugging_folder).mkdir(exist_ok=True)
