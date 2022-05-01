@@ -96,7 +96,9 @@ class ToolTester:
                 Path(violations_folder).mkdir(exist_ok=True)
                 violations: List[Violation] = self.checker.check_violations(results, violations_folder)
             if self.debugger is not None:
-                [self.debugger.delta_debug(v) for v in violations]
+                delta_debugging_folder = os.path.join(campaign_folder, 'deltadebugging')
+                Path(delta_debugging_folder).mkdir(exist_ok=True)
+                [self.debugger.delta_debug(v, delta_debugging_folder) for v in violations]
             self.generator.update_exclusions(violations)
             # self.print_output(FinishedCampaign(results), campaign_index)  # TODO: Replace with generate_report
             print('Done!')
