@@ -167,7 +167,6 @@ def main():
     violations: Iterable[Violation] = checker.check_violations(finishedJobs, tmpdir.name)
     for v in violations:
         # Since we already know the target and the configs are the same, we only have to check the partial order.
-        logging.info(f"Found a violation. Comparing {v.as_dict()} to {violation.as_dict()}")
         if v.partial_orders == violation.partial_orders:
             logging.info("Violation was recreated! Exiting with 0.")
             # 0 means succeed.
