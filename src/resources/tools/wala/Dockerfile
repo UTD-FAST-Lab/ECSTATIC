@@ -8,8 +8,7 @@ RUN apt-get update && \
     dpkg-reconfigure -f noninteractive tzdata
 
 ## package update
-RUN apt-get update && apt-get install -y git
-
+RUN apt-get update && apt-get install -y git openjdk-8-jdk maven
 
 WORKDIR /
 RUN git clone https://github.com/amordahl/WALAInterface --depth 1
