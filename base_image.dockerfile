@@ -20,6 +20,7 @@ RUN python -m pip install -r requirements.txt
 FROM python-build AS checkmate-build
 
 COPY --from=dep-build /venv /venv
+ENV PATH=/venv/bin:$PATH
 WORKDIR /
 COPY . /checkmate
 WORKDIR /checkmate
