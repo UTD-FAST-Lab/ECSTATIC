@@ -34,9 +34,12 @@ class JavaApplicationCodeFilter(ApplicationCodeFilter):
             for root, dirs, files in os.walk(source):
                 for f in [f for f in files if f.endswith('.java')]:
                     with open(os.path.join(root, f), 'r') as infile:
-                        lines = infile.readlines()
-                        package_decls = [l for l in lines if l.startswith("package")]
-                        packages.extend([p.split(' ')[1].split(';')[0] for p in package_decls])
+                        try:
+                            lines = infile.readlines()
+                            package_decls = [l for l in lines if l.startswith("package")]
+                            packages.extend([p.split(' ')[1].split(';')[0] for p in package_decls])
+                        except UnicodeDecodeError:
+                            logging.critical(f"Could not read in file {os.path.join(root, f)}")
         br.packages = packages
         print(f"Resolved packages as {packages})")
         return br
