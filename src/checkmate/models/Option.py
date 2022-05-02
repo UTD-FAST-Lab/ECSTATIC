@@ -114,8 +114,10 @@ class Option:
         if not isinstance(o2, Level):
             o2 = Level(self.name, o2)
         self.precision.add_edge(o1, o2)
-        self.set_more_sound_than(o1, o2)
-        self.set_more_sound_than(o2, o1)
+
+        # Implicit soundness partial orders
+        self.soundness.add_edge(o1, o2)
+        self.soundness.add_edge(o2, o1)
 
     def set_more_sound_than(self, o1, o2):
         """
