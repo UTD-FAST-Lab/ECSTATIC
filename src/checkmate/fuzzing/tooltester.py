@@ -90,8 +90,9 @@ class ToolTester:
             if os.path.exists(violations_folder):
                 logging.warning(f"{violations_folder} exists, so reading existing pickled violations. Please remove "
                                 f"{violations_folder} if you want violations to be recomputed.")
-                existing_violations: List[Violation] = [pickle.load(open(os.path.join(violations_folder, f), 'rb')) for f in
-                                               [f1 for f1 in os.listdir(violations_folder) if f1.endswith('.pickle')]]
+                with Pool(self.num_processes) as p:
+                    existing_violations = p.map(lambda v: pickle.load(open(os.path.join(violations_folder, v), 'rb')),
+                                                [v for v in os.listdir(violations_folder) if v.endswith('.pickle')])
                 logging.info(f'Read in {len(existing_violations)} existing violations.')
             Path(violations_folder).mkdir(exist_ok=True)
             violations: List[Violation] = self.checker.check_violations(results, violations_folder, existing_violations)
