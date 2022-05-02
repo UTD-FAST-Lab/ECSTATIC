@@ -56,7 +56,7 @@ class AbstractViolationChecker(ABC):
     def check_violations(self, results: Iterable[FinishedFuzzingJob], output_folder: str,
                          finished_results: Iterable[Violation] = []) -> List[Violation]:
         start_time = time.time()
-        pairs: Set[Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]] = set()
+        pairs: Set[Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]] = []
         for finished_run in results:
             finished_run: FinishedFuzzingJob
             option_under_investigation: Option = finished_run.job.option_under_investigation
@@ -82,14 +82,15 @@ class AbstractViolationChecker(ABC):
                         raise RuntimeError('Trying to compare two configurations with None as the option '
                                            'under investigation. This should never happen.')
 
-                pairs.add((finished_run, candidate, option_under_investigation))
+                pairs.append((finished_run, candidate, option_under_investigation))
 
-        already_checked_pairs = {(v.job1, v.job2, v.get_option_under_investigation()) for v in finished_results}
-        if len(already_checked_pairs.difference(pairs)) > 0:
-            for job1, job2, op in already_checked_pairs.difference(pairs):
+        already_checked_pairs = [(v.job1, v.job2, v.get_option_under_investigation()) for v in finished_results]
+        obsolete = [v for v in already_checked_pairs if v not in pairs]
+        if len(obsolete) > 0:
+            for job1, job2, op in obsolete:
                 logger.critical(f'Found a violation between {job1.results_location} and {job2.results_location} on '
                                 f'option {op} that is out-of-date or otherwise erroneously included.')
-        pairs = pairs.difference(already_checked_pairs)
+        pairs = [v for v in pairs if v not in already_checked_pairs]
         with Pool(self.jobs) as p:
             print(f'Checking violations with {self.jobs} cores.')
             [finished_results.extend(v_set) for v_set in p.starmap(self.check_for_violation, pairs)]
