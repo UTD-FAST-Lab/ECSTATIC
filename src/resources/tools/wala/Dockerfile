@@ -1,14 +1,15 @@
 FROM ubuntu:20.04 as wala-install
 
 USER root
-## package update
-RUN apt-get update && apt-get install -y git
-
 ## timezone
 RUN apt-get update && \
     apt-get install -yq tzdata && \
     ln -fs /usr/share/zoneinfo/America/Chicago /etc/localtime && \
     dpkg-reconfigure -f noninteractive tzdata
+
+## package update
+RUN apt-get update && apt-get install -y git
+
 
 WORKDIR /
 RUN git clone https://github.com/amordahl/WALAInterface --depth 1
