@@ -200,7 +200,9 @@ class FuzzGenerator:
                         continue
                     if o.type.startswith('int'):
                         if 'i' in level.level_name:
+                            logging.info(f'Sampling between {o.min_value} and {o.max_value}')
                             level = Level(o.name, random.randint(o.min_value, o.max_value))
+                            logging.info(f'Sampled level {str(level)}')
                         else:
                             level = Level(o.name, int(level.level_name))
                     config_copy = copy.deepcopy(config)
