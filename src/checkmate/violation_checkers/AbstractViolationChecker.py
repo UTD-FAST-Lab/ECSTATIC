@@ -84,6 +84,8 @@ class AbstractViolationChecker(ABC):
 
                 pairs.append((finished_run, candidate, option_under_investigation))
 
+        if len(finished_results) > 0:
+            print("Comparing old violations to see what needs to be recomputed.")
         already_checked_pairs = [(v.job1, v.job2, v.get_option_under_investigation()) for v in finished_results]
         obsolete = [v for v in already_checked_pairs if v not in pairs]
         if len(obsolete) > 0:
@@ -91,16 +93,20 @@ class AbstractViolationChecker(ABC):
                 logger.critical(f'Found a violation between {job1.results_location} and {job2.results_location} on '
                                 f'option {op} that is out-of-date or otherwise erroneously included.')
         pairs = [v for v in pairs if v not in already_checked_pairs]
+        print(f'{len(pairs)} pairs of results need to be compared to find violations.')
         with Pool(self.jobs) as p:
             print(f'Checking violations with {self.jobs} cores.')
             [finished_results.extend(v_set) for v_set in p.starmap(self.check_for_violation, pairs)]
 
+        print('Violation detection done. Now printing to files.')
         for violation in filter(lambda v: v.violated, finished_results):
             filename = get_file_name(violation)
+            logging.info(f'Writing violation to file {filename}')
             with open(os.path.join(output_folder, filename), 'w') as f:
                 json.dump(violation.as_dict(), f, indent=4)
-            with NamedTemporaryFile(dir=output_folder, delete=False, suffix='.pickle') as f:
-                pickle.dump(violation, f)
+            if violation not in finished_results:
+                with NamedTemporaryFile(dir=output_folder, delete=False, suffix='.pickle') as f:
+                    pickle.dump(violation, f)
         print(f'Finished checking violations. {len([v for v in finished_results if v.violated])} violations detected.')
         print(f'Campaign value processing done (took {time.time() - start_time} seconds).')
         self.summarize(finished_results)
