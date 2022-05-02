@@ -247,10 +247,10 @@ class Option:
             o.type = d['type']
         if 'default' in d:
             o.set_default(d['default'])
-        if 'min_value' in d:
-            o.min_value = d['min_value']
-        if 'max_value' in d:
-            o.max_value = d['max_value']
+        if 'minValue' in d:
+            o.min_value = int(d['minValue'])
+        if 'maxValue' in d:
+            o.max_value = int(d['maxValue'])
         if 'tags' in d:
             [o.add_tag(t) for t in d['tags']]
         for p in d['orders']:
