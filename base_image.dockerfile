@@ -36,9 +36,4 @@ FROM python-build
 COPY --from=delta-debugger-build /SADeltaDebugger /SADeltaDebugger
 COPY --from=dep-build /venv /venv
 COPY --from=checkmate-build /checkmate /checkmate
-
-WORKDIR /checkmate
-
 ENV PATH=/venv/bin:$PATH
-RUN python -m pip install -e .
-WORKDIR /
