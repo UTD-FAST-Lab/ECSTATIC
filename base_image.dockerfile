@@ -20,6 +20,7 @@ RUN python -m pip install -r requirements.txt
 FROM python-build AS checkmate-build
 
 COPY --from=dep-build /venv /venv
+ENV PATH=/venv/bin:$PATH
 WORKDIR /
 COPY . /checkmate
 WORKDIR /checkmate
@@ -35,6 +36,6 @@ RUN cd SADeltaDebugger/ProjectLineCounter && mvn install && \
 FROM python-build
 
 COPY --from=delta-debugger-build /SADeltaDebugger /SADeltaDebugger
-COPY --from=dep-build /venv /venv
+COPY --from=checkmate-build /venv /venv
 COPY --from=checkmate-build /checkmate /checkmate
 ENV PATH=/venv/bin:$PATH
