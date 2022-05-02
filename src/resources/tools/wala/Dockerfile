@@ -5,10 +5,10 @@ USER root
 RUN apt-get update && apt-get install -y git
 
 ## timezone
-RUN apt-get install tzdata
-RUN echo "America/Chicago" > /etc/timezone
-RUN dpkg-reconfigure -f noninteractive tzdata
-RUN apt-get update && apt-get install -y gcc g++
+RUN apt-get update && \
+    apt-get install -yq tzdata && \
+    ln -fs /usr/share/zoneinfo/America/Chicago /etc/localtime && \
+    dpkg-reconfigure -f noninteractive tzdata
 
 WORKDIR /
 RUN git clone https://github.com/amordahl/WALAInterface --depth 1
