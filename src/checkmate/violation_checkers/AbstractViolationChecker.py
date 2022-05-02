@@ -22,6 +22,7 @@ import pickle
 import time
 from abc import ABC, abstractmethod
 from multiprocessing import Pool
+from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import List, Any, Tuple, Set, Iterable, TypeVar
 
@@ -37,12 +38,12 @@ T = TypeVar('T')  # Indicates the type of content in the results (e.g., call gra
 
 
 def get_file_name(violation: Violation) -> str:
-    filename = f'violation_{AbstractCommandLineToolRunner.dict_hash(violation.job1.job.configuration)}_' \
-               f'{AbstractCommandLineToolRunner.dict_hash(violation.job2.job.configuration)}_' \
-               f'{violation.get_option_under_investigation().name}_' + \
-               '_'.join([f'{v.left.level_name}_{"MST" if v.type == PartialOrderType.MORE_SOUND_THAN else "MPT"}'
-                         f'_{v.right.level_name}' for v in violation.partial_orders]) + \
-               f'_{os.path.basename(violation.job1.job.target.name)}.json'
+    filename = f'{AbstractCommandLineToolRunner.dict_hash(violation.job1.job.configuration)}/' \
+               f'{AbstractCommandLineToolRunner.dict_hash(violation.job2.job.configuration)}/' \
+               f'{violation.get_option_under_investigation().name}/' + \
+               '/'.join([f'{v.left.level_name}/{"MST" if v.type == PartialOrderType.MORE_SOUND_THAN else "MPT"}'
+                         f'/{v.right.level_name}' for v in violation.partial_orders]) + \
+               f'/{os.path.basename(violation.job1.job.target.name)}.json'
     return filename
 
 
@@ -102,8 +103,10 @@ class AbstractViolationChecker(ABC):
         print('Violation detection done. Now printing to files.')
         for violation in filter(lambda v: v.violated, finished_results):
             filename = get_file_name(violation)
+            dirname = os.path.dirname(filename)
+            Path(os.path.join(output_folder, "json", dirname)).mkdir(exist_ok=True, parents=True)
             logging.info(f'Writing violation to file {filename}')
-            with open(os.path.join(output_folder, filename), 'w') as f:
+            with open(os.path.join(output_folder, "json", filename), 'w') as f:
                 json.dump(violation.as_dict(), f, indent=4)
             if violation not in finished_results:
                 with NamedTemporaryFile(dir=output_folder, delete=False, suffix='.pickle') as f:

@@ -33,6 +33,10 @@
             "items": {
               "type": "string"
             }
+          },
+          "build_script": {
+            "description": "The location of the build script.",
+            "type": "string"
           }
         }
       }

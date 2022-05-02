@@ -60,6 +60,7 @@ def validate(b: BenchmarkRecord, root: str = "/") -> BenchmarkRecord:
     b.name = try_resolve_path(b.name, root)
     b.depends_on = [try_resolve_path(d, root) for d in b.depends_on]
     b.sources = [try_resolve_path(s, root) for s in b.sources]
+    b.build_script = try_resolve_path(b.build_script, root)
     logger.info(f'Resolved benchmark record to {b}')
     return b
 

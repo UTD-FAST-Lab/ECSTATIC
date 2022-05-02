@@ -19,7 +19,8 @@
       "sources": [
         "build_src/bloat",
         "bmsrc/dacapo"
-      ]
+      ],
+      "build_script": "build_scripts/build_bloat.sh"
     },
     {
       "name": "deps/chart.jar",
@@ -27,62 +28,65 @@
         "deps/chart-deps.jar"
       ],
       "sources": [
-
-      ]
-    },
-    {
-      "name": "eclipse.jar",
-      "depends_on": [
-        "eclipse-deps.jar"
-      ]
-    },
-    {
-      "name": "fop.jar",
-      "depends_on": [
-        "fop-deps.jar",
-        "fop-deps.orig.jar"
+        "build_src/chart",
+        "bmsrc/dacapo"
       ],
-      "sources": "fop-0.20.5-src/fop-0.20.5/src"
+      "build_script": "build_scripts/build_chart.sh"
     },
     {
-      "name": "hsqldb.jar",
+      "name": "deps/eclipse.jar",
       "depends_on": [
-        "hsqldb-deps.jar"
+        "deps/eclipse-deps.jar"
       ],
-      "sources": "hsqldb_1_8_0_4/hsqldb/src"
-    },
-    {
-      "name": "jython.jar",
-      "depends_on": [
-        "jython-deps.jar"
-      ]
-    },
-    {
-      "name": "luindex.jar",
-      "depends_on":[
-        "luindex-deps.jar"
-      ]
-    },
-    {
-      "name": "lusearch.jar",
-      "depends_on": [
-        "lusearch-deps.jar"
+      "sources": [
+        "build_src/eclipse",
+        "bmsrc/dacapo"
       ],
-      "sources": "lucene-1.9.1-src/lucene-1.9.1/src"
+      "build_script": "build_scripts/build_eclipse.sh"
     },
     {
-      "name": "pmd.jar",
+      "name": "deps/fop.jar",
       "depends_on": [
-        "pmd-deps.jar"
+        "deps/fop-deps.jar"
       ],
-      "sources": "lucene-1.9.1-src/lucene-1.9.1/src"
+      "sources": [
+        "build_src/fop",
+        "bmsrc/dacapo"
+      ],
+      "build_script": "build_scripts/build_fop.sh"
     },
     {
-      "name": "xalan.jar",
+      "name": "deps/hsqldb.jar",
       "depends_on": [
-        "xalan-deps.jar"
+        "deps/hsqldb-deps.jar"
       ],
-      "sources": "xalan-j_2_4_1-src/xalan-j_2_4_1/src"
+      "sources": [
+        "build_src/hsqldb",
+        "bmsrc/dacapo"
+      ],
+      "build_script": "build_scripts/build_hsqldb.sh"
+    },
+    {
+      "name": "deps/jython.jar",
+      "depends_on": [
+        "deps/jython-deps.jar"
+      ],
+      "sources": [
+        "build_src/jython",
+        "bmsrc/dacapo"
+      ],
+      "build_script": "build_scripts/build_jython.sh"
+    },
+    {
+      "name": "deps/pmd.jar",
+      "depends_on": [
+        "deps/pmd-deps.jar"
+      ],
+      "sources": [
+        "build_src/pmd",
+        "bmsrc/dacapo"
+      ],
+      "build_script": "build_scripts/build_chart.sh"
     }
   ]
 }
