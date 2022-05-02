@@ -29,7 +29,7 @@ class JavaApplicationCodeFilter(ApplicationCodeFilter):
     """
 
     def find_application_packages(self, br: BenchmarkRecord) -> BenchmarkRecord:
-        packages = []
+        packages = set()
         for source in br.sources:
             for root, dirs, files in os.walk(source):
                 for f in [f for f in files if f.endswith('.java')]:
@@ -37,9 +37,9 @@ class JavaApplicationCodeFilter(ApplicationCodeFilter):
                         try:
                             lines = infile.readlines()
                             package_decls = [l for l in lines if l.startswith("package")]
-                            packages.extend([p.split(' ')[1].split(';')[0] for p in package_decls])
+                            packages.update([p.split(' ')[1].split(';')[0] for p in package_decls])
                         except UnicodeDecodeError:
                             logging.critical(f"Could not read in file {os.path.join(root, f)}")
-        br.packages = packages
+        br.packages = frozenset(packages)
         print(f"Resolved packages as {packages})")
         return br
