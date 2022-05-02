@@ -1,23 +1,33 @@
 {
   "benchmark": [
     {
-      "name": "antlr.jar",
+      "name": "deps/antlr.jar",
       "depends_on": [
-        "antlr-deps.jar"
+        "deps/antlr-deps.jar"
       ],
-      "sources": "antlr-2.7.2/antlr-2.7.2/antlr"
+      "sources": [
+        "build_src/antlr",
+        "bmsrc/dacapo"
+      ],
+      "build_script": "build_scripts/build_antlr.sh"
     },
     {
-      "name": "bloat.jar",
+      "name": "deps/bloat.jar",
       "depends_on": [
-        "bloat-deps.jar"
+        "deps/bloat-deps.jar"
       ],
-      "sources": "bloat-1.0-src/src"
+      "sources": [
+        "build_src/bloat",
+        "bmsrc/dacapo"
+      ]
     },
     {
-      "name": "chart.jar",
+      "name": "deps/chart.jar",
       "depends_on": [
-        "chart-deps.jar"
+        "deps/chart-deps.jar"
+      ],
+      "sources": [
+
       ]
     },
     {

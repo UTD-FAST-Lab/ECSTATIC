@@ -7,7 +7,7 @@
 #      the Free Software Foundation, either version 3 of the License, or
 #      (at your option) any later version.
 #
-#      This program is distributed in the hope that it will be useful,
+#      This program is distributed in the hope that it will be useful
 #      but WITHOUT ANY WARRANTY; without even the implied warranty of
 #      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #      GNU General Public License for more details.
@@ -39,9 +39,10 @@ T = TypeVar('T')  # Indicates the type of content in the results (e.g., call gra
 def get_file_name(violation: Violation) -> str:
     filename = f'violation_{AbstractCommandLineToolRunner.dict_hash(violation.job1.job.configuration)}_' \
                f'{AbstractCommandLineToolRunner.dict_hash(violation.job2.job.configuration)}_' \
-               f'{violation.get_option_under_investigation().name}_' \
-               f'{"_".join([str(v) for v in violation.partial_orders])}' \
-               f'{os.path.basename(violation.job1.job.target.name)}.json'
+               f'{violation.get_option_under_investigation().name}_' + \
+               '_'.join([f'{v.left.level_name}_{"MST" if v.type == PartialOrderType.MORE_SOUND_THAN else "MPT"}'
+                         f'_{v.right.level_name}' for v in violation.partial_orders]) + \
+               f'_{os.path.basename(violation.job1.job.target.name)}.json'
     return filename
 
 

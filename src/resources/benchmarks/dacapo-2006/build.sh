@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Clone repository
-apt install parallel ant unzip -y
+apt install parallel ant javacc unzip -y
 CUR=$(pwd)
-cd /
-git clone https://bitbucket.org/yanniss/doop-benchmarks.git --depth 1
-cd /doop-benchmarks/dacapo-2006
-mkdir -p /benchmarks/dacapo-2006
-find . -type f -name '*.jar' | parallel cp -t /benchmarks/dacapo-2006
-cp /checkmate/src/resources/benchmarks/dacapo-2006/index.json /benchmarks/dacapo-2006
+mkdir -p /benchmarks
+cd /benchmarks
+git clone https://github.com/amordahl/Dacapo-2006.git
+cd Dacapo-2006/benchmarks/build_scripts
+find . -type f -name '*.sh' -exec {} \;
+cd $CUR
