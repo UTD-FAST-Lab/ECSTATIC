@@ -199,7 +199,6 @@ class FuzzGenerator:
                     if level == config[o]:
                         continue
                     if o.type.startswith('int'):
-                        import pdb; pdb.set_trace()
                         if 'i' in level.level_name:
                             logging.info(f'Sampling between {o.min_value} and {o.max_value}')
                             level = Level(o.name, random.randint(o.min_value, o.max_value))
