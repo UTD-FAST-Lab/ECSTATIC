@@ -3,7 +3,7 @@
 # Clone repository
 CUR=$(pwd)
 cd /
-git clone git@github.com:amordahl/CATS-Microbenchmark.git
+git clone https://github.com/amordahl/CATS-Microbenchmark.git
 cd CATS-Microbenchmark
 
 # Build repo
