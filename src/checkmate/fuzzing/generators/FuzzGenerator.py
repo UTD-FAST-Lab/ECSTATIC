@@ -124,14 +124,15 @@ class FuzzGenerator:
         return result
 
     def update_exclusions(self, violations: List[Violation]):
-        if not self.adaptive:
-            return  # Do nothing
-        # Else....
-        # For every violation, add the responsible option settings into the exclusion list.
-        for v in list(filter(lambda v: v.violated, violations)):
-            v: Violation
-            option: Option = v.get_option_under_investigation()
-            self.exclusions.extend([v.job1.job.configuration[option], v.job2.job.configuration[option]])
+        pass
+        # if not self.adaptive:
+        #     return  # Do nothing
+        # # Else....
+        # # For every violation, add the responsible option settings into the exclusion list.
+        # for v in list(filter(lambda v: v.violated, violations)):
+        #     v: Violation
+        #     option: Option = v.get_option_under_investigation()
+        #     self.exclusions.extend([v.job1.job.configuration[option], v.job2.job.configuration[option]])
 
     def make_new_seed(self) -> Dict[Option, Level]:
         """
@@ -172,9 +173,9 @@ class FuzzGenerator:
 
         for candidate in candidates:
             choice = candidate.config
-            excluded = [v for k, v in choice.items() if v in self.exclusions]
-            if len(excluded) > 0:
-                continue
+            # excluded = [v for k, v in choice.items() if v in self.exclusions]
+            # if len(excluded) > 0:
+            #     continue
             logger.info(f"Chosen config: {choice}")
             option_under_investigation = candidate.option
             for benchmark_record in self.benchmark.benchmarks:
@@ -204,9 +205,6 @@ class FuzzGenerator:
                             level = Level(o.name, int(level.level_name))
                     config_copy = copy.deepcopy(config)
                     config_copy[o] = level
-                    for _, v in config_copy.items():
-                        if v in self.exclusions:
-                            raise OptionExcludedError(f"Not allowed to use {v}")
                     candidates.append(ConfigWithMutatedOption(frozendict(config_copy), o))
                 except OptionExcludedError as oee:
                     logger.debug(str(oee))
