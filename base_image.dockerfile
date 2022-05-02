@@ -20,9 +20,10 @@ RUN python -m pip install -r requirements.txt
 FROM python-build AS checkmate-build
 
 COPY --from=dep-build /venv /venv
-
 WORKDIR /
 COPY . /checkmate
+WORKDIR /checkmate
+RUN python -m pip install -e .
 
 FROM python-build AS delta-debugger-build
 
@@ -36,9 +37,4 @@ FROM python-build
 COPY --from=delta-debugger-build /SADeltaDebugger /SADeltaDebugger
 COPY --from=dep-build /venv /venv
 COPY --from=checkmate-build /checkmate /checkmate
-
-WORKDIR /checkmate
-
 ENV PATH=/venv/bin:$PATH
-RUN python -m pip install -e .
-WORKDIR /
