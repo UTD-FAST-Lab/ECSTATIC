@@ -2,16 +2,12 @@
 
 # Clone repository
 CUR=$(pwd)
-cd /
+mkdir -p /benchmarks
+cd /benchmarks
 git clone https://github.com/amordahl/CATS-Microbenchmark.git
 cd CATS-Microbenchmark
 
 # Build repo
 mvn clean compile package
 
-# Move outputs
-mkdir -p /benchmarks
-rm -r /benchmarks/cats-microbenchmark
-mkdir /benchmarks/cats-microbenchmark
-find . type f -name '*.jar' -execdir mv '{}' -t /benchmarks/cats-microbenchmark \;
 cd "$CUR"
