@@ -17,4 +17,5 @@ RUN mvn compile package
 
 FROM checkmate/base-image
 
+RUN apt-get install openjdk-11-jdk
 COPY --from=wala-install /WALAInterface /WALAInterface
