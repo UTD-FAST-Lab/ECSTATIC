@@ -4,7 +4,7 @@
 CUR=$(pwd)
 mkdir -p /benchmarks/test
 cd /benchmarks/test
-git clone git@github.com:amordahl/CATS-Microbenchmark.git
+git clone https://github.com/amordahl/CATS-Microbenchmark.git
 cd ./CATS-Microbenchmark/benchmarks/Reflection/TrivialReflection/TR1
 
 # Build repo

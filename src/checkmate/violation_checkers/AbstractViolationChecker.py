@@ -157,6 +157,19 @@ class AbstractViolationChecker(ABC):
         logger.info(f'Out of {len(input)} flows, {len(result)} were true positives.')
         return {i for i in input if i in fps}
 
+    def postprocess(self, results: Iterable[T], job: FinishedFuzzingJob) -> Iterable[T]:
+        """
+        Allows postprocessing of results. By default, does no postprocessing.
+        Parameters
+        ----------
+        results: The results to postprocess.
+
+        Returns
+        -------
+        The postprocessed result.
+        """
+        return results
+
     def read_from_input(self, file: str) -> Iterable[T]:
         return self.reader.import_file(file)
 
@@ -186,9 +199,8 @@ class AbstractViolationChecker(ABC):
                                                               job1.job.configuration[option_under_investigation]):
                     # If these are true, and job2 has more stuff than job1, we have a certain violation of one of these
                     # partial orders.
-                    job1_input = set(self.read_from_input(job1.results_location))
-                    job2_input = set(self.read_from_input(job2.results_location))
-
+                    job1_input = set(self.postprocess(self.read_from_input(job1.results_location), job1))
+                    job2_input = set(self.postprocess(self.read_from_input(job2.results_location), job2))
                     differences: Set[T] = job2_input.difference(job1_input)
                     if len(differences) > 0:
                         logger.info(f'Found {len(differences)} differences between '
@@ -205,12 +217,9 @@ class AbstractViolationChecker(ABC):
                                                           job2.job.configuration[option_under_investigation]):
                 if option_under_investigation.is_more_sound(job2.job.configuration[option_under_investigation],
                                                             job1.job.configuration[option_under_investigation]):
-                    job1_input = set(self.read_from_input(job1.results_location))
-                    job2_input = set(self.read_from_input(job2.results_location))
+                    job1_input = set(self.postprocess(self.read_from_input(job1.results_location), job1))
+                    job2_input = set(self.postprocess(self.read_from_input(job2.results_location), job2))
                     differences: Set[T] = job1_input.difference(job2_input)
-
-                    differences: Set[T] = set(self.read_from_input(job1.results_location)).difference(
-                        set(self.read_from_input(job2.results_location)))
                     if len(differences) > 0:
                         logger.info(f'Found {len(differences)} differences between '
                                     f'{job2.results_location} ({len(job2_input)}) and '
@@ -225,8 +234,9 @@ class AbstractViolationChecker(ABC):
         else:
             if option_under_investigation.is_more_sound(job1.job.configuration[option_under_investigation],
                                                         job2.job.configuration[option_under_investigation]):
-                differences: Set[T] = self.get_true_positives(self.read_from_input(job2.results_location)).difference(
-                    self.get_true_positives(self.read_from_input(job1.results_location)))
+                job2_result = self.get_true_positives(self.postprocess(self.read_from_input(job2.results_location),job2))
+                job1_result = self.get_true_positives(self.postprocess(self.read_from_input(job1.results_location),job1))
+                differences = job2_result.difference(job1_result)
                 if len(differences) > 0:
                     results.append(Violation(True, {PartialOrder(job1.job.configuration[option_under_investigation],
                                                                  PartialOrderType.MORE_SOUND_THAN,
@@ -234,8 +244,9 @@ class AbstractViolationChecker(ABC):
                                              job1, job2, differences))
             if option_under_investigation.is_more_precise(job1.job.configuration[option_under_investigation],
                                                           job2.job.configuration[option_under_investigation]):
-                differences: Set[T] = self.get_false_positives(self.read_from_input(job1.results_location)).difference(
-                    self.get_false_positives(self.read_from_input(job2.results_location)))
+                job2_result = self.get_false_positives(self.postprocess(self.read_from_input(job2.results_location),job2))
+                job1_result = self.get_false_positives(self.postprocess(self.read_from_input(job1.results_location),job1))
+                differences: Set[T] = job1_result.difference(job2_result)
                 if len(differences) > 0:
                     results.append(Violation(True, {PartialOrder(job1.job.configuration[option_under_investigation],
                                                                  PartialOrderType.MORE_PRECISE_THAN,

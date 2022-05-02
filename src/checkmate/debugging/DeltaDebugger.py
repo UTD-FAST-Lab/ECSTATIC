@@ -106,18 +106,18 @@ class DeltaDebugger:
         print(f"Running delta debugger with cmd {' '.join(cmd)}")
         ps = subprocess.run(cmd, stdout=sys.stdout, stderr=sys.stderr, text=True)
         print("Delta debugging completed.")
-        delta_debugging_directory = os.path.join(results_directory, "deltadebugging")
-        Path(delta_debugging_directory).mkdir(parents=True, exist_ok=True)
+        delta_debugging_directory = os.path.join(results_directory)
         tarname = os.path.join(delta_debugging_directory, get_file_name(violation)) + '.tar.gz'
+        Path(os.path.dirname(tarname)).mkdir(exist_ok=True, parents=True)
         with tarfile.open(tarname, 'w:gz') as f:
             f.add(violation.job1.job.target.name)
             [f.add(s) for s in violation.job1.job.target.sources]
             with open(os.path.join(delta_debugging_directory, get_file_name(violation)), 'w') as f1:
-                json.dump(violation.as_dict())
+                json.dump(violation.as_dict(), f1)
             f.add(os.path.join(delta_debugging_directory, get_file_name(violation)))
             os.remove(os.path.join(delta_debugging_directory, get_file_name(violation)))
 
-        logging.info(f"Delta debugging result written to {tarname}")
+        print(f"Delta debugging result written to {tarname}")
         return tarname
 
     def create_script(self, violation: Violation, directory: str) -> str:

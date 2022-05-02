@@ -31,6 +31,7 @@ class BenchmarkRecord:
     depends_on: List[str] = field(kw_only=True, default_factory=list)
     sources: List[str] = field(kw_only=True, default_factory=list)
     build_script: str = field(kw_only=True, default=None)
+    packages: List[str] = field(kw_only=True, default_factory=list)
 
 
 @dataclass

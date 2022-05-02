@@ -47,6 +47,6 @@ class AbstractCallGraphReader(AbstractReader):
         caller\tcallsite\tcalling_context\ttarget\ttarget_context
         """
         tokens = line.split('\t')
-        callsite = CGCallSite(tokens[0].strip(), tokens[1].strip(), tokens[2].strip())
+        callsite = CGCallSite(tokens[0].strip(' <>'), tokens[1].strip(), tokens[2].strip())
         target = CGTarget(tokens[3].strip(), tokens[4].strip())
         return callsite, target

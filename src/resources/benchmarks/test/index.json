@@ -2,8 +2,6 @@
   "benchmark": [
     {
       "name": "TR1.jar",
-      "depends_on": [
-      ],
       "sources": [
         "TR1/src"
       ]

@@ -22,12 +22,16 @@ import os.path
 
 from jsonschema.validators import RefResolver, Draft7Validator
 
+from src.checkmate.util.ApplicationCodeFilter import ApplicationCodeFilter
+from src.checkmate.util.JavaApplicationCodeFilter import JavaApplicationCodeFilter
 from src.checkmate.util.UtilClasses import Benchmark, BenchmarkRecord
 
 logger = logging.getLogger(__name__)
 
 
-def try_resolve_path(path: str, root: str = "/"):
+def try_resolve_path(path: str, root: str = "/") -> str:
+    if path is None:
+        return None
     logging.info(f'Trying to resolve {path} in {root}')
     if path.startswith("/"):
         path = path[1:]
@@ -67,18 +71,22 @@ def validate(b: BenchmarkRecord, root: str = "/") -> BenchmarkRecord:
 
 class BenchmarkReader:
     def __init__(self,
-                 schema: str = importlib.resources.path('src.resources.schema', 'benchmark.schema.json')):
+                 schema: str = importlib.resources.path('src.resources.schema', 'benchmark.schema.json'),
+                 application_code_filter: ApplicationCodeFilter = JavaApplicationCodeFilter()):
         self.schema = schema
         with open(schema, 'r') as f:
             self.schema = json.load(f)
         self.resolver = RefResolver.from_schema(self.schema)
         self.validator = Draft7Validator(self.schema, self.resolver)
+        self.application_code_filter = application_code_filter
 
     def read_benchmark(self, file: str) -> Benchmark:
         with open(file, 'r') as f:
             index = json.load(f)
         self.validator.validate(index)
         benchmark = Benchmark([validate(BenchmarkRecord(**b)) for b in index['benchmark']])
+        if self.application_code_filter is not None:
+            benchmark = Benchmark([self.application_code_filter.find_application_packages(br) for br in benchmark.benchmarks])
         return benchmark
 
 

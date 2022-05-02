@@ -16,11 +16,31 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
+from typing import Tuple, Any
 
 from src.checkmate.readers.callgraph.AbstractCallGraphReader import AbstractCallGraphReader
+from src.checkmate.util.CGCallSite import CGCallSite
+from src.checkmate.util.CGTarget import CGTarget
 
 logger = logging.getLogger(__name__)
 
-
 class WALACallGraphReader(AbstractCallGraphReader):
-    pass
+
+    def process_line(self, line: str) -> Tuple[CGCallSite, CGTarget]:
+        """
+        Example of WALA line is < Application, Lcfne/Demo, main([Ljava/lang/String;)V >	invokestatic < Application, Ljava/lang/Class, forName(Ljava/lang/String;)Ljava/lang/Class; >@2	Everywhere	java.lang.Class.forName(Ljava/lang/String;)Ljava/lang/Class;	Everywhere
+
+        Parameters
+        ----------
+        line
+
+        Returns
+        -------
+
+        """
+        tokens = line.split("\t")
+        cs = CGCallSite(clazz=f"{tokens[0].split(',')[1].strip()[1:].replace('/', '.')}.{tokens[0].split(',')[2].strip(' <>')}",
+                        stmt = tokens[1], context=tokens[2])
+        tar = CGTarget(target=tokens[3], context=tokens[4])
+        logging.debug(f"Processed {line} to {(cs, tar)}")
+        return (cs, tar)

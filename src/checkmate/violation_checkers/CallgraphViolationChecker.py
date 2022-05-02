@@ -16,15 +16,23 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
-from typing import Any, Set, List, Tuple
+from typing import Any, Set, List, Tuple, Iterable
 
 from src.checkmate.readers.callgraph.AbstractCallGraphReader import AbstractCallGraphReader
+from src.checkmate.util.UtilClasses import FinishedFuzzingJob
 from src.checkmate.violation_checkers.AbstractViolationChecker import AbstractViolationChecker, T
 
 logger = logging.getLogger(__name__)
 
 
 class CallgraphViolationChecker(AbstractViolationChecker):
+
+    def postprocess(self, results: Iterable[T], job: FinishedFuzzingJob) -> Iterable[T]:
+        orig_length = len(results)
+        if len(job.job.target.packages) > 0:
+            results = list(filter(lambda x: True in [x[0].clazz.startswith(p) for p in job.job.target.packages], results))
+            print(f"Postprocessed result from {orig_length} to {len(results)} edges.\nNew call graph is {results}")
+            return results
 
     def is_true_positive(self, input: T) -> bool:
         raise NotImplementedError("We do not support classified call graphs yet.")
