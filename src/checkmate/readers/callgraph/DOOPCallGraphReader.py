@@ -26,11 +26,16 @@ logger = logging.getLogger(__name__)
 
 
 class DOOPCallGraphReader(AbstractCallGraphReader):
+    """
+    A DOOP line is [<<immutable-context>>] <sun.security.x509.AVA: void <clinit>()>/java.security.AccessController.doPrivileged/0  [<<immutable-context>>] <java.security.AccessController: j\
+ava.lang.Object doPrivileged(java.security.PrivilegedAction)>
+    """
     def process_line(self, line: str) -> Tuple[CGCallSite, CGTarget]:
         tokens = line.split("\t")
         if len(tokens) == 5:
             return super().process_line(line)
         else:
-            return CGCallSite(tokens[0].split('/')[0],
-                              '/'.join(tokens[0].split('/')[1:]),
-                              tokens[1]), CGTarget(tokens[2], tokens[3])
+            return (CGCallSite(clazz=tokens[1].split('/')[0].strip(' <>'),
+                               stmt='/'.join(tokens[1].split('/')[1:]),
+                               context=tokens[0]),
+                    CGTarget(tokens[3], tokens[2]))
