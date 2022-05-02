@@ -41,5 +41,5 @@ class JavaApplicationCodeFilter(ApplicationCodeFilter):
                         except UnicodeDecodeError:
                             logging.critical(f"Could not read in file {os.path.join(root, f)}")
         br.packages = frozenset(packages)
-        print(f"Resolved packages as {packages})")
+        logging.info(f"Resolved packages as {packages})")
         return br

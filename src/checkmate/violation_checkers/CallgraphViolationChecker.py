@@ -31,7 +31,7 @@ class CallgraphViolationChecker(AbstractViolationChecker):
         orig_length = len(results)
         if len(job.job.target.packages) > 0:
             results = list(filter(lambda x: True in [x[0].clazz.startswith(p) for p in job.job.target.packages], results))
-            print(f"Postprocessed result from {orig_length} to {len(results)} edges.\nNew call graph is {results}")
+            logging.info(f"Postprocessed result from {orig_length} to {len(results)} edges.")
             return results
 
     def is_true_positive(self, input: T) -> bool:
