@@ -47,8 +47,9 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
     def get_base_command(self) -> List[str]:
         pass
 
-    @abstractmethod
     def get_whole_program(self) -> List[str]:
+        """If supported, this should return an option to enable whole-program analysis.
+        Necessary for Dacapo benchmarks."""
         pass
 
     @abstractmethod
@@ -61,9 +62,10 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         """Returns option that should prepend the output."""
         pass
 
-    @abstractmethod
     def get_task_option(self, task: str) -> List[str]:
-        """Given a task, sets the appropriate option."""
+        """Given a task, sets the appropriate option.
+        Currently not implemented, because every tool only has one task.
+        If we allow multiple tasks for each tool, then we will have to include this."""
         pass
 
     @abstractmethod
