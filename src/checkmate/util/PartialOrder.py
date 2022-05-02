@@ -36,4 +36,4 @@ class PartialOrder:
         return hash((self.left, self.type, self.right))
 
     def __str__(self):
-        return f'{str(self.left)} {self.type} {str(self.right)}'
+        return f'{str(self.left)}_{self.type}_{str(self.right)}'

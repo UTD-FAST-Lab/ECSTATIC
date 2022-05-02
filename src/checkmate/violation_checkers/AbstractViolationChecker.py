@@ -40,7 +40,7 @@ def get_file_name(violation: Violation) -> str:
     filename = f'violation_{AbstractCommandLineToolRunner.dict_hash(violation.job1.job.configuration)}_' \
                f'{AbstractCommandLineToolRunner.dict_hash(violation.job2.job.configuration)}_' \
                f'{violation.get_option_under_investigation().name}_' \
-               f'{"_".join(violation.partial_orders)}' \
+               f'{"_".join([str(v) for v in violation.partial_orders])}' \
                f'{os.path.basename(violation.job1.job.target.name)}.json'
     return filename
 
