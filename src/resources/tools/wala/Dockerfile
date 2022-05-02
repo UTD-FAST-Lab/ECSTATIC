@@ -2,7 +2,7 @@ FROM ubuntu:20.04 as wala-install
 
 USER root
 ## package update
-RUN apt-get update && apt-get install -y openjdk-11-jdk
+RUN apt-get update && apt-get install -y git
 
 ## timezone
 RUN apt-get install tzdata
