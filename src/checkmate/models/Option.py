@@ -246,9 +246,9 @@ class Option:
         if 'default' in d:
             o.set_default(d['default'])
         if 'minValue' in d:
-            o.min_value = d['minValue']
+            o.min_value = int(d['minValue'])
         if 'maxValue' in d:
-            o.max_value = d['maxValue']
+            o.max_value = int(d['maxValue'])
         if 'tags' in d:
             [o.add_tag(t) for t in d['tags']]
         for p in d['orders']:
