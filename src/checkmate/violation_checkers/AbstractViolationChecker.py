@@ -38,7 +38,8 @@ T = TypeVar('T')  # Indicates the type of content in the results (e.g., call gra
 
 
 def get_file_name(violation: Violation) -> str:
-    filename = f'{AbstractCommandLineToolRunner.dict_hash(violation.job1.job.configuration)}/' \
+    filename = f'{"TRANSITIVE" if violation.partial_orders[0].is_transitive() else "DIRECT"}/'\
+               f'{AbstractCommandLineToolRunner.dict_hash(violation.job1.job.configuration)}/' \
                f'{AbstractCommandLineToolRunner.dict_hash(violation.job2.job.configuration)}/' \
                f'{violation.get_option_under_investigation().name}/' + \
                '/'.join([f'{v.left.level_name}/{"MST" if v.type == PartialOrderType.MORE_SOUND_THAN else "MPT"}'

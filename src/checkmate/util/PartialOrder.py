@@ -15,10 +15,11 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 
 from src.checkmate.models.Level import Level
+from src.checkmate.models.Option import Option
 
 
 class PartialOrderType(Enum):
@@ -31,9 +32,18 @@ class PartialOrder:
     left: Level
     type: PartialOrderType
     right: Level
+    option: Option
+    transitive: bool = field(kw_only=True, default=False)
 
     def __hash__(self):
         return hash((self.left, self.type, self.right))
 
     def __str__(self):
         return f'{str(self.left)}_{self.type}_{str(self.right)}'
+
+    def is_transitive(self) -> bool:
+        if type == PartialOrderType.MORE_PRECISE_THAN:
+            return not self.option.precision.has_edge(self.left, self.right)
+        else:
+            return not self.option.soundness.has_edge(self.left, self.right)
+
