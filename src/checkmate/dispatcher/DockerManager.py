@@ -30,7 +30,6 @@ logger = logging.getLogger(__name__)
 
 
 def build_image(tool: str, nocache: bool = False):
-    import pdb; pdb.set_trace()
     env = os.environ
     env['DOCKER_BUILDKIT'] = '1'
     if tool == 'base':

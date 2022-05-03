@@ -94,7 +94,7 @@ def parse_args():
 def main():
     args = parse_args()
 
-    DockerManager.build_image('base')
+    DockerManager.build_image('base', args.no_cache)
     for t in args.tools:
         DockerManager.build_image(t, args.no_cache)
 
