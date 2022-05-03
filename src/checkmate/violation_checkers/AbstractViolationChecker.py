@@ -59,47 +59,38 @@ class AbstractViolationChecker(ABC):
     def check_violations(self, results: Iterable[FinishedFuzzingJob], output_folder: str,
                          finished_results: Iterable[Violation] = []) -> List[Violation]:
         start_time = time.time()
-        pairs: Set[Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]] = []
-        for finished_run in results:
-            finished_run: FinishedFuzzingJob
-            option_under_investigation: Option = finished_run.job.option_under_investigation
-            # Find configs with potential partial order relationships.
-            candidates: List[FinishedFuzzingJob]
-            if option_under_investigation is None:
-                candidates = [f for f in results if
-                              f.job.target == finished_run.job.target and
-                              f.results_location != finished_run.results_location]
-            else:
-                candidates = [f for f in results if
-                              (f.job.option_under_investigation is None or
-                               f.job.option_under_investigation == option_under_investigation) and
-                              f.job.target == finished_run.job.target and
-                              f.results_location != finished_run.results_location]
-            logger.info(f'Found {len(candidates)} candidates for job {finished_run.results_location}')
-            for candidate in candidates:
-                candidate: FinishedFuzzingJob
-                if finished_run.job.option_under_investigation is None:
-                    # switch to the other candidate's
-                    option_under_investigation = candidate.job.option_under_investigation
-                    if option_under_investigation is None:
-                        raise RuntimeError('Trying to compare two configurations with None as the option '
-                                           'under investigation. This should never happen.')
+        if len(finished_results) == 0:
+            pairs: Set[Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]] = []
+            for finished_run in results:
+                finished_run: FinishedFuzzingJob
+                option_under_investigation: Option = finished_run.job.option_under_investigation
+                # Find configs with potential partial order relationships.
+                candidates: List[FinishedFuzzingJob]
+                if option_under_investigation is None:
+                    candidates = [f for f in results if
+                                  f.job.target == finished_run.job.target and
+                                  f.results_location != finished_run.results_location]
+                else:
+                    candidates = [f for f in results if
+                                  (f.job.option_under_investigation is None or
+                                   f.job.option_under_investigation == option_under_investigation) and
+                                  f.job.target == finished_run.job.target and
+                                  f.results_location != finished_run.results_location]
+                logger.info(f'Found {len(candidates)} candidates for job {finished_run.results_location}')
+                for candidate in candidates:
+                    candidate: FinishedFuzzingJob
+                    if finished_run.job.option_under_investigation is None:
+                        # switch to the other candidate's
+                        option_under_investigation = candidate.job.option_under_investigation
+                        if option_under_investigation is None:
+                            raise RuntimeError('Trying to compare two configurations with None as the option '
+                                               'under investigation. This should never happen.')
 
-                pairs.append((finished_run, candidate, option_under_investigation))
+                    pairs.append((finished_run, candidate, option_under_investigation))
 
-        if len(finished_results) > 0:
-            print("Comparing old violations to see what needs to be recomputed.")
-        already_checked_pairs = [(v.job1, v.job2, v.get_option_under_investigation()) for v in finished_results]
-        obsolete = [v for v in already_checked_pairs if v not in pairs]
-        if len(obsolete) > 0:
-            for job1, job2, op in obsolete:
-                logger.critical(f'Found a violation between {job1.results_location} and {job2.results_location} on '
-                                f'option {op} that is out-of-date or otherwise erroneously included.')
-        pairs = [v for v in pairs if v not in already_checked_pairs]
-        print(f'{len(pairs)} pairs of results need to be compared to find violations.')
-        with Pool(self.jobs) as p:
-            print(f'Checking violations with {self.jobs} cores.')
-            [finished_results.extend(v_set) for v_set in p.starmap(self.check_for_violation, pairs)]
+            with Pool(self.jobs) as p:
+                print(f'Checking violations with {self.jobs} cores.')
+                [finished_results.extend(v_set) for v_set in p.starmap(self.check_for_violation, pairs)]
 
         print('Violation detection done. Now printing to files.')
         for violation in filter(lambda v: v.violated, finished_results):
