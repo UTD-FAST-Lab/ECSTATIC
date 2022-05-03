@@ -52,7 +52,7 @@ class DeltaDebugger:
         self.task = task
         self.groundtruths = groundtruths
 
-    def delta_debug(self, violation: Violation, results_directory: str) -> Optional[DeltaDebuggingResult]:
+    def delta_debug(self, violation: Violation, campaign_directory: str) -> Optional[DeltaDebuggingResult]:
         """
 
         Parameters
@@ -64,10 +64,13 @@ class DeltaDebugger:
         True if the delta debugging failed. False otherwise.
         """
         # First, create artifacts. We need to pickle the violation, as well as creating the script.
-        d = tempfile.TemporaryDirectory(dir=self.artifacts_folder)
+        d = os.path.abspath(os.path.join(campaign_directory, 'deltadebugging',
+                         os.path.dirname(get_file_name(violation))))
+        Path(d).mkdir(exist_ok=True, parents=True)
+
         # Copy benchmarks folder so that we have our own code location.
-        shutil.copytree(src="/benchmarks", dst=os.path.join(d.name, "benchmarks"))
-        violation.job1.job.target = validate(violation.job1.job.target, d.name)
+        shutil.copytree(src="/benchmarks", dst=d)
+        violation.job1.job.target = validate(violation.job1.job.target, d)
         logging.info(f'Moved benchmark, so target is now {violation.job1.job.target}')
         violation.job2.job.target = violation.job1.job.target
         try:
@@ -78,48 +81,39 @@ class DeltaDebugger:
             logging.exception(violation.job1.job.target)
 
         # Then, create the script.
-        script_location = self.create_script(violation, d.name)
-        build_script = tempfile.NamedTemporaryFile(delete=False, dir=d.name)
-        with open(build_script.name, 'w') as f:
-            f.write("#!/bin/bash\n")
-            f.write("CURDIR=$(pwd)\n")
-            f.write(f"cd {os.path.dirname(violation.job1.job.target.sources[0])}\n")
-            f.write("mvn compile package\n")
-            f.write("e=$?\n")
-            f.write("cd $CURDIR\n")
-            f.write("exit $e\n")
-
-        os.chmod(build_script.name, 700)
+        script_location = self.create_script(violation, d)
+        build_script = violation.job1.job.target.build_script
+        os.chmod(build_script, 700)
         os.chmod(script_location, 700)
-        build_script.close()
+
         # Then, run the delta debugger
         cmd : List[str]= "java -jar /SADeltaDebugger/ViolationDeltaDebugger/target/ViolationDeltaDebugger-1.0-SNAPSHOT-jar-with" \
               "-dependencies.jar".split(' ')
         cmd.append("--sources")
         cmd.extend(violation.job1.job.target.sources)
         cmd.extend(["--target", violation.job1.job.target.name])
-        cmd.extend(["--bs", os.path.abspath(build_script.name)])
+        cmd.extend(["--bs", os.path.abspath(build_script)])
         cmd.extend(["--vs", os.path.abspath(script_location)])
-        cmd.extend(["--logs", os.path.join(d.name, "log.txt")])
+        cmd.extend(["--logs", os.path.join(d, "log.txt")])
         cmd.extend(['--hdd', '--class-reduction'])
 
         print(f"Running delta debugger with cmd {' '.join(cmd)}")
         ps = subprocess.run(cmd, stdout=sys.stdout, stderr=sys.stderr, text=True)
         print("Delta debugging completed.")
-        delta_debugging_directory = os.path.join(results_directory)
-        tarname = os.path.join(delta_debugging_directory, get_file_name(violation)) + '.tar.gz'
-        Path(os.path.dirname(tarname)).mkdir(exist_ok=True, parents=True)
-        with tarfile.open(tarname, 'w:gz') as f:
-            f.add(violation.job1.job.target.name, os.path.basename(violation.job1.job.target.name))
-            [f.add(s) for s in violation.job1.job.target.sources]
-            with open(os.path.join(delta_debugging_directory, get_file_name(violation)), 'w') as f1:
-                json.dump(violation.as_dict(), f1)
-            f.add(os.path.join(delta_debugging_directory, get_file_name(violation)),
-                  os.path.basename(os.path.join(delta_debugging_directory, get_file_name(violation))))
-            f.add(os.path.join(d.name, "log.txt"), "log.txt")
-            os.remove(os.path.join(delta_debugging_directory, get_file_name(violation)))
-
-        print(f"Delta debugging result written to {tarname}")
+        # delta_debugging_directory = os.path.join(results_directory)
+        # tarname = os.path.join(delta_debugging_directory, get_file_name(violation)) + '.tar.gz'
+        # Path(os.path.dirname(tarname)).mkdir(exist_ok=True, parents=True)
+        # with tarfile.open(tarname, 'w:gz') as f:
+        #     f.add(violation.job1.job.target.name, os.path.basename(violation.job1.job.target.name))
+        #     [f.add(s) for s in violation.job1.job.target.sources]
+        #     with open(os.path.join(delta_debugging_directory, get_file_name(violation)), 'w') as f1:
+        #         json.dump(violation.as_dict(), f1)
+        #     f.add(os.path.join(delta_debugging_directory, get_file_name(violation)),
+        #           os.path.basename(os.path.join(delta_debugging_directory, get_file_name(violation))))
+        #     f.add(os.path.join(d.name, "log.txt"), "log.txt")
+        #     os.remove(os.path.join(delta_debugging_directory, get_file_name(violation)))
+        #
+        # print(f"Delta debugging result written to {tarname}")
         return tarname
 
     def create_script(self, violation: Violation, directory: str) -> str:
