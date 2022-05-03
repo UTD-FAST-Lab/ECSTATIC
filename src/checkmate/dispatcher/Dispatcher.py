@@ -96,7 +96,7 @@ def main():
 
     DockerManager.build_image('base')
     for t in args.tools:
-        DockerManager.build_image(t)
+        DockerManager.build_image(t, args.nocache)
 
     for t in args.tools:
         for b in args.benchmarks:
