@@ -79,7 +79,6 @@ class DeltaDebugger:
 
         # Then, create the script.
         script_location = self.create_script(violation, d.name)
-
         build_script = tempfile.NamedTemporaryFile(delete=False, dir=d.name)
         with open(build_script.name, 'w') as f:
             f.write("#!/bin/bash\n")
@@ -101,6 +100,7 @@ class DeltaDebugger:
         cmd.extend(["--target", violation.job1.job.target.name])
         cmd.extend(["--bs", os.path.abspath(build_script.name)])
         cmd.extend(["--vs", os.path.abspath(script_location)])
+        cmd.extend(["--logs", os.path.join(d.name, "log.txt")])
         cmd.extend(['--hdd'])
 
         print(f"Running delta debugger with cmd {' '.join(cmd)}")
@@ -115,6 +115,7 @@ class DeltaDebugger:
             with open(os.path.join(delta_debugging_directory, get_file_name(violation)), 'w') as f1:
                 json.dump(violation.as_dict(), f1)
             f.add(os.path.join(delta_debugging_directory, get_file_name(violation)))
+            f.add(os.path.join(d.name, "log.txt"))
             os.remove(os.path.join(delta_debugging_directory, get_file_name(violation)))
 
         print(f"Delta debugging result written to {tarname}")
