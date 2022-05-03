@@ -1,1 +1,788 @@
-{"benchmark": [{"name": "StaticInitializers/SI8/target/SI8.jar", "sources": ["StaticInitializers/SI8/src"], "build_script": "StaticInitializers/SI8/build.sh"}, {"name": "StaticInitializers/SI6/target/SI6.jar", "sources": ["StaticInitializers/SI6/src"], "build_script": "StaticInitializers/SI6/build.sh"}, {"name": "StaticInitializers/SI1/target/SI1.jar", "sources": ["StaticInitializers/SI1/src"], "build_script": "StaticInitializers/SI1/build.sh"}, {"name": "StaticInitializers/SI7/target/SI7.jar", "sources": ["StaticInitializers/SI7/src"], "build_script": "StaticInitializers/SI7/build.sh"}, {"name": "StaticInitializers/SI2/target/SI2.jar", "sources": ["StaticInitializers/SI2/src"], "build_script": "StaticInitializers/SI2/build.sh"}, {"name": "StaticInitializers/SI5/target/SI5.jar", "sources": ["StaticInitializers/SI5/src"], "build_script": "StaticInitializers/SI5/build.sh"}, {"name": "StaticInitializers/SI4/target/SI4.jar", "sources": ["StaticInitializers/SI4/src"], "build_script": "StaticInitializers/SI4/build.sh"}, {"name": "StaticInitializers/SI3/target/SI3.jar", "sources": ["StaticInitializers/SI3/src"], "build_script": "StaticInitializers/SI3/build.sh"}, {"name": "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM6/target/J8DIM6.jar", "sources": ["Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM6/src"], "build_script": "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM6/build.sh"}, {"name": "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM1/target/J8DIM1.jar", "sources": ["Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM1/src"], "build_script": "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM1/build.sh"}, {"name": "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM4/target/J8DIM4.jar", "sources": ["Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM4/src"], "build_script": "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM4/build.sh"}, {"name": "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM3/target/J8DIM3.jar", "sources": ["Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM3/src"], "build_script": "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM3/build.sh"}, {"name": "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM2/target/J8DIM2.jar", "sources": ["Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM2/src"], "build_script": "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM2/build.sh"}, {"name": "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM5/target/J8DIM5.jar", "sources": ["Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM5/src"], "build_script": "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM5/build.sh"}, {"name": "Java8InterfaceMethods/Java8StaticInterfaceMethods/J8SIM1/target/J8SIM1.jar", "sources": ["Java8InterfaceMethods/Java8StaticInterfaceMethods/J8SIM1/src"], "build_script": "Java8InterfaceMethods/Java8StaticInterfaceMethods/J8SIM1/build.sh"}, {"name": "Serialization/Ser7/target/Ser7.jar", "sources": ["Serialization/Ser7/src"], "build_script": "Serialization/Ser7/build.sh"}, {"name": "Serialization/Ser9/target/Ser9.jar", "sources": ["Serialization/Ser9/src"], "build_script": "Serialization/Ser9/build.sh"}, {"name": "Serialization/ExternalizableClasses/ExtSer2/target/ExtSer2.jar", "sources": ["Serialization/ExternalizableClasses/ExtSer2/src"], "build_script": "Serialization/ExternalizableClasses/ExtSer2/build.sh"}, {"name": "Serialization/ExternalizableClasses/ExtSer3/target/ExtSer3.jar", "sources": ["Serialization/ExternalizableClasses/ExtSer3/src"], "build_script": "Serialization/ExternalizableClasses/ExtSer3/build.sh"}, {"name": "Serialization/ExternalizableClasses/ExtSer1/target/ExtSer1.jar", "sources": ["Serialization/ExternalizableClasses/ExtSer1/src"], "build_script": "Serialization/ExternalizableClasses/ExtSer1/build.sh"}, {"name": "Serialization/Ser8/target/Ser8.jar", "sources": ["Serialization/Ser8/src"], "build_script": "Serialization/Ser8/build.sh"}, {"name": "Serialization/Ser6/target/Ser6.jar", "sources": ["Serialization/Ser6/src"], "build_script": "Serialization/Ser6/build.sh"}, {"name": "Serialization/Ser1/target/Ser1.jar", "sources": ["Serialization/Ser1/src"], "build_script": "Serialization/Ser1/build.sh"}, {"name": "Serialization/SerializationAndLambdas/SerLam1/target/SerLam1.jar", "sources": ["Serialization/SerializationAndLambdas/SerLam1/src"], "build_script": "Serialization/SerializationAndLambdas/SerLam1/build.sh"}, {"name": "Serialization/Ser4/target/Ser4.jar", "sources": ["Serialization/Ser4/src"], "build_script": "Serialization/Ser4/build.sh"}, {"name": "Serialization/Ser3/target/Ser3.jar", "sources": ["Serialization/Ser3/src"], "build_script": "Serialization/Ser3/build.sh"}, {"name": "Serialization/Ser2/target/Ser2.jar", "sources": ["Serialization/Ser2/src"], "build_script": "Serialization/Ser2/build.sh"}, {"name": "Serialization/Ser5/target/Ser5.jar", "sources": ["Serialization/Ser5/src"], "build_script": "Serialization/Ser5/build.sh"}, {"name": "Serialization/SerLam2/target/SerLam2.jar", "sources": ["Serialization/SerLam2/src"], "build_script": "Serialization/SerLam2/build.sh"}, {"name": "DynamicProxies/DP1/target/DP1.jar", "sources": ["DynamicProxies/DP1/src"], "build_script": "DynamicProxies/DP1/build.sh"}, {"name": "VirtualCalls/VC4/target/VC4.jar", "sources": ["VirtualCalls/VC4/src"], "build_script": "VirtualCalls/VC4/build.sh"}, {"name": "VirtualCalls/VC3/target/VC3.jar", "sources": ["VirtualCalls/VC3/src"], "build_script": "VirtualCalls/VC3/build.sh"}, {"name": "VirtualCalls/VC2/target/VC2.jar", "sources": ["VirtualCalls/VC2/src"], "build_script": "VirtualCalls/VC2/build.sh"}, {"name": "VirtualCalls/VC1/target/VC1.jar", "sources": ["VirtualCalls/VC1/src"], "build_script": "VirtualCalls/VC1/build.sh"}, {"name": "TypeCasts/TC1/target/TC1.jar", "sources": ["TypeCasts/TC1/src"], "build_script": "TypeCasts/TC1/build.sh"}, {"name": "TypeCasts/TC6/target/TC6.jar", "sources": ["TypeCasts/TC6/src"], "build_script": "TypeCasts/TC6/build.sh"}, {"name": "TypeCasts/TC3/target/TC3.jar", "sources": ["TypeCasts/TC3/src"], "build_script": "TypeCasts/TC3/build.sh"}, {"name": "TypeCasts/TC4/target/TC4.jar", "sources": ["TypeCasts/TC4/src"], "build_script": "TypeCasts/TC4/build.sh"}, {"name": "TypeCasts/TC5/target/TC5.jar", "sources": ["TypeCasts/TC5/src"], "build_script": "TypeCasts/TC5/build.sh"}, {"name": "TypeCasts/TC2/target/TC2.jar", "sources": ["TypeCasts/TC2/src"], "build_script": "TypeCasts/TC2/build.sh"}, {"name": "Library/LIB2/target/LIB2.jar", "sources": ["Library/LIB2/src"], "build_script": "Library/LIB2/build.sh"}, {"name": "Library/LIB5/target/LIB5.jar", "sources": ["Library/LIB5/src"], "build_script": "Library/LIB5/build.sh"}, {"name": "Library/LIB4/target/LIB4.jar", "sources": ["Library/LIB4/src"], "build_script": "Library/LIB4/build.sh"}, {"name": "Library/LIB3/target/LIB3.jar", "sources": ["Library/LIB3/src"], "build_script": "Library/LIB3/build.sh"}, {"name": "Library/LIB1/target/LIB1.jar", "sources": ["Library/LIB1/src"], "build_script": "Library/LIB1/build.sh"}, {"name": "ClassLoading/CL1/target/CL1.jar", "sources": ["ClassLoading/CL1/src"], "build_script": "ClassLoading/CL1/build.sh"}, {"name": "ClassLoading/CL2/target/CL2.jar", "sources": ["ClassLoading/CL2/src"], "build_script": "ClassLoading/CL2/build.sh"}, {"name": "ClassLoading/CL4/target/CL4.jar", "sources": ["ClassLoading/CL4/src"], "build_script": "ClassLoading/CL4/build.sh"}, {"name": "ClassLoading/CL3/target/CL3.jar", "sources": ["ClassLoading/CL3/src"], "build_script": "ClassLoading/CL3/build.sh"}, {"name": "Unsafe/Unsafe6/target/Unsafe6.jar", "sources": ["Unsafe/Unsafe6/src"], "build_script": "Unsafe/Unsafe6/build.sh"}, {"name": "Unsafe/Unsafe1/target/Unsafe1.jar", "sources": ["Unsafe/Unsafe1/src"], "build_script": "Unsafe/Unsafe1/build.sh"}, {"name": "Unsafe/Unsafe7/target/Unsafe7.jar", "sources": ["Unsafe/Unsafe7/src"], "build_script": "Unsafe/Unsafe7/build.sh"}, {"name": "Unsafe/Unsafe2/target/Unsafe2.jar", "sources": ["Unsafe/Unsafe2/src"], "build_script": "Unsafe/Unsafe2/build.sh"}, {"name": "Unsafe/Unsafe5/target/Unsafe5.jar", "sources": ["Unsafe/Unsafe5/src"], "build_script": "Unsafe/Unsafe5/build.sh"}, {"name": "Unsafe/Unsafe4/target/Unsafe4.jar", "sources": ["Unsafe/Unsafe4/src"], "build_script": "Unsafe/Unsafe4/build.sh"}, {"name": "Unsafe/Unsafe3/target/Unsafe3.jar", "sources": ["Unsafe/Unsafe3/src"], "build_script": "Unsafe/Unsafe3/build.sh"}, {"name": "JVMCalls/JVMC5/target/JVMC5.jar", "sources": ["JVMCalls/JVMC5/src"], "build_script": "JVMCalls/JVMC5/build.sh"}, {"name": "JVMCalls/JVMC2/target/JVMC2.jar", "sources": ["JVMCalls/JVMC2/src"], "build_script": "JVMCalls/JVMC2/build.sh"}, {"name": "JVMCalls/JVMC3/target/JVMC3.jar", "sources": ["JVMCalls/JVMC3/src"], "build_script": "JVMCalls/JVMC3/build.sh"}, {"name": "JVMCalls/JVMC4/target/JVMC4.jar", "sources": ["JVMCalls/JVMC4/src"], "build_script": "JVMCalls/JVMC4/build.sh"}, {"name": "JVMCalls/JVMC1/target/JVMC1.jar", "sources": ["JVMCalls/JVMC1/src"], "build_script": "JVMCalls/JVMC1/build.sh"}, {"name": "SignaturePolymorphicMethods/SPM7/target/SPM7.jar", "sources": ["SignaturePolymorphicMethods/SPM7/src"], "build_script": "SignaturePolymorphicMethods/SPM7/build.sh"}, {"name": "SignaturePolymorphicMethods/SPM6/target/SPM6.jar", "sources": ["SignaturePolymorphicMethods/SPM6/src"], "build_script": "SignaturePolymorphicMethods/SPM6/build.sh"}, {"name": "SignaturePolymorphicMethods/SPM1/target/SPM1.jar", "sources": ["SignaturePolymorphicMethods/SPM1/src"], "build_script": "SignaturePolymorphicMethods/SPM1/build.sh"}, {"name": "SignaturePolymorphicMethods/SPM4/target/SPM4.jar", "sources": ["SignaturePolymorphicMethods/SPM4/src"], "build_script": "SignaturePolymorphicMethods/SPM4/build.sh"}, {"name": "SignaturePolymorphicMethods/SPM3/target/SPM3.jar", "sources": ["SignaturePolymorphicMethods/SPM3/src"], "build_script": "SignaturePolymorphicMethods/SPM3/build.sh"}, {"name": "SignaturePolymorphicMethods/SPM2/target/SPM2.jar", "sources": ["SignaturePolymorphicMethods/SPM2/src"], "build_script": "SignaturePolymorphicMethods/SPM2/build.sh"}, {"name": "SignaturePolymorphicMethods/SPM5/target/SPM5.jar", "sources": ["SignaturePolymorphicMethods/SPM5/src"], "build_script": "SignaturePolymorphicMethods/SPM5/build.sh"}, {"name": "TrivialModernReflection/TMR8/target/TMR8.jar", "sources": ["TrivialModernReflection/TMR8/src"], "build_script": "TrivialModernReflection/TMR8/build.sh"}, {"name": "TrivialModernReflection/TMR6/target/TMR6.jar", "sources": ["TrivialModernReflection/TMR6/src"], "build_script": "TrivialModernReflection/TMR6/build.sh"}, {"name": "TrivialModernReflection/TMR1/target/TMR1.jar", "sources": ["TrivialModernReflection/TMR1/src"], "build_script": "TrivialModernReflection/TMR1/build.sh"}, {"name": "TrivialModernReflection/TMR7/target/TMR7.jar", "sources": ["TrivialModernReflection/TMR7/src"], "build_script": "TrivialModernReflection/TMR7/build.sh"}, {"name": "TrivialModernReflection/TMR2/target/TMR2.jar", "sources": ["TrivialModernReflection/TMR2/src"], "build_script": "TrivialModernReflection/TMR2/build.sh"}, {"name": "TrivialModernReflection/TMR5/target/TMR5.jar", "sources": ["TrivialModernReflection/TMR5/src"], "build_script": "TrivialModernReflection/TMR5/build.sh"}, {"name": "TrivialModernReflection/TMR4/target/TMR4.jar", "sources": ["TrivialModernReflection/TMR4/src"], "build_script": "TrivialModernReflection/TMR4/build.sh"}, {"name": "TrivialModernReflection/TMR3/target/TMR3.jar", "sources": ["TrivialModernReflection/TMR3/src"], "build_script": "TrivialModernReflection/TMR3/build.sh"}, {"name": "NonVirtualCalls/NVC4/target/NVC4.jar", "sources": ["NonVirtualCalls/NVC4/src"], "build_script": "NonVirtualCalls/NVC4/build.sh"}, {"name": "NonVirtualCalls/NVC3/target/NVC3.jar", "sources": ["NonVirtualCalls/NVC3/src"], "build_script": "NonVirtualCalls/NVC3/build.sh"}, {"name": "NonVirtualCalls/NVC2/target/NVC2.jar", "sources": ["NonVirtualCalls/NVC2/src"], "build_script": "NonVirtualCalls/NVC2/build.sh"}, {"name": "NonVirtualCalls/NVC5/target/NVC5.jar", "sources": ["NonVirtualCalls/NVC5/src"], "build_script": "NonVirtualCalls/NVC5/build.sh"}, {"name": "NonVirtualCalls/NVC1/target/NVC1.jar", "sources": ["NonVirtualCalls/NVC1/src"], "build_script": "NonVirtualCalls/NVC1/build.sh"}, {"name": "Java8InvokeDynamics/Lambdas/Lambda1/target/Lambda1.jar", "sources": ["Java8InvokeDynamics/Lambdas/Lambda1/src"], "build_script": "Java8InvokeDynamics/Lambdas/Lambda1/build.sh"}, {"name": "Java8InvokeDynamics/Lambdas/Lambda2/target/Lambda2.jar", "sources": ["Java8InvokeDynamics/Lambdas/Lambda2/src"], "build_script": "Java8InvokeDynamics/Lambdas/Lambda2/build.sh"}, {"name": "Java8InvokeDynamics/Lambdas/Lambda3/target/Lambda3.jar", "sources": ["Java8InvokeDynamics/Lambdas/Lambda3/src"], "build_script": "Java8InvokeDynamics/Lambdas/Lambda3/build.sh"}, {"name": "Java8InvokeDynamics/Lambdas/Lambda4/target/Lambda4.jar", "sources": ["Java8InvokeDynamics/Lambdas/Lambda4/src"], "build_script": "Java8InvokeDynamics/Lambdas/Lambda4/build.sh"}, {"name": "Java8InvokeDynamics/MR4/target/MR4.jar", "sources": ["Java8InvokeDynamics/MR4/src"], "build_script": "Java8InvokeDynamics/MR4/build.sh"}, {"name": "Java8InvokeDynamics/MR3/target/MR3.jar", "sources": ["Java8InvokeDynamics/MR3/src"], "build_script": "Java8InvokeDynamics/MR3/build.sh"}, {"name": "Java8InvokeDynamics/MR2/target/MR2.jar", "sources": ["Java8InvokeDynamics/MR2/src"], "build_script": "Java8InvokeDynamics/MR2/build.sh"}, {"name": "Java8InvokeDynamics/MR5/target/MR5.jar", "sources": ["Java8InvokeDynamics/MR5/src"], "build_script": "Java8InvokeDynamics/MR5/build.sh"}, {"name": "Java8InvokeDynamics/MR7/target/MR7.jar", "sources": ["Java8InvokeDynamics/MR7/src"], "build_script": "Java8InvokeDynamics/MR7/build.sh"}, {"name": "Java8InvokeDynamics/MR6/target/MR6.jar", "sources": ["Java8InvokeDynamics/MR6/src"], "build_script": "Java8InvokeDynamics/MR6/build.sh"}, {"name": "Java8InvokeDynamics/MR1/target/MR1.jar", "sources": ["Java8InvokeDynamics/MR1/src"], "build_script": "Java8InvokeDynamics/MR1/build.sh"}, {"name": "Reflection/ContextSensitiveReflection/CSR4/target/CSR4.jar", "sources": ["Reflection/ContextSensitiveReflection/CSR4/src"], "build_script": "Reflection/ContextSensitiveReflection/CSR4/build.sh"}, {"name": "Reflection/ContextSensitiveReflection/CSR3/target/CSR3.jar", "sources": ["Reflection/ContextSensitiveReflection/CSR3/src"], "build_script": "Reflection/ContextSensitiveReflection/CSR3/build.sh"}, {"name": "Reflection/ContextSensitiveReflection/CSR2/target/CSR2.jar", "sources": ["Reflection/ContextSensitiveReflection/CSR2/src"], "build_script": "Reflection/ContextSensitiveReflection/CSR2/build.sh"}, {"name": "Reflection/ContextSensitiveReflection/CSR1/target/CSR1.jar", "sources": ["Reflection/ContextSensitiveReflection/CSR1/src"], "build_script": "Reflection/ContextSensitiveReflection/CSR1/build.sh"}, {"name": "Reflection/ClassForNameExceptions/CFNE1/target/CFNE1.jar", "sources": ["Reflection/ClassForNameExceptions/CFNE1/src"], "build_script": "Reflection/ClassForNameExceptions/CFNE1/build.sh"}, {"name": "Reflection/ClassForNameExceptions/CFNE2/target/CFNE2.jar", "sources": ["Reflection/ClassForNameExceptions/CFNE2/src"], "build_script": "Reflection/ClassForNameExceptions/CFNE2/build.sh"}, {"name": "Reflection/ClassForNameExceptions/CFNE3/target/CFNE3.jar", "sources": ["Reflection/ClassForNameExceptions/CFNE3/src"], "build_script": "Reflection/ClassForNameExceptions/CFNE3/build.sh"}, {"name": "Reflection/ClassForNameExceptions/CFNE4/target/CFNE4.jar", "sources": ["Reflection/ClassForNameExceptions/CFNE4/src"], "build_script": "Reflection/ClassForNameExceptions/CFNE4/build.sh"}, {"name": "Reflection/TrivialReflection/TR7/target/TR7.jar", "sources": ["Reflection/TrivialReflection/TR7/src"], "build_script": "Reflection/TrivialReflection/TR7/build.sh"}, {"name": "Reflection/TrivialReflection/TR9/target/TR9.jar", "sources": ["Reflection/TrivialReflection/TR9/src"], "build_script": "Reflection/TrivialReflection/TR9/build.sh"}, {"name": "Reflection/TrivialReflection/TR8/target/TR8.jar", "sources": ["Reflection/TrivialReflection/TR8/src"], "build_script": "Reflection/TrivialReflection/TR8/build.sh"}, {"name": "Reflection/TrivialReflection/TR1/target/TR1.jar", "sources": ["Reflection/TrivialReflection/TR1/src"], "build_script": "Reflection/TrivialReflection/TR1/build.sh"}, {"name": "Reflection/TrivialReflection/TR6/target/TR6.jar", "sources": ["Reflection/TrivialReflection/TR6/src"], "build_script": "Reflection/TrivialReflection/TR6/build.sh"}, {"name": "Reflection/TrivialReflection/TR3/target/TR3.jar", "sources": ["Reflection/TrivialReflection/TR3/src"], "build_script": "Reflection/TrivialReflection/TR3/build.sh"}, {"name": "Reflection/TrivialReflection/TR4/target/TR4.jar", "sources": ["Reflection/TrivialReflection/TR4/src"], "build_script": "Reflection/TrivialReflection/TR4/build.sh"}, {"name": "Reflection/TrivialReflection/TR5/target/TR5.jar", "sources": ["Reflection/TrivialReflection/TR5/src"], "build_script": "Reflection/TrivialReflection/TR5/build.sh"}, {"name": "Reflection/TrivialReflection/TR2/target/TR2.jar", "sources": ["Reflection/TrivialReflection/TR2/src"], "build_script": "Reflection/TrivialReflection/TR2/build.sh"}, {"name": "Reflection/LocallyResolvableReflection/LRR1/target/LRR1.jar", "sources": ["Reflection/LocallyResolvableReflection/LRR1/src"], "build_script": "Reflection/LocallyResolvableReflection/LRR1/build.sh"}, {"name": "Reflection/LocallyResolvableReflection/LRR3/target/LRR3.jar", "sources": ["Reflection/LocallyResolvableReflection/LRR3/src"], "build_script": "Reflection/LocallyResolvableReflection/LRR3/build.sh"}, {"name": "Reflection/LocallyResolvableReflection/LRR2/target/LRR2.jar", "sources": ["Reflection/LocallyResolvableReflection/LRR2/src"], "build_script": "Reflection/LocallyResolvableReflection/LRR2/build.sh"}]}
+{
+  "benchmark": [
+    {
+      "name": "StaticInitializers/SI8/target/SI8.jar",
+      "sources": [
+        "StaticInitializers/SI8/src"
+      ],
+      "build_script": "StaticInitializers/SI8/build.sh"
+    },
+    {
+      "name": "StaticInitializers/SI6/target/SI6.jar",
+      "sources": [
+        "StaticInitializers/SI6/src"
+      ],
+      "build_script": "StaticInitializers/SI6/build.sh"
+    },
+    {
+      "name": "StaticInitializers/SI1/target/SI1.jar",
+      "sources": [
+        "StaticInitializers/SI1/src"
+      ],
+      "build_script": "StaticInitializers/SI1/build.sh"
+    },
+    {
+      "name": "StaticInitializers/SI7/target/SI7.jar",
+      "sources": [
+        "StaticInitializers/SI7/src"
+      ],
+      "build_script": "StaticInitializers/SI7/build.sh"
+    },
+    {
+      "name": "StaticInitializers/SI2/target/SI2.jar",
+      "sources": [
+        "StaticInitializers/SI2/src"
+      ],
+      "build_script": "StaticInitializers/SI2/build.sh"
+    },
+    {
+      "name": "StaticInitializers/SI5/target/SI5.jar",
+      "sources": [
+        "StaticInitializers/SI5/src"
+      ],
+      "build_script": "StaticInitializers/SI5/build.sh"
+    },
+    {
+      "name": "StaticInitializers/SI4/target/SI4.jar",
+      "sources": [
+        "StaticInitializers/SI4/src"
+      ],
+      "build_script": "StaticInitializers/SI4/build.sh"
+    },
+    {
+      "name": "StaticInitializers/SI3/target/SI3.jar",
+      "sources": [
+        "StaticInitializers/SI3/src"
+      ],
+      "build_script": "StaticInitializers/SI3/build.sh"
+    },
+    {
+      "name": "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM6/target/J8DIM6.jar",
+      "sources": [
+        "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM6/src"
+      ],
+      "build_script": "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM6/build.sh"
+    },
+    {
+      "name": "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM1/target/J8DIM1.jar",
+      "sources": [
+        "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM1/src"
+      ],
+      "build_script": "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM1/build.sh"
+    },
+    {
+      "name": "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM4/target/J8DIM4.jar",
+      "sources": [
+        "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM4/src"
+      ],
+      "build_script": "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM4/build.sh"
+    },
+    {
+      "name": "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM3/target/J8DIM3.jar",
+      "sources": [
+        "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM3/src"
+      ],
+      "build_script": "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM3/build.sh"
+    },
+    {
+      "name": "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM2/target/J8DIM2.jar",
+      "sources": [
+        "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM2/src"
+      ],
+      "build_script": "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM2/build.sh"
+    },
+    {
+      "name": "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM5/target/J8DIM5.jar",
+      "sources": [
+        "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM5/src"
+      ],
+      "build_script": "Java8InterfaceMethods/Java8DefaultInterfaceMethods/J8DIM5/build.sh"
+    },
+    {
+      "name": "Java8InterfaceMethods/Java8StaticInterfaceMethods/J8SIM1/target/J8SIM1.jar",
+      "sources": [
+        "Java8InterfaceMethods/Java8StaticInterfaceMethods/J8SIM1/src"
+      ],
+      "build_script": "Java8InterfaceMethods/Java8StaticInterfaceMethods/J8SIM1/build.sh"
+    },
+    {
+      "name": "Serialization/Ser7/target/Ser7.jar",
+      "sources": [
+        "Serialization/Ser7/src"
+      ],
+      "build_script": "Serialization/Ser7/build.sh"
+    },
+    {
+      "name": "Serialization/Ser9/target/Ser9.jar",
+      "sources": [
+        "Serialization/Ser9/src"
+      ],
+      "build_script": "Serialization/Ser9/build.sh"
+    },
+    {
+      "name": "Serialization/ExternalizableClasses/ExtSer2/target/ExtSer2.jar",
+      "sources": [
+        "Serialization/ExternalizableClasses/ExtSer2/src"
+      ],
+      "build_script": "Serialization/ExternalizableClasses/ExtSer2/build.sh"
+    },
+    {
+      "name": "Serialization/ExternalizableClasses/ExtSer3/target/ExtSer3.jar",
+      "sources": [
+        "Serialization/ExternalizableClasses/ExtSer3/src"
+      ],
+      "build_script": "Serialization/ExternalizableClasses/ExtSer3/build.sh"
+    },
+    {
+      "name": "Serialization/ExternalizableClasses/ExtSer1/target/ExtSer1.jar",
+      "sources": [
+        "Serialization/ExternalizableClasses/ExtSer1/src"
+      ],
+      "build_script": "Serialization/ExternalizableClasses/ExtSer1/build.sh"
+    },
+    {
+      "name": "Serialization/Ser8/target/Ser8.jar",
+      "sources": [
+        "Serialization/Ser8/src"
+      ],
+      "build_script": "Serialization/Ser8/build.sh"
+    },
+    {
+      "name": "Serialization/Ser6/target/Ser6.jar",
+      "sources": [
+        "Serialization/Ser6/src"
+      ],
+      "build_script": "Serialization/Ser6/build.sh"
+    },
+    {
+      "name": "Serialization/Ser1/target/Ser1.jar",
+      "sources": [
+        "Serialization/Ser1/src"
+      ],
+      "build_script": "Serialization/Ser1/build.sh"
+    },
+    {
+      "name": "Serialization/SerializationAndLambdas/SerLam1/target/SerLam1.jar",
+      "sources": [
+        "Serialization/SerializationAndLambdas/SerLam1/src"
+      ],
+      "build_script": "Serialization/SerializationAndLambdas/SerLam1/build.sh"
+    },
+    {
+      "name": "Serialization/Ser4/target/Ser4.jar",
+      "sources": [
+        "Serialization/Ser4/src"
+      ],
+      "build_script": "Serialization/Ser4/build.sh"
+    },
+    {
+      "name": "Serialization/Ser3/target/Ser3.jar",
+      "sources": [
+        "Serialization/Ser3/src"
+      ],
+      "build_script": "Serialization/Ser3/build.sh"
+    },
+    {
+      "name": "Serialization/Ser2/target/Ser2.jar",
+      "sources": [
+        "Serialization/Ser2/src"
+      ],
+      "build_script": "Serialization/Ser2/build.sh"
+    },
+    {
+      "name": "Serialization/Ser5/target/Ser5.jar",
+      "sources": [
+        "Serialization/Ser5/src"
+      ],
+      "build_script": "Serialization/Ser5/build.sh"
+    },
+    {
+      "name": "Serialization/SerLam2/target/SerLam2.jar",
+      "sources": [
+        "Serialization/SerLam2/src"
+      ],
+      "build_script": "Serialization/SerLam2/build.sh"
+    },
+    {
+      "name": "DynamicProxies/DP1/target/DP1.jar",
+      "sources": [
+        "DynamicProxies/DP1/src"
+      ],
+      "build_script": "DynamicProxies/DP1/build.sh"
+    },
+    {
+      "name": "VirtualCalls/VC4/target/VC4.jar",
+      "sources": [
+        "VirtualCalls/VC4/src"
+      ],
+      "build_script": "VirtualCalls/VC4/build.sh"
+    },
+    {
+      "name": "VirtualCalls/VC3/target/VC3.jar",
+      "sources": [
+        "VirtualCalls/VC3/src"
+      ],
+      "build_script": "VirtualCalls/VC3/build.sh"
+    },
+    {
+      "name": "VirtualCalls/VC2/target/VC2.jar",
+      "sources": [
+        "VirtualCalls/VC2/src"
+      ],
+      "build_script": "VirtualCalls/VC2/build.sh"
+    },
+    {
+      "name": "VirtualCalls/VC1/target/VC1.jar",
+      "sources": [
+        "VirtualCalls/VC1/src"
+      ],
+      "build_script": "VirtualCalls/VC1/build.sh"
+    },
+    {
+      "name": "TypeCasts/TC1/target/TC1.jar",
+      "sources": [
+        "TypeCasts/TC1/src"
+      ],
+      "build_script": "TypeCasts/TC1/build.sh"
+    },
+    {
+      "name": "TypeCasts/TC6/target/TC6.jar",
+      "sources": [
+        "TypeCasts/TC6/src"
+      ],
+      "build_script": "TypeCasts/TC6/build.sh"
+    },
+    {
+      "name": "TypeCasts/TC3/target/TC3.jar",
+      "sources": [
+        "TypeCasts/TC3/src"
+      ],
+      "build_script": "TypeCasts/TC3/build.sh"
+    },
+    {
+      "name": "TypeCasts/TC4/target/TC4.jar",
+      "sources": [
+        "TypeCasts/TC4/src"
+      ],
+      "build_script": "TypeCasts/TC4/build.sh"
+    },
+    {
+      "name": "TypeCasts/TC5/target/TC5.jar",
+      "sources": [
+        "TypeCasts/TC5/src"
+      ],
+      "build_script": "TypeCasts/TC5/build.sh"
+    },
+    {
+      "name": "TypeCasts/TC2/target/TC2.jar",
+      "sources": [
+        "TypeCasts/TC2/src"
+      ],
+      "build_script": "TypeCasts/TC2/build.sh"
+    },
+    {
+      "name": "Library/LIB2/target/LIB2.jar",
+      "sources": [
+        "Library/LIB2/src"
+      ],
+      "build_script": "Library/LIB2/build.sh"
+    },
+    {
+      "name": "Library/LIB5/target/LIB5.jar",
+      "sources": [
+        "Library/LIB5/src"
+      ],
+      "build_script": "Library/LIB5/build.sh"
+    },
+    {
+      "name": "Library/LIB4/target/LIB4.jar",
+      "sources": [
+        "Library/LIB4/src"
+      ],
+      "build_script": "Library/LIB4/build.sh"
+    },
+    {
+      "name": "Library/LIB3/target/LIB3.jar",
+      "sources": [
+        "Library/LIB3/src"
+      ],
+      "build_script": "Library/LIB3/build.sh"
+    },
+    {
+      "name": "Library/LIB1/target/LIB1.jar",
+      "sources": [
+        "Library/LIB1/src"
+      ],
+      "build_script": "Library/LIB1/build.sh"
+    },
+    {
+      "name": "ClassLoading/CL1/target/CL1.jar",
+      "sources": [
+        "ClassLoading/CL1/src"
+      ],
+      "build_script": "ClassLoading/CL1/build.sh"
+    },
+    {
+      "name": "ClassLoading/CL2/target/CL2.jar",
+      "sources": [
+        "ClassLoading/CL2/src"
+      ],
+      "build_script": "ClassLoading/CL2/build.sh"
+    },
+    {
+      "name": "ClassLoading/CL4/target/CL4.jar",
+      "sources": [
+        "ClassLoading/CL4/src"
+      ],
+      "build_script": "ClassLoading/CL4/build.sh"
+    },
+    {
+      "name": "ClassLoading/CL3/target/CL3.jar",
+      "sources": [
+        "ClassLoading/CL3/src"
+      ],
+      "build_script": "ClassLoading/CL3/build.sh"
+    },
+    {
+      "name": "Unsafe/Unsafe6/target/Unsafe6.jar",
+      "sources": [
+        "Unsafe/Unsafe6/src"
+      ],
+      "build_script": "Unsafe/Unsafe6/build.sh"
+    },
+    {
+      "name": "Unsafe/Unsafe1/target/Unsafe1.jar",
+      "sources": [
+        "Unsafe/Unsafe1/src"
+      ],
+      "build_script": "Unsafe/Unsafe1/build.sh"
+    },
+    {
+      "name": "Unsafe/Unsafe7/target/Unsafe7.jar",
+      "sources": [
+        "Unsafe/Unsafe7/src"
+      ],
+      "build_script": "Unsafe/Unsafe7/build.sh"
+    },
+    {
+      "name": "Unsafe/Unsafe2/target/Unsafe2.jar",
+      "sources": [
+        "Unsafe/Unsafe2/src"
+      ],
+      "build_script": "Unsafe/Unsafe2/build.sh"
+    },
+    {
+      "name": "Unsafe/Unsafe5/target/Unsafe5.jar",
+      "sources": [
+        "Unsafe/Unsafe5/src"
+      ],
+      "build_script": "Unsafe/Unsafe5/build.sh"
+    },
+    {
+      "name": "Unsafe/Unsafe4/target/Unsafe4.jar",
+      "sources": [
+        "Unsafe/Unsafe4/src"
+      ],
+      "build_script": "Unsafe/Unsafe4/build.sh"
+    },
+    {
+      "name": "Unsafe/Unsafe3/target/Unsafe3.jar",
+      "sources": [
+        "Unsafe/Unsafe3/src"
+      ],
+      "build_script": "Unsafe/Unsafe3/build.sh"
+    },
+    {
+      "name": "JVMCalls/JVMC5/target/JVMC5.jar",
+      "sources": [
+        "JVMCalls/JVMC5/src"
+      ],
+      "build_script": "JVMCalls/JVMC5/build.sh"
+    },
+    {
+      "name": "JVMCalls/JVMC2/target/JVMC2.jar",
+      "sources": [
+        "JVMCalls/JVMC2/src"
+      ],
+      "build_script": "JVMCalls/JVMC2/build.sh"
+    },
+    {
+      "name": "JVMCalls/JVMC3/target/JVMC3.jar",
+      "sources": [
+        "JVMCalls/JVMC3/src"
+      ],
+      "build_script": "JVMCalls/JVMC3/build.sh"
+    },
+    {
+      "name": "JVMCalls/JVMC4/target/JVMC4.jar",
+      "sources": [
+        "JVMCalls/JVMC4/src"
+      ],
+      "build_script": "JVMCalls/JVMC4/build.sh"
+    },
+    {
+      "name": "JVMCalls/JVMC1/target/JVMC1.jar",
+      "sources": [
+        "JVMCalls/JVMC1/src"
+      ],
+      "build_script": "JVMCalls/JVMC1/build.sh"
+    },
+    {
+      "name": "SignaturePolymorphicMethods/SPM7/target/SPM7.jar",
+      "sources": [
+        "SignaturePolymorphicMethods/SPM7/src"
+      ],
+      "build_script": "SignaturePolymorphicMethods/SPM7/build.sh"
+    },
+    {
+      "name": "SignaturePolymorphicMethods/SPM6/target/SPM6.jar",
+      "sources": [
+        "SignaturePolymorphicMethods/SPM6/src"
+      ],
+      "build_script": "SignaturePolymorphicMethods/SPM6/build.sh"
+    },
+    {
+      "name": "SignaturePolymorphicMethods/SPM1/target/SPM1.jar",
+      "sources": [
+        "SignaturePolymorphicMethods/SPM1/src"
+      ],
+      "build_script": "SignaturePolymorphicMethods/SPM1/build.sh"
+    },
+    {
+      "name": "SignaturePolymorphicMethods/SPM4/target/SPM4.jar",
+      "sources": [
+        "SignaturePolymorphicMethods/SPM4/src"
+      ],
+      "build_script": "SignaturePolymorphicMethods/SPM4/build.sh"
+    },
+    {
+      "name": "SignaturePolymorphicMethods/SPM3/target/SPM3.jar",
+      "sources": [
+        "SignaturePolymorphicMethods/SPM3/src"
+      ],
+      "build_script": "SignaturePolymorphicMethods/SPM3/build.sh"
+    },
+    {
+      "name": "SignaturePolymorphicMethods/SPM2/target/SPM2.jar",
+      "sources": [
+        "SignaturePolymorphicMethods/SPM2/src"
+      ],
+      "build_script": "SignaturePolymorphicMethods/SPM2/build.sh"
+    },
+    {
+      "name": "SignaturePolymorphicMethods/SPM5/target/SPM5.jar",
+      "sources": [
+        "SignaturePolymorphicMethods/SPM5/src"
+      ],
+      "build_script": "SignaturePolymorphicMethods/SPM5/build.sh"
+    },
+    {
+      "name": "TrivialModernReflection/TMR8/target/TMR8.jar",
+      "sources": [
+        "TrivialModernReflection/TMR8/src"
+      ],
+      "build_script": "TrivialModernReflection/TMR8/build.sh"
+    },
+    {
+      "name": "TrivialModernReflection/TMR6/target/TMR6.jar",
+      "sources": [
+        "TrivialModernReflection/TMR6/src"
+      ],
+      "build_script": "TrivialModernReflection/TMR6/build.sh"
+    },
+    {
+      "name": "TrivialModernReflection/TMR1/target/TMR1.jar",
+      "sources": [
+        "TrivialModernReflection/TMR1/src"
+      ],
+      "build_script": "TrivialModernReflection/TMR1/build.sh"
+    },
+    {
+      "name": "TrivialModernReflection/TMR7/target/TMR7.jar",
+      "sources": [
+        "TrivialModernReflection/TMR7/src"
+      ],
+      "build_script": "TrivialModernReflection/TMR7/build.sh"
+    },
+    {
+      "name": "TrivialModernReflection/TMR2/target/TMR2.jar",
+      "sources": [
+        "TrivialModernReflection/TMR2/src"
+      ],
+      "build_script": "TrivialModernReflection/TMR2/build.sh"
+    },
+    {
+      "name": "TrivialModernReflection/TMR5/target/TMR5.jar",
+      "sources": [
+        "TrivialModernReflection/TMR5/src"
+      ],
+      "build_script": "TrivialModernReflection/TMR5/build.sh"
+    },
+    {
+      "name": "TrivialModernReflection/TMR4/target/TMR4.jar",
+      "sources": [
+        "TrivialModernReflection/TMR4/src"
+      ],
+      "build_script": "TrivialModernReflection/TMR4/build.sh"
+    },
+    {
+      "name": "TrivialModernReflection/TMR3/target/TMR3.jar",
+      "sources": [
+        "TrivialModernReflection/TMR3/src"
+      ],
+      "build_script": "TrivialModernReflection/TMR3/build.sh"
+    },
+    {
+      "name": "NonVirtualCalls/NVC4/target/NVC4.jar",
+      "sources": [
+        "NonVirtualCalls/NVC4/src"
+      ],
+      "build_script": "NonVirtualCalls/NVC4/build.sh"
+    },
+    {
+      "name": "NonVirtualCalls/NVC3/target/NVC3.jar",
+      "sources": [
+        "NonVirtualCalls/NVC3/src"
+      ],
+      "build_script": "NonVirtualCalls/NVC3/build.sh"
+    },
+    {
+      "name": "NonVirtualCalls/NVC2/target/NVC2.jar",
+      "sources": [
+        "NonVirtualCalls/NVC2/src"
+      ],
+      "build_script": "NonVirtualCalls/NVC2/build.sh"
+    },
+    {
+      "name": "NonVirtualCalls/NVC5/target/NVC5.jar",
+      "sources": [
+        "NonVirtualCalls/NVC5/src"
+      ],
+      "build_script": "NonVirtualCalls/NVC5/build.sh"
+    },
+    {
+      "name": "NonVirtualCalls/NVC1/target/NVC1.jar",
+      "sources": [
+        "NonVirtualCalls/NVC1/src"
+      ],
+      "build_script": "NonVirtualCalls/NVC1/build.sh"
+    },
+    {
+      "name": "Java8InvokeDynamics/Lambdas/Lambda1/target/Lambda1.jar",
+      "sources": [
+        "Java8InvokeDynamics/Lambdas/Lambda1/src"
+      ],
+      "build_script": "Java8InvokeDynamics/Lambdas/Lambda1/build.sh"
+    },
+    {
+      "name": "Java8InvokeDynamics/Lambdas/Lambda2/target/Lambda2.jar",
+      "sources": [
+        "Java8InvokeDynamics/Lambdas/Lambda2/src"
+      ],
+      "build_script": "Java8InvokeDynamics/Lambdas/Lambda2/build.sh"
+    },
+    {
+      "name": "Java8InvokeDynamics/Lambdas/Lambda3/target/Lambda3.jar",
+      "sources": [
+        "Java8InvokeDynamics/Lambdas/Lambda3/src"
+      ],
+      "build_script": "Java8InvokeDynamics/Lambdas/Lambda3/build.sh"
+    },
+    {
+      "name": "Java8InvokeDynamics/Lambdas/Lambda4/target/Lambda4.jar",
+      "sources": [
+        "Java8InvokeDynamics/Lambdas/Lambda4/src"
+      ],
+      "build_script": "Java8InvokeDynamics/Lambdas/Lambda4/build.sh"
+    },
+    {
+      "name": "Java8InvokeDynamics/MR4/target/MR4.jar",
+      "sources": [
+        "Java8InvokeDynamics/MR4/src"
+      ],
+      "build_script": "Java8InvokeDynamics/MR4/build.sh"
+    },
+    {
+      "name": "Java8InvokeDynamics/MR3/target/MR3.jar",
+      "sources": [
+        "Java8InvokeDynamics/MR3/src"
+      ],
+      "build_script": "Java8InvokeDynamics/MR3/build.sh"
+    },
+    {
+      "name": "Java8InvokeDynamics/MR2/target/MR2.jar",
+      "sources": [
+        "Java8InvokeDynamics/MR2/src"
+      ],
+      "build_script": "Java8InvokeDynamics/MR2/build.sh"
+    },
+    {
+      "name": "Java8InvokeDynamics/MR5/target/MR5.jar",
+      "sources": [
+        "Java8InvokeDynamics/MR5/src"
+      ],
+      "build_script": "Java8InvokeDynamics/MR5/build.sh"
+    },
+    {
+      "name": "Java8InvokeDynamics/MR7/target/MR7.jar",
+      "sources": [
+        "Java8InvokeDynamics/MR7/src"
+      ],
+      "build_script": "Java8InvokeDynamics/MR7/build.sh"
+    },
+    {
+      "name": "Java8InvokeDynamics/MR6/target/MR6.jar",
+      "sources": [
+        "Java8InvokeDynamics/MR6/src"
+      ],
+      "build_script": "Java8InvokeDynamics/MR6/build.sh"
+    },
+    {
+      "name": "Java8InvokeDynamics/MR1/target/MR1.jar",
+      "sources": [
+        "Java8InvokeDynamics/MR1/src"
+      ],
+      "build_script": "Java8InvokeDynamics/MR1/build.sh"
+    },
+    {
+      "name": "Reflection/ContextSensitiveReflection/CSR4/target/CSR4.jar",
+      "sources": [
+        "Reflection/ContextSensitiveReflection/CSR4/src"
+      ],
+      "build_script": "Reflection/ContextSensitiveReflection/CSR4/build.sh"
+    },
+    {
+      "name": "Reflection/ContextSensitiveReflection/CSR3/target/CSR3.jar",
+      "sources": [
+        "Reflection/ContextSensitiveReflection/CSR3/src"
+      ],
+      "build_script": "Reflection/ContextSensitiveReflection/CSR3/build.sh"
+    },
+    {
+      "name": "Reflection/ContextSensitiveReflection/CSR2/target/CSR2.jar",
+      "sources": [
+        "Reflection/ContextSensitiveReflection/CSR2/src"
+      ],
+      "build_script": "Reflection/ContextSensitiveReflection/CSR2/build.sh"
+    },
+    {
+      "name": "Reflection/ContextSensitiveReflection/CSR1/target/CSR1.jar",
+      "sources": [
+        "Reflection/ContextSensitiveReflection/CSR1/src"
+      ],
+      "build_script": "Reflection/ContextSensitiveReflection/CSR1/build.sh"
+    },
+    {
+      "name": "Reflection/ClassForNameExceptions/CFNE1/target/CFNE1.jar",
+      "sources": [
+        "Reflection/ClassForNameExceptions/CFNE1/src"
+      ],
+      "build_script": "Reflection/ClassForNameExceptions/CFNE1/build.sh"
+    },
+    {
+      "name": "Reflection/ClassForNameExceptions/CFNE2/target/CFNE2.jar",
+      "sources": [
+        "Reflection/ClassForNameExceptions/CFNE2/src"
+      ],
+      "build_script": "Reflection/ClassForNameExceptions/CFNE2/build.sh"
+    },
+    {
+      "name": "Reflection/ClassForNameExceptions/CFNE3/target/CFNE3.jar",
+      "sources": [
+        "Reflection/ClassForNameExceptions/CFNE3/src"
+      ],
+      "build_script": "Reflection/ClassForNameExceptions/CFNE3/build.sh"
+    },
+    {
+      "name": "Reflection/ClassForNameExceptions/CFNE4/target/CFNE4.jar",
+      "sources": [
+        "Reflection/ClassForNameExceptions/CFNE4/src"
+      ],
+      "build_script": "Reflection/ClassForNameExceptions/CFNE4/build.sh"
+    },
+    {
+      "name": "Reflection/TrivialReflection/TR7/target/TR7.jar",
+      "sources": [
+        "Reflection/TrivialReflection/TR7/src"
+      ],
+      "build_script": "Reflection/TrivialReflection/TR7/build.sh"
+    },
+    {
+      "name": "Reflection/TrivialReflection/TR9/target/TR9.jar",
+      "sources": [
+        "Reflection/TrivialReflection/TR9/src"
+      ],
+      "build_script": "Reflection/TrivialReflection/TR9/build.sh"
+    },
+    {
+      "name": "Reflection/TrivialReflection/TR8/target/TR8.jar",
+      "sources": [
+        "Reflection/TrivialReflection/TR8/src"
+      ],
+      "build_script": "Reflection/TrivialReflection/TR8/build.sh"
+    },
+    {
+      "name": "Reflection/TrivialReflection/TR1/target/TR1.jar",
+      "sources": [
+        "Reflection/TrivialReflection/TR1/src"
+      ],
+      "build_script": "Reflection/TrivialReflection/TR1/build.sh"
+    },
+    {
+      "name": "Reflection/TrivialReflection/TR6/target/TR6.jar",
+      "sources": [
+        "Reflection/TrivialReflection/TR6/src"
+      ],
+      "build_script": "Reflection/TrivialReflection/TR6/build.sh"
+    },
+    {
+      "name": "Reflection/TrivialReflection/TR3/target/TR3.jar",
+      "sources": [
+        "Reflection/TrivialReflection/TR3/src"
+      ],
+      "build_script": "Reflection/TrivialReflection/TR3/build.sh"
+    },
+    {
+      "name": "Reflection/TrivialReflection/TR4/target/TR4.jar",
+      "sources": [
+        "Reflection/TrivialReflection/TR4/src"
+      ],
+      "build_script": "Reflection/TrivialReflection/TR4/build.sh"
+    },
+    {
+      "name": "Reflection/TrivialReflection/TR5/target/TR5.jar",
+      "sources": [
+        "Reflection/TrivialReflection/TR5/src"
+      ],
+      "build_script": "Reflection/TrivialReflection/TR5/build.sh"
+    },
+    {
+      "name": "Reflection/TrivialReflection/TR2/target/TR2.jar",
+      "sources": [
+        "Reflection/TrivialReflection/TR2/src"
+      ],
+      "build_script": "Reflection/TrivialReflection/TR2/build.sh"
+    },
+    {
+      "name": "Reflection/LocallyResolvableReflection/LRR1/target/LRR1.jar",
+      "sources": [
+        "Reflection/LocallyResolvableReflection/LRR1/src"
+      ],
+      "build_script": "Reflection/LocallyResolvableReflection/LRR1/build.sh"
+    },
+    {
+      "name": "Reflection/LocallyResolvableReflection/LRR3/target/LRR3.jar",
+      "sources": [
+        "Reflection/LocallyResolvableReflection/LRR3/src"
+      ],
+      "build_script": "Reflection/LocallyResolvableReflection/LRR3/build.sh"
+    },
+    {
+      "name": "Reflection/LocallyResolvableReflection/LRR2/target/LRR2.jar",
+      "sources": [
+        "Reflection/LocallyResolvableReflection/LRR2/src"
+      ],
+      "build_script": "Reflection/LocallyResolvableReflection/LRR2/build.sh"
+    }
+  ]
+}

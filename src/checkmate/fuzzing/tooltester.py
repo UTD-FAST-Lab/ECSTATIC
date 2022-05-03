@@ -104,8 +104,8 @@ class ToolTester:
             if self.debugger is not None:
                 delta_debugging_folder = os.path.join(campaign_folder, 'deltadebugging')
                 Path(delta_debugging_folder).mkdir(exist_ok=True)
-                with Pool(self.jobs) as p:
-                    print(f'Delta debugging with {self.jobs} cores.')
+                with Pool(self.num_processes) as p:
+                    print(f'Delta debugging with {self.num_processes} cores.')
                     p.map(partial(self.deltadebugger.delta_debug, results_location=delta_debugging_folder), violations)
             self.generator.update_exclusions(violations)
             # self.print_output(FinishedCampaign(results), campaign_index)  # TODO: Replace with generate_report
