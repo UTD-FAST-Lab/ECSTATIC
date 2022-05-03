@@ -37,6 +37,7 @@ def build_image(tool: str, nocache: bool = False):
         cmd = ['docker', 'build', '.', '-f', 'base_image.dockerfile', '-t', get_image_name(tool)]
         if nocache:
             cmd.append('--no-cache')
+        print(f'Building docker image with command {" ".join(cmd)}')
         subprocess.run(cmd)
         # image = client.images.build(path=".", dockerfile="base_image.dockerfile", tag=get_image_name(tool), nocache=nocache)
         # with open('base_image.dockerfile', 'rb') as df:
@@ -48,6 +49,7 @@ def build_image(tool: str, nocache: bool = False):
                '-t', get_image_name(tool)]
         if nocache:
             cmd.append('--no-cache')
+        print(f'Building docker image with command {" ".join(cmd)}')
         subprocess.run(cmd)
 
 

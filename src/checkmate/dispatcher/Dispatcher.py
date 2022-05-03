@@ -52,7 +52,7 @@ def parse_args():
         default=tasks,
         choices=tasks)
     parser.add_argument(
-        '--nocache',
+        '--no-cache',
         '-n',
         action='store_true',
         help='Build images without cache'
@@ -96,7 +96,7 @@ def main():
 
     DockerManager.build_image('base')
     for t in args.tools:
-        DockerManager.build_image(t, args.nocache)
+        DockerManager.build_image(t, args.no_cache)
 
     for t in args.tools:
         for b in args.benchmarks:
