@@ -209,10 +209,12 @@ class AbstractViolationChecker(ABC):
                                     f'{job1.results_location} ({len(job1_input)})')
                         pos: Set[PartialOrder] = {PartialOrder(job1.job.configuration[option_under_investigation],
                                                                PartialOrderType.MORE_SOUND_THAN,
-                                                               job2.job.configuration[option_under_investigation]),
+                                                               job2.job.configuration[option_under_investigation],
+                                                               option_under_investigation),
                                                   PartialOrder(job2.job.configuration[option_under_investigation],
                                                                PartialOrderType.MORE_PRECISE_THAN,
-                                                               job1.job.configuration[option_under_investigation])}
+                                                               job1.job.configuration[option_under_investigation],
+                                                               option_under_investigation)}
                         results.append(Violation(True, pos, job1, job2, differences))
             if option_under_investigation.is_more_precise(job1.job.configuration[option_under_investigation],
                                                           job2.job.configuration[option_under_investigation]):
@@ -227,10 +229,12 @@ class AbstractViolationChecker(ABC):
                                     f'{job1.results_location} ({len(job1_input)})')
                         pos: Set[PartialOrder] = {PartialOrder(job1.job.configuration[option_under_investigation],
                                                                PartialOrderType.MORE_PRECISE_THAN,
-                                                               job2.job.configuration[option_under_investigation]),
+                                                               job2.job.configuration[option_under_investigation],
+                                                               option_under_investigation),
                                                   PartialOrder(job2.job.configuration[option_under_investigation],
                                                                PartialOrderType.MORE_SOUND_THAN,
-                                                               job1.job.configuration[option_under_investigation])}
+                                                               job1.job.configuration[option_under_investigation],
+                                                               option_under_investigation)}
                         results.append(Violation(True, pos, job1, job2, differences))
         else:
             if option_under_investigation.is_more_sound(job1.job.configuration[option_under_investigation],
@@ -241,7 +245,8 @@ class AbstractViolationChecker(ABC):
                 if len(differences) > 0:
                     results.append(Violation(True, {PartialOrder(job1.job.configuration[option_under_investigation],
                                                                  PartialOrderType.MORE_SOUND_THAN,
-                                                                 job2.job.configuration[option_under_investigation])},
+                                                                 job2.job.configuration[option_under_investigation],
+                                                                 option_under_investigation)},
                                              job1, job2, differences))
             if option_under_investigation.is_more_precise(job1.job.configuration[option_under_investigation],
                                                           job2.job.configuration[option_under_investigation]):
@@ -251,6 +256,7 @@ class AbstractViolationChecker(ABC):
                 if len(differences) > 0:
                     results.append(Violation(True, {PartialOrder(job1.job.configuration[option_under_investigation],
                                                                  PartialOrderType.MORE_PRECISE_THAN,
-                                                                 job2.job.configuration[option_under_investigation])},
+                                                                 job2.job.configuration[option_under_investigation],
+                                                                 option_under_investigation)},
                                              job1, job2, differences))
         return results
