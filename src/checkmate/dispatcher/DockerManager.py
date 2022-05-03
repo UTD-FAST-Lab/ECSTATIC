@@ -29,12 +29,15 @@ client = docker.from_env()
 logger = logging.getLogger(__name__)
 
 
-def build_image(tool: str):
+def build_image(tool: str, nocache: bool = False):
     env = os.environ
     env['DOCKER_BUILDKIT'] = '1'
     if tool == 'base':
         logger.info("Creating base image")
-        subprocess.run(['docker', 'build', '.', '-f', 'base_image.dockerfile', '-t', get_image_name(tool)])
+        cmd = ['docker', 'build', '.', '-f', 'base_image.dockerfile', '-t', get_image_name(tool)]
+        if nocache:
+            cmd.append('--no-cache')
+        subprocess.run(cmd)
         # image = client.images.build(path=".", dockerfile="base_image.dockerfile", tag=get_image_name(tool), nocache=nocache)
         # with open('base_image.dockerfile', 'rb') as df:
         #     logging.info("Building base image.")
@@ -43,7 +46,8 @@ def build_image(tool: str):
         logger.info(f"Building image for {tool}")
         cmd = ['docker', 'build', os.path.abspath(importlib.resources.path(f"src.resources.tools", tool)),
                '-t', get_image_name(tool)]
-        logger.info(cmd)
+        if nocache:
+            cmd.append('--no-cache')
         subprocess.run(cmd)
 
 
