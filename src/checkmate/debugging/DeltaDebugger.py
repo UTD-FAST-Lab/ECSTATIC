@@ -110,12 +110,14 @@ class DeltaDebugger:
         tarname = os.path.join(delta_debugging_directory, get_file_name(violation)) + '.tar.gz'
         Path(os.path.dirname(tarname)).mkdir(exist_ok=True, parents=True)
         with tarfile.open(tarname, 'w:gz') as f:
-            f.add(violation.job1.job.target.name)
+            f.addFile(tarfile.TarInfo(os.path.basename(violation.job1.job.target.name)),
+                      open(violation.job1.job.target.name, 'rb'))
             [f.add(s) for s in violation.job1.job.target.sources]
             with open(os.path.join(delta_debugging_directory, get_file_name(violation)), 'w') as f1:
                 json.dump(violation.as_dict(), f1)
-            f.add(os.path.join(delta_debugging_directory, get_file_name(violation)))
-            f.add(os.path.join(d.name, "log.txt"))
+            f.addFile(tarfile.TarInfo(os.path.basename(os.path.join(delta_debugging_directory, get_file_name(violation)))),
+                      open(os.path.join(delta_debugging_directory, get_file_name(violation)), 'rb'))
+            f.addFile(tarfile.TarInfo("log.txt"), open(os.path.join(d.name, "log.txt"), 'rb'))
             os.remove(os.path.join(delta_debugging_directory, get_file_name(violation)))
 
         print(f"Delta debugging result written to {tarname}")
