@@ -101,7 +101,7 @@ class DeltaDebugger:
         cmd.extend(["--bs", os.path.abspath(build_script.name)])
         cmd.extend(["--vs", os.path.abspath(script_location)])
         cmd.extend(["--logs", os.path.join(d.name, "log.txt")])
-        cmd.extend(['--hdd'])
+        cmd.extend(['--hdd', '--class-reduction'])
 
         print(f"Running delta debugger with cmd {' '.join(cmd)}")
         ps = subprocess.run(cmd, stdout=sys.stdout, stderr=sys.stderr, text=True)
