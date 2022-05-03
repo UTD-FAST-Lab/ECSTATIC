@@ -17,9 +17,9 @@
 
 from dataclasses import dataclass, field
 from enum import Enum
+from typing import Any
 
 from src.checkmate.models.Level import Level
-from src.checkmate.models.Option import Option
 
 
 class PartialOrderType(Enum):
@@ -32,7 +32,7 @@ class PartialOrder:
     left: Level
     type: PartialOrderType
     right: Level
-    option: Option
+    option: Any
     transitive: bool = field(kw_only=True, default=False)
 
     def __hash__(self):
@@ -42,6 +42,9 @@ class PartialOrder:
         return f'{str(self.left)}_{self.type}_{str(self.right)}'
 
     def is_transitive(self) -> bool:
+        from src.checkmate.models.Option import Option # Resolve circular dependency
+        if not isinstance(self.option, Option):
+            raise RuntimeError(f'{self.option} is not of type Option')
         if type == PartialOrderType.MORE_PRECISE_THAN:
             return not self.option.precision.has_edge(self.left, self.right)
         else:

@@ -259,3 +259,4 @@ class Option:
             elif p['order'] == 'MPT':
                 o.set_more_precise_than(p['left'], p['right'])
         return o
+
