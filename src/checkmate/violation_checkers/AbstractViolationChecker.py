@@ -19,6 +19,7 @@ import json
 import logging
 import os.path
 import pickle
+import shutil
 import time
 from abc import ABC, abstractmethod
 from multiprocessing import Pool
@@ -94,6 +95,9 @@ class AbstractViolationChecker(ABC):
                 finished_results = set(finished_results)
 
         print('Violation detection done. Now printing to files.')
+        print('Removing old violations...')
+        shutil.rmtree(output_folder)
+        Path(output_folder).mkdir(exist_ok=False, parents=True)
         for violation in filter(lambda v: v.violated, finished_results):
             filename = get_file_name(violation)
             dirname = os.path.dirname(filename)
