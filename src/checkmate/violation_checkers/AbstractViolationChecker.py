@@ -91,6 +91,7 @@ class AbstractViolationChecker(ABC):
             with Pool(self.jobs) as p:
                 print(f'Checking violations with {self.jobs} cores.')
                 [finished_results.extend(v_set) for v_set in p.starmap(self.check_for_violation, pairs)]
+                finished_results = set(finished_results)
 
         print('Violation detection done. Now printing to files.')
         for violation in filter(lambda v: v.violated, finished_results):

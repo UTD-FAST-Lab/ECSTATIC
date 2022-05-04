@@ -27,11 +27,13 @@ class Violation:
 
     def __eq__(self, o: object) -> bool:
         return isinstance(o, Violation) and self.violated == o.violated \
-               and self.partial_orders == o.partial_orders and self.job1 == o.job1 \
-               and self.job2 == o.job2 and self.differences == o.differences
+               and self.partial_orders == o.partial_orders and \
+               frozenset([self.job1.results_location, self.job2.results_location]) == \
+               frozenset([o.job1.results_location, o.job2.results_location])
 
     def __hash__(self) -> int:
-        return hash((self.violated, self.partial_orders, self.job1, self.job2, self.differences))
+        return hash((self.violated, self.partial_orders,
+                     frozenset([self.job1.results_location, self.job2.results_location])))
 
     def as_dict(self) -> Dict[str, str | List[str] | List[Tuple[str]]]:
         return {'violated': self.violated,
