@@ -21,3 +21,4 @@ RUN wget https://dl.google.com/android/repository/commandlinetools-linux-8092744
     yes | ./bin/sdkmanager --sdk_root=/lib/android-sdk --update && \
     ./bin/sdkmanager --sdk_root=/lib/android-sdk --install "platforms;android-25"
 WORKDIR /
+ENV ANDROID_SDK_ROOT=/lib/android-sdk
