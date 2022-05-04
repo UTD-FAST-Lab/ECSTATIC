@@ -2,6 +2,8 @@
 
 CUR=$(pwd)
 cd /
+mkdir -p benchmarks/fossdroid
+cd benchmarks/fossdroid
 git clone https://github.com/Pancax/AlarmKlock_Android.git
 cd AlarmKlock_Android
 
