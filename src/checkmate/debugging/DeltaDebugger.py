@@ -66,7 +66,9 @@ class DeltaDebugger:
         # First, create artifacts. We need to pickle the violation, as well as creating the script.
         d = os.path.abspath(os.path.join(campaign_directory, 'deltadebugging',
                          os.path.dirname(get_file_name(violation))))
-        Path(d).mkdir(exist_ok=True, parents=True)
+        if os.path.exists(d):
+            shutil.rmtree(d)
+        Path(d).mkdir(exist_ok=False, parents=True)
 
         # Copy benchmarks folder so that we have our own code location.
         shutil.copytree(src="/benchmarks", dst=d)
