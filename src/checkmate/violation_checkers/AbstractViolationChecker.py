@@ -61,7 +61,7 @@ class AbstractViolationChecker(ABC):
         start_time = time.time()
         if len(finished_results) == 0:
             pairs: Set[Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]] = []
-            for finished_run in results:
+            for finished_run in [r for r in results if r is not None]:
                 finished_run: FinishedFuzzingJob
                 option_under_investigation: Option = finished_run.job.option_under_investigation
                 # Find configs with potential partial order relationships.
