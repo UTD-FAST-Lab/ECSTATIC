@@ -14,13 +14,12 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-import json
 import logging
 import os.path
+import pickle
 import shutil
 import subprocess
 import sys
-import tarfile
 import tempfile
 from dataclasses import dataclass
 from functools import partial
@@ -33,11 +32,10 @@ from src.checkmate.runners import RunnerFactory
 from src.checkmate.util.BenchmarkReader import validate
 from src.checkmate.util.UtilClasses import FinishedFuzzingJob
 from src.checkmate.util.Violation import Violation
-import pickle
-
 from src.checkmate.violation_checkers import ViolationCheckerFactory
 from src.checkmate.violation_checkers.AbstractViolationChecker import get_file_name
 
+logger = logging.getLogger(__name__)
 
 @dataclass
 class DeltaDebuggingResult:
@@ -52,7 +50,8 @@ class DeltaDebugger:
         self.task = task
         self.groundtruths = groundtruths
 
-    def delta_debug(self, violation: Violation, campaign_directory: str) -> Optional[DeltaDebuggingResult]:
+    def delta_debug(self, violation: Violation, campaign_directory: str, timeout: Optional[int])\
+            -> Optional[DeltaDebuggingResult]:
         """
 
         Parameters
@@ -62,6 +61,9 @@ class DeltaDebugger:
         Returns
         -------
         True if the delta debugging failed. False otherwise.
+        @param violation:
+        @param timeout:
+        @param campaign_directory:
         """
         # First, create artifacts. We need to pickle the violation, as well as creating the script.
         d = os.path.abspath(os.path.join(campaign_directory, 'deltadebugging',
@@ -83,7 +85,7 @@ class DeltaDebugger:
             logging.exception(violation.job1.job.target)
 
         # Then, create the script.
-        script_location = self.create_script(violation, d)
+        script_location = self.create_script(violation, d, timeout)
         build_script = violation.job1.job.target.build_script
         os.chmod(build_script, 700)
         os.chmod(script_location, 700)
@@ -98,6 +100,7 @@ class DeltaDebugger:
         cmd.extend(["--vs", os.path.abspath(script_location)])
         cmd.extend(["--logs", os.path.join(d, "log.txt")])
         cmd.extend(['--hdd', '--class-reduction'])
+        cmd.extend(['--timeout', '120'])
 
         print(f"Running delta debugger with cmd {' '.join(cmd)}")
         ps = subprocess.run(cmd, stdout=sys.stdout, stderr=sys.stderr, text=True)
@@ -117,7 +120,7 @@ class DeltaDebugger:
         #
         # print(f"Delta debugging result written to {tarname}")
 
-    def create_script(self, violation: Violation, directory: str) -> str:
+    def create_script(self, violation: Violation, directory: str, timeout: Optional[int]) -> str:
         """
         Given a violation, creates a script that will execute it and return True if the violation is
         preserved.
@@ -139,11 +142,14 @@ class DeltaDebugger:
             cmd = f"deltadebugger --violation {violation_tmp.name} " \
                   f"--target {violation.job1.job.target.name} " \
                   f"--tool {self.tool} " \
-                  f"--task {self.task}"
+                  f"--task {self.task} "
+            if timeout is not None:
+                cmd += f"--timeout {timeout} "
             if self.groundtruths is not None:
                 cmd = f"{cmd} --groundtruths {self.groundtruths}"
             f.write(cmd + "\n")
             result = f.name
+            logger.info(f"Wrote cmd {cmd} to delta debugging script.")
         return result
 
 
@@ -159,6 +165,7 @@ def main():
     parser.add_argument("--tool", help="The tool to use.", required=True)
     parser.add_argument("--task", help="The task.", required=True)
     parser.add_argument("--groundtruths", help="Groundtruths (may be None if we are not using ground truths.")
+    parser.add_argument("--timeout", help="Timeout in minutes.", type=int, default=None)
     args = parser.parse_args()
 
     with open(args.violation, 'rb') as f:
@@ -171,6 +178,8 @@ def main():
     # Create tool runner.
     tmpdir = tempfile.TemporaryDirectory()
     runner = RunnerFactory.get_runner_for_tool(args.tool)
+    if args.timeout is not None:
+        runner.timeout = args.timeout
     reader = ReaderFactory.get_reader_for_task_and_tool(args.task, args.tool)
     checker = ViolationCheckerFactory.get_violation_checker_for_task(args.task, args.tool,
                                                                      2, args.groundtruths, reader)
