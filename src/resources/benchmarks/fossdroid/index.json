@@ -1,0 +1,11 @@
+{
+  "benchmarks": [
+    {
+      "name": "com.angrydoughnuts.android.alarmclock_15-release-unsigned.apk",
+      "sources": [
+        "com.angrydoughnuts.android.alarmclock_15/src"
+      ],
+      "build_script": "build.sh"
+    }
+  ]
+}
