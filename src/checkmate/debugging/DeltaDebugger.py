@@ -116,7 +116,6 @@ class DeltaDebugger:
         #     os.remove(os.path.join(delta_debugging_directory, get_file_name(violation)))
         #
         # print(f"Delta debugging result written to {tarname}")
-        return tarname
 
     def create_script(self, violation: Violation, directory: str) -> str:
         """
