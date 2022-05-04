@@ -71,8 +71,8 @@ class DeltaDebugger:
         Path(d).mkdir(exist_ok=False, parents=True)
 
         # Copy benchmarks folder so that we have our own code location.
-        shutil.copytree(src="benchmarks", dst=d)
-        violation.job1.job.target = validate(violation.job1.job.target, os.path.join(d, "benchmarks"))
+        shutil.copytree(src="benchmarks", tgt=os.path.join(d, "benchmarks"))
+        violation.job1.job.target = validate(violation.job1.job.target, d)
         logging.info(f'Moved benchmark, so target is now {violation.job1.job.target}')
         violation.job2.job.target = violation.job1.job.target
         try:
