@@ -93,8 +93,8 @@ class DeltaDebugger:
         # Then, run the delta debugger
         cmd : List[str]= "java -jar /SADeltaDebugger/ViolationDeltaDebugger/target/ViolationDeltaDebugger-1.0-SNAPSHOT-jar-with" \
               "-dependencies.jar".split(' ')
-        cmd.append("--sources")
-        cmd.extend(violation.job1.job.target.sources)
+        sources = [['--sources', s] for s in violation.job1.job.target.sources]
+        [cmd.extend(s) for s in sources]
         cmd.extend(["--target", violation.job1.job.target.name])
         cmd.extend(["--bs", os.path.abspath(build_script)])
         cmd.extend(["--vs", os.path.abspath(script_location)])
