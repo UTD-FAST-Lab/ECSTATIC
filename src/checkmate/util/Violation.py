@@ -56,6 +56,11 @@ class Violation:
         else:
             return self.job1.job.option_under_investigation
 
+    def is_transitive(self) -> bool:
+        for p in self.partial_orders:
+            if p.is_transitive():
+                return True
+        return False
     def __init__(self, violated: bool, partial_orders: Set[PartialOrder],
                  job1: FinishedFuzzingJob, job2: FinishedFuzzingJob,
                  differences: Iterable[T]):

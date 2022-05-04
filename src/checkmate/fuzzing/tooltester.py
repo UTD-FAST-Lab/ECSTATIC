@@ -102,12 +102,10 @@ class ToolTester:
             Path(violations_folder).mkdir(exist_ok=True)
             violations: List[Violation] = self.checker.check_violations(results, violations_folder, existing_violations)
             if self.debugger is not None:
-                delta_debugging_folder = os.path.join(campaign_folder, 'deltadebugging')
-                Path(delta_debugging_folder).mkdir(exist_ok=True)
-                with Pool(int(self.num_processes/2)) as p:  # /2 because each delta debugging process needs 2 cores.
-                    direct_violations = [v for v in violations if True in [not po.is_transitive() for po in v.partial_orders]]
+                with Pool(max(int(self.num_processes/2), 1)) as p:  # /2 because each delta debugging process needs 2 cores.
+                    direct_violations = [v for v in violations if not v.is_transitive()]
                     print(f'Delta debugging {len(direct_violations)} violations with {self.num_processes} cores.')
-                    p.map(partial(self.debugger.delta_debug, campaign_directory=delta_debugging_folder,
+                    p.map(partial(self.debugger.delta_debug, campaign_directory=campaign_folder,
                                   timeout=self.runner.timeout), direct_violations)
             self.generator.update_exclusions(violations)
             # self.print_output(FinishedCampaign(results), campaign_index)  # TODO: Replace with generate_report
