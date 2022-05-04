@@ -104,7 +104,7 @@ class ToolTester:
             if self.debugger is not None:
                 delta_debugging_folder = os.path.join(campaign_folder, 'deltadebugging')
                 Path(delta_debugging_folder).mkdir(exist_ok=True)
-                with Pool(self.num_processes) as p:
+                with Pool(self.num_processes/2) as p:  # /2 because each delta debugging process needs 2 cores.
                     print(f'Delta debugging with {self.num_processes} cores.')
                     direct_violations = [v for v in violations if True in [not po.is_transitive() for po in v.partial_orders]]
                     p.map(partial(self.debugger.delta_debug, campaign_directory=delta_debugging_folder,
