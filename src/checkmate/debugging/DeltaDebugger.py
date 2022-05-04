@@ -69,7 +69,8 @@ class DeltaDebugger:
         d = os.path.abspath(os.path.join(campaign_directory, 'deltadebugging',
                          os.path.dirname(get_file_name(violation))))
         if os.path.exists(d):
-            shutil.rmtree(d)
+            logger.critical(f'Delta debugging directory {d} already exists. Not removing. Skipping this violation.')
+            return None
         Path(d).mkdir(exist_ok=False, parents=True)
 
         # Copy benchmarks folder so that we have our own code location.
