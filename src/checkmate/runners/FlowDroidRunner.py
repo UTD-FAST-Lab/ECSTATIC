@@ -184,7 +184,7 @@ class FlowDroidRunner(AbstractCommandLineToolRunner):
                    os.path.abspath(xml_config_file),
                    os.path.abspath(job.target.name), output]
             if self.timeout is not None:
-                cmd.append(self.timeout)
+                cmd.append(str(self.timeout))
             curdir = os.path.abspath(os.curdir)
             os.chdir("/AQL-System/target/build")
             logger.info(f'Cmd is {" ".join(cmd)}')

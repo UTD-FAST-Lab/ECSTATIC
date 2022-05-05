@@ -142,3 +142,4 @@ resources/do_not_commit/*
 
 *.sorted
 *.intersection
+results/

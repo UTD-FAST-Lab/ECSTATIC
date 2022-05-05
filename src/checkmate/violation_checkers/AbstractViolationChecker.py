@@ -27,6 +27,8 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import List, Any, Tuple, Set, Iterable, TypeVar
 
+import tqdm as tqdm
+
 from src.checkmate.models.Option import Option
 from src.checkmate.readers.AbstractReader import AbstractReader
 from src.checkmate.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
@@ -91,8 +93,9 @@ class AbstractViolationChecker(ABC):
 
             with Pool(self.jobs) as p:
                 print(f'Checking violations with {self.jobs} cores.')
-                [finished_results.extend(v_set) for v_set in p.starmap(self.check_for_violation, pairs)]
-                finished_results = set(finished_results)
+                finished_results = set()
+                for result in tqdm(p.imap(self.check_for_violation, pairs), total=len(pairs)):
+                    finished_results.add(result)
 
         print('Violation detection done. Now printing to files.')
         print('Removing old violations...')

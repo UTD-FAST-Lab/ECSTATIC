@@ -29,6 +29,7 @@ from typing import Iterable, Optional, List
 
 from src.checkmate.readers import ReaderFactory
 from src.checkmate.runners import RunnerFactory
+from src.checkmate.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
 from src.checkmate.util.BenchmarkReader import validate
 from src.checkmate.util.UtilClasses import FinishedFuzzingJob
 from src.checkmate.util.Violation import Violation
@@ -179,7 +180,7 @@ def main():
 
     # Create tool runner.
     tmpdir = tempfile.TemporaryDirectory()
-    runner = RunnerFactory.get_runner_for_tool(args.tool)
+    runner : AbstractCommandLineToolRunner = RunnerFactory.get_runner_for_tool(args.tool)
     if args.timeout is not None:
         runner.timeout = args.timeout
     reader = ReaderFactory.get_reader_for_task_and_tool(args.task, args.tool)
