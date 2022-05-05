@@ -102,7 +102,7 @@ def create_xml_config_file(shell_file_path: str, apk: BenchmarkRecord, output_fo
     Path(xml_output_folder).mkdir(exist_ok=True)
     prefix = os.path.basename(shell_file_path).replace('.sh', '')
     xml_output_file = os.path.join(xml_output_folder,
-                                   f"{prefix + '_' + category_and_apk(apk.name)}.xml")
+                                   f"{prefix + '_' + os.path.basename(apk.name)}.xml")
     flowdroid_output = os.path.abspath(xml_output_file) + ".flowdroid.result"
     # if verify:
     #     xml_output_file += '.verify'
@@ -134,10 +134,6 @@ def create_xml_config_file(shell_file_path: str, apk: BenchmarkRecord, output_fo
 
 
 class FlowDroidRunner(AbstractCommandLineToolRunner):
-
-    def get_output(self, output_folder: str, job: FuzzingJob) -> str:
-        return os.path.abspath(os.path.join(output_folder,
-                            f'{self.dict_hash(job.configuration)}_{category_and_apk(job.target.name)}.raw'))
 
     @staticmethod
     def dict_to_config_str(config_as_dict: Dict[Option, Level]) -> str:

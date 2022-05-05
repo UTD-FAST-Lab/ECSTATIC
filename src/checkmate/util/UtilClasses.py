@@ -68,6 +68,7 @@ class FuzzingCampaign:
 class ConfigWithMutatedOption:
     config: frozendict[Option, Level]
     option: Option | None
+    level: Level | None
 
 
 @dataclass

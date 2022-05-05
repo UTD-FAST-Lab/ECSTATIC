@@ -59,19 +59,23 @@ def get_apks(directory: str) -> List[str]:
 class OptionExcludedError(Exception):
     pass
 
+
 class SeedGenerationStrategy(Enum):
     COVERAGE = auto()
     RANDOM = auto()
+
 
 class MutantWeighingStrategy(Enum):
     UNIFORM = auto()
     FIND_NEW_BUGS = auto()
     EXPLORE_EXISTING_BUGS = auto()
 
+
 class BenchmarkSelectionStrategy(Enum):
     ALL = auto()
     NEW = auto()
-    BUGGY= auto()
+    BUGGY = auto()
+
 
 class FuzzGenerator:
 
@@ -79,16 +83,22 @@ class FuzzGenerator:
                  grammar_location: str,
                  benchmark: Benchmark,
                  seed_strategy: SeedGenerationStrategy = SeedGenerationStrategy.COVERAGE,
-                 mutant_strategy: MutantWeighingStrategy = MutantWeighingStrategy.UNIFORM,
-                 benchmark_strategy: BenchmarkSelectionStrategy = BenchmarkSelectionStrategy.ALL):
+                 mutant_strategy: MutantWeighingStrategy = MutantWeighingStrategy.FIND_NEW_BUGS,
+                 benchmark_strategy: BenchmarkSelectionStrategy = BenchmarkSelectionStrategy.BUGGY):
         self.first_run = True
         with open(grammar_location) as f:
             self.json_grammar = json.load(f)
         self.grammar = convert_ebnf_grammar(self.json_grammar)
-        self.benchmark: Benchmark = benchmark
+        self.benchmark: List[BenchmarkRecord] = benchmark.benchmarks
         self.fuzzer = GrammarCoverageFuzzer(self.grammar)
         self.model = ConfigurationSpaceReader().read_configuration_space(model_location)
-        self.violations : Iterable[Violation] = []
+
+        self.levels: List[Level] = []
+        for o in self.model.get_options():
+            o: Option
+            self.levels.extend(o.get_levels_involved_in_partial_orders())
+
+        self.benchmark_population = benchmark.benchmarks
         self.seed_strategy = seed_strategy
         self.mutant_strategy = mutant_strategy
         self.benchmark_strategy = benchmark_strategy
@@ -142,7 +152,6 @@ class FuzzGenerator:
 
         """
         if self.first_run:
-            self.first_run = False
             return dict()
         if self.seed_strategy == SeedGenerationStrategy.COVERAGE:
             config = ""
@@ -171,18 +180,56 @@ class FuzzGenerator:
         results: List[FuzzingJob] = list()
         candidates.append(ConfigWithMutatedOption(frozendict(seed_config), None))
 
-        for candidate in candidates:
+        if self.first_run:
+            candidate_sample = candidates
+            benchmark_sample = self.benchmark
+        else:
+            candidate_sample = random.sample(candidates, 4)
+            benchmark_sample = random.sample(self.benchmark, 4)
+
+        levels_selected = []
+        for c in candidate_sample:
+            if c.option.type.startswith('int'):
+                # If an int, add all of its levels, we don't want to treat them differently.
+                levels_selected.extend(c.option.get_levels_involved_in_partial_orders())
+            else:
+                # Just add the one level
+                levels_selected.append(c.level)
+
+        # Levels not selected
+        held_out = [l for l in self.levels if l not in levels_selected]
+
+        # Increase weight of all levels not selected
+        self.levels.extend(held_out)
+
+        for candidate in candidate_sample:
             choice = candidate.config
             # excluded = [v for k, v in choice.items() if v in self.exclusions]
             # if len(excluded) > 0:
             #     continue
             logger.info(f"Chosen config: {choice}")
             option_under_investigation = candidate.option
-            for benchmark_record in self.benchmark.benchmarks:
+            for benchmark_record in benchmark_sample:
                 benchmark_record: BenchmarkRecord
                 results.append(FuzzingJob(choice, option_under_investigation, benchmark_record))
 
+        self.first_run = False
         return FuzzingCampaign(results)
+
+    def feedback(self, violations: List[Violation]):
+        for v in [v for v in violations if v.violated and not v.is_transitive()]:
+            o: Option = v.get_option_under_investigation()
+
+            # Don't retest levels that already exhibited violations.
+            if o.type.lower().startswith('int'):
+                self.levels = [l for l in self.levels if l.option_name != o.name]
+            else:
+                del self.levels[v.job1.job.configuration[o]]
+                del self.levels[v.job2.job.configuration[o]]
+
+            # Weigh benchmarks higher that have discovered benchmarks.
+            self.benchmark.append(v.job1.job.target)
+
 
     def mutate_config(self, config: Dict[Option, Level]) -> List[ConfigWithMutatedOption]:
         """
@@ -191,23 +238,23 @@ class FuzzGenerator:
         """
         candidates: List[ConfigWithMutatedOption] = list()
         options: List[Option] = self.model.get_options()
-        for o in options:
-            for level in o.get_levels_involved_in_partial_orders():
-                try:
-                    if o not in config:
-                        config[o] = o.get_default()
-                    if level == config[o]:
-                        continue
-                    if o.type.startswith('int'):
-                        if 'i' in level.level_name:
-                            logging.info(f'Sampling between {o.min_value} and {o.max_value}')
-                            level = Level(o.name, random.randint(o.min_value, o.max_value))
-                            logging.info(f'Sampled level {str(level)}')
-                        else:
-                            level = Level(o.name, int(level.level_name))
-                    config_copy = copy.deepcopy(config)
-                    config_copy[o] = level
-                    candidates.append(ConfigWithMutatedOption(frozendict(config_copy), o))
-                except OptionExcludedError as oee:
-                    logger.debug(str(oee))
+        for level in self.levels:
+            o = self.model.get_option(level.option_name)
+            try:
+                if o not in config:
+                    config[o] = o.get_default()
+                if level == config[o]:
+                    continue
+                if o.type.startswith('int'):
+                    if 'i' in level.level_name:
+                        logging.info(f'Sampling between {o.min_value} and {o.max_value}')
+                        level = Level(o.name, random.randint(o.min_value, o.max_value))
+                        logging.info(f'Sampled level {str(level)}')
+                    else:
+                        level = Level(o.name, int(level.level_name))
+                config_copy = copy.deepcopy(config)
+                config_copy[o] = level
+                candidates.append(ConfigWithMutatedOption(frozendict(config_copy), o, level))
+            except OptionExcludedError as oee:
+                logger.debug(str(oee))
         return candidates
