@@ -22,11 +22,10 @@ import pickle
 import shutil
 import time
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
 from multiprocessing import Pool
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import List, Tuple, Set, Iterable, TypeVar
+from typing import List, Any, Tuple, Set, Iterable, TypeVar
 
 from tqdm import tqdm
 
@@ -52,14 +51,6 @@ def get_file_name(violation: Violation) -> str:
     return filename
 
 
-@dataclass
-class ViolationJob:
-    job1: FinishedFuzzingJob
-    job2: FinishedFuzzingJob
-    output_folder: str
-    option_under_investigation: Option
-    prior_violations: Iterable[Violation]
-
 class AbstractViolationChecker(ABC):
 
     def __init__(self, jobs: int, reader: AbstractReader, groundtruths: str | None = None):
@@ -68,67 +59,62 @@ class AbstractViolationChecker(ABC):
         self.groundtruths = groundtruths
         logger.debug(f'Groundtruths are {self.groundtruths}')
 
-    def check_violations(self, results: Iterable[FinishedFuzzingJob], output_folder: str):
-        pairs: Iterable[ViolationJob] = []
-        prior_pickles = [os.path.join(output_folder, f) for f in [f1 for f1 in os.listdir(output_folder) if f1.endswith(".pickle")]]
-        prior_violations = [pickle.load(open(f, 'rb')) for f in prior_pickles]
-        print(f'Found {len(prior_violations)} prior violations.')
-        for finished_run in [r for r in results if r is not None]:
-            finished_run: FinishedFuzzingJob
-            option_under_investigation: Option = finished_run.job.option_under_investigation
-            # Find configs with potential partial order relationships.
-            candidates: List[FinishedFuzzingJob]
-            if option_under_investigation is None:
-                candidates = [f for f in results if
-                              f.job.target == finished_run.job.target and
-                              f.results_location != finished_run.results_location]
-            else:
-                candidates = [f for f in results if
-                              (f.job.option_under_investigation is None or
-                               f.job.option_under_investigation == option_under_investigation) and
-                              f.job.target == finished_run.job.target and
-                              f.results_location != finished_run.results_location]
-            logger.info(f'Found {len(candidates)} candidates for job {finished_run.results_location}')
-            for candidate in candidates:
-                candidate: FinishedFuzzingJob
-                if finished_run.job.option_under_investigation is None:
-                    # switch to the other candidate's
-                    option_under_investigation = candidate.job.option_under_investigation
-                    if option_under_investigation is None:
-                        raise RuntimeError('Trying to compare two configurations with None as the option '
-                                           'under investigation. This should never happen.')
+    def check_violations(self, results: Iterable[FinishedFuzzingJob], output_folder: str,
+                         finished_results: Iterable[Violation] = []) -> List[Violation]:
+        start_time = time.time()
+        if len(finished_results) == 0:
+            pairs: Set[Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]] = []
+            for finished_run in [r for r in results if r is not None]:
+                finished_run: FinishedFuzzingJob
+                option_under_investigation: Option = finished_run.job.option_under_investigation
+                # Find configs with potential partial order relationships.
+                candidates: List[FinishedFuzzingJob]
+                if option_under_investigation is None:
+                    candidates = [f for f in results if
+                                  f.job.target == finished_run.job.target and
+                                  f.results_location != finished_run.results_location]
+                else:
+                    candidates = [f for f in results if
+                                  (f.job.option_under_investigation is None or
+                                   f.job.option_under_investigation == option_under_investigation) and
+                                  f.job.target == finished_run.job.target and
+                                  f.results_location != finished_run.results_location]
+                logger.info(f'Found {len(candidates)} candidates for job {finished_run.results_location}')
+                for candidate in candidates:
+                    candidate: FinishedFuzzingJob
+                    if finished_run.job.option_under_investigation is None:
+                        # switch to the other candidate's
+                        option_under_investigation = candidate.job.option_under_investigation
+                        if option_under_investigation is None:
+                            raise RuntimeError('Trying to compare two configurations with None as the option '
+                                               'under investigation. This should never happen.')
 
-                pairs.append(ViolationJob(finished_run, candidate, output_folder,
-                                          option_under_investigation, prior_violations))
+                    pairs.append((finished_run, candidate, option_under_investigation))
 
-        with Pool(self.jobs) as p:
-            print(f'Checking violations with {self.jobs} cores.')
-            finished_results = set()
-            for result in tqdm(p.imap(self.check_for_violation, pairs), total=len(pairs)):
-                finished_results.update(result)
-        finished_results = [f for f in finished_results if f.violated]
+            with Pool(self.jobs) as p:
+                print(f'Checking violations with {self.jobs} cores.')
+                finished_results = set()
+                for result in tqdm(p.imap(self.check_for_violation, pairs), total=len(pairs)):
+                    finished_results.update(result)
+
+        print('Violation detection done. Now printing to files.')
+        print('Removing old violations...')
+        shutil.rmtree(output_folder)
+        Path(output_folder).mkdir(exist_ok=False, parents=True)
+        for violation in filter(lambda v: v.violated, finished_results):
+            filename = get_file_name(violation)
+            dirname = os.path.dirname(filename)
+            Path(os.path.join(output_folder, "json", dirname)).mkdir(exist_ok=True, parents=True)
+            logging.info(f'Writing violation to file {filename}')
+            with open(os.path.join(output_folder, "json", filename), 'w') as f:
+                json.dump(violation.as_dict(), f, indent=4)
+            with NamedTemporaryFile(dir=output_folder, delete=False, suffix='.pickle') as f:
+                pickle.dump(violation, f)
+        print(f'Finished checking violations. {len([v for v in finished_results if v.violated])} violations detected.')
+        print(f'Campaign value processing done (took {time.time() - start_time} seconds).')
         self.summarize(finished_results)
-        [os.remove(f) for f in prior_pickles]  # Cleanup outdated violations.
         return finished_results
-
-        # print('Violation detection done. Now printing to files.')
-        # print('Removing old violations...')
-        # shutil.rmtree(output_folder)
-        # Path(output_folder).mkdir(exist_ok=False, parents=True)
-        # for violation in filter(lambda v: v.violated, finished_results):
-        #     filename = get_file_name(violation)
-        #     dirname = os.path.dirname(filename)
-        #     Path(os.path.join(output_folder, "json", dirname)).mkdir(exist_ok=True, parents=True)
-        #     logging.info(f'Writing violation to file {filename}')
-        #     with open(os.path.join(output_folder, "json", filename), 'w') as f:
-        #         json.dump(violation.as_dict(), f, indent=4)
-        #     with NamedTemporaryFile(dir=output_folder, delete=False, suffix='.pickle') as f:
-        #         pickle.dump(violation, f)
-        # print(f'Finished checking violations. {len([v for v in finished_results if v.violated])} violations detected.')
-        # print(f'Campaign value processing done (took {time.time() - start_time} seconds).')
-        # self.summarize(finished_results)
-        # return finished_results
-        # # results_queue.task_done()
+        # results_queue.task_done()
 
     def summarize(self, violations: Iterable[Violation]):
         """
@@ -186,7 +172,7 @@ class AbstractViolationChecker(ABC):
     def read_from_input(self, file: str) -> Iterable[T]:
         return self.reader.import_file(file)
 
-    def check_for_violation(self, violationJob: ViolationJob) -> Iterable[Violation]:
+    def check_for_violation(self, t: Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]) -> Iterable[Violation]:
 
         """
         Given two jobs, checks whether there are any violations.
@@ -200,11 +186,9 @@ class AbstractViolationChecker(ABC):
         -------
         An iterable containing any violations that were detected (can be empty).
         """
-        job1 = violationJob.job1
-        job2 = violationJob.job2
-        option_under_investigation = violationJob.option_under_investigation
-        output_folder = violationJob.output_folder
-        existing_violations = violationJob.prior_violations
+        job1 = t[0]
+        job2 = t[1]
+        option_under_investigation = t[2]
         results = []
         if job1.job.configuration[option_under_investigation] == job2.job.configuration[option_under_investigation]:
             return results
@@ -216,96 +200,63 @@ class AbstractViolationChecker(ABC):
                                                               job1.job.configuration[option_under_investigation]):
                     # If these are true, and job2 has more stuff than job1, we have a certain violation of one of these
                     # partial orders.
-
-                    # Before we read in, check that the violation does not already exist.
-                    # This optimization is possible because we don't consider the content of violations
-                    # When we check equality.
-                    pos: Set[PartialOrder] = {PartialOrder(job1.job.configuration[option_under_investigation],
-                                                           PartialOrderType.MORE_SOUND_THAN,
-                                                           job2.job.configuration[option_under_investigation],
-                                                           option_under_investigation),
-                                              PartialOrder(job2.job.configuration[option_under_investigation],
-                                                           PartialOrderType.MORE_PRECISE_THAN,
-                                                           job1.job.configuration[option_under_investigation],
-                                                           option_under_investigation)}
-                    v = self.check_violation_job_in_violations_list(violationJob, pos, existing_violations)
-                    if v is not None:
-                        results.append(v)
-                    else:
-                        job1_input = set(self.postprocess(self.read_from_input(job1.results_location), job1))
-                        job2_input = set(self.postprocess(self.read_from_input(job2.results_location), job2))
-                        differences: Set[T] = job2_input.difference(job1_input)
-                        results.append(Violation(len(differences), pos, job1, job2, differences))
+                    job1_input = set(self.postprocess(self.read_from_input(job1.results_location), job1))
+                    job2_input = set(self.postprocess(self.read_from_input(job2.results_location), job2))
+                    differences: Set[T] = job2_input.difference(job1_input)
+                    if len(differences) > 0:
+                        logger.info(f'Found {len(differences)} differences between '
+                                    f'{job2.results_location} ({len(job2_input)}) and '
+                                    f'{job1.results_location} ({len(job1_input)})')
+                        pos: Set[PartialOrder] = {PartialOrder(job1.job.configuration[option_under_investigation],
+                                                               PartialOrderType.MORE_SOUND_THAN,
+                                                               job2.job.configuration[option_under_investigation],
+                                                               option_under_investigation),
+                                                  PartialOrder(job2.job.configuration[option_under_investigation],
+                                                               PartialOrderType.MORE_PRECISE_THAN,
+                                                               job1.job.configuration[option_under_investigation],
+                                                               option_under_investigation)}
+                        results.append(Violation(True, pos, job1, job2, differences))
             if option_under_investigation.is_more_precise(job1.job.configuration[option_under_investigation],
                                                           job2.job.configuration[option_under_investigation]):
                 if option_under_investigation.is_more_sound(job2.job.configuration[option_under_investigation],
                                                             job1.job.configuration[option_under_investigation]):
-                    pos: Set[PartialOrder] = {PartialOrder(job1.job.configuration[option_under_investigation],
-                                                           PartialOrderType.MORE_PRECISE_THAN,
-                                                           job2.job.configuration[option_under_investigation],
-                                                           option_under_investigation),
-                                              PartialOrder(job2.job.configuration[option_under_investigation],
-                                                           PartialOrderType.MORE_SOUND_THAN,
-                                                           job1.job.configuration[option_under_investigation],
-                                                           option_under_investigation)}
-                    v = self.check_violation_job_in_violations_list(violationJob, pos, existing_violations)
-                    if v is not None:
-                        results.append(v)
-                    else:
-                        job1_input = set(self.postprocess(self.read_from_input(job1.results_location), job1))
-                        job2_input = set(self.postprocess(self.read_from_input(job2.results_location), job2))
-                        differences: Set[T] = job1_input.difference(job2_input)
-                        results.append(Violation(len(differences) > 0, pos, job1, job2, differences))
+                    job1_input = set(self.postprocess(self.read_from_input(job1.results_location), job1))
+                    job2_input = set(self.postprocess(self.read_from_input(job2.results_location), job2))
+                    differences: Set[T] = job1_input.difference(job2_input)
+                    if len(differences) > 0:
+                        logger.info(f'Found {len(differences)} differences between '
+                                    f'{job2.results_location} ({len(job2_input)}) and '
+                                    f'{job1.results_location} ({len(job1_input)})')
+                        pos: Set[PartialOrder] = {PartialOrder(job1.job.configuration[option_under_investigation],
+                                                               PartialOrderType.MORE_PRECISE_THAN,
+                                                               job2.job.configuration[option_under_investigation],
+                                                               option_under_investigation),
+                                                  PartialOrder(job2.job.configuration[option_under_investigation],
+                                                               PartialOrderType.MORE_SOUND_THAN,
+                                                               job1.job.configuration[option_under_investigation],
+                                                               option_under_investigation)}
+                        results.append(Violation(True, pos, job1, job2, differences))
         else:
             if option_under_investigation.is_more_sound(job1.job.configuration[option_under_investigation],
                                                         job2.job.configuration[option_under_investigation]):
-                pos = {PartialOrder(job1.job.configuration[option_under_investigation],
+                job2_result = self.get_true_positives(self.postprocess(self.read_from_input(job2.results_location),job2))
+                job1_result = self.get_true_positives(self.postprocess(self.read_from_input(job1.results_location),job1))
+                differences = job2_result.difference(job1_result)
+                if len(differences) > 0:
+                    results.append(Violation(True, {PartialOrder(job1.job.configuration[option_under_investigation],
                                                                  PartialOrderType.MORE_SOUND_THAN,
                                                                  job2.job.configuration[option_under_investigation],
-                                                                 option_under_investigation)}
-                v = self.check_violation_job_in_violations_list(violationJob, pos, existing_violations)
-                if v is not None:
-                    results.append(v)
-                else:
-                    job2_result = self.get_true_positives(self.postprocess(self.read_from_input(job2.results_location),job2))
-                    job1_result = self.get_true_positives(self.postprocess(self.read_from_input(job1.results_location),job1))
-                    differences = job2_result.difference(job1_result)
-                    results.append(Violation(len(differences) > 0, pos, job1, job2, differences))
+                                                                 option_under_investigation)},
+                                             job1, job2, differences))
             if option_under_investigation.is_more_precise(job1.job.configuration[option_under_investigation],
                                                           job2.job.configuration[option_under_investigation]):
-                pos = {PartialOrder(job1.job.configuration[option_under_investigation],
-                              PartialOrderType.MORE_PRECISE_THAN,
-                              job2.job.configuration[option_under_investigation],
-                              option_under_investigation)}
-                v = self.check_violation_job_in_violations_list(violationJob, pos, existing_violations)
-                if v is not None:
-                    results.append(v)
-                else:
-                    job2_result = self.get_false_positives(self.postprocess(self.read_from_input(job2.results_location),job2))
-                    job1_result = self.get_false_positives(self.postprocess(self.read_from_input(job1.results_location),job1))
-                    differences: Set[T] = job1_result.difference(job2_result)
-                    results.append(Violation(len(differences) > 0, pos, job1, job2, differences))
-
-        for violation in results:
-            filename = get_file_name(violation)
-            dirname = os.path.dirname(filename)
-            Path(os.path.join(output_folder, "json", dirname)).mkdir(exist_ok=True, parents=True)
-            logging.info(f'Writing violation to file {filename}')
-            if violation.violated:
-                with open(os.path.join(output_folder, "json", filename), 'w') as f:
-                    json.dump(violation.as_dict(), f, indent=4)
-            with NamedTemporaryFile(dir=output_folder, delete=False, suffix='.pickle') as f:
-                pickle.dump(violation, f)
+                job2_result = self.get_false_positives(self.postprocess(self.read_from_input(job2.results_location),job2))
+                job1_result = self.get_false_positives(self.postprocess(self.read_from_input(job1.results_location),job1))
+                differences: Set[T] = job1_result.difference(job2_result)
+                if len(differences) > 0:
+                    results.append(Violation(True, {PartialOrder(job1.job.configuration[option_under_investigation],
+                                                                 PartialOrderType.MORE_PRECISE_THAN,
+                                                                 job2.job.configuration[option_under_investigation],
+                                                                 option_under_investigation)},
+                                             job1, job2, differences))
         return results
-
-    def check_violation_job_in_violations_list(self, violation_job: ViolationJob,
-                                               pos: Iterable[PartialOrder],
-                                               violations_list: Iterable[Violation]):
-        true_violation = Violation(True, pos, violation_job.job1, violation_job.job1, [])
-        if true_violation in violations_list:
-            return [v for v in violations_list if v == true_violation][0]
-        false_violation = Violation(False, pos, violation_job.job1, violation_job.job1, [])
-        if false_violation in violations_list:
-            return [v for v in violations_list if v == false_violation][0]
-        return None
-

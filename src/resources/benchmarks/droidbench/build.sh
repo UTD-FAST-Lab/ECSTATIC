@@ -1,9 +1,12 @@
 #!/bin/bash
+
+apt install -y parallel
 CURDIR=$(pwd)
 cd /
-mkdir -p benchmarks
-cd /benchmarks
-git clone https://github.com/Pancax/droidbench_android_projects.git
+git clone https://github.com/secure-software-engineering/DroidBench.git
 cd DroidBench
-./script.sh
+git checkout develop
+mkdir -p /benchmarks/droidbench
+find ./apk -maxdepth 1 -type d | grep -v InterAppCommunication | parallel mv -t /benchmarks/droidbench
+cd /benchmarks/droidbench
 cd $CURDIR
