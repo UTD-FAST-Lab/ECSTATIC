@@ -172,9 +172,8 @@ class AbstractViolationChecker(ABC):
     def read_from_input(self, file: str) -> Iterable[T]:
         return self.reader.import_file(file)
 
-    def check_for_violation(self, job1: FinishedFuzzingJob,
-                            job2: FinishedFuzzingJob,
-                            option_under_investigation: Option) -> Iterable[Violation]:
+    def check_for_violation(self, t: Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]) -> Iterable[Violation]:
+
         """
         Given two jobs, checks whether there are any violations.
         Parameters
@@ -187,6 +186,9 @@ class AbstractViolationChecker(ABC):
         -------
         An iterable containing any violations that were detected (can be empty).
         """
+        job1 = t[0]
+        job2 = t[1]
+        option_under_investigation = t[3]
         results = []
         if job1.job.configuration[option_under_investigation] == job2.job.configuration[option_under_investigation]:
             return results
