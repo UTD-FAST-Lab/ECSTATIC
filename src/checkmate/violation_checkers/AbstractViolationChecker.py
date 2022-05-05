@@ -95,7 +95,7 @@ class AbstractViolationChecker(ABC):
                 print(f'Checking violations with {self.jobs} cores.')
                 finished_results = set()
                 for result in tqdm(p.imap(self.check_for_violation, pairs), total=len(pairs)):
-                    finished_results.add(result)
+                    finished_results.update(result)
 
         print('Violation detection done. Now printing to files.')
         print('Removing old violations...')
