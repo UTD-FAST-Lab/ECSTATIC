@@ -90,8 +90,17 @@ class ToolTester:
             print(f'Campaign {campaign_index} finished (time {time.time() - start} seconds)')
             violations_folder = os.path.join(campaign_folder, 'violations')
             print(f'Now checking for violations.')
+            existing_violations = []
+            if os.path.exists(violations_folder):
+                logging.warning(f"{violations_folder} exists, so reading existing pickled violations. Please remove "
+                                f"{violations_folder} if you want violations to be recomputed.")
+                with Pool(self.num_processes) as p:
+                    existing_violations = p.map(self.read_violation_from_file,
+                                                [os.path.join(violations_folder, v) for v in
+                                                 os.listdir(violations_folder) if v.endswith('.pickle')])
+                logging.info(f'Read in {len(existing_violations)} existing violations.')
             Path(violations_folder).mkdir(exist_ok=True)
-            violations: List[Violation] = self.checker.check_violations(results, violations_folder)
+            violations: List[Violation] = self.checker.check_violations(results, violations_folder, existing_violations)
             if self.debugger is not None:
                 with Pool(max(int(self.num_processes/2), 1)) as p:  # /2 because each delta debugging process needs 2 cores.
                     direct_violations = [v for v in violations if not v.is_transitive()]
