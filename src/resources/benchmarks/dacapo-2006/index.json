@@ -36,8 +36,7 @@
         "deps/eclipse-deps.jar"
       ],
       "sources": [
-        "build_src/eclipse",
-        "../extra/eclipse-plugin"
+        "build_src/eclipse"
       ],
       "build_script": "build_scripts/build_eclipse.sh"
     },
