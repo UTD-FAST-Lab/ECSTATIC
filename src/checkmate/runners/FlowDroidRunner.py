@@ -157,19 +157,13 @@ class FlowDroidRunner(AbstractCommandLineToolRunner):
 
     def try_run_job(self, job: FuzzingJob, output_folder: str) -> FinishedFuzzingJob | None:
         try:
-            start_time: float = time.time()
             result_location: str
             shell_location: str = create_shell_file(job, output_folder)
             xml_location: str = create_xml_config_file(shell_location, job.target, output_folder)
             print(f'Running job with configuration {xml_location} on apk {job.target.name}')
             result_location = self.run_aql(job, self.get_output(output_folder, job), xml_location)
             print(f'Job on configuration {xml_location} on apk {job.target} done.')
-            end_time: float = time.time()
-
-            return FinishedFuzzingJob(
-                job=job,
-                execution_time=(end_time - start_time),
-                results_location=result_location)
+            return result_location
         except (KeyboardInterrupt, TimeoutError, RuntimeError):
             # logger.exception(f'Failed to run configuration {xml_location} on apk {job.apk}')
             return None
