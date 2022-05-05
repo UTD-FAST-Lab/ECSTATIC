@@ -106,6 +106,7 @@ class AbstractViolationChecker(ABC):
             finished_results = set()
             for result in tqdm(p.imap(self.check_for_violation, pairs), total=len(pairs)):
                 finished_results.update(result)
+        finished_results = [f for f in finished_results if f.violated]
         self.summarize(finished_results)
         [os.remove(f) for f in prior_pickles]  # Cleanup outdated violations.
         return finished_results
@@ -227,19 +228,14 @@ class AbstractViolationChecker(ABC):
                                                            PartialOrderType.MORE_PRECISE_THAN,
                                                            job1.job.configuration[option_under_investigation],
                                                            option_under_investigation)}
-                    dummy_violation = Violation(True, pos, job1, job2, [])
-                    if dummy_violation in existing_violations:
-                        logging.info("This violation was already found.")
-                        results.append([v for v in existing_violations if v == Violation(True, pos, job1, job2, [])][0])
+                    v = self.check_violation_job_in_violations_list(violationJob, pos, existing_violations)
+                    if v is not None:
+                        results.append(v)
                     else:
                         job1_input = set(self.postprocess(self.read_from_input(job1.results_location), job1))
                         job2_input = set(self.postprocess(self.read_from_input(job2.results_location), job2))
                         differences: Set[T] = job2_input.difference(job1_input)
-                        if len(differences) > 0:
-                            logger.info(f'Found {len(differences)} differences between '
-                                        f'{job2.results_location} ({len(job2_input)}) and '
-                                        f'{job1.results_location} ({len(job1_input)})')
-                            results.append(Violation(True, pos, job1, job2, differences))
+                        results.append(Violation(len(differences), pos, job1, job2, differences))
             if option_under_investigation.is_more_precise(job1.job.configuration[option_under_investigation],
                                                           job2.job.configuration[option_under_investigation]):
                 if option_under_investigation.is_more_sound(job2.job.configuration[option_under_investigation],
@@ -252,19 +248,14 @@ class AbstractViolationChecker(ABC):
                                                            PartialOrderType.MORE_SOUND_THAN,
                                                            job1.job.configuration[option_under_investigation],
                                                            option_under_investigation)}
-                    dummy_violation = Violation(True, pos, job1, job2, [])
-                    if dummy_violation in existing_violations:
-                        logging.info("This violation was already found.")
-                        results.append([v for v in existing_violations if v == Violation(True, pos, job1, job2, [])][0])
+                    v = self.check_violation_job_in_violations_list(violationJob, pos, existing_violations)
+                    if v is not None:
+                        results.append(v)
                     else:
                         job1_input = set(self.postprocess(self.read_from_input(job1.results_location), job1))
                         job2_input = set(self.postprocess(self.read_from_input(job2.results_location), job2))
                         differences: Set[T] = job1_input.difference(job2_input)
-                        if len(differences) > 0:
-                            logger.info(f'Found {len(differences)} differences between '
-                                        f'{job2.results_location} ({len(job2_input)}) and '
-                                        f'{job1.results_location} ({len(job1_input)})')
-                            results.append(Violation(True, pos, job1, job2, differences))
+                        results.append(Violation(len(differences) > 0, pos, job1, job2, differences))
         else:
             if option_under_investigation.is_more_sound(job1.job.configuration[option_under_investigation],
                                                         job2.job.configuration[option_under_investigation]):
@@ -272,40 +263,49 @@ class AbstractViolationChecker(ABC):
                                                                  PartialOrderType.MORE_SOUND_THAN,
                                                                  job2.job.configuration[option_under_investigation],
                                                                  option_under_investigation)}
-                dummy_violation = Violation(True, pos, job1, job2, [])
-                if dummy_violation in existing_violations:
-                    logging.info("This violation was already found.")
-                    results.append([v for v in existing_violations if v == Violation(True, pos, job1, job2, [])][0])
+                v = self.check_violation_job_in_violations_list(violationJob, pos, existing_violations)
+                if v is not None:
+                    results.append(v)
                 else:
                     job2_result = self.get_true_positives(self.postprocess(self.read_from_input(job2.results_location),job2))
                     job1_result = self.get_true_positives(self.postprocess(self.read_from_input(job1.results_location),job1))
                     differences = job2_result.difference(job1_result)
-                    if len(differences) > 0:
-                        results.append(Violation(True, pos, job1, job2, differences))
+                    results.append(Violation(len(differences) > 0, pos, job1, job2, differences))
             if option_under_investigation.is_more_precise(job1.job.configuration[option_under_investigation],
                                                           job2.job.configuration[option_under_investigation]):
                 pos = {PartialOrder(job1.job.configuration[option_under_investigation],
                               PartialOrderType.MORE_PRECISE_THAN,
                               job2.job.configuration[option_under_investigation],
                               option_under_investigation)}
-                dummy_violation = Violation(True, pos, job1, job2, [])
-                if dummy_violation in existing_violations:
-                    logging.info("This violation was already found.")
-                    results.append([v for v in existing_violations if v == Violation(True, pos, job1, job2, [])][0])
+                v = self.check_violation_job_in_violations_list(violationJob, pos, existing_violations)
+                if v is not None:
+                    results.append(v)
                 else:
                     job2_result = self.get_false_positives(self.postprocess(self.read_from_input(job2.results_location),job2))
                     job1_result = self.get_false_positives(self.postprocess(self.read_from_input(job1.results_location),job1))
                     differences: Set[T] = job1_result.difference(job2_result)
-                    if len(differences) > 0:
-                        results.append(Violation(True, pos, job1, job2, differences))
+                    results.append(Violation(len(differences) > 0, pos, job1, job2, differences))
 
-        for violation in filter(lambda v: v.violated, results):
+        for violation in results:
             filename = get_file_name(violation)
             dirname = os.path.dirname(filename)
             Path(os.path.join(output_folder, "json", dirname)).mkdir(exist_ok=True, parents=True)
             logging.info(f'Writing violation to file {filename}')
-            with open(os.path.join(output_folder, "json", filename), 'w') as f:
-                json.dump(violation.as_dict(), f, indent=4)
+            if violation.violated:
+                with open(os.path.join(output_folder, "json", filename), 'w') as f:
+                    json.dump(violation.as_dict(), f, indent=4)
             with NamedTemporaryFile(dir=output_folder, delete=False, suffix='.pickle') as f:
                 pickle.dump(violation, f)
         return results
+
+    def check_violation_job_in_violations_list(self, violation_job: ViolationJob,
+                                               pos: Iterable[PartialOrder],
+                                               violations_list: Iterable[Violation]):
+        true_violation = Violation(True, pos, violation_job.job1, violation_job.job1, [])
+        if true_violation in violations_list:
+            return [v for v in violations_list if v == true_violation][0]
+        false_violation = Violation(False, pos, violation_job.job1, violation_job.job1, [])
+        if false_violation in violations_list:
+            return [v for v in violations_list if v == false_violation][0]
+        return None
+
