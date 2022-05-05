@@ -30,12 +30,9 @@ class CallgraphViolationChecker(AbstractViolationChecker):
     cache: Dict[str, Iterable[T]] = {}
 
     def postprocess(self, results: Iterable[T], job: FinishedFuzzingJob) -> Iterable[T]:
-        if job.results_location in CallgraphViolationChecker.cache:
-            return CallgraphViolationChecker.cache[job.results_location]
         orig_length = len(results)
         if len(job.job.target.packages) > 0:
             results = list(filter(lambda x: True in [x[0].clazz.startswith(p) for p in job.job.target.packages], results))
-            CallgraphViolationChecker.cache[job.results_location] = results
             logging.info(f"Postprocessed result from {orig_length} to {len(results)} edges.")
             return results
 
