@@ -188,7 +188,7 @@ class AbstractViolationChecker(ABC):
         """
         job1 = t[0]
         job2 = t[1]
-        option_under_investigation = t[3]
+        option_under_investigation = t[2]
         results = []
         if job1.job.configuration[option_under_investigation] == job2.job.configuration[option_under_investigation]:
             return results
