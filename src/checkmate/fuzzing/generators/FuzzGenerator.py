@@ -178,7 +178,7 @@ class FuzzGenerator:
         candidates: List[ConfigWithMutatedOption] = self.mutate_config(seed_config)
         logger.info(f"Generated {len(candidates)} single-option mutant configurations.")
         results: List[FuzzingJob] = list()
-        candidates.append(ConfigWithMutatedOption(frozendict(seed_config), None))
+        candidates.append(ConfigWithMutatedOption(frozendict(seed_config), None, None))
 
         if self.first_run:
             candidate_sample = candidates
@@ -186,21 +186,20 @@ class FuzzGenerator:
         else:
             candidate_sample = random.sample(candidates, 4)
             benchmark_sample = random.sample(self.benchmark, 4)
+            levels_selected = []
+            for c in candidate_sample:
+                if c.option.type.startswith('int'):
+                    # If an int, add all of its levels, we don't want to treat them differently.
+                    levels_selected.extend(c.option.get_levels_involved_in_partial_orders())
+                else:
+                    # Just add the one level
+                    levels_selected.append(c.level)
+    
+            # Levels not selected
+            held_out = [l for l in self.levels if l not in levels_selected]
 
-        levels_selected = []
-        for c in candidate_sample:
-            if c.option.type.startswith('int'):
-                # If an int, add all of its levels, we don't want to treat them differently.
-                levels_selected.extend(c.option.get_levels_involved_in_partial_orders())
-            else:
-                # Just add the one level
-                levels_selected.append(c.level)
-
-        # Levels not selected
-        held_out = [l for l in self.levels if l not in levels_selected]
-
-        # Increase weight of all levels not selected
-        self.levels.extend(held_out)
+            # Increase weight of all levels not selected
+            self.levels.extend(held_out)
 
         for candidate in candidate_sample:
             choice = candidate.config

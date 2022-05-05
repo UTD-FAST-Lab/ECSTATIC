@@ -23,6 +23,7 @@ class CGCallSite():
     clazz: str
     stmt: str
     context: str
+    original_line: str
 
     def __hash__(self):
         return hash((self.clazz, self.stmt))

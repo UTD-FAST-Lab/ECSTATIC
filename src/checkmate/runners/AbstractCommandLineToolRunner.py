@@ -107,12 +107,16 @@ class AbstractCommandLineToolRunner(ABC):
         exception = None
         num_runs = 0
 
-        if os.path.exists(self.get_output(output_folder, job)):
-            logging.info(f'{self.get_output(output_folder, job)} already exists. Returning that.')
-            with open(self.get_time_file(output_folder, job), 'r') as f:
-                execution_time = float(f.read().strip())
+        try:
+            if os.path.exists(self.get_output(output_folder, job)):
+                logging.info(f'{self.get_output(output_folder, job)} already exists. Returning that.')
+                with open(self.get_time_file(output_folder, job), 'r') as f:
+                    execution_time = float(f.read().strip())
 
-            return FinishedFuzzingJob(job, execution_time, self.get_output(output_folder, job))
+                return FinishedFuzzingJob(job, execution_time, self.get_output(output_folder, job))
+        except FileNotFoundError:
+            logging.exception("Time file was not created, so starting over.")
+            os.remove(self.get_output(output_folder, job))
 
         while num_runs < num_retries and not os.path.exists(
                 self.get_output(output_folder, job) + '.error'):

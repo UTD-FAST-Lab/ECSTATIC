@@ -16,6 +16,8 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
+import os
+import pickle
 from abc import ABC
 from typing import Tuple, List, Any
 
@@ -29,6 +31,8 @@ logger = logging.getLogger(__name__)
 class AbstractCallGraphReader(AbstractReader):
 
     def import_file(self, file: str) -> Any:
+        if os.path.exists(file + ".reduced.pickle"):
+            return pickle.load(open(self.import_file(file + ".reduced"), 'rb'))
         logger.info(f'Reading callgraph from {file}')
         callgraph: List[Tuple[CGCallSite, CGTarget]] = []
         with open(file) as f:

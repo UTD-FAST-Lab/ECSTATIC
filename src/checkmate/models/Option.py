@@ -94,8 +94,6 @@ class Option:
         """Returns list of all registered levels"""
         return self.all
 
-    def resolve_level(self, name: str) -> Level:
-
     def get_level(self, name: str) -> Level:
         if self.type.startswith('int') and int(name):
             return Level(self.name, name)

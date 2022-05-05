@@ -27,6 +27,8 @@ from multiprocessing.pool import Pool
 from pathlib import Path
 from typing import List, Optional
 
+from tqdm import tqdm
+
 from src.checkmate.debugging.DeltaDebugger import DeltaDebugger
 from src.checkmate.dispatcher import Sanitizer
 from src.checkmate.fuzzing.generators import FuzzGeneratorFactory
@@ -84,8 +86,11 @@ class ToolTester:
             Path(campaign_folder).mkdir(exist_ok=True, parents=True)
             partial_run_job = partial(self.runner.run_job, output_folder=campaign_folder)
             with Pool(self.num_processes) as p:
-                results = list(p.map(partial_run_job,
-                                     campaign.jobs if self.limit is None else campaign.jobs[:self.limit - 1]))
+                results = []
+                for r in tqdm(p.imap(partial_run_job,
+                                     campaign.jobs if self.limit is None else campaign.jobs[:self.limit - 1]),
+                              total=len(campaign.jobs)):
+                    results.append(r)
             results = [r for r in results if r is not None]
             print(f'Campaign {campaign_index} finished (time {time.time() - start} seconds)')
             violations_folder = os.path.join(campaign_folder, 'violations')
