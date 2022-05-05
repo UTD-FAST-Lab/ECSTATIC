@@ -6,8 +6,7 @@
         "deps/antlr-deps.jar"
       ],
       "sources": [
-        "build_src/antlr",
-        "bmsrc/dacapo"
+        "build_src/antlr"
       ],
       "build_script": "build_scripts/build_antlr.sh"
     },
@@ -17,8 +16,7 @@
         "deps/bloat-deps.jar"
       ],
       "sources": [
-        "build_src/bloat",
-        "bmsrc/dacapo"
+        "build_src/bloat"
       ],
       "build_script": "build_scripts/build_bloat.sh"
     },
@@ -28,8 +26,7 @@
         "deps/chart-deps.jar"
       ],
       "sources": [
-        "build_src/chart",
-        "bmsrc/dacapo"
+        "build_src/chart"
       ],
       "build_script": "build_scripts/build_chart.sh"
     },
@@ -39,8 +36,7 @@
         "deps/eclipse-deps.jar"
       ],
       "sources": [
-        "build_src/eclipse",
-        "bmsrc/dacapo"
+        "build_src/eclipse"
       ],
       "build_script": "build_scripts/build_eclipse.sh"
     },
@@ -50,8 +46,7 @@
         "deps/fop-deps.jar"
       ],
       "sources": [
-        "build_src/fop",
-        "bmsrc/dacapo"
+        "build_src/fop"
       ],
       "build_script": "build_scripts/build_fop.sh"
     },
@@ -61,8 +56,7 @@
         "deps/hsqldb-deps.jar"
       ],
       "sources": [
-        "build_src/hsqldb",
-        "bmsrc/dacapo"
+        "build_src/hsqldb"
       ],
       "build_script": "build_scripts/build_hsqldb.sh"
     },
@@ -72,8 +66,7 @@
         "deps/jython-deps.jar"
       ],
       "sources": [
-        "build_src/jython",
-        "bmsrc/dacapo"
+        "build_src/jython"
       ],
       "build_script": "build_scripts/build_jython.sh"
     },
@@ -83,8 +76,7 @@
         "deps/pmd-deps.jar"
       ],
       "sources": [
-        "build_src/pmd",
-        "bmsrc/dacapo"
+        "build_src/pmd"
       ],
       "build_script": "build_scripts/build_chart.sh"
     }
