@@ -45,7 +45,7 @@ class PartialOrder:
         from src.checkmate.models.Option import Option # Resolve circular dependency
         if not isinstance(self.option, Option):
             raise RuntimeError(f'{self.option} is not of type Option')
-        if type == PartialOrderType.MORE_PRECISE_THAN:
+        if self.type == PartialOrderType.MORE_PRECISE_THAN:
             return not self.option.precision.has_edge(self.left, self.right)
         else:
             return not self.option.soundness.has_edge(self.left, self.right)

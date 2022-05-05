@@ -105,9 +105,8 @@ class AbstractViolationChecker(ABC):
             logging.info(f'Writing violation to file {filename}')
             with open(os.path.join(output_folder, "json", filename), 'w') as f:
                 json.dump(violation.as_dict(), f, indent=4)
-            if violation not in finished_results:
-                with NamedTemporaryFile(dir=output_folder, delete=False, suffix='.pickle') as f:
-                    pickle.dump(violation, f)
+            with NamedTemporaryFile(dir=output_folder, delete=False, suffix='.pickle') as f:
+                pickle.dump(violation, f)
         print(f'Finished checking violations. {len([v for v in finished_results if v.violated])} violations detected.')
         print(f'Campaign value processing done (took {time.time() - start_time} seconds).')
         self.summarize(finished_results)

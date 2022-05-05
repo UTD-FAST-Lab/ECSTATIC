@@ -14,13 +14,17 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import logging
+
 from src.checkmate.models.Flow import Flow
 from src.checkmate.violation_checkers.AbstractViolationChecker import AbstractViolationChecker
 
+logger = logging.getLogger(__name__)
 
 class FlowDroidFlowViolationChecker(AbstractViolationChecker):
 
     def is_true_positive(self, groundtruth_record: Flow) -> bool:
+        logging.info(f'Checking if {str(groundtruth_record.element)} is true.')
         return groundtruth_record.get_classification().lower() == 'true'
 
     def is_false_positive(self, groundtruth_record: Flow) -> bool:

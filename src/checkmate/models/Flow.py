@@ -112,7 +112,7 @@ class Flow:
             if not self.get_source_and_sink() == other.get_source_and_sink():
                 logging.debug(f'My source and sink ({self.get_source_and_sink()} does not equal the other '
                               f'source and sink ({other.get_source_and_sink()})')
-            return self.get_file() == other.get_file() and self.get_source_and_sink() == other.get_source_and_sink()
+            return os.path.basename(self.get_file()) == os.path.basename(other.get_file()) and self.get_source_and_sink() == other.get_source_and_sink()
 
     def __hash__(self):
         sas = self.get_source_and_sink()
