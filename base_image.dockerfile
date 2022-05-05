@@ -39,3 +39,4 @@ COPY --from=delta-debugger-build /SADeltaDebugger /SADeltaDebugger
 COPY --from=checkmate-build /venv /venv
 COPY --from=checkmate-build /checkmate /checkmate
 ENV PATH=/venv/bin:$PATH
+ENV DELTA_DEBUGGER_HOME=/SADeltaDebugger
