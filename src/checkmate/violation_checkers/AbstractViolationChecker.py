@@ -70,7 +70,7 @@ class AbstractViolationChecker(ABC):
 
     def check_violations(self, results: Iterable[FinishedFuzzingJob], output_folder: str):
         pairs: Iterable[ViolationJob] = []
-        prior_pickles = [f for f in [f1 for f1 in os.listdir(output_folder) if f1.endswith(".pickle")]]
+        prior_pickles = [os.path.join(output_folder, f) for f in [f1 for f1 in os.listdir(output_folder) if f1.endswith(".pickle")]]
         prior_violations = [pickle.load(open(f, 'rb')) for f in prior_pickles]
         print(f'Found {len(prior_violations)} prior violations.')
         for finished_run in [r for r in results if r is not None]:
