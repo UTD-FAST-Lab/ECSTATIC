@@ -27,7 +27,7 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import List, Any, Tuple, Set, Iterable, TypeVar
 
-import tqdm as tqdm
+from tqdm import tqdm
 
 from src.checkmate.models.Option import Option
 from src.checkmate.readers.AbstractReader import AbstractReader
