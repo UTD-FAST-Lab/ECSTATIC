@@ -150,7 +150,7 @@ class FuzzGenerator:
                 for p in o.partial_orders:
                     candidate_sample.update(self.mutate_config(seed_config, p))
             # All candidates, all benchmarks
-            candidate_sample.update(ConfigWithMutatedOption(seed_config, None, None))
+            candidate_sample.add(ConfigWithMutatedOption(seed_config, None, None))
             benchmarks_sample = self.benchmark_population.keys()
         else:
             candidate_sample = set()
