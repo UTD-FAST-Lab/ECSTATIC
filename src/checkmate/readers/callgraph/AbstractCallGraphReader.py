@@ -32,7 +32,7 @@ class AbstractCallGraphReader(AbstractReader):
 
     def import_file(self, file: str) -> Any:
         if os.path.exists(file + ".reduced.pickle"):
-            return pickle.load(open(self.import_file(file + ".reduced.pickle"), 'rb'))
+            return pickle.load(open(file + ".reduced.pickle"), 'rb')
         logger.info(f'Reading callgraph from {file}')
         callgraph: List[Tuple[CGCallSite, CGTarget]] = []
         with open(file) as f:
