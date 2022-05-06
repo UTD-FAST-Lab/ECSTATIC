@@ -97,7 +97,7 @@ class AbstractViolationChecker(ABC):
                 finished_results = set()
                 for result in tqdm(p.imap(self.check_for_violation, pairs), total=len(pairs)):
                     finished_results.update(result)
-                    print("Size of results set is " + sys.getsizeof(finished_results))
+                    print("Size of results set is " + str(sys.getsizeof(finished_results)) + "B")
 
         print('Violation detection done. Now printing to files.')
         print('Removing old violations...')
