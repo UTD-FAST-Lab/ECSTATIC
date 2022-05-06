@@ -45,11 +45,13 @@ class DeltaDebuggingResult:
 
 class DeltaDebugger:
 
-    def __init__(self, artifacts_folder: str, tool: str, task: str, groundtruths: str = None):
+    def __init__(self, artifacts_folder: str, tool: str, task: str, groundtruths: str = None,
+                 whole_program: bool = False):
         self.artifacts_folder = artifacts_folder
         self.tool = tool
         self.task = task
         self.groundtruths = groundtruths
+        self.whole_program = whole_program
 
     def delta_debug(self, violation: Violation, campaign_directory: str, timeout: Optional[int])\
             -> Optional[DeltaDebuggingResult]:
@@ -149,7 +151,9 @@ class DeltaDebugger:
             if timeout is not None:
                 cmd += f"--timeout {timeout} "
             if self.groundtruths is not None:
-                cmd = f"{cmd} --groundtruths {self.groundtruths}"
+                cmd = f"{cmd} --groundtruths {self.groundtruths} "
+            if self.whole_program:
+                cmd = f"{cmd} --whole-program"
             f.write(cmd + "\n")
             result = f.name
             logger.info(f"Wrote cmd {cmd} to delta debugging script.")
@@ -169,6 +173,7 @@ def main():
     parser.add_argument("--task", help="The task.", required=True)
     parser.add_argument("--groundtruths", help="Groundtruths (may be None if we are not using ground truths.")
     parser.add_argument("--timeout", help="Timeout in minutes.", type=int, default=None)
+    parser.add_argument("--whole-program", help="Whole program")
     args = parser.parse_args()
 
     with open(args.violation, 'rb') as f:
@@ -181,6 +186,8 @@ def main():
     # Create tool runner.
     tmpdir = tempfile.TemporaryDirectory()
     runner : AbstractCommandLineToolRunner = RunnerFactory.get_runner_for_tool(args.tool)
+    if args.whole_program:
+        runner.whole_program = True
     if args.timeout is not None:
         runner.timeout = args.timeout
     reader = ReaderFactory.get_reader_for_task_and_tool(args.task, args.tool)

@@ -180,7 +180,7 @@ def main():
 
     if not args.no_delta_debug:
         Path("/artifacts").mkdir(exist_ok=True)
-        debugger = DeltaDebugger("/artifacts", args.tool, args.task, groundtruths)
+        debugger = DeltaDebugger("/artifacts", args.tool, args.task, groundtruths, runner.whole_program)
     else:
         debugger = None
 
