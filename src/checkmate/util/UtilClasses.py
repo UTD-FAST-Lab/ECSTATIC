@@ -25,13 +25,17 @@ from src.checkmate.models.Level import Level
 from src.checkmate.models.Option import Option
 
 
-@dataclass(unsafe_hash=True)
+@dataclass
 class BenchmarkRecord:
     name: str
     depends_on: List[str] = field(kw_only=True, default_factory=list)
     sources: List[str] = field(kw_only=True, default_factory=list)
     build_script: str = field(kw_only=True, default=None)
     packages: List[str] = field(kw_only=True, default_factory=list)
+
+    def __hash__(self):
+        return hash((self.name, tuple(self.depends_on), tuple(self.sources),
+                     self.build_script, tuple(self.packages)))
 
 
 @dataclass
