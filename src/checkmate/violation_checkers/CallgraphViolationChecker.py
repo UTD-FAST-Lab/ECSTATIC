@@ -32,14 +32,10 @@ class CallgraphViolationChecker(AbstractViolationChecker):
     cache: Dict[str, Iterable[T]] = {}
 
     def postprocess(self, results: Iterable[T], job: FinishedFuzzingJob) -> Iterable[T]:
-        if os.path.exists(job.results_location + ".reduced.pickle"):
-            # We already reduced it so no need to compute again.
-            return results
         orig_length = len(results)
         if len(job.job.target.packages) > 0:
             results = list(filter(lambda x: True in [x[0].clazz.startswith(p) for p in job.job.target.packages], results))
             logging.info(f"Postprocessed result from {orig_length} to {len(results)} edges.")
-            pickle.dump(results, open(job.results_location + ".reduced.pickle", 'wb'))
         return results
 
     def is_true_positive(self, input: T) -> bool:
