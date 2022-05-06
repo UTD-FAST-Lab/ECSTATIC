@@ -87,7 +87,7 @@ class ToolTester:
                 results = []
                 for r in tqdm(p.imap(partial_run_job, campaign.jobs), total=len(campaign.jobs)):
                     results.append(r)
-            results = [r for r in results if r is not None]
+            results = [r for r in results if r.results_location is not None]
             print(f'Campaign {campaign_index} finished (time {time.time() - campaign_start_time} seconds)')
             violations_folder = os.path.join(campaign_folder, 'violations')
             print(f'Now checking for violations.')
@@ -102,12 +102,12 @@ class ToolTester:
                 logging.info(f'Read in {len(existing_violations)} existing violations.')
             Path(violations_folder).mkdir(exist_ok=True)
             violations: List[Violation] = self.checker.check_violations(results, violations_folder, existing_violations)
-            # if self.debugger is not None:
-            #     with Pool(max(int(self.num_processes/2), 1)) as p:  # /2 because each delta debugging process needs 2 cores.
-            #         direct_violations = [v for v in violations if not v.is_transitive()]
-            #         print(f'Delta debugging {len(direct_violations)} violations with {self.num_processes} cores.')
-            #         p.map(partial(self.debugger.delta_debug, campaign_directory=campaign_folder,
-            #                       timeout=self.runner.timeout), direct_violations)
+            if self.debugger is not None:
+                with Pool(max(int(self.num_processes/2), 1)) as p:  # /2 because each delta debugging process needs 2 cores.
+                    direct_violations = [v for v in violations if not v.is_transitive()]
+                    print(f'Delta debugging {len(direct_violations)} violations with {self.num_processes} cores.')
+                    p.map(partial(self.debugger.delta_debug, campaign_directory=campaign_folder,
+                                  timeout=self.runner.timeout), direct_violations)
             self.generator.feedback(violations)
             print(f'Done with campaign {campaign_index}!')
             campaign_index += 1

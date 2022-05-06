@@ -31,6 +31,7 @@ from src.checkmate.models.Level import Level
 from src.checkmate.models.Option import Option
 from src.checkmate.models.Tool import Tool
 from src.checkmate.util.ConfigurationSpaceReader import ConfigurationSpaceReader
+from src.checkmate.util.PartialOrder import PartialOrder
 from src.checkmate.util.UtilClasses import ConfigWithMutatedOption, FuzzingCampaign, Benchmark, BenchmarkRecord, \
     FuzzingJob
 from src.checkmate.util.Violation import Violation
@@ -69,11 +70,10 @@ class FuzzGenerator:
         self.fuzzer = GrammarCoverageFuzzer(self.grammar)
         self.model = ConfigurationSpaceReader().read_configuration_space(model_location)
 
-        self.levels: Dict[Level, int] = {}
+        self.partial_orders: Dict[PartialOrder, int] = {}
         for o in self.model.get_options():
-            o: Option
-            for l in o.get_levels_involved_in_partial_orders():
-                self.levels[l] = 1
+            for p in o.partial_orders:
+                self.partial_orders[p] = 1
 
         self.benchmark_population = {b: 1 for b in benchmark.benchmarks}
 
@@ -137,46 +137,37 @@ class FuzzGenerator:
         """
         This method generates the next task for the fuzzer.
         """
-        if len(self.levels) == 0:
-            print("All out of levels!")
+        if len(self.partial_orders) == 0:
+            print("All out of partial orders!")
             exit(0)
         seed_config = self.make_new_seed()
         seed_config = fill_out_defaults(self.model, seed_config)
         logger.info(f"Configuration is {[(str(k), str(v)) for k, v in seed_config.items()]}")
-        logger.info(f"Benchmark population is {self.benchmark_population}")
-        logger.info(f"Level weights are {self.levels}")
-        candidates: List[Tuple[ConfigWithMutatedOption, int]] = self.mutate_config(seed_config)
-        logger.info(f"Generated {len(candidates)} single-option mutant configurations.")
         results: List[FuzzingJob] = list()
         if self.first_run:
+            candidate_sample = set()
+            for o in self.model.options:
+                for p in o.partial_orders:
+                    candidate_sample.update(self.mutate_config(seed_config, p))
             # All candidates, all benchmarks
-            candidate_sample = [c[0] for c in candidates]
-            candidate_sample.append(ConfigWithMutatedOption(frozendict(seed_config), None, None))
             benchmarks_sample = self.benchmark_population.keys()
         else:
             candidate_sample = set()
-            while len(candidate_sample) < min(4, len(candidates)):
-                candidate_sample.update(random.sample([c[0] for c in candidates], 1, counts=[c[1] for c in candidates]))
-            benchmarks_sample=set()
+            pos = set()
+            while len(pos) < min(len(self.partial_orders), 2):
+                pos.update(random.sample(self.partial_orders.keys(), 2, counts=self.partial_orders.values()))
+            [candidate_sample.update(self.mutate_config(seed_config, p)) for p in pos]
+            benchmarks_sample = set()
             while len(benchmarks_sample) < min(4, len(self.benchmark_population)):
                 benchmarks_sample.update(random.sample(self.benchmark_population.keys(), 1,
-                                              counts=self.benchmark_population.values()))
-        levels_selected = []
-        for c in candidate_sample:
-            if c.option is not None:
-                if c.option.type.startswith('int'):
-                    # If an int, add all of its levels, we don't want to treat them differently.
-                    levels_selected.extend(c.option.get_levels_involved_in_partial_orders())
-                else:
-                    # Just add the one level
-                    levels_selected.append(c.level)
+                                                       counts=self.benchmark_population.values()))
 
-        # Levels not selected
-        held_out = [l for l in self.levels if l not in levels_selected]
+            # Levels not selected
+            held_out = [p for p in self.partial_orders if p not in pos]
 
-        # Increase weight of all levels not selected
-        for l in held_out:
-            self.levels[l] += 1
+            # Increase weight of all levels not selected
+            for l in held_out:
+                self.partial_orders[l] += 1
 
         for candidate in candidate_sample:
             choice = candidate.config
@@ -199,11 +190,12 @@ class FuzzGenerator:
 
             # Don't retest levels that already exhibited violations.
             if o.type.lower().startswith('int'):
-                self.levels = {l: w for l, w in self.levels.items() if l.option_name != o.name}
+                self.partial_orders = {p: w for p, w in self.partial_orders.items() if p.option != o}
+
             else:
-                self.levels = {l: w for l, w in self.levels.items() if l != v.job1.job.configuration[o] and l != v.job2.job.configuration[o]}
-                #%del self.levels[v.job1.job.configuration[o]]
-                #del self.levels[v.job2.job.configuration[o]]
+                self.partial_orders = {p: w for p, w in self.partial_orders.items() if p not in v.partial_orders}
+                # %del self.levels[v.job1.job.configuration[o]]
+                # del self.levels[v.job2.job.configuration[o]]
 
             # Weigh benchmarks higher that have discovered benchmarks.
             buggy_benchmarks.add(v.job1.job.target)
@@ -214,15 +206,14 @@ class FuzzGenerator:
             else:
                 self.benchmark_population[k] = max(self.benchmark_population[k] - 1, 1)
 
-
-    def mutate_config(self, config: Dict[Option, Level]) -> List[Tuple[ConfigWithMutatedOption, int]]:
+    def mutate_config(self, config: Dict[Option, Level], partial_order) -> List[Tuple[ConfigWithMutatedOption, int]]:
         """
         Given a configuration, generate every potential mutant of it that uses a configuration option in a partial
         order.
         """
         candidates: List[ConfigWithMutatedOption] = list()
-        for level, weight in self.levels.items():
-            o = self.model.get_option(level.option_name)
+        for level in [partial_order.left, partial_order.right]:
+            o = partial_order.option
             if o not in config:
                 config[o] = o.get_default()
             if level == config[o]:
@@ -236,6 +227,5 @@ class FuzzGenerator:
                     level = Level(o.name, int(level.level_name))
             config_copy = copy.deepcopy(config)
             config_copy[o] = level
-            for i in range(weight):
-                candidates.append((ConfigWithMutatedOption(frozendict(config_copy), o, level), weight))
+            candidates.append((ConfigWithMutatedOption(frozendict(config_copy), o, level)))
         return candidates

@@ -52,6 +52,7 @@ class Option:
 
     def __init__(self, name, type="enum",
                  min_value=-2147483648, max_value=2147483647):
+        self.partial_orders = set()
         self.name = name
         self.precision = DiGraph()
         self.soundness = DiGraph()
@@ -113,6 +114,7 @@ class Option:
             o1 = Level(self.name, o1)
         if not isinstance(o2, Level):
             o2 = Level(self.name, o2)
+        self.partial_orders.add(PartialOrder(o1, PartialOrderType.MORE_PRECISE_THAN, o2, self))
         self.precision.add_edge(o1, o2)
 
         # Implicit soundness partial orders
@@ -128,6 +130,7 @@ class Option:
             o1 = Level(self.name, o1)
         if not isinstance(o2, Level):
             o2 = Level(self.name, o2)
+        self.partial_orders.add(PartialOrder(o1, PartialOrderType.MORE_SOUND_THAN, o2, self))
         self.soundness.add_edge(o1, o2)
 
         # Add the implicit precision order that B should be at least as precise as A.

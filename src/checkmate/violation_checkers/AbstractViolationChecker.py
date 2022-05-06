@@ -92,6 +92,7 @@ class AbstractViolationChecker(ABC):
                             raise RuntimeError('Trying to compare two configurations with None as the option '
                                                'under investigation. This should never happen.')
 
+                    logging.info(f"Added pair {str(finished_run)} {str(candidate)} {str(option_under_investigation)})")
                     pairs.append((finished_run, candidate, option_under_investigation))
 
             with Pool(self.jobs) as p:
@@ -181,6 +182,7 @@ class AbstractViolationChecker(ABC):
         """
         job1 = t[0]
         job2 = t[1]
+        logger.info(f'Job1 is {job1} and job2 is {job2}')
         option_under_investigation = t[2]
         results = []
         if job1.job.configuration[option_under_investigation] == job2.job.configuration[option_under_investigation]:
