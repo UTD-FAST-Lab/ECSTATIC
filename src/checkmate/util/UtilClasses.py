@@ -75,7 +75,7 @@ class ConfigWithMutatedOption:
     level: Level | None
 
     def __hash__(self):
-        return hash((self.config, self.option, self.level))
+        return hash((frozendict(self.config), self.option, self.level))
 
 
 @dataclass
