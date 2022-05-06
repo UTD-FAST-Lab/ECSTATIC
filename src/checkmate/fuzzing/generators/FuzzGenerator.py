@@ -223,8 +223,9 @@ class FuzzGenerator:
             if o.type.lower().startswith('int'):
                 self.levels = [l for l in self.levels if l.option_name != o.name]
             else:
-                del self.levels[v.job1.job.configuration[o]]
-                del self.levels[v.job2.job.configuration[o]]
+                self.levels = [l for l in self.levels if l != v.job1.job.configuration[o] and l != v.job2.job.configuration[o]]
+                #%del self.levels[v.job1.job.configuration[o]]
+                #del self.levels[v.job2.job.configuration[o]]
 
             # Weigh benchmarks higher that have discovered benchmarks.
             self.benchmark.append(v.job1.job.target)

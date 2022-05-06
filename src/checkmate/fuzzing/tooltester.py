@@ -77,10 +77,7 @@ class ToolTester:
         while campaign_index < self.num_campaigns:
             campaign: FuzzingCampaign = self.generator.generate_campaign()
             print(f"Got new fuzzing campaign: {campaign_index}.")
-            if campaign_index == 4:
-                continue
             start = time.time()
-
             # Make campaign folder.
             campaign_folder = os.path.join(self.results_location, f'campaign{campaign_index}')
             Path(campaign_folder).mkdir(exist_ok=True, parents=True)
@@ -112,8 +109,7 @@ class ToolTester:
                     print(f'Delta debugging {len(direct_violations)} violations with {self.num_processes} cores.')
                     p.map(partial(self.debugger.delta_debug, campaign_directory=campaign_folder,
                                   timeout=self.runner.timeout), direct_violations)
-            self.generator.update_exclusions(violations)
-            # self.print_output(FinishedCampaign(results), campaign_index)  # TODO: Replace with generate_report
+            self.generator.feedback(violations)# self.print_output(FinishedCampaign(results), campaign_index)  # TODO: Replace with generate_report
             print('Done!')
             campaign_index += 1
 
