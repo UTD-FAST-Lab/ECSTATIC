@@ -88,6 +88,12 @@ def parse_args():
         help='Disable delta debugging.',
         action='store_true'
     )
+    parser.add_argument(
+        '--fuzzing-timeout',
+        help='Time in minutes to allow fuzzing to continue for.',
+        type=int,
+        default=0
+    )
     return parser.parse_args()
 
 

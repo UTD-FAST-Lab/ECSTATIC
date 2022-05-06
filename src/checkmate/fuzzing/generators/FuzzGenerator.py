@@ -21,7 +21,7 @@ import logging
 import os
 import random
 from enum import Enum, auto
-from typing import List, Dict, Iterable
+from typing import List, Dict, Iterable, Tuple
 
 from frozendict import frozendict
 from fuzzingbook.GrammarCoverageFuzzer import GrammarCoverageFuzzer
@@ -176,31 +176,35 @@ class FuzzGenerator:
         seed_config = self.make_new_seed()
         seed_config = fill_out_defaults(self.model, seed_config)
         logger.info(f"Configuration is {[(str(k), str(v)) for k, v in seed_config.items()]}")
-        candidates: List[ConfigWithMutatedOption] = self.mutate_config(seed_config)
+        logger.info(f"Benchmark population is {self.benchmark_population}")
+        logger.info(f"Level weights are {self.levels}")
+        candidates: List[Tuple[ConfigWithMutatedOption, int]] = self.mutate_config(seed_config)
         logger.info(f"Generated {len(candidates)} single-option mutant configurations.")
         results: List[FuzzingJob] = list()
-        candidates.append(ConfigWithMutatedOption(frozendict(seed_config), None, None))
-
         if self.first_run:
-            candidate_sample = candidates
-            benchmark_sample = self.benchmark
+            # All candidates, all benchmarks
+            candidate_sample = [c[0] for c in candidates]
+            candidate_sample.append(ConfigWithMutatedOption(frozendict(seed_config), None, None))
+            benchmark_sample = self.benchmark_population.keys()
         else:
-            candidate_sample = random.sample(candidates, 4)
-            benchmark_sample = random.sample(self.benchmark, 4)
-            levels_selected = []
-            for c in candidate_sample:
-                if c.option.type.startswith('int'):
-                    # If an int, add all of its levels, we don't want to treat them differently.
-                    levels_selected.extend(c.option.get_levels_involved_in_partial_orders())
-                else:
-                    # Just add the one level
-                    levels_selected.append(c.level)
-    
-            # Levels not selected
-            held_out = [l for l in self.levels if l not in levels_selected]
+            candidate_sample = random.sample([c[0] for c in candidates], 4, counts=[c[1] for c in candidates])
+            benchmarks_sample = random.sample(self.benchmark_population.keys(), 4,
+                                              counts=self.benchmark_population.values())
+        levels_selected = []
+        for c in candidate_sample:
+            if c.option.type.startswith('int'):
+                # If an int, add all of its levels, we don't want to treat them differently.
+                levels_selected.extend(c.option.get_levels_involved_in_partial_orders())
+            else:
+                # Just add the one level
+                levels_selected.append(c.level)
 
-            # Increase weight of all levels not selected
-            self.levels.extend(held_out)
+        # Levels not selected
+        held_out = [l for l in self.levels if l not in levels_selected]
+
+        # Increase weight of all levels not selected
+        for l in held_out:
+            self.levels[l] += 1
 
         for candidate in candidate_sample:
             choice = candidate.config
@@ -239,13 +243,12 @@ class FuzzGenerator:
                 self.benchmark[k] = min(self.benchmark[k] - 1, 1)
 
 
-    def mutate_config(self, config: Dict[Option, Level]) -> List[ConfigWithMutatedOption]:
+    def mutate_config(self, config: Dict[Option, Level]) -> List[Tuple[ConfigWithMutatedOption, int]]:
         """
         Given a configuration, generate every potential mutant of it that uses a configuration option in a partial
         order.
         """
         candidates: List[ConfigWithMutatedOption] = list()
-        options: List[Option] = self.model.get_options()
         for level, weight in self.levels.items():
             o = self.model.get_option(level.option_name)
             try:
@@ -262,7 +265,8 @@ class FuzzGenerator:
                         level = Level(o.name, int(level.level_name))
                 config_copy = copy.deepcopy(config)
                 config_copy[o] = level
-                candidates.append(ConfigWithMutatedOption(frozendict(config_copy), o, level))
+                for i in range(weight):
+                    candidates.append((ConfigWithMutatedOption(frozendict(config_copy), o, level), weight))
             except OptionExcludedError as oee:
                 logger.debug(str(oee))
         return candidates

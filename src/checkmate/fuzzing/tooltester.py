@@ -50,7 +50,7 @@ class ToolTester:
 
     def __init__(self, generator, runner: AbstractCommandLineToolRunner, debugger: Optional[DeltaDebugger],
                  results_location: str,
-                 num_processes: int, num_campaigns: int, checker: AbstractViolationChecker,
+                 num_processes: int, fuzzing_timeout: int, checker: AbstractViolationChecker,
                  limit: Optional[int] = None):
         """
 
@@ -64,7 +64,7 @@ class ToolTester:
         self.results_location: str = results_location
         self.unverified_violations = list()
         self.num_processes = num_processes
-        self.num_campaigns = num_campaigns
+        self.fuzzing_timeout = fuzzing_timeout
         self.checker = checker
         self.limit = limit
 
@@ -74,22 +74,21 @@ class ToolTester:
 
     def main(self):
         campaign_index = 0
-        while campaign_index < self.num_campaigns:
+        start_time = time.time()
+        while True:
             campaign: FuzzingCampaign = self.generator.generate_campaign()
             print(f"Got new fuzzing campaign: {campaign_index}.")
-            start = time.time()
+            campaign_start_time = time.time()
             # Make campaign folder.
             campaign_folder = os.path.join(self.results_location, f'campaign{campaign_index}')
             Path(campaign_folder).mkdir(exist_ok=True, parents=True)
             partial_run_job = partial(self.runner.run_job, output_folder=campaign_folder)
             with Pool(self.num_processes) as p:
                 results = []
-                for r in tqdm(p.imap(partial_run_job,
-                                     campaign.jobs if self.limit is None else campaign.jobs[:self.limit - 1]),
-                              total=len(campaign.jobs)):
+                for r in tqdm(p.imap(partial_run_job, campaign.jobs), total=len(campaign.jobs)):
                     results.append(r)
             results = [r for r in results if r is not None]
-            print(f'Campaign {campaign_index} finished (time {time.time() - start} seconds)')
+            print(f'Campaign {campaign_index} finished (time {time.time() - campaign_start_time} seconds)')
             violations_folder = os.path.join(campaign_folder, 'violations')
             print(f'Now checking for violations.')
             existing_violations = []
@@ -103,15 +102,18 @@ class ToolTester:
                 logging.info(f'Read in {len(existing_violations)} existing violations.')
             Path(violations_folder).mkdir(exist_ok=True)
             violations: List[Violation] = self.checker.check_violations(results, violations_folder, existing_violations)
-            if self.debugger is not None:
-                with Pool(max(int(self.num_processes/2), 1)) as p:  # /2 because each delta debugging process needs 2 cores.
-                    direct_violations = [v for v in violations if not v.is_transitive()]
-                    print(f'Delta debugging {len(direct_violations)} violations with {self.num_processes} cores.')
-                    p.map(partial(self.debugger.delta_debug, campaign_directory=campaign_folder,
-                                  timeout=self.runner.timeout), direct_violations)
-            self.generator.feedback(violations)# self.print_output(FinishedCampaign(results), campaign_index)  # TODO: Replace with generate_report
-            print('Done!')
+            # if self.debugger is not None:
+            #     with Pool(max(int(self.num_processes/2), 1)) as p:  # /2 because each delta debugging process needs 2 cores.
+            #         direct_violations = [v for v in violations if not v.is_transitive()]
+            #         print(f'Delta debugging {len(direct_violations)} violations with {self.num_processes} cores.')
+            #         p.map(partial(self.debugger.delta_debug, campaign_directory=campaign_folder,
+            #                       timeout=self.runner.timeout), direct_violations)
+            self.generator.feedback(violations)
+            print(f'Done with campaign {campaign_index}!')
             campaign_index += 1
+            if time.time() - start_time > self.fuzzing_timeout * 60:
+                break
+        print('Testing done!')
 
 
 def main():
@@ -132,6 +134,7 @@ def main():
     p.add_argument('--timeout', help='Timeout in minutes', type=int)
     p.add_argument('--verbose', '-v', action='count', default=0)
     p.add_argument('--no-delta-debug', help='Do not delta debug.', action='store_true')
+    p.add_argument('--fuzzing-timeout', help='Fuzzing timeout in minutes.', type=int, default=0)
     args = p.parse_args()
 
     if args.verbose > 1:
@@ -185,7 +188,7 @@ def main():
         debugger = None
 
     t = ToolTester(generator, runner, debugger, results_location,
-                   num_processes=args.jobs, num_campaigns=args.campaigns,
+                   num_processes=args.jobs, fuzzing_timeout=args.fuzzing_timeout,
                    checker=checker)
     t.main()
 

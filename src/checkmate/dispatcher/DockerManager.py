@@ -57,7 +57,7 @@ def start_runner(tool: str, benchmark: str, task: str, args):
     # PYTHONENV=/checkmate
     # run build benchmark script
     # TODO: Can we specify some other way that benchmarks should be run with whole-program mode?
-    command = f'tester {tool} {benchmark} -t {task} -j {args.jobs} -c {args.campaigns}'
+    command = f'tester {tool} {benchmark} -t {task} -j {args.jobs} --fuzzing-timeout {args.fuzzing_timeout}'
     if args.timeout is not None:
         command += f' --timeout {args.timeout}'
     if args.verbose > 0:
