@@ -222,9 +222,9 @@ class FuzzGenerator:
 
             # Don't retest levels that already exhibited violations.
             if o.type.lower().startswith('int'):
-                self.levels = [l for l in self.levels if l.option_name != o.name]
+                self.levels = {l: w for l, w in self.levels.items() if l.option_name != o.name}
             else:
-                self.levels = [l for l in self.levels if l != v.job1.job.configuration[o] and l != v.job2.job.configuration[o]]
+                self.levels = {l: w for l, w in self.levels.items() if l != v.job1.job.configuration[o] and l != v.job2.job.configuration[o]}
                 #%del self.levels[v.job1.job.configuration[o]]
                 #del self.levels[v.job2.job.configuration[o]]
 

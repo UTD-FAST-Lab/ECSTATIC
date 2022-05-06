@@ -21,6 +21,7 @@ import os.path
 import pickle
 import shutil
 import sys
+from pympler.tracker import SummaryTracker
 import time
 from abc import ABC, abstractmethod
 from multiprocessing import Pool
@@ -92,9 +93,14 @@ class AbstractViolationChecker(ABC):
 
                     pairs.append((finished_run, candidate, option_under_investigation))
 
+            tracker = SummaryTracker()
             with Pool(self.jobs) as p:
                 print(f'Checking violations with {self.jobs} cores.')
                 finished_results = set()
+                for p in pairs:
+                    finished_results.update(self.check_for_violation(p))
+                    tracker.print_diff()
+
                 for result in tqdm(p.imap(self.check_for_violation, pairs), total=len(pairs)):
                     finished_results.update(result)
                     print("Size of results set is " + str(sys.getsizeof(finished_results)) + "B")
