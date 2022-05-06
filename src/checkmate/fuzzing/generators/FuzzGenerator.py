@@ -93,12 +93,13 @@ class FuzzGenerator:
         self.fuzzer = GrammarCoverageFuzzer(self.grammar)
         self.model = ConfigurationSpaceReader().read_configuration_space(model_location)
 
-        self.levels: List[Level] = []
+        self.levels: Dict[Level, int] = {}
         for o in self.model.get_options():
             o: Option
-            self.levels.extend(o.get_levels_involved_in_partial_orders())
+            for l in o.get_levels_involved_in_partial_orders():
+                self.levels[l] = 1
 
-        self.benchmark_population = benchmark.benchmarks
+        self.benchmark_population = {b: 1 for b in benchmark.benchmarks}
         self.seed_strategy = seed_strategy
         self.mutant_strategy = mutant_strategy
         self.benchmark_strategy = benchmark_strategy
@@ -245,7 +246,7 @@ class FuzzGenerator:
         """
         candidates: List[ConfigWithMutatedOption] = list()
         options: List[Option] = self.model.get_options()
-        for level in self.levels:
+        for level, weight in self.levels.items():
             o = self.model.get_option(level.option_name)
             try:
                 if o not in config:
