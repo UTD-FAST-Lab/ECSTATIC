@@ -68,6 +68,8 @@ class DeltaDebugger:
         @param timeout:
         @param campaign_directory:
         """
+        if "eclipse" in os.path.basename(violation.job1.job.target.name):
+            return None
         # First, create artifacts. We need to pickle the violation, as well as creating the script.
         d = os.path.abspath(os.path.join(campaign_directory, 'deltadebugging',
                          os.path.dirname(get_file_name(violation)), os.path.basename((violation.job1.job.target.name))))
