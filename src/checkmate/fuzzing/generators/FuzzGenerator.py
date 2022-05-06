@@ -161,7 +161,7 @@ class FuzzGenerator:
             candidate_sample = set()
             pos = set()
             while len(pos) < min(len(self.partial_orders), 2):
-                pos.update(random.sample(self.partial_orders.keys(), 2, counts=self.partial_orders.values()))
+                pos.update(random.sample(self.partial_orders.keys(), 1, counts=self.partial_orders.values()))
             [candidate_sample.update(self.mutate_config(seed_config, p)) for p in pos]
             benchmarks_sample = set()
             while len(benchmarks_sample) < min(4, len(self.benchmark_population)):
