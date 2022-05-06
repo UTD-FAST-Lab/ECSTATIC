@@ -21,7 +21,6 @@ import os.path
 import pickle
 import shutil
 import sys
-from pympler.tracker import SummaryTracker
 import time
 from abc import ABC, abstractmethod
 from multiprocessing import Pool

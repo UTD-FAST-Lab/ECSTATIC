@@ -173,7 +173,7 @@ def main():
     parser.add_argument("--task", help="The task.", required=True)
     parser.add_argument("--groundtruths", help="Groundtruths (may be None if we are not using ground truths.")
     parser.add_argument("--timeout", help="Timeout in minutes.", type=int, default=None)
-    parser.add_argument("--whole-program", help="Whole program")
+    parser.add_argument("--whole-program", help="Whole program", action='store_true')
     args = parser.parse_args()
 
     with open(args.violation, 'rb') as f:
