@@ -26,7 +26,7 @@ from src.checkmate.models.Option import Option
 
 
 @dataclass
-class BenchmarkRecord:
+class BenchmarkRecord(unsafe_hash = True):
     name: str
     depends_on: List[str] = field(kw_only=True, default_factory=list)
     sources: List[str] = field(kw_only=True, default_factory=list)
