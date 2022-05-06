@@ -109,7 +109,7 @@ class DeltaDebugger:
         cmd.extend(["--bs", os.path.abspath(build_script)])
         cmd.extend(["--vs", os.path.abspath(script_location)])
         cmd.extend(["--logs", os.path.join(d, "log.txt")])
-        cmd.extend(['--hdd', '--class-reduction'])
+        cmd.extend(['--hdd'])
         cmd.extend(['--timeout', '120'])
 
         print(f"Running delta debugger with cmd {' '.join(cmd)}")
