@@ -89,7 +89,7 @@ class FuzzGenerator:
         with open(grammar_location) as f:
             self.json_grammar = json.load(f)
         self.grammar = convert_ebnf_grammar(self.json_grammar)
-        self.benchmark: List[BenchmarkRecord] = benchmark.benchmarks
+        self.benchmark: Dict[BenchmarkRecord, int] = {b: 1 for b in benchmark.benchmarks}
         self.fuzzer = GrammarCoverageFuzzer(self.grammar)
         self.model = ConfigurationSpaceReader().read_configuration_space(model_location)
 
@@ -216,6 +216,7 @@ class FuzzGenerator:
         return FuzzingCampaign(results)
 
     def feedback(self, violations: List[Violation]):
+        buggy_benchmarks = set()
         for v in [v for v in violations if v.violated and not v.is_transitive()]:
             o: Option = v.get_option_under_investigation()
 
@@ -228,7 +229,13 @@ class FuzzGenerator:
                 #del self.levels[v.job2.job.configuration[o]]
 
             # Weigh benchmarks higher that have discovered benchmarks.
-            self.benchmark.append(v.job1.job.target)
+            buggy_benchmarks.add(v.job1.job.target)
+        # Increase weight of buggy benchmarks
+        for k in self.benchmark.keys():
+            if k in buggy_benchmarks:
+                self.benchmark[k] += 10
+            else:
+                self.benchmark[k] = min(self.benchmark[k] - 1, 1)
 
 
     def mutate_config(self, config: Dict[Option, Level]) -> List[ConfigWithMutatedOption]:

@@ -20,6 +20,7 @@ import logging
 import os.path
 import pickle
 import shutil
+import sys
 import time
 from abc import ABC, abstractmethod
 from multiprocessing import Pool
@@ -96,6 +97,7 @@ class AbstractViolationChecker(ABC):
                 finished_results = set()
                 for result in tqdm(p.imap(self.check_for_violation, pairs), total=len(pairs)):
                     finished_results.update(result)
+                    print("Size of results set is " + sys.getsizeof(finished_results))
 
         print('Violation detection done. Now printing to files.')
         print('Removing old violations...')
