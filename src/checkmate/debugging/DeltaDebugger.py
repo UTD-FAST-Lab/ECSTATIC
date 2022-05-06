@@ -201,7 +201,8 @@ def main():
     partial_function = partial(runner.run_job, output_folder=tmpdir.name)
     with Pool(2) as p:
         finishedJobs: Iterable[FinishedFuzzingJob] = p.map(partial_function, [violation.job1.job, violation.job2.job])
-    violations: Iterable[Violation] = checker.check_violations([f for f in finishedJobs if f is not None], tmpdir.name)
+    violations: Iterable[Violation] = \
+        checker.check_violations([f for f in finishedJobs if f is not None and f.results_location is not None], tmpdir.name)
     for v in violations:
         # Since we already know the target and the configs are the same, we only have to check the partial order.
         if v.partial_orders == violation.partial_orders:
