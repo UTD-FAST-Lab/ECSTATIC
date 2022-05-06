@@ -55,6 +55,7 @@ def get_file_name(violation: Violation) -> str:
 class AbstractViolationChecker(ABC):
 
     def __init__(self, jobs: int, reader: AbstractReader, groundtruths: str | None = None):
+        self.output_folder = None
         self.jobs: int = jobs
         self.reader = reader
         self.groundtruths = groundtruths
@@ -62,6 +63,7 @@ class AbstractViolationChecker(ABC):
 
     def check_violations(self, results: Iterable[FinishedFuzzingJob], output_folder: str,
                          finished_results: Iterable[Violation] = []) -> List[Violation]:
+        self.output_folder = output_folder
         start_time = time.time()
         if len(finished_results) == 0:
             pairs: Set[Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]] = []
@@ -94,24 +96,12 @@ class AbstractViolationChecker(ABC):
 
             with Pool(self.jobs) as p:
                 print(f'Checking violations with {self.jobs} cores.')
-                finished_results = set()
                 for result in tqdm(p.imap(self.check_for_violation, pairs), total=len(pairs)):
-                    finished_results.update(result)
-                    print("Size of results set is " + str(sys.getsizeof(finished_results)) + "B")
+                    pass
 
-        print('Violation detection done. Now printing to files.')
-        print('Removing old violations...')
-        shutil.rmtree(output_folder)
-        Path(output_folder).mkdir(exist_ok=False, parents=True)
-        for violation in filter(lambda v: v.violated, finished_results):
-            filename = get_file_name(violation)
-            dirname = os.path.dirname(filename)
-            Path(os.path.join(output_folder, "json", dirname)).mkdir(exist_ok=True, parents=True)
-            logging.info(f'Writing violation to file {filename}')
-            with open(os.path.join(output_folder, "json", filename), 'w') as f:
-                json.dump(violation.as_dict(), f, indent=4)
-            with NamedTemporaryFile(dir=output_folder, delete=False, suffix='.pickle') as f:
-                pickle.dump(violation, f)
+        print('Violation detection done.')
+        print('Now reading them back in.')
+        finished_results = set([pickle.load(open(f, 'rb')) for f in os.listdir(self.output_folder) if f.endswith('.pickle')])
         print(f'Finished checking violations. {len([v for v in finished_results if v.violated])} violations detected.')
         print(f'Campaign value processing done (took {time.time() - start_time} seconds).')
         self.summarize(finished_results)
@@ -174,7 +164,7 @@ class AbstractViolationChecker(ABC):
     def read_from_input(self, file: str) -> Iterable[T]:
         return self.reader.import_file(file)
 
-    def check_for_violation(self, t: Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]) -> Iterable[Violation]:
+    def check_for_violation(self, t: Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]):
 
         """
         Given two jobs, checks whether there are any violations.
@@ -218,6 +208,8 @@ class AbstractViolationChecker(ABC):
                                                                job1.job.configuration[option_under_investigation],
                                                                option_under_investigation)}
                         results.append(Violation(True, pos, job1, job2, differences))
+                    del job1_input
+                    del job2_input
             if option_under_investigation.is_more_precise(job1.job.configuration[option_under_investigation],
                                                           job2.job.configuration[option_under_investigation]):
                 if option_under_investigation.is_more_sound(job2.job.configuration[option_under_investigation],
@@ -238,6 +230,8 @@ class AbstractViolationChecker(ABC):
                                                                job1.job.configuration[option_under_investigation],
                                                                option_under_investigation)}
                         results.append(Violation(True, pos, job1, job2, differences))
+                        del job1_input
+                        del job2_input
         else:
             if option_under_investigation.is_more_sound(job1.job.configuration[option_under_investigation],
                                                         job2.job.configuration[option_under_investigation]):
@@ -261,4 +255,16 @@ class AbstractViolationChecker(ABC):
                                                                  job2.job.configuration[option_under_investigation],
                                                                  option_under_investigation)},
                                              job1, job2, differences))
-        return results
+
+        Path(self.output_folder).mkdir(exist_ok=True, parents=True)
+        for violation in filter(lambda v: v.violated, results):
+            filename = get_file_name(violation)
+            dirname = os.path.dirname(filename)
+            Path(os.path.join(self.output_folder, "json", dirname)).mkdir(exist_ok=True, parents=True)
+            logging.info(f'Writing violation to file {filename}')
+            with open(os.path.join(self.output_folder, "json", filename), 'w') as f:
+                json.dump(violation.as_dict(), f, indent=4)
+            with NamedTemporaryFile(dir=self.output_folder, delete=False, suffix='.pickle') as f:
+                pickle.dump(violation, f)
+
+
