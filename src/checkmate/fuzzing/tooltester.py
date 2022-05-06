@@ -176,7 +176,7 @@ def main():
         runner.timeout = args.timeout
 
     generator = FuzzGeneratorFactory.get_fuzz_generator_for_name(args.tool, model_location, grammar,
-                                                                 benchmark, args.adaptive)
+                                                                 benchmark)
     reader = ReaderFactory.get_reader_for_task_and_tool(args.task, args.tool)
     checker = ViolationCheckerFactory.get_violation_checker_for_task(args.task, args.tool,
                                                                      args.jobs, groundtruths, reader)

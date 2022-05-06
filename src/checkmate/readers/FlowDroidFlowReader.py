@@ -31,3 +31,5 @@ class FlowDroidFlowReader(AbstractReader):
             return result
         except AttributeError:
             return []
+        except TypeError:
+            logger.exception(f"Tried to read file {file} and it caused an exception.")

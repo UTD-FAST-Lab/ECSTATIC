@@ -29,7 +29,7 @@
     "<callbackanalyzeropts>": ["DEFAULT", "FAST"],
     "<codeeliminationopts>": ["NONE", "DEFAULT", "REMOVECODE"],
     "<dataflowsolveropts>": ["FLOWINSENSITIVE", "DEFAULT"],
-    "<cgalgoopts>": ["CHA", "RTA", "VTA", "GEOM", "DEFAULT"],
+    "<cgalgoopts>": ["CHA", "RTA", "VTA", "GEOM", "SPARK"],
     "<implicitopts>": ["DEFAULT", "ARRAYONLY", "ALL"],
     "<maxcallbackspercomponentopts>": ["1", "50", "80", "90", "100", "110", "120", "150", "600"],
     "<maxcallbacksdepthopts>": ["-1", "1", "50", "80", "90", "100", "110", "120", "150", "600"],

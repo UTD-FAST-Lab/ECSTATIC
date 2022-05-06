@@ -114,7 +114,7 @@ class AbstractCommandLineToolRunner(ABC):
                     execution_time = float(f.read().strip())
 
                 return FinishedFuzzingJob(job, execution_time, self.get_output(output_folder, job))
-        except FileNotFoundError | ValueError:
+        except Exception:
             logging.exception("Time file was not created, so starting over.")
             os.remove(self.get_output(output_folder, job))
 

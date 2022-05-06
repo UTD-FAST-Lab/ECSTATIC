@@ -74,6 +74,9 @@ class ConfigWithMutatedOption:
     option: Option | None
     level: Level | None
 
+    def __hash__(self):
+        return hash((self.config, self.option, self.level))
+
 
 @dataclass
 class FinishedFuzzingJob:

@@ -56,35 +56,11 @@ def get_apks(directory: str) -> List[str]:
                 yield os.path.join(root, f)
 
 
-class OptionExcludedError(Exception):
-    pass
-
-
-class SeedGenerationStrategy(Enum):
-    COVERAGE = auto()
-    RANDOM = auto()
-
-
-class MutantWeighingStrategy(Enum):
-    UNIFORM = auto()
-    FIND_NEW_BUGS = auto()
-    EXPLORE_EXISTING_BUGS = auto()
-
-
-class BenchmarkSelectionStrategy(Enum):
-    ALL = auto()
-    NEW = auto()
-    BUGGY = auto()
-
-
 class FuzzGenerator:
 
     def __init__(self, model_location: str,
                  grammar_location: str,
-                 benchmark: Benchmark,
-                 seed_strategy: SeedGenerationStrategy = SeedGenerationStrategy.COVERAGE,
-                 mutant_strategy: MutantWeighingStrategy = MutantWeighingStrategy.FIND_NEW_BUGS,
-                 benchmark_strategy: BenchmarkSelectionStrategy = BenchmarkSelectionStrategy.BUGGY):
+                 benchmark: Benchmark):
         self.first_run = True
         with open(grammar_location) as f:
             self.json_grammar = json.load(f)
@@ -100,9 +76,6 @@ class FuzzGenerator:
                 self.levels[l] = 1
 
         self.benchmark_population = {b: 1 for b in benchmark.benchmarks}
-        self.seed_strategy = seed_strategy
-        self.mutant_strategy = mutant_strategy
-        self.benchmark_strategy = benchmark_strategy
 
     def process_config(self, config: str) -> Dict[Option, Level]:
         """
@@ -154,25 +127,19 @@ class FuzzGenerator:
         """
         if self.first_run:
             return dict()
-        if self.seed_strategy == SeedGenerationStrategy.COVERAGE:
+        else:
             config = ""
-            while (config != ""):
+            while config == "":
                 config = self.fuzzer.fuzz()
             return self.process_config(config)
-        if self.seed_strategy == SeedGenerationStrategy.RANDOM:
-            config = dict()
-            for o in self.model.get_options():
-                o: Option
-                if o.type.startswith("int"):
-                    config[o] = Level(o.name, random.randint(o.min_value, o.max_value))
-                else:
-                    config[o] = random.choice(o.get_levels())
-            return config
 
     def generate_campaign(self) -> FuzzingCampaign:
         """
         This method generates the next task for the fuzzer.
         """
+        if len(self.levels) == 0:
+            print("All out of levels!")
+            exit(0)
         seed_config = self.make_new_seed()
         seed_config = fill_out_defaults(self.model, seed_config)
         logger.info(f"Configuration is {[(str(k), str(v)) for k, v in seed_config.items()]}")
@@ -185,19 +152,24 @@ class FuzzGenerator:
             # All candidates, all benchmarks
             candidate_sample = [c[0] for c in candidates]
             candidate_sample.append(ConfigWithMutatedOption(frozendict(seed_config), None, None))
-            benchmark_sample = self.benchmark_population.keys()
+            benchmarks_sample = self.benchmark_population.keys()
         else:
-            candidate_sample = random.sample([c[0] for c in candidates], 4, counts=[c[1] for c in candidates])
-            benchmarks_sample = random.sample(self.benchmark_population.keys(), 4,
-                                              counts=self.benchmark_population.values())
+            candidate_sample = set()
+            while len(candidate_sample) < min(4, len(candidates)):
+                candidate_sample.update(random.sample([c[0] for c in candidates], 1, counts=[c[1] for c in candidates]))
+            benchmarks_sample=set()
+            while len(benchmarks_sample) < min(4, len(self.benchmark_population)):
+                benchmarks_sample.update(random.sample(self.benchmark_population.keys(), 1,
+                                              counts=self.benchmark_population.values()))
         levels_selected = []
         for c in candidate_sample:
-            if c.option.type.startswith('int'):
-                # If an int, add all of its levels, we don't want to treat them differently.
-                levels_selected.extend(c.option.get_levels_involved_in_partial_orders())
-            else:
-                # Just add the one level
-                levels_selected.append(c.level)
+            if c.option is not None:
+                if c.option.type.startswith('int'):
+                    # If an int, add all of its levels, we don't want to treat them differently.
+                    levels_selected.extend(c.option.get_levels_involved_in_partial_orders())
+                else:
+                    # Just add the one level
+                    levels_selected.append(c.level)
 
         # Levels not selected
         held_out = [l for l in self.levels if l not in levels_selected]
@@ -213,7 +185,7 @@ class FuzzGenerator:
             #     continue
             logger.info(f"Chosen config: {choice}")
             option_under_investigation = candidate.option
-            for benchmark_record in benchmark_sample:
+            for benchmark_record in benchmarks_sample:
                 benchmark_record: BenchmarkRecord
                 results.append(FuzzingJob(choice, option_under_investigation, benchmark_record))
 
@@ -238,9 +210,9 @@ class FuzzGenerator:
         # Increase weight of buggy benchmarks
         for k in self.benchmark.keys():
             if k in buggy_benchmarks:
-                self.benchmark[k] += 10
+                self.benchmark_population[k] += 10
             else:
-                self.benchmark[k] = min(self.benchmark[k] - 1, 1)
+                self.benchmark_population[k] = max(self.benchmark_population[k] - 1, 1)
 
 
     def mutate_config(self, config: Dict[Option, Level]) -> List[Tuple[ConfigWithMutatedOption, int]]:
@@ -251,22 +223,19 @@ class FuzzGenerator:
         candidates: List[ConfigWithMutatedOption] = list()
         for level, weight in self.levels.items():
             o = self.model.get_option(level.option_name)
-            try:
-                if o not in config:
-                    config[o] = o.get_default()
-                if level == config[o]:
-                    continue
-                if o.type.startswith('int'):
-                    if 'i' in level.level_name:
-                        logging.info(f'Sampling between {o.min_value} and {o.max_value}')
-                        level = Level(o.name, random.randint(o.min_value, o.max_value))
-                        logging.info(f'Sampled level {str(level)}')
-                    else:
-                        level = Level(o.name, int(level.level_name))
-                config_copy = copy.deepcopy(config)
-                config_copy[o] = level
-                for i in range(weight):
-                    candidates.append((ConfigWithMutatedOption(frozendict(config_copy), o, level), weight))
-            except OptionExcludedError as oee:
-                logger.debug(str(oee))
+            if o not in config:
+                config[o] = o.get_default()
+            if level == config[o]:
+                continue
+            if o.type.startswith('int'):
+                if 'i' in level.level_name:
+                    logging.info(f'Sampling between {o.min_value} and {o.max_value}')
+                    level = Level(o.name, random.randint(o.min_value, o.max_value))
+                    logging.info(f'Sampled level {str(level)}')
+                else:
+                    level = Level(o.name, int(level.level_name))
+            config_copy = copy.deepcopy(config)
+            config_copy[o] = level
+            for i in range(weight):
+                candidates.append((ConfigWithMutatedOption(frozendict(config_copy), o, level), weight))
         return candidates
