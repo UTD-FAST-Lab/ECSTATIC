@@ -46,7 +46,7 @@
         "deps/fop-deps.jar"
       ],
       "sources": [
-        "build_src/fop"
+        "build_src/fop/fop-0.20.5/build/src/"
       ],
       "build_script": "build_scripts/build_fop.sh"
     },
