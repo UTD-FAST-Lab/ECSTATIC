@@ -1,7 +1,10 @@
-# ECSTATUC
+# ECSTATIC
 
 ECSTATIC (Extensible, Customizable Static Analysis Tester Informed by Configuration) is a flexible tool that can be used to test configurable 
 static analyses on a variety of benchmarks.
+
+*Please note that this is not the full, functional artifact, as the Dockerfiles that are used to build the analysis tools pull from the authors' repositories. We do plan to make the full artifact available and submit it to the Artifact Evaluation track upon paper acceptance.*
+
 ECSTATIC can be extended to use alternative analyses, but currently, it can run 
 call graph analyses on WALA, SOOT, and DOOP, as well as taint analysis on Android
 applications using FlowDroid.
