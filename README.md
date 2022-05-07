@@ -1,4 +1,4 @@
-# ECSTATUC
+# ECSTATIC
 
 ECSTATIC (Extensible, Customizable Static Analysis Tester Informed by Configuration) is a flexible tool that can be used to test configurable 
 static analyses on a variety of benchmarks.
