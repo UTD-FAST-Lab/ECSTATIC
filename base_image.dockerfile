@@ -30,7 +30,7 @@ FROM python-build AS delta-debugger-build
 
 WORKDIR /
 RUN git clone https://github.com/Pancax/SADeltaDebugger.git
-RUN cd SADeltaDebugger/ProjectLineCounter && mvn install && \
+RUN cd SADeltaDebugger/ProjectLineCounter && git checkout 7b9404ca3906822ba4cf55c1851b0cd98bc8812d && mvn install && \
     cd ../ViolationDeltaDebugger && mvn package
 
 FROM python-build
