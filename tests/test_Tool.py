@@ -1,4 +1,4 @@
-#  CheckMate: A Configuration Tester for Static Analysis
+#  ECSTATIC: Extensible, Customizable STatic Analysis Tester Informed by Configuration
 #
 #  Copyright (c) 2022.
 #
@@ -15,9 +15,10 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from src.checkmate import Tool
-from src.checkmate import Option
-from src.checkmate import Constraint
+
+from src.ecstatic import Tool
+from src.ecstatic import Option
+from src.ecstatic import Constraint
 
 
 def test_constructor():

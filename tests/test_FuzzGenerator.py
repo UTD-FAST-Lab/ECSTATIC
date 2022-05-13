@@ -1,4 +1,4 @@
-#  CheckMate: A Configuration Tester for Static Analysis
+#  ECSTATIC: Extensible, Customizable STatic Analysis Tester Informed by Configuration
 #
 #  Copyright (c) 2022.
 #
@@ -15,16 +15,16 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+
 import importlib
 import os
 
 import pytest
 
-from src.checkmate.fuzzing import tooltester
-from src.checkmate.fuzzing.generators.FuzzGenerator import FuzzGenerator
-from src.checkmate.fuzzing.generators.SOOTFuzzGenerator import SOOTFuzzGenerator
-from src.checkmate.models.Level import Level
-from src.checkmate.util.UtilClasses import Benchmark, BenchmarkRecord, FuzzingCampaign, FuzzingJob
+from src.ecstatic.fuzzing.generators.FuzzGenerator import FuzzGenerator
+from src.ecstatic.fuzzing.generators.SOOTFuzzGenerator import SOOTFuzzGenerator
+from src.ecstatic.models.Level import Level
+from src.ecstatic.util.UtilClasses import Benchmark, BenchmarkRecord, FuzzingCampaign, FuzzingJob
 
 b: Benchmark = Benchmark([BenchmarkRecord(
     os.path.abspath(importlib.resources.path("src.resources.benchmarks.test", "CallSiteSensitivity1.jar")))])

@@ -1,4 +1,4 @@
-#  CheckMate: A Configuration Tester for Static Analysis
+#  ECSTATIC: Extensible, Customizable STatic Analysis Tester Informed by Configuration
 #
 #  Copyright (c) 2022.
 #
@@ -15,10 +15,11 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+
 from xml.etree import ElementTree
 import argparse
 
-from src.checkmate.models.Flow import Flow
+from src.ecstatic.models.Flow import Flow
 
 p = argparse.ArgumentParser()
 p.add_argument('groundtruths')

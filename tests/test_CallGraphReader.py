@@ -1,4 +1,4 @@
-#  CheckMate: A Configuration Tester for Static Analysis
+#  ECSTATIC: Extensible, Customizable STatic Analysis Tester Informed by Configuration
 #
 #  Copyright (c) 2022.
 #
@@ -15,13 +15,14 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+
 import importlib.resources
 
 from networkx import DiGraph
 
-from src.checkmate.readers.callgraph.AbstractCallGraphReader import AbstractCallGraphReader
-from src.checkmate.readers.callgraph.DOOPCallGraphReader import DOOPCallGraphReader
-from src.checkmate.transformers.callgraphs import CallgraphTransformations
+from src.ecstatic.readers.callgraph.AbstractCallGraphReader import AbstractCallGraphReader
+from src.ecstatic.readers.callgraph.DOOPCallGraphReader import DOOPCallGraphReader
+from src.ecstatic.transformers.callgraphs import CallgraphTransformations
 
 
 def test_wala_contextins():

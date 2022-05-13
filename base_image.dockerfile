@@ -17,18 +17,21 @@ WORKDIR /app
 COPY requirements.txt .
 RUN python -m pip install -r requirements.txt
 
-FROM python-build AS checkmate-build
+FROM python-build AS ecstatic-build
 
 COPY --from=dep-build /venv /venv
 ENV PATH=/venv/bin:$PATH
 WORKDIR /
-COPY . /checkmate
-WORKDIR /checkmate
+RUN git clone --depth 1 https://github.com/amordahl/ECSTATIC.git
+WORKDIR ECSTATIC
 RUN python -m pip install -e .
 
 FROM python-build AS delta-debugger-build
 
 WORKDIR /
+RUN git config --global core.eol lf && \
+ git config --global core.autocrlf input
+
 RUN git clone https://github.com/Pancax/SADeltaDebugger.git
 RUN cd SADeltaDebugger/ProjectLineCounter && git checkout 7b9404ca3906822ba4cf55c1851b0cd98bc8812d && mvn install && \
     cd ../ViolationDeltaDebugger && mvn package
@@ -37,6 +40,6 @@ FROM python-build
 
 COPY --from=delta-debugger-build /SADeltaDebugger /SADeltaDebugger
 COPY --from=checkmate-build /venv /venv
-COPY --from=checkmate-build /checkmate /checkmate
+COPY --from=checkmate-build /ecstatic /ecstatic
 ENV PATH=/venv/bin:$PATH
 ENV DELTA_DEBUGGER_HOME=/SADeltaDebugger

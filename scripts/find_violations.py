@@ -1,4 +1,4 @@
-#  CheckMate: A Configuration Tester for Static Analysis
+#  ECSTATIC: Extensible, Customizable STatic Analysis Tester Informed by Configuration
 #
 #  Copyright (c) 2022.
 #
@@ -15,14 +15,15 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+
 import logging
 logging.basicConfig(level = logging.CRITICAL)
 
 import xml.etree.ElementTree as ET
-from src.checkmate import Flow
-from src.checkmate import Configuration
-from src.checkmate.models.Option import Option
-from src.checkmate.models.Tool import Tool
+from src.ecstatic import Flow
+from src.ecstatic import Configuration
+from src.ecstatic.models.Option import Option
+from src.ecstatic.models.Tool import Tool
 from typing import List, Dict, Set
 from csv import DictReader
 import pickle
@@ -51,8 +52,8 @@ p.add_argument('--verify_classifications', action='store_true',
                and fix any errors. Otherwise, it will simply \
                skip checking classifications for any flow \
                that already has groundtruths.""")
-p.add_argument('--data_directory', default='./checkmate/data',
-               help="""The directory in which checkmate's model files \
+p.add_argument('--data_directory', default='./ecstatic/data',
+               help="""The directory in which ecstatic's model files \
                are stored.""")
 p.add_argument('--tool', default='flowdroid', choices=['flowdroid','droidsafe'],
                help="""The tool that we are checking for violations in.""")
