@@ -95,6 +95,11 @@ def parse_args():
         type=int,
         default=0
     )
+    parser.add_argument(
+        '--results-location',
+        help='Location to write results.',
+        default='./results'
+    )
     return parser.parse_args()
 
 

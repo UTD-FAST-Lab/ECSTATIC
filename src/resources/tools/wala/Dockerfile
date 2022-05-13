@@ -15,7 +15,7 @@ RUN git clone https://github.com/amordahl/WALAInterface --depth 1
 WORKDIR /WALAInterface
 RUN mvn compile package
 
-FROM checkmate/base-image
+FROM ecstatic/base-image
 
 RUN apt-get install -y openjdk-11-jdk
 COPY --from=wala-install /WALAInterface /WALAInterface

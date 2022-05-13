@@ -1,4 +1,4 @@
-FROM checkmate/base-image AS setup-deps
+FROM ecstatic/base-image AS setup-deps
 
 USER root
 RUN wget -q -O - "https://download.bell-sw.com/pki/GPG-KEY-bellsoft" | apt-key add -

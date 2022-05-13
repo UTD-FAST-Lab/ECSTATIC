@@ -19,6 +19,6 @@ WORKDIR /SootInterface
 RUN mvn compile package
 WORKDIR /
 
-FROM checkmate/base-image
+FROM ecstatic/base-image
 
 COPY --from=soot-build /SootInterface /SootInterface

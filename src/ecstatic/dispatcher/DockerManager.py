@@ -66,14 +66,13 @@ def start_runner(tool: str, benchmark: str, task: str, args):
     if args.no_delta_debug:
         command += f' --no-delta-debug'
     print(f'Starting container with command {command}')
-    results_folder = os.path.abspath(importlib.resources.path("results", ""))
-    Path(results_folder).mkdir(parents=True, exist_ok=True)
+    Path(args.results_location).mkdir(parents=True, exist_ok=True)
     cntr: Container = client.containers.run(
         image=get_image_name(tool),
         command="/bin/bash",
         detach=True,
         tty=True,
-        volumes={os.path.abspath(results_folder): {"bind": "/results", "mode": "rw"}},
+        volumes={os.path.abspath(args.results_location): {"bind": "/results", "mode": "rw"}},
         auto_remove=True)
     _, log_stream = cntr.exec_run(cmd=command, stream=True)
     for l in log_stream:
@@ -83,7 +82,7 @@ def start_runner(tool: str, benchmark: str, task: str, args):
     # cntr.stop()
     # cntr.remove()
     # print('Container removed!')
-    print(f"Results are in {results_folder}")
+    print(f"Results are in {args.results_location}")
 
 
 def get_image_name(tool: str):

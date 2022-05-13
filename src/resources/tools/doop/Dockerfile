@@ -1,7 +1,7 @@
 # Copied from DOOP's repository (https://bitbucket.org/yanniss/doop/src/master/docs/docker/Dockerfile)
 # on 2022-03-30
 
-FROM checkmate/base-image
+FROM ecstatic/base-image
 
 USER root
 

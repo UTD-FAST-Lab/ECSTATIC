@@ -1,4 +1,4 @@
-FROM checkmate/base-image
+FROM ecstatic/base-image
 
 ARG PHASAR=/phasar
 ARG PHASAR_INSTALL_DIR=/usr/local/phasar

@@ -39,7 +39,7 @@ RUN cd SADeltaDebugger/ProjectLineCounter && git checkout 7b9404ca3906822ba4cf55
 FROM python-build
 
 COPY --from=delta-debugger-build /SADeltaDebugger /SADeltaDebugger
-COPY --from=checkmate-build /venv /venv
-COPY --from=checkmate-build /ecstatic /ecstatic
+COPY --from=ecstatic-build /venv /venv
+COPY --from=ecstatic-build /ECSTATIC /ECSTATIC
 ENV PATH=/venv/bin:$PATH
 ENV DELTA_DEBUGGER_HOME=/SADeltaDebugger
