@@ -71,7 +71,8 @@ def start_runner(tool: str, benchmark: str, task: str, args):
         command="/bin/bash",
         detach=True,
         tty=True,
-        user=f"{subprocess.check_output(['id', '-u'])}:{subprocess.check_output(['id', '-g'])}",
+        user=f"{bytes(subprocess.check_output(['id', '-u']))}:"
+             f"{bytes(subprocess.check_output(['id', '-g']))}",
         volumes={os.path.abspath(args.results_location): {"bind": "/results", "mode": "rw"}},
         auto_remove=True)
     _, log_stream = cntr.exec_run(cmd=command, stream=True)
