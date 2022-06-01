@@ -56,7 +56,6 @@ def build_image(tool: str, nocache: bool = False):
 def start_runner(tool: str, benchmark: str, task: str, args):
     # PYTHONENV=/ecstatic
     # run build benchmark script
-    # TODO: Can we specify some other way that benchmarks should be run with whole-program mode?
     command = f'tester {tool} {benchmark} -t {task} -j {args.jobs} --fuzzing-timeout {args.fuzzing_timeout}'
     if args.timeout is not None:
         command += f' --timeout {args.timeout}'
@@ -64,6 +63,10 @@ def start_runner(tool: str, benchmark: str, task: str, args):
         command += f' -{"".join(["v" for i in range(args.verbose)])}'
     if args.no_delta_debug:
         command += f' --no-delta-debug'
+    if 'linux' in platform.system().lower():
+        command += f' --uid {subprocess.check_output(["id", "-u"]).decode("utf-8")}'
+        command += f' --gid {subprocess.check_output(["id", "-g"]).decode("utf-8")}'
+
     print(f'Starting container with command {command}')
     Path(args.results_location).mkdir(parents=True, exist_ok=True)
     cntr: Container = client.containers.run(
@@ -71,8 +74,6 @@ def start_runner(tool: str, benchmark: str, task: str, args):
         command="/bin/bash",
         detach=True,
         tty=True,
-        user=f"{bytes(subprocess.check_output(['id', '-u']))}:"
-             f"{bytes(subprocess.check_output(['id', '-g']))}",
         volumes={os.path.abspath(args.results_location): {"bind": "/results", "mode": "rw"}},
         auto_remove=True)
     _, log_stream = cntr.exec_run(cmd=command, stream=True)
