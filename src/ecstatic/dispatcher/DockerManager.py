@@ -19,6 +19,7 @@
 import importlib
 import logging
 import os
+import platform
 import subprocess
 from importlib.resources import path
 from pathlib import Path
@@ -36,8 +37,6 @@ def build_image(tool: str, nocache: bool = False):
     if tool == 'base':
         logger.info("Creating base image")
         cmd = ['docker', 'build', '.', '-f', 'base_image.dockerfile', '-t', get_image_name(tool)]
-        if nocache:
-            cmd.append('--no-cache')
         print(f'Building docker image with command {" ".join(cmd)}')
         subprocess.run(cmd)
         # image = client.images.build(path=".", dockerfile="base_image.dockerfile", tag=get_image_name(tool), nocache=nocache)
@@ -48,10 +47,10 @@ def build_image(tool: str, nocache: bool = False):
         logger.info(f"Building image for {tool}")
         cmd = ['docker', 'build', os.path.abspath(importlib.resources.path(f"src.resources.tools", tool)),
                '-t', get_image_name(tool)]
-        if nocache:
-            cmd.append('--no-cache')
         print(f'Building docker image with command {" ".join(cmd)}')
-        subprocess.run(cmd)
+    if nocache:
+        cmd.append('--no-cache')
+    subprocess.run(cmd)
 
 
 def start_runner(tool: str, benchmark: str, task: str, args):
@@ -72,6 +71,7 @@ def start_runner(tool: str, benchmark: str, task: str, args):
         command="/bin/bash",
         detach=True,
         tty=True,
+        user=f"{subprocess.check_output(['id', '-u'])}:{subprocess.check_output(['id', '-g'])}",
         volumes={os.path.abspath(args.results_location): {"bind": "/results", "mode": "rw"}},
         auto_remove=True)
     _, log_stream = cntr.exec_run(cmd=command, stream=True)

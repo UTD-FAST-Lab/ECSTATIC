@@ -55,11 +55,6 @@
           "right": "NO_FLOW_TO_CASTS_NO_METHOD_INVOKE"
         },
         {
-          "left": "ONE_FLOW_TO_CASTS_NO_METHOD_INVOKE",
-          "order": "MST",
-          "right": "ONE_FLOW_TO_CASTS_APPLICATION_GET_METHOD"
-        },
-        {
           "left": "MULTI_FLOW_TO_CASTS_APPLICATION_GET_METHOD",
           "order": "MST",
           "right": "ONE_FLOW_TO_CASTS_APPLICATION_GET_METHOD"
