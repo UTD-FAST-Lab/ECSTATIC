@@ -24,6 +24,7 @@ ENV PATH=/venv/bin:$PATH
 WORKDIR /
 RUN git clone --depth 1 https://github.com/amordahl/ECSTATIC.git
 WORKDIR ECSTATIC
+RUN git checkout fault_localization_prelim
 RUN python -m pip install -e .
 
 FROM python-build AS delta-debugger-build
@@ -35,6 +36,10 @@ RUN git config --global core.eol lf && \
 RUN git clone https://github.com/Pancax/SADeltaDebugger.git
 RUN cd SADeltaDebugger/ProjectLineCounter && git checkout 7b9404ca3906822ba4cf55c1851b0cd98bc8812d && mvn install && \
     cd ../ViolationDeltaDebugger && mvn package
+
+RUN git clone https://github.com/amordahl/AndroidTA_FaultLocalization.git
+WORKDIR AndroidTA_FaultLocalization
+RUN cd instrumentation/FL_Logger && mvn install package && cd ../MultiPhaseInstrumenter && mvn package
 
 FROM python-build
 

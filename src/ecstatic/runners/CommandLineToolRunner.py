@@ -117,7 +117,7 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         if self.whole_program:
             cmd.extend(self.get_whole_program())
         cmd = [c for c in cmd if c != '']
-        logging.info(f"Cmd is {' '.join(cmd)}")
+        logging.warning(f"run from cmd CMD {' '.join(cmd)}")
         ps = subprocess.run(cmd, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, text=True)
         logging.debug(ps.stdout)
         return ps.stdout
