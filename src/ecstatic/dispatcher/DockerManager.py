@@ -38,7 +38,6 @@ def build_image(tool: str, nocache: bool = False):
         logger.info("Creating base image")
         cmd = ['docker', 'build', '.', '-f', 'base_image.dockerfile', '-t', get_image_name(tool)]
         print(f'Building docker image with command {" ".join(cmd)}')
-        subprocess.run(cmd)
         # image = client.images.build(path=".", dockerfile="base_image.dockerfile", tag=get_image_name(tool), nocache=nocache)
         # with open('base_image.dockerfile', 'rb') as df:
         #     logging.info("Building base image.")
