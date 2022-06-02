@@ -19,6 +19,7 @@
 import importlib
 import logging
 import os
+import platform
 import subprocess
 from importlib.resources import path
 from pathlib import Path
@@ -36,10 +37,7 @@ def build_image(tool: str, nocache: bool = False):
     if tool == 'base':
         logger.info("Creating base image")
         cmd = ['docker', 'build', '.', '-f', 'base_image.dockerfile', '-t', get_image_name(tool)]
-        if nocache:
-            cmd.append('--no-cache')
         print(f'Building docker image with command {" ".join(cmd)}')
-        subprocess.run(cmd)
         # image = client.images.build(path=".", dockerfile="base_image.dockerfile", tag=get_image_name(tool), nocache=nocache)
         # with open('base_image.dockerfile', 'rb') as df:
         #     logging.info("Building base image.")
@@ -48,16 +46,15 @@ def build_image(tool: str, nocache: bool = False):
         logger.info(f"Building image for {tool}")
         cmd = ['docker', 'build', os.path.abspath(importlib.resources.path(f"src.resources.tools", tool)),
                '-t', get_image_name(tool)]
-        if nocache:
-            cmd.append('--no-cache')
         print(f'Building docker image with command {" ".join(cmd)}')
-        subprocess.run(cmd)
+    if nocache:
+        cmd.append('--no-cache')
+    subprocess.run(cmd)
 
 
 def start_runner(tool: str, benchmark: str, task: str, args):
     # PYTHONENV=/ecstatic
     # run build benchmark script
-    # TODO: Can we specify some other way that benchmarks should be run with whole-program mode?
     command = f'tester {tool} {benchmark} -t {task} -j {args.jobs} --fuzzing-timeout {args.fuzzing_timeout}'
     if args.timeout is not None:
         command += f' --timeout {args.timeout}'
@@ -65,6 +62,10 @@ def start_runner(tool: str, benchmark: str, task: str, args):
         command += f' -{"".join(["v" for i in range(args.verbose)])}'
     if args.no_delta_debug:
         command += f' --no-delta-debug'
+    if 'linux' in platform.system().lower():
+        command += f' --uid {subprocess.check_output(["id", "-u"]).decode("utf-8")}'
+        command += f' --gid {subprocess.check_output(["id", "-g"]).decode("utf-8")}'
+
     print(f'Starting container with command {command}')
     Path(args.results_location).mkdir(parents=True, exist_ok=True)
     cntr: Container = client.containers.run(

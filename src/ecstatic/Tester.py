@@ -52,7 +52,7 @@ class ToolTester:
     def __init__(self, generator, runner: AbstractCommandLineToolRunner, debugger: Optional[DeltaDebugger],
                  results_location: str,
                  num_processes: int, fuzzing_timeout: int, checker: AbstractViolationChecker,
-                 limit: Optional[int] = None):
+                 uid: int = None, gid: int = None):
         """
 
         Parameters
@@ -67,7 +67,8 @@ class ToolTester:
         self.num_processes = num_processes
         self.fuzzing_timeout = fuzzing_timeout
         self.checker = checker
-        self.limit = limit
+        self.uid = uid
+        self.gid = gid
 
     def read_violation_from_file(self, file: str) -> Violation:
         with open(file, 'rb') as f:
@@ -112,6 +113,12 @@ class ToolTester:
             self.generator.feedback(violations)
             print(f'Done with campaign {campaign_index}!')
             campaign_index += 1
+            if self.uid is not None and self.gid is not None:
+                logger.info("Changing permissions of folder.")
+                os.chown(campaign_folder, int(self.uid), int(self.gid))
+                for root, dirs, files in os.walk(campaign_folder):
+                    files = map(lambda x: os.path.join(root, x), files)
+                    map(lambda x: os.chown(x, int(self.uid), self.gid), files)
             if time.time() - start_time > self.fuzzing_timeout * 60:
                 break
         print('Testing done!')
@@ -136,6 +143,8 @@ def main():
     p.add_argument('--verbose', '-v', action='count', default=0)
     p.add_argument('--no-delta-debug', help='Do not delta debug.', action='store_true')
     p.add_argument('--fuzzing-timeout', help='Fuzzing timeout in minutes.', type=int, default=0)
+    p.add_argument('--uid', help='If passed, change artifacts to be owned by the user after each step.')
+    p.add_argument('--gid', help='If passed, change artifacts to be owned by the user after each step.')
     args = p.parse_args()
 
     if args.verbose > 1:
@@ -190,7 +199,7 @@ def main():
 
     t = ToolTester(generator, runner, debugger, results_location,
                    num_processes=args.jobs, fuzzing_timeout=args.fuzzing_timeout,
-                   checker=checker)
+                   checker=checker, uid=args.uid, gid=args.gid)
     t.main()
 
 

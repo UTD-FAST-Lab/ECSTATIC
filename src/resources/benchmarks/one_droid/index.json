@@ -1,0 +1,6 @@
+{"benchmark": [
+{"name": "ActivityEventSequence2/ActivityEventSequence2/build/outputs/apk/debug/ActivityEventSequence2.apk", 
+"sources": ["ActivityEventSequence2/ActivityEventSequence2"], 
+"build_script": "ActivityEventSequence2/build.sh"
+}]
+}
