@@ -197,6 +197,7 @@ class FlowDroidRunner(AbstractCommandLineToolRunner):
             inst_file = output+".instrumentation"
             if not os.path.exists(inst_file):
                 cmd_out = cp.stdout;
+                logging.warning("cmd out" + str(cmd_out))
                 logging.warning("creating instrumentation file");
                 cmd_out = cp.stdout.split("\n");
                 printstring="";
