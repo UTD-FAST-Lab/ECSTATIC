@@ -152,7 +152,7 @@ class FlowDroidRunner(AbstractCommandLineToolRunner):
                 result += f'--{k.name} '
         return result
     #create a file only for coverage info
-    def create_instrumentation_file(flowdroid_out):
+    def create_instrumentation_file(self, flowdroid_out):
         f = open(flowdroid_out,'r')
         cmd_out = f.readlines()
         f.close()
