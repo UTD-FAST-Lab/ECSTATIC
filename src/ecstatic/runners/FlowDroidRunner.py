@@ -158,7 +158,7 @@ class FlowDroidRunner(AbstractCommandLineToolRunner):
             xml_location: str = create_xml_config_file(shell_location, job.target, output_folder)
             logger.info(f'Running job with configuration {xml_location} on apk {job.target.name}')
             result_location = self.run_aql(job, self.get_output(output_folder, job), xml_location)
-            flowdroid_output = os.path.abspath(xml_location) + ".flowdroid.result"
+            flowdroid_out = os.path.abspath(xml_location) + ".flowdroid.result"
             f = open(flowdroid_out,'r')
             cmd_out = f.readlines()
             f.close()
