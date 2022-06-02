@@ -124,7 +124,7 @@ class AbstractViolationChecker(ABC):
         finalstr="";
         for x in finished_results:
             if x.violated:
-                finalstr+=str(x.as_dict())
+                finalstr+=str(x.as_dict())+"\n";
         vfile.write(finalstr);
         vfile.flush()
         vfile.close()
