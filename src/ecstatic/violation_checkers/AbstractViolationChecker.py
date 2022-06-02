@@ -120,6 +120,14 @@ class AbstractViolationChecker(ABC):
         print('Now reading them back in.')
         finished_results = set([pickle.load(open(os.path.join(output_folder, f), 'rb'))
                                 for f in os.listdir(self.output_folder) if f.endswith('.pickle')])
+        vfile = open(os.path.join(output_folder,"violations_text"),'w')
+        finalstr="";
+        for x in finished_results:
+            if x.violated:
+                finalstr+=str(x.as_dict())
+        vfile.write(finalstr);
+        vfile.flush()
+        vfile.close()
         print(f'Finished checking violations. {len([v for v in finished_results if v.violated])} violations detected.')
         print(f'Campaign value processing done (took {time.time() - start_time} seconds).')
         self.summarize(finished_results)
