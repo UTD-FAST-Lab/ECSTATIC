@@ -44,6 +44,7 @@ RUN cd AndroidTA_FaultLocalization && cd instrumentation/FL_Logger && mvn instal
 FROM python-build
 
 COPY --from=delta-debugger-build /SADeltaDebugger /SADeltaDebugger
+COPY --from=delta-debugger-build /AndroidTA_FaultLocalization /AndroidTA_FaultLocalization
 COPY --from=ecstatic-build /venv /venv
 COPY --from=ecstatic-build /ECSTATIC /ECSTATIC
 ENV PATH=/venv/bin:$PATH
