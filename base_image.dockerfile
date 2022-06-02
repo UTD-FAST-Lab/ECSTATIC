@@ -22,9 +22,8 @@ FROM python-build AS ecstatic-build
 COPY --from=dep-build /venv /venv
 ENV PATH=/venv/bin:$PATH
 WORKDIR /
-RUN git clone --depth 1 https://github.com/amordahl/ECSTATIC.git
+RUN git clone --branch fault_localization_prelim https://github.com/amordahl/ECSTATIC.git
 WORKDIR ECSTATIC
-RUN git checkout origin fault_localization_prelim
 #ADD "https://api.github.com/repos/amordahl/ecstatic/commits?per_page=1" latest_commit
 RUN git pull
 RUN python -m pip install -e .
@@ -40,8 +39,7 @@ RUN cd SADeltaDebugger/ProjectLineCounter && mvn install && \
     cd ../ViolationDeltaDebugger && mvn package
 
 RUN git clone https://github.com/amordahl/AndroidTA_FaultLocalization.git
-WORKDIR AndroidTA_FaultLocalization
-RUN cd instrumentation/FL_Logger && mvn install package && cd ../MultiPhaseInstrumenter && mvn package
+RUN cd AndroidTA_FaultLocalization && cd instrumentation/FL_Logger && mvn install package && cd ../MultiPhaseInstrumenter && mvn package
 
 FROM python-build
 
