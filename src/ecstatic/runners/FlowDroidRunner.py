@@ -151,23 +151,6 @@ class FlowDroidRunner(AbstractCommandLineToolRunner):
             elif v.level_name.lower() == 'true':
                 result += f'--{k.name} '
         return result
-    #create a file only for coverage info
-    def create_instrumentation_file(self, flowdroid_out):
-        f = open(flowdroid_out,'r')
-        cmd_out = f.readlines()
-        f.close()
-        #create output instrumentation file
-        inst_file = flowdroid_out+".instrumentation"
-        if not os.path.exists(inst_file):
-            logging.warning("creating instrumentation file");
-            printstring="";
-            for x in cmd_out:
-                if "COVERAGE:" in x:
-                    printstring+=x;
-            f = open(inst_file,'w');
-            f.write(printstring);
-            f.flush()
-            f.close();
     def try_run_job(self, job: FuzzingJob, output_folder: str) -> FinishedFuzzingJob | None:
         try:
             result_location: str
@@ -176,7 +159,21 @@ class FlowDroidRunner(AbstractCommandLineToolRunner):
             logger.info(f'Running job with configuration {xml_location} on apk {job.target.name}')
             result_location = self.run_aql(job, self.get_output(output_folder, job), xml_location)
             flowdroid_output = os.path.abspath(xml_location) + ".flowdroid.result"
-            create_instrumentation_file(flowdroid_output)
+            f = open(flowdroid_out,'r')
+            cmd_out = f.readlines()
+            f.close()
+            #create output instrumentation file
+            inst_file = flowdroid_out+".instrumentation"
+            if not os.path.exists(inst_file):
+                logging.warning("creating instrumentation file");
+                printstring="";
+                for x in cmd_out:
+                    if "COVERAGE:" in x:
+                        printstring+=x;
+                f = open(inst_file,'w');
+                f.write(printstring);
+                f.flush()
+                f.close();
             logger.info(f'Job on configuration {xml_location} on apk {job.target} done.')
             return result_location
         except (KeyboardInterrupt, TimeoutError, RuntimeError):
