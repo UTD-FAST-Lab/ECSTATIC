@@ -24,8 +24,8 @@ ENV PATH=/venv/bin:$PATH
 WORKDIR /
 RUN git clone --depth 1 https://github.com/amordahl/ECSTATIC.git
 WORKDIR ECSTATIC
-RUN git checkout fault_localization_prelim
-ADD "https://api.github.com/repos/amordahl/ecstatic/commits?per_page=1" latest_commit
+RUN git checkout origin fault_localization_prelim
+#ADD "https://api.github.com/repos/amordahl/ecstatic/commits?per_page=1" latest_commit
 RUN git pull
 RUN python -m pip install -e .
 
@@ -36,7 +36,7 @@ RUN git config --global core.eol lf && \
  git config --global core.autocrlf input
 
 RUN git clone https://github.com/Pancax/SADeltaDebugger.git
-RUN cd SADeltaDebugger/ProjectLineCounter && git checkout 7b9404ca3906822ba4cf55c1851b0cd98bc8812d && mvn install && \
+RUN cd SADeltaDebugger/ProjectLineCounter && mvn install && \
     cd ../ViolationDeltaDebugger && mvn package
 
 RUN git clone https://github.com/amordahl/AndroidTA_FaultLocalization.git
