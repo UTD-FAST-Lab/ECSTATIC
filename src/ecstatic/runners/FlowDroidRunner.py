@@ -193,6 +193,20 @@ class FlowDroidRunner(AbstractCommandLineToolRunner):
                 answers = ElementTree.Element('answer')
                 tree = ElementTree.ElementTree(answers)
                 tree.write(output)
+            #create output instrumentation file
+            inst_file = output+".instrumentation"
+            if not os.path.exists(inst_file):
+                cmd_out = cp.stdout;
+                logging.warning("creating instrumentation file");
+                cmd_out = cp.stdout.split("\n");
+                printstring="";
+                for x in cmd_out:
+                    if "COVERAGE:" in x:
+                        printstring+=x;
+                f = open(inst_file,'w');
+                f.write(printstring);
+                f.flush()
+                f.close();
             return output
 
         except KeyboardInterrupt:
