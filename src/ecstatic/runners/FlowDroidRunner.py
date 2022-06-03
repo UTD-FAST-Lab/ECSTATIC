@@ -167,9 +167,18 @@ class FlowDroidRunner(AbstractCommandLineToolRunner):
             if not os.path.exists(inst_file):
                 logging.warning("creating instrumentation file");
                 printstring="";
+                flowdroidstring="";
                 for x in cmd_out:
                     if "COVERAGE:" in x:
                         printstring+=x;
+                    else:
+                        flowdroidstring+=x;
+                #print original flowdroid output to flowdroid.result to not break aql.
+                f = open(flowdroid_out,'w');
+                f.write(flowdroidstring);
+                f.flush()
+                f.close()
+                #print coverage info to instrumentation file
                 f = open(inst_file,'w');
                 f.write(printstring);
                 f.flush()
