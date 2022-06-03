@@ -176,6 +176,7 @@ def main():
         logger.info(f'Using {groundtruths} as groundtruths.')
 
     results_location = f'/results/{args.tool}/{args.benchmark}'
+
     Path(results_location).mkdir(exist_ok=True, parents=True)
     runner = RunnerFactory.get_runner_for_tool(args.tool)
 
