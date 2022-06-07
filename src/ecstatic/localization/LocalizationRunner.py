@@ -27,7 +27,7 @@ class LocalizationRunner():
                 i+=1;
     def runLocalizerHandleResult(self):
         localize_results = self.localization.localize();
-        handle_results(localize_results);
+        self.handle_results(localize_results);
 
     def setLocalizer(self, localizer: AbstractLocalization):
         self.localization = localizer;
