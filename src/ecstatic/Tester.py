@@ -29,7 +29,9 @@ from pathlib import Path
 from typing import List, Optional
 
 from tqdm import tqdm
-
+from src.ecstatic.localization.AbstractLocalization import AbstractLocalization
+from src.ecstatic.localization.DiffLocalizer import DiffLocalizer
+from src.ecstatic.localization.LocalizationRunner import LocalizationRunner
 from src.ecstatic.debugging.DeltaDebugger import DeltaDebugger
 from src.ecstatic.dispatcher import Sanitizer
 from src.ecstatic.fuzzing.generators import FuzzGeneratorFactory
