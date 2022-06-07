@@ -1,9 +1,5 @@
 
-
-
-
-
-
+from src.ecstatic.localization import LocalizeResult
 
 #Class for getting localization results
 class AbstractLocalization():

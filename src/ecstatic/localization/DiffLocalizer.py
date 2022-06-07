@@ -2,6 +2,8 @@ import sys
 import os
 import json
 import logging
+from src.ecstatic.localization import AbstractLocalization;
+from src.ecstatic.localization import LocalizeResult;
 
 class DiffLocalizer(AbstractLocalization):
 
@@ -9,7 +11,7 @@ class DiffLocalizer(AbstractLocalization):
     def __init__(self,violations):
         self.violations=violations;
 
-    def get_dict_for_file(file_lines):
+    def get_dict_for_file(self,file_lines):
         rDict = dict()
         for x in file_lines:
             line = x.split(":")
@@ -19,7 +21,7 @@ class DiffLocalizer(AbstractLocalization):
             else:
                 rDict[line[1]] = 1;
         return rDict;
-    def get_diff_for_files(file1,file2):
+    def get_diff_for_files(self,file1,file2):
         f1_lines = []
         f2_lines = []
         with open(file1,'r') as fp:
@@ -48,7 +50,7 @@ class DiffLocalizer(AbstractLocalization):
         #go through all violations and check em out
         rList: List[LocalizeResult] = []
         for x in self.violations:
-            jsonObj = json.loads(x.as_dict());
+            jsonObj = json.loads(json.dumps(x.as_dict()));
 
             #we are interested in a couple things, mostly
             # the apk
@@ -57,8 +59,8 @@ class DiffLocalizer(AbstractLocalization):
             target = jsonObj["target"];
             target = target[target.rindex("/")+1:];
 
-            job1 = json.loads(jsonObj.["job1"])["result"].replace(".apk.raw",".apk.xml.flowdroid.result.instrumentation")
-            job2 = json.loads(jsonObj.["job2"])["result"].replace(".apk.raw",".apk.xml.flowdroid.result.instrumentation")
+            job1 = jsonObj["job1"]["result"].replace(".apk.raw",".apk.xml.flowdroid.result.instrumentation")
+            job2 = jsonObj["job2"]["result"].replace(".apk.raw",".apk.xml.flowdroid.result.instrumentation")
 
             split = job1.split("/");
 
@@ -83,5 +85,5 @@ class DiffLocalizer(AbstractLocalization):
             inst_file_2=inst_file_2[1:]
 
             lineDiff = get_diff_for_files(inst_file_1,inst_file_2);
-            rList.append(LocalizeResult(str(lineDiff),str(target),str(jsonObj.partial_orders[0])))
+            rList.append(LocalizeResult(str(lineDiff),str(target),str(jsonObj["partial_orders"][0])))
         return rList;
