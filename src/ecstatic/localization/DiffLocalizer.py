@@ -21,7 +21,7 @@ class DiffLocalizer(AbstractLocalization):
             else:
                 rDict[line[1]] = 1;
         return rDict;
-    def get_diff_for_files(self,file1,file2):
+    def get_diff_for_files(self,file1,file2,partial_orders):
         f1_lines = []
         f2_lines = []
         with open(file1,'r') as fp:
@@ -32,17 +32,25 @@ class DiffLocalizer(AbstractLocalization):
         f1_dict = get_dict_for_file(f1_lines)
         f2_dict = get_dict_for_file(f2_lines)
 
+        rList = []
         #TODO::.keys method
         f1_lines = [*f1_dict]
         f2_lines = [*f2_dict]
-
-        lineDiff=0
         # 1 -> 2, A -> B
+
+        diffInfo="";
         for x in f2_lines:
             if x not in f1_lines:
-                lineDiff+=1;
+                diffInfo+=x+":"+f2_dict[x]+"\n";
+        rList.append(diffInfo);
+        diffInfo2="";
+        if len(partial_orders) > 1:
+            for x in f1_lines:
+                if x not in f2_lines:
+                    diffInfo2+=x+":"+f1_dict[x]+"\n"
+            rList.append(diffInfo2);
 
-        return lineDiff;
+        return rList;
 
 
     def localize(self):
@@ -51,17 +59,15 @@ class DiffLocalizer(AbstractLocalization):
         #go through all violations and check em out
         rList: List[LocalizeResult] = []
         for x in self.violations:
-            jsonObj = json.loads(json.dumps(x.as_dict()));
-
             #we are interested in a couple things, mostly
             # the apk
             # the two files that contain instrumentation info
             # the partial_orders being bad
-            target = jsonObj["target"];
+            target = x.job1.job.target.name
             target = target[target.rindex("/")+1:];
 
-            job1 = jsonObj["job1"]["result"].replace(".apk.raw",".apk.xml.flowdroid.result.instrumentation")
-            job2 = jsonObj["job2"]["result"].replace(".apk.raw",".apk.xml.flowdroid.result.instrumentation")
+            job1 = x.job1.results_location.replace(".apk.raw",".apk.xml.flowdroid.result.instrumentation")
+            job2 = x.job2.results_location.replace(".apk.raw",".apk.xml.flowdroid.result.instrumentation")
 
             split = job1.split("/");
 
@@ -86,5 +92,5 @@ class DiffLocalizer(AbstractLocalization):
             inst_file_2=inst_file_2[1:]
 
             lineDiff = get_diff_for_files(inst_file_1,inst_file_2);
-            rList.append(LocalizeResult(str(lineDiff),str(target),str(jsonObj["partial_orders"][0])))
+            rList.append(LocalizeResult(str(lineDiff),str(target),x.partial_orders))
         return rList;

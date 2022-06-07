@@ -17,11 +17,14 @@ class LocalizationRunner():
         for x in results:
             #make a file
             filename = "/results/localization";
-            if not os.path.exists("/results/localization/"+x.partial_orders):
-                os.mkdir("/results/localization/"+x.partial_orders);
-            filename+="/"+x.partial_orders+"/"+x.apk+".localize.result"
-            with open(filename,'w') as fp:
-                fp.write(x.result+"\n")
+            i=0;
+            for pO in x.partial_orders:
+                if not os.path.exists("/results/localization/"+str(pO)):
+                    os.mkdir("/results/localization/"+str(pO));
+                filename+="/"+str(pO)+"/"+x.apk+".localize.result"
+                with open(filename,'w') as fp:
+                    fp.write(x.result[i]+"\n")
+                i+=1;
     def runLocalizerHandleResult(self):
         localize_results = self.localization.localize();
         handle_results(localize_results);
