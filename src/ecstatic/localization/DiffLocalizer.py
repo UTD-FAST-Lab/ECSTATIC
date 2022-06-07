@@ -29,8 +29,8 @@ class DiffLocalizer(AbstractLocalization):
         with open(file2,'r') as fp:
             f2_lines = fp.readlines()
 
-        f1_dict = get_dict_for_file(f1_lines)
-        f2_dict = get_dict_for_file(f2_lines)
+        f1_dict = self.get_dict_for_file(f1_lines)
+        f2_dict = self.get_dict_for_file(f2_lines)
 
         rList = []
         #TODO::.keys method
@@ -91,6 +91,6 @@ class DiffLocalizer(AbstractLocalization):
                 i+=1;
             inst_file_2=inst_file_2[1:]
 
-            lineDiff = get_diff_for_files(inst_file_1,inst_file_2);
+            lineDiff = self.get_diff_for_files(inst_file_1,inst_file_2);
             rList.append(LocalizeResult(str(lineDiff),str(target),x.partial_orders))
         return rList;
