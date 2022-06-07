@@ -91,6 +91,6 @@ class DiffLocalizer(AbstractLocalization):
                 i+=1;
             inst_file_2=inst_file_2[1:]
 
-            lineDiff = self.get_diff_for_files(inst_file_1,inst_file_2);
+            lineDiff = self.get_diff_for_files(inst_file_1,inst_file_2,x.partial_orders);
             rList.append(LocalizeResult(str(lineDiff),str(target),x.partial_orders))
         return rList;
