@@ -15,11 +15,11 @@ class DiffLocalizer(AbstractLocalization):
         rDict = dict()
         for x in file_lines:
             line = x.split(":")
-            if rDict.get(line[1]) is not None:
+            if rDict.get(line[1]+":"+line[2]) is not None:
                 #we've seen this class before inc count
-                rDict[line[1]] = rDict[line[1]]+1
+                rDict[line[1]+":"+line[2]] = rDict[line[1]+":"+line[2]]+1
             else:
-                rDict[line[1]] = 1;
+                rDict[line[1]+":"+line[2]] = 1;
         return rDict;
     def get_diff_for_files(self,file1,file2,partial_orders):
         f1_lines = []
