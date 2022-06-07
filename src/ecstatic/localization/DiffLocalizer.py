@@ -74,7 +74,7 @@ class DiffLocalizer(AbstractLocalization):
             inst_file_1 = "";
             i=0;
             for st in split:
-                if i == 4:
+                if i == 5:
                     inst_file_1+="/xml_scripts"
                 inst_file_1+="/"+st;
                 i+=1;
@@ -85,7 +85,7 @@ class DiffLocalizer(AbstractLocalization):
             inst_file_2 = "";
             i=0;
             for st in split:
-                if i==4:
+                if i==5:
                     inst_file_2+="/xml_scripts"
                 inst_file_2+="/"+st;
                 i+=1;
