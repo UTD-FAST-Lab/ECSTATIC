@@ -41,13 +41,13 @@ class DiffLocalizer(AbstractLocalization):
         diffInfo="";
         for x in f2_lines:
             if x not in f1_lines:
-                diffInfo+=x+":"+str(f2_dict[x])+"\n";
+                diffInfo+=x.strip()+":"+str(f2_dict[x])+"\n";
         rList.append(diffInfo);
         diffInfo2="";
         if len(partial_orders) > 1:
             for x in f1_lines:
                 if x not in f2_lines:
-                    diffInfo2+=x+":"+str(f1_dict[x])+"\n"
+                    diffInfo2+=x.strip()+":"+str(f1_dict[x])+"\n"
             rList.append(diffInfo2);
 
         return rList;
