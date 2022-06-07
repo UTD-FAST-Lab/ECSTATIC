@@ -2,8 +2,8 @@ import sys
 import os
 import json
 import logging
-from src.ecstatic.localization import AbstractLocalization;
-from src.ecstatic.localization import LocalizeResult;
+from src.ecstatic.localization.AbstractLocalization import AbstractLocalization;
+from src.ecstatic.localization.LocalizeResult import LocalizeResult;
 
 class DiffLocalizer(AbstractLocalization):
 
@@ -32,6 +32,7 @@ class DiffLocalizer(AbstractLocalization):
         f1_dict = get_dict_for_file(f1_lines)
         f2_dict = get_dict_for_file(f2_lines)
 
+        #TODO::.keys method
         f1_lines = [*f1_dict]
         f2_lines = [*f2_dict]
 

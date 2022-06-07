@@ -1,6 +1,6 @@
 import os
 import sys
-from src.ecstatic.localization import AbstractLocalization;
+from src.ecstatic.localization.AbstractLocalization import AbstractLocalization;
 
 #Class that runs a localization algorithm and handles results
 class LocalizationRunner():
@@ -8,6 +8,8 @@ class LocalizationRunner():
     #No Choice for now
     def __init__(self):
         #STUB
+        print("")
+
     def handle_results(self,results):
         #TODO:: this is not correct, the result dir can change
         if(not os.path.exists("/results/localization")):
