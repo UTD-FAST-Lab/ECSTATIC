@@ -63,6 +63,7 @@ class ToolTester:
         self.runner: AbstractCommandLineToolRunner = runner
         self.debugger: DeltaDebugger = debugger
         self.results_location: str = results_location
+        self.localize_runner: LocalizationRunner = LocalizationRunner();
         self.unverified_violations = list()
         self.num_processes = num_processes
         self.fuzzing_timeout = fuzzing_timeout
@@ -111,6 +112,11 @@ class ToolTester:
                     p.map(partial(self.debugger.delta_debug, campaign_directory=campaign_folder,
                                   timeout=self.runner.timeout), direct_violations)
             self.generator.feedback(violations)
+            #run localier on list of violations
+
+            localizer: AbstractLocalization = DiffLocalizer(violations);
+            self.localize_runner.setLocalizer(localizer);
+            self.localize_runner.runLocalizerHandleResult();
             print(f'Done with campaign {campaign_index}!')
             campaign_index += 1
             if self.uid is not None and self.gid is not None:
