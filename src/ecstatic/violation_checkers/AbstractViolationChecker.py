@@ -275,7 +275,7 @@ class AbstractViolationChecker(ABC):
                     #Non violation
                     results.append(Violation(False,{PartialOrder(job1.configuration[option_under_investigation],
                                                                     PartialOrderType.MORE_SOUND_THAN,
-                                                                    job2.job.configuration[option_under_investigation]
+                                                                    job2.job.configuration[option_under_investigation],
                                                                     option_under_investigation)},
                                                     job1,job2,differences))
             if option_under_investigation.is_more_precise(job1.job.configuration[option_under_investigation],
