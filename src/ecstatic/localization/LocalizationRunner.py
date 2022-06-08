@@ -44,30 +44,57 @@ class LocalizationRunner():
             else:
                 #fresh
                 resultsMap[pOString] = resultDict;
-
+        fragmentMap = dict();
+        for x in results:
+            pOString = str(x.partial_order)
+            resultDict = x.fragmentation;
+            if fragmentMap.get(pOString) is not None:
+                #we've seen this pO before
+                fragmentMap[pOString] = self.getIntersection(resultDict,fragmentMap[pOString]);
+            else:
+                #fresh
+                fragmentMap[pOString] = resultDict;
         for x in [*resultsMap]:
             fName = "/results/localization/"+x+"/"+x+".intersect";
             with open(fName,'w') as fp:
                 for line in [*resultsMap[x]]:
                     fp.write(line.strip()+":"+str(resultsMap[x][line]).strip()+"\n")
+        for x in [*fragmentMap]:
+            fName = "/results/localization/"+x+"/"+x+".fragintersect";
+            with open(fName,'w') as fp:
+                for line in [*fragmentMap[x]]:
+                    fp.write(line.strip()+":"+str(fragmentMap[x][line]).strip()+"\n")
+        return resultsMap,fragmentMap;
 
     def handle_results(self,results):
         #TODO:: this is not correct, the result dir can change
         if(not os.path.exists("/results/localization")):
             os.mkdir("/results/localization")
+        intersectMap,fragMap = self.handle_intersection(results);
         for x in results:
             #make a file
             filename = "/results/localization";
+            csvfile = "/results/localization/"+str(x.partial_order)+"/"+str(x.partial_order)+".csv"
             if not os.path.exists("/results/localization/"+str(x.partial_order)):
                 os.mkdir("/results/localization/"+str(x.partial_order));
+            if not os.path.exists(csvfile):
+                with open(csvfile) as fp:
+                    fp.write("APK,diff_size,fragment_size\n")
             filename+="/"+str(x.partial_order)+"/"+x.apk+".localize.result"
             filename2 =  filename+".fragmentation"
             with open(filename,'w') as fp:
                 fp.write(x.result+"\n")
             with open(filename2,'w') as fp:
                 fp.write(x.get_fragmentation())
+            with open(csvfile,'a') as fp:
+                fp.write(x.apk+","+str(len(x.result.split("\n")))+","+str(len([*x.fragmentation]))+"\n")
+        filename="/results/localization/po_intersects.csv"
+        with open(filename,'w') as fp:
+            fp.write("PartialOrder,DiffIntersection,FragmentationIntersection\n")
+            for x in [*intersectMap]:
+                fp.write(x+","+str(len(intersectMap[x]))+","+str(len(fragmentMap[x])))+"\n")
 
-        self.handle_intersection(results);
+
     def runLocalizerHandleResult(self):
         localize_results = self.localization.localize();
         self.handle_results(localize_results);
