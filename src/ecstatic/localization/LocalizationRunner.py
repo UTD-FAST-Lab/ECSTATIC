@@ -70,7 +70,7 @@ class LocalizationRunner():
         #TODO:: this is not correct, the result dir can change
         if(not os.path.exists("/results/localization")):
             os.mkdir("/results/localization")
-        intersectMap,fragmentMap = self.handle_intersection(results);
+
         for x in results:
             #make a file
             filename = "/results/localization";
@@ -88,13 +88,12 @@ class LocalizationRunner():
                 fp.write(x.get_fragmentation())
             with open(csvfile,'a') as fp:
                 fp.write(x.apk+","+str(len(x.result.split("\n")))+","+str(len([*x.fragmentation]))+"\n")
+        intersectMap,fragmentMap = self.handle_intersection(results);
         filename="/results/localization/po_intersects.csv"
         with open(filename,'w') as fp:
             fp.write("PartialOrder,DiffIntersection,FragmentationIntersection\n")
             for x in [*intersectMap]:
                 fp.write(x+","+str(len(intersectMap[x]))+","+str(len(fragmentMap[x]))+"\n")
-
-
     def runLocalizerHandleResult(self):
         localize_results = self.localization.localize();
         self.handle_results(localize_results);
