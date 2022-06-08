@@ -18,6 +18,14 @@ class LocalizationRunner():
                 rDict[x] = dict1[x]+dict2[x]
 
         return rDict;
+    def getUnion(self,dict1,dict2):
+        rDict=dict();
+        for x in [*dict1]:
+            rDict[x] = dict1[x];
+            if(x in dict2):
+                rDict[x] = rDict[x]+dict2[x];
+            else:
+                rDict[x] = dict2[x];
 
     def turnDiffStringIntoDict(self, diffString):
         rDict= dict()
@@ -32,6 +40,25 @@ class LocalizationRunner():
                 rDict[line] = lineCount;
         return rDict;
 
+    def handle_union(self,results):
+        resultMaps =dict()
+        for x in results:
+            pOString = str(x.partial_order)
+            resultDict = x.fDict;
+            if resultsMap.get(pOString) is not None:
+                resultsMap[pOString] = self.getUnion(resultDict,resultsMap[pOString])
+            else:
+                resultsMap[pOString] = resultDict;
+        for x in results:
+            pOString = str(x.partial_order)
+            resultDict = x.fragmentation;
+            if fragmentMap.get(pOString) is not None:
+                #we've seen this pO before
+                fragmentMap[pOString] = self.getUnion(resultDict,fragmentMap[pOString]);
+            else:
+                #fresh
+                fragmentMap[pOString] = resultDict;
+        return resultsMap,fragmentMap;
     def handle_intersection(self,results):
         #method that returns set intersection of all apks that recreated this partial order violation
         resultsMap = dict()
@@ -89,11 +116,12 @@ class LocalizationRunner():
             with open(csvfile,'a') as fp:
                 fp.write(x.apk+","+str(len(x.result.split("\n")))+","+str(len([*x.fragmentation]))+"\n")
         intersectMap,fragmentMap = self.handle_intersection(results);
+        unionMap,uFragmentMap = self.handle_union(results);
         filename="/results/localization/po_intersects.csv"
         with open(filename,'w') as fp:
-            fp.write("PartialOrder,DiffIntersection,FragmentationIntersection\n")
+            fp.write("PartialOrder,diff_intersect,diff_union,fragment_intersect,fragment_union\n")
             for x in [*intersectMap]:
-                fp.write(x+","+str(len(intersectMap[x]))+","+str(len(fragmentMap[x]))+"\n")
+                fp.write(x+","+str(len(intersectMap[x]))+","+str(len(unionMap[x]))+","+str(len(fragmentMap[x]))+","+str(len(uFragmentMap[x]))"\n")
     def runLocalizerHandleResult(self):
         localize_results = self.localization.localize();
         self.handle_results(localize_results);
