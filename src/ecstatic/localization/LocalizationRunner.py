@@ -70,7 +70,7 @@ class LocalizationRunner():
         #TODO:: this is not correct, the result dir can change
         if(not os.path.exists("/results/localization")):
             os.mkdir("/results/localization")
-        intersectMap,fragMap = self.handle_intersection(results);
+        intersectMap,fragmentMap = self.handle_intersection(results);
         for x in results:
             #make a file
             filename = "/results/localization";
