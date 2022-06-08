@@ -121,7 +121,7 @@ class LocalizationRunner():
         with open(filename,'w') as fp:
             fp.write("PartialOrder,diff_intersect,diff_union,fragment_intersect,fragment_union\n")
             for x in [*intersectMap]:
-                fp.write(x+","+str(len(intersectMap[x]))+","+str(len(unionMap[x]))+","+str(len(fragmentMap[x]))+","+str(len(uFragmentMap[x]))"\n")
+                fp.write(x+","+str(len(intersectMap[x]))+","+str(len(unionMap[x]))+","+str(len(fragmentMap[x]))+","+str(len(uFragmentMap[x]))+"\n")
     def runLocalizerHandleResult(self):
         localize_results = self.localization.localize();
         self.handle_results(localize_results);
