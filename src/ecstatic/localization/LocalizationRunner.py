@@ -24,8 +24,10 @@ class LocalizationRunner():
             rDict[x] = dict1[x];
             if(x in dict2):
                 rDict[x] = rDict[x]+dict2[x];
-            else:
-                rDict[x] = dict2[x];
+        for x in [*dict2]:
+            if x not in dict1:
+                rDict[x] = dict2[x]
+        return rDict;
 
     def turnDiffStringIntoDict(self, diffString):
         rDict= dict()
