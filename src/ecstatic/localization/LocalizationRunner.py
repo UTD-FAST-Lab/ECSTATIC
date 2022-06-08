@@ -49,7 +49,7 @@ class LocalizationRunner():
             fName = "/results/localization/"+x+"/"+x+".intersect";
             with open(fName,'w') as fp:
                 for line in [*resultsMap[x]]:
-                    fp.write(line+":"+resultsMap[x][line])
+                    fp.write(line+":"+str(resultsMap[x][line]))
 
     def handle_results(self,results):
         #TODO:: this is not correct, the result dir can change
