@@ -92,7 +92,7 @@ class LocalizationRunner():
         with open(filename,'w') as fp:
             fp.write("PartialOrder,DiffIntersection,FragmentationIntersection\n")
             for x in [*intersectMap]:
-                fp.write(x+","+str(len(intersectMap[x]))+","+str(len(fragmentMap[x])))+"\n")
+                fp.write(x+","+str(len(intersectMap[x]))+","+str(len(fragmentMap[x]))+"\n")
 
 
     def runLocalizerHandleResult(self):
