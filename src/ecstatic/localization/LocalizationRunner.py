@@ -41,7 +41,8 @@ class LocalizationRunner():
         return rDict;
 
     def handle_union(self,results):
-        resultMaps =dict()
+        resultsMap =dict()
+        fragmentMap=dict()
         for x in results:
             pOString = str(x.partial_order)
             resultDict = x.fDict;
