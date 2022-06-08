@@ -61,7 +61,7 @@ class LocalizationRunner():
             if not os.path.exists("/results/localization/"+str(x.partial_order)):
                 os.mkdir("/results/localization/"+str(x.partial_order));
             filename+="/"+str(x.partial_order)+"/"+x.apk+".localize.result"
-            filename2 =  filename+=".fragmentation"
+            filename2 =  filename+".fragmentation"
             with open(filename,'w') as fp:
                 fp.write(x.result+"\n")
             with open(filename2,'w') as fp:
