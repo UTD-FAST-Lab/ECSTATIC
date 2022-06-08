@@ -37,7 +37,7 @@ class LocalizationRunner():
         resultsMap = dict()
         for x in results:
             pOString = str(x.partial_order)
-            resultDict = self.turnDiffStringIntoDict(x.result);
+            resultDict = x.fDict;
             if resultsMap.get(pOString) is not None:
                 #we've seen this pO before
                 resultsMap[pOString] = self.getIntersection(resultDict,resultsMap[pOString]);

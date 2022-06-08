@@ -55,7 +55,7 @@ class DiffLocalizer(AbstractLocalization):
                 diffInfo+=x.strip()+":"+str(f2_dict[x])+"\n";
                 diffDict[x] = f2_dict[x]
         fragmentation = self.get_fragmentation_for_file(diffDict);
-        return LocalizeResult(diffInfo,apk,partial_order,fragmentation);
+        return LocalizeResult(diffInfo,apk,partial_order,fragmentation,diffDict);
 
 
     def localize(self):
