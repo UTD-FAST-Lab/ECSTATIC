@@ -273,7 +273,7 @@ class AbstractViolationChecker(ABC):
                                              job1, job2, differences))
                 else:
                     #Non violation
-                    results.append(Violation(False,{PartialOrder(job1.configuration[option_under_investigation],
+                    results.append(Violation(False,{PartialOrder(job1.job.configuration[option_under_investigation],
                                                                     PartialOrderType.MORE_SOUND_THAN,
                                                                     job2.job.configuration[option_under_investigation],
                                                                     option_under_investigation)},
@@ -291,7 +291,7 @@ class AbstractViolationChecker(ABC):
                                              job1, job2, differences))
                 else:
                     #Non violation
-                    results.append(Violation(False,{PartialOrder(job1.configuration[option_under_investigation],
+                    results.append(Violation(False,{PartialOrder(job1.job.configuration[option_under_investigation],
                                                                     PartialOrderType.MORE_PRECISE_THAN,
                                                                     job2.job.configuration[option_under_investigation],
                                                                     option_under_investigation)},
