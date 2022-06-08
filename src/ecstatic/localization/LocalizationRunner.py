@@ -49,7 +49,7 @@ class LocalizationRunner():
             fName = "/results/localization/"+x+"/"+x+".intersect";
             with open(fName,'w') as fp:
                 for line in [*resultsMap[x]]:
-                    fp.write(line+":"+str(resultsMap[x][line]))
+                    fp.write(line.strip()+":"+str(resultsMap[x][line]).strip()+"\n")
 
     def handle_results(self,results):
         #TODO:: this is not correct, the result dir can change
@@ -61,8 +61,11 @@ class LocalizationRunner():
             if not os.path.exists("/results/localization/"+str(x.partial_order)):
                 os.mkdir("/results/localization/"+str(x.partial_order));
             filename+="/"+str(x.partial_order)+"/"+x.apk+".localize.result"
+            filename2 =  filename+=".fragmentation"
             with open(filename,'w') as fp:
                 fp.write(x.result+"\n")
+            with open(filename2,'w') as fp:
+                fp.write(x.get_fragmentation())
 
         self.handle_intersection(results);
     def runLocalizerHandleResult(self):

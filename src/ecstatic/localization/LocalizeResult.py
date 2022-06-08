@@ -9,3 +9,9 @@ class LocalizeResult():
         self.partial_order=partial_order;
         self.fragmentation=fragmentation;
         self.fDict = fDict;
+
+    def get_fragmentation(self):
+        rString="";
+        for x in [*self.fragmentation]:
+            rString+=x.strip()+":"+str(self.fragmentation[x])+"\n";
+        return rString;
