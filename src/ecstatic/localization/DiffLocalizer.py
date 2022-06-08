@@ -15,7 +15,9 @@ class DiffLocalizer(AbstractLocalization):
         classmap = dict();
         for x in [*fDict]:
             classN = x.split(":")[0]
-            anonymousClassCutOff = classN.index("$") if classN.index("$") > 0 else len(classN)
+            anonymousClassCutOff = len(classN);
+            if "$" in classN:
+                anonymousClassCutOff = classN.index("$")
             classN = classN[0:anonymousClassCutOff]
             if classmap.get(classN) is not None:
                 #we've seen this class b4
