@@ -78,7 +78,7 @@ class LocalizationRunner():
             if not os.path.exists("/results/localization/"+str(x.partial_order)):
                 os.mkdir("/results/localization/"+str(x.partial_order));
             if not os.path.exists(csvfile):
-                with open(csvfile) as fp:
+                with open(csvfile,'w') as fp:
                     fp.write("APK,diff_size,fragment_size\n")
             filename+="/"+str(x.partial_order)+"/"+x.apk+".localize.result"
             filename2 =  filename+".fragmentation"
