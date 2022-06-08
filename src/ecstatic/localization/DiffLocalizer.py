@@ -15,6 +15,7 @@ class DiffLocalizer(AbstractLocalization):
         classmap = dict();
         for x in [*fDict]:
             classN = x.split(":")[0]
+            classN = classN[0:classN.index("$")]
             if classmap.get(classN) is not None:
                 #we've seen this class b4
                 classmap[classN] = classmap[classN] + fDict[x]
