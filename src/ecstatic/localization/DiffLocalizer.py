@@ -4,7 +4,6 @@ import json
 import logging
 from src.ecstatic.localization.AbstractLocalization import AbstractLocalization;
 from src.ecstatic.localization.LocalizeResult import LocalizeResult;
-
 class DiffLocalizer(AbstractLocalization):
 
 
@@ -13,7 +12,7 @@ class DiffLocalizer(AbstractLocalization):
 
     def get_fragmentation_for_file(self,fDict):
         classmap = dict();
-        for x in [*fDict]:
+        for x in fDict:
             classN = x.split(":")[0]
             anonymousClassCutOff = len(classN);
             if "$" in classN:
@@ -58,7 +57,8 @@ class DiffLocalizer(AbstractLocalization):
             if x not in f1_lines:
                 diffInfo+=x.strip()+":"+str(f2_dict[x])+"\n";
                 diffDict[x] = f2_dict[x]
-        fragmentation = self.get_fragmentation_for_file(diffDict);
+        #fragmentation = self.get_fragmentation_for_file(diffDict);
+        fragmentation = None;
         return LocalizeResult(diffInfo,apk,partial_order,fragmentation,diffDict,violated);
 
 

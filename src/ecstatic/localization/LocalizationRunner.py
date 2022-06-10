@@ -98,7 +98,7 @@ class LocalizationRunner():
 
     def update_line_count_list(self,result,line_count_list):
 
-        for x in [*result.fDict]:
+        for x in result.fDict:
             if result.violated:
                 #add 1 to line_count_list[0] lines
                 if x in line_count_list[0]:
@@ -123,9 +123,9 @@ class LocalizationRunner():
         #DICT() = LINE(), LINE()
 
         #both dicts should be the same length();
-        for PO in [*line_counts]:
+        for PO in line_counts:
             strFile = "line,vCount,uvCount\n"
-            for line in [*line_counts[0]]:
+            for line in line_counts[0]:
                 lineStr = ""+line.strip()+",";
                 if line in line_counts[0]:
                     lineStr+=str(line_counts[0][line])+",";
@@ -147,7 +147,7 @@ class LocalizationRunner():
                 line_count_list = list(dict(),dict());
                 nDict = dict();
                 n2Dict = dict();
-                for x in [*result.fDict]:
+                for x in result.fDict:
                     nDict[x]=1;
                     n2Dict[x]=0;
                 if result.violated:
