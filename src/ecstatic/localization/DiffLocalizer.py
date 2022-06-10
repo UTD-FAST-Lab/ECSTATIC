@@ -103,8 +103,8 @@ class DiffLocalizer(AbstractLocalization):
                 inst_file_2=inst_file_2[1:]
                 lineDiff="";
                 if not first:
-                    rList.append(self.get_diff_for_files(inst_file_2,inst_file_1,pO,target))
+                    rList.append(self.get_diff_for_files(inst_file_2,inst_file_1,pO,target,x.violated))
                 else:
-                    rList.append(self.get_diff_for_files(inst_file_1,inst_file_2,pO,target))
+                    rList.append(self.get_diff_for_files(inst_file_1,inst_file_2,pO,target,x.violated))
                 first = True
         return rList;
