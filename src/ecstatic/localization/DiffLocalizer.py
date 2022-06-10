@@ -35,13 +35,19 @@ class DiffLocalizer(AbstractLocalization):
             else:
                 rDict[line[1]+":"+line[2]] = 1;
         return rDict;
+    linesForFile = dict();
     def get_diff_for_files(self,file1,file2,partial_order,apk, violated):
         f1_lines = []
         f2_lines = []
-        with open(file1,'r') as fp:
-            f1_lines = fp.readlines()
-        with open(file2,'r') as fp:
-            f2_lines = fp.readlines()
+
+        if(file1 not in lineForFile):
+            with open(file1,'r') as fp:
+                linesForFile[file1] = fp.readlines();
+        if(file2 not in linesForFile):
+            with open(file2,'r') as fp:
+                linesForFile[file2] = fp.readlines();
+        f1_lines= linesForFile[file1];
+        f2_lines= linesForFile[file2];
 
         f1_dict = self.get_dict_for_file(f1_lines)
         f2_dict = self.get_dict_for_file(f2_lines)
