@@ -42,25 +42,20 @@ class DiffLocalizer(AbstractLocalization):
 
         if(file1 not in lineForFile):
             with open(file1,'r') as fp:
-                linesForFile[file1] = fp.readlines();
+                linesForFile[file1] = self.get_dict_for_file(fp.readlines())
         if(file2 not in linesForFile):
             with open(file2,'r') as fp:
-                linesForFile[file2] = fp.readlines();
-        f1_lines= linesForFile[file1];
-        f2_lines= linesForFile[file2];
-
-        f1_dict = self.get_dict_for_file(f1_lines)
-        f2_dict = self.get_dict_for_file(f2_lines)
+                linesForFile[file2] = self.get_dict_for_file(fp.readlines())
+        f1_dict = linesForFile[file1];
+        f2_dict = linesForFile[file2];
 
         rList = []
         #TODO::.keys method
-        f1_lines = [*f1_dict]
-        f2_lines = [*f2_dict]
         # 1 -> 2, A -> B
         diffDict = dict();
         diffInfo="";
-        for x in f2_lines:
-            if x not in f1_lines:
+        for x in f2_dict:
+            if x not in f1_dict:
                 diffInfo+=x.strip()+":"+str(f2_dict[x])+"\n";
                 diffDict[x] = f2_dict[x]
         #fragmentation = self.get_fragmentation_for_file(diffDict);
