@@ -35,7 +35,8 @@ class DiffLocalizer(AbstractLocalization):
             else:
                 rDict[line[1]+":"+line[2]] = 1;
         return rDict;
-    linesForFile = dict();
+
+    self.linesForFile = dict();
     def get_diff_for_files(self,file1,file2,partial_order,apk, violated):
         f1_lines = []
         f2_lines = []
@@ -61,7 +62,6 @@ class DiffLocalizer(AbstractLocalization):
         #fragmentation = self.get_fragmentation_for_file(diffDict);
         fragmentation = None;
         return LocalizeResult(diffInfo,apk,partial_order,fragmentation,diffDict,violated);
-
 
     def localize(self):
         #Internal logic for running this localizer
