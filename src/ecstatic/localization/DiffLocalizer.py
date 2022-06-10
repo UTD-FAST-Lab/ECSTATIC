@@ -9,6 +9,7 @@ class DiffLocalizer(AbstractLocalization):
 
     def __init__(self,violations):
         self.violations=violations;
+        self.linesForFile = dict();
 
     def get_fragmentation_for_file(self,fDict):
         classmap = dict();
@@ -36,7 +37,7 @@ class DiffLocalizer(AbstractLocalization):
                 rDict[line[1]+":"+line[2]] = 1;
         return rDict;
 
-    self.linesForFile = dict();
+
     def get_diff_for_files(self,file1,file2,partial_order,apk, violated):
         f1_lines = []
         f2_lines = []
