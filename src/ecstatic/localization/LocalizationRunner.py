@@ -144,7 +144,10 @@ class LocalizationRunner():
                 line_counts[str(result.partial_order)] = self.update_line_count_list(result,line_counts[str(result.partial_order)])
             else:
                 #We don't have this partial order
-                line_count_list = list(dict(),dict());
+                line_count_list = []
+                line_count_list.append(dict());
+                line_count_list.append(dict());
+
                 nDict = dict();
                 n2Dict = dict();
                 for x in result.fDict:
