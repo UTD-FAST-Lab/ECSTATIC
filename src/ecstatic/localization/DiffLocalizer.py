@@ -42,14 +42,14 @@ class DiffLocalizer(AbstractLocalization):
         f1_lines = []
         f2_lines = []
 
-        if(file1 not in linesForFile):
+        if(file1 not in self.linesForFile):
             with open(file1,'r') as fp:
-                linesForFile[file1] = self.get_dict_for_file(fp.readlines())
-        if(file2 not in linesForFile):
+                self.linesForFile[file1] = self.get_dict_for_file(fp.readlines())
+        if(file2 not in self.linesForFile):
             with open(file2,'r') as fp:
                 linesForFile[file2] = self.get_dict_for_file(fp.readlines())
-        f1_dict = linesForFile[file1];
-        f2_dict = linesForFile[file2];
+        f1_dict = self.linesForFile[file1];
+        f2_dict = self.linesForFile[file2];
 
         rList = []
         #TODO::.keys method
