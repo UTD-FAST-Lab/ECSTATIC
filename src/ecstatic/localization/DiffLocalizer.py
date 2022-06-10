@@ -47,7 +47,7 @@ class DiffLocalizer(AbstractLocalization):
                 self.linesForFile[file1] = self.get_dict_for_file(fp.readlines())
         if(file2 not in self.linesForFile):
             with open(file2,'r') as fp:
-                linesForFile[file2] = self.get_dict_for_file(fp.readlines())
+                self.linesForFile[file2] = self.get_dict_for_file(fp.readlines())
         f1_dict = self.linesForFile[file1];
         f2_dict = self.linesForFile[file2];
 
