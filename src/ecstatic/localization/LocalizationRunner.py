@@ -127,7 +127,7 @@ class LocalizationRunner():
             doPrint=False;
             strFile = "line,vCount,uvCount\n"
             for line in line_counts[PO][0]:
-                if(not line_counts[PO][0] == 0):
+                if(not line_counts[PO][0][line] == 0):
                     doPrint=True
                 lineStr = ""+line.strip()+",";
                 if line in line_counts[PO][0]:
