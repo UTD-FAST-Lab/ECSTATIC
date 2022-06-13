@@ -160,7 +160,7 @@ class LocalizationRunner():
                     line_count_list[0]=n2Dict;
                     line_count_list[1]=nDict;
                 line_counts[str(result.partial_order)]=line_count_list;
-        self.print_line_counts(self,line_counts);
+        self.print_line_counts(line_counts);
     def handle_results(self,results):
         #TODO:: this is not correct, the result dir can change
         if(not os.path.exists("/results/localization")):
