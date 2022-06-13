@@ -123,22 +123,23 @@ class LocalizationRunner():
         #DICT() = LINE(), LINE()
 
         #both dicts should be the same length();
+        strFile = "pO,line,vCount,uvCount\n"
         for PO in line_counts:
             doPrint=False;
-            strFile = "pO,line,vCount,uvCount\n"
+            pOString = "";
             for line in line_counts[PO][0]:
                 if(not line_counts[PO][0][line] == 0):
                     doPrint=True
-                lineStr = PO +","+line.strip()+",";
+                pOString += PO +","+line.strip()+",";
                 if line in line_counts[PO][0]:
-                    lineStr+=str(line_counts[PO][0][line])+",";
+                    pOString+=str(line_counts[PO][0][line])+",";
                 if line in line_counts[PO][1]:
-                    lineStr+=str(line_counts[PO][1][line])+"\n";
-                strFile+=lineStr;
+                    pOString+=str(line_counts[PO][1][line])+"\n";
             if doPrint:
-                oFile = "/results/localization/"+PO+"linecounts.csv";
-                with open(oFile,'w') as fp:
-                    fp.write(strFile);
+                strFile+=pOString;
+        oFile = "/results/localization/"+"linecounts.csv";
+        with open(oFile,'w') as fp:
+            fp.write(strFile);
     def create_line_counts(self,results):
         #Go through all the results
         line_counts = dict();

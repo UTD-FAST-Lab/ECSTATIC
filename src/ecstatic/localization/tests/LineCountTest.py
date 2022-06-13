@@ -10,7 +10,7 @@ class testresult:
 
 localize = DiffLocalizer(None);
 runner = LocalizationRunner();
-pO1 = "A"
+pO1 = "B"
 pOV1 = True;
 pO1D = dict();
 
