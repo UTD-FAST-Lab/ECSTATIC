@@ -8,7 +8,6 @@ class testresult:
         self.fDict=dicti;
         self.violated=violated;
 
-
 localize = DiffLocalizer(None);
 runner = LocalizationRunner();
 pO1 = "A"
