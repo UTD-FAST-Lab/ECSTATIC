@@ -125,12 +125,12 @@ class LocalizationRunner():
         #both dicts should be the same length();
         for PO in line_counts:
             strFile = "line,vCount,uvCount\n"
-            for line in line_counts[0]:
+            for line in line_counts[PO][0]:
                 lineStr = ""+line.strip()+",";
-                if line in line_counts[0]:
-                    lineStr+=str(line_counts[0][line])+",";
-                if line in line_counts[1]:
-                    lineStr+=str(line_counts[1][line])+"\n";
+                if line in line_counts[PO][0]:
+                    lineStr+=str(line_counts[PO][0][line])+",";
+                if line in line_counts[PO][1]:
+                    lineStr+=str(line_counts[PO][1][line])+"\n";
                 strFile+=lineStr;
             oFile = "/results/localization/"+PO+"linecounts.csv";
             with open(oFile,'w') as fp:
