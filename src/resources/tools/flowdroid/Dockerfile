@@ -8,7 +8,7 @@ RUN apt-get -y update && apt-get -y upgrade && apt-get -y install git maven bell
 ENV JAVA_HOME=/lib/jvm/bellsoft-java8-full-amd64
 WORKDIR /
 RUN git clone https://github.com/secure-software-engineering/FlowDroid.git && \
-    cd FlowDroid && git checkout 72734bd629dfae2aacaf6e6973abfe73d035c979 && mvn clean compile package -DskipTests
+    cd FlowDroid && mvn clean compile package -DskipTests
 
 WORKDIR /
 RUN git clone https://github.com/amordahl/AQL-System.git && cd AQL-System && mvn clean compile package -DskipTests && \
