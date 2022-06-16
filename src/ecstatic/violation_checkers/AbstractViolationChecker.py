@@ -271,6 +271,13 @@ class AbstractViolationChecker(ABC):
                                                                  job2.job.configuration[option_under_investigation],
                                                                  option_under_investigation)},
                                              job1, job2, differences))
+                else:
+                    #Non violation
+                    results.append(Violation(False,{PartialOrder(job1.job.configuration[option_under_investigation],
+                                                                    PartialOrderType.MORE_SOUND_THAN,
+                                                                    job2.job.configuration[option_under_investigation],
+                                                                    option_under_investigation)},
+                                                    job1,job2,differences))
             if option_under_investigation.is_more_precise(job1.job.configuration[option_under_investigation],
                                                           job2.job.configuration[option_under_investigation]):
                 job2_result = self.get_false_positives(self.postprocess(self.read_from_input(job2.results_location),job2))
@@ -282,9 +289,17 @@ class AbstractViolationChecker(ABC):
                                                                  job2.job.configuration[option_under_investigation],
                                                                  option_under_investigation)},
                                              job1, job2, differences))
+                else:
+                    #Non violation
+                    results.append(Violation(False,{PartialOrder(job1.job.configuration[option_under_investigation],
+                                                                    PartialOrderType.MORE_PRECISE_THAN,
+                                                                    job2.job.configuration[option_under_investigation],
+                                                                    option_under_investigation)},
+                                                    job1,job2,differences))
 
         Path(self.output_folder).mkdir(exist_ok=True, parents=True)
-        for violation in filter(lambda v: v.violated, results):
+        #for violation in filter(lambda v: v.violated, results):
+        for violation in results:
             filename = get_file_name(violation)
             dirname = os.path.dirname(filename)
             Path(os.path.join(self.output_folder, "json", dirname)).mkdir(exist_ok=True, parents=True)
@@ -293,5 +308,3 @@ class AbstractViolationChecker(ABC):
                 json.dump(violation.as_dict(), f, indent=4)
             with NamedTemporaryFile(dir=self.output_folder, delete=False, suffix='.pickle') as f:
                 pickle.dump(violation, f)
-
-
