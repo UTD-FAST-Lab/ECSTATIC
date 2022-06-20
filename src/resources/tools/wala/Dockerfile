@@ -11,7 +11,7 @@ RUN apt-get update && \
 RUN apt-get update && apt-get install -y git openjdk-11-jdk maven
 
 WORKDIR /
-RUN git clone https://github.com/amordahl/WALAInterface --depth 1
+RUN git clone --branch wala_revert https://github.com/amordahl/WALAInterface 
 WORKDIR /WALAInterface
 RUN mvn compile package
 
