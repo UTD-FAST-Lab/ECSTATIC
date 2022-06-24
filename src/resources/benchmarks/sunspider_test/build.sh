@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # ECSTATIC: Extensible, Customizable STatic Analysis Tester Informed by Configuration
 #
@@ -16,7 +17,6 @@
 #     You should have received a copy of the GNU General Public License
 #     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-
 CURDIR=$(pwd)
 mkdir -p /benchmarks/sunspider
 cd /benchmarks/sunspider

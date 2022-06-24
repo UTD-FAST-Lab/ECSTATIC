@@ -20,4 +20,4 @@ RUN mvn compile package
 FROM ecstatic/base-image
 
 RUN apt-get install -y openjdk-11-jdk
-COPY --from=wala-install /WALAInterface /WALAInterface
+COPY --from=wala-install /WalaJSCallgraph /WalaJSCallgraph
