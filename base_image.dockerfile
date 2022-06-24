@@ -7,6 +7,7 @@ RUN apt-get update -y && apt-get upgrade -y && \
     openjdk-8-jdk git maven wget && \
     DEBIAN_FRONTEND=noninteractive  \
     apt-get install -y --no-install-recommends --assume-yes build-essential libpq-dev unzip
+RUN apt-get update && apt-get install -y nodejs npm
 
 FROM python-build AS dep-build
 
@@ -45,3 +46,4 @@ COPY --from=ecstatic-build /venv /venv
 COPY --from=ecstatic-build /ECSTATIC /ECSTATIC
 ENV PATH=/venv/bin:$PATH
 ENV DELTA_DEBUGGER_HOME=/SADeltaDebugger
+RUN npm install -g jsdelta

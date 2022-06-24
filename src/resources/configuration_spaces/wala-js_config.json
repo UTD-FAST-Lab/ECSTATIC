@@ -1,0 +1,20 @@
+{
+  "name": "WALA",
+  "options": [
+    {
+      "name": "cgalgo",
+      "levels": [
+        "ZEROONE_CFA",
+        "ONE_CFA"
+      ],
+      "default": "ZEROONE_CFA",
+      "orders": [
+        {
+          "left": "ONE_CFA",
+          "order": "MPT",
+          "right": "ZEROONE_CFA"
+        }
+      ]
+    }
+  ]
+}

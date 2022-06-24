@@ -1,0 +1,15 @@
+{
+  "<start>": [
+    "<options>"
+  ],
+  "<options>": [
+    "<option>"
+  ],
+  "<option>": [
+    "--cgalgo <cgalgoopts>"
+  ],
+  "<cgalgoopts>": [
+        "ZEROONE_CFA",
+        "ONE_CFA"
+  ]
+}

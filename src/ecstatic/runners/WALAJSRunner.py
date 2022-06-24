@@ -14,25 +14,18 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from typing import List
 
-
-import logging
-
-from src.ecstatic.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
-from src.ecstatic.runners.DOOPRunner import DOOPRunner
-from src.ecstatic.runners.FlowDroidRunner import FlowDroidRunner
-from src.ecstatic.runners.SOOTRunner import SOOTRunner
-from src.ecstatic.runners.WALAJSRunner import WALAJSRunner
 from src.ecstatic.runners.WALARunner import WALARunner
+from src.ecstatic.util.UtilClasses import BenchmarkRecord
 
-logger = logging.getLogger(__name__)
 
+class WALAJSRunner(WALARunner):
+    def get_input_option(self, benchmark_record: BenchmarkRecord) -> List[str]:
+        return f"--scripts {benchmark_record.name}".split(" ")
 
-def get_runner_for_tool(name: str, *args) -> AbstractCommandLineToolRunner:
-    match name.lower():
-        case "soot": return SOOTRunner(*args)
-        case "wala": return WALARunner(*args)
-        case "doop": return DOOPRunner(*args)
-        case "flowdroid": return FlowDroidRunner(*args)
-        case "wala-js": return WALAJSRunner(*args)
-        case _ : raise NotImplementedError(f"No support for runner for {name}")
+    def get_output_option(self, output_file: str) -> List[str]:
+        return f"--cgoutput {output_file}".split(" ")
+
+    def get_base_command(self) -> List[str]:
+        return "java -jar /WalaJSCallgraph/target/js_callgraph_0.0.1-SNAPSHOT-jar-with-dependencies.jar".split(" ")
