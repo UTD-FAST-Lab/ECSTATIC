@@ -22,6 +22,7 @@ from src.ecstatic.readers.FlowDroidFlowReader import FlowDroidFlowReader
 from src.ecstatic.readers.callgraph.DOOPCallGraphReader import DOOPCallGraphReader
 from src.ecstatic.readers.callgraph.SOOTCallGraphReader import SOOTCallGraphReader
 from src.ecstatic.readers.callgraph.WALACallGraphReader import WALACallGraphReader
+from src.ecstatic.readers.callgraph.WALAJSCallGraphReader import WALAJSCallGraphReader
 
 
 def get_reader_for_task_and_tool(task: str, name: str, *args) -> Any:
@@ -29,7 +30,8 @@ def get_reader_for_task_and_tool(task: str, name: str, *args) -> Any:
         case "cg":
             match name.lower():
                 case "soot": return SOOTCallGraphReader(*args)
-                case "wala" | "wala-js": return WALACallGraphReader(*args)
+                case "wala": return WALACallGraphReader(*args)
+                case "wala-js": return WALAJSCallGraphReader(*args)
                 case "doop": return DOOPCallGraphReader(*args)
                 case _: raise NotImplementedError(f"No support for task {task} on tool {name}")
         case "taint":
