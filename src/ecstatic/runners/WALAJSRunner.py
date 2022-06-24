@@ -28,4 +28,4 @@ class WALAJSRunner(WALARunner):
         return f"--cgoutput {output_file}".split(" ")
 
     def get_base_command(self) -> List[str]:
-        return "java -jar /WalaJSCallgraph/target/jscallgraph_0.0.1-SNAPSHOT-jar-with-dependencies.jar".split(" ")
+        return "java -jar /WalaJSCallgraph/target/jscallgraph-0.0.1-SNAPSHOT-jar-with-dependencies.jar".split(" ")
