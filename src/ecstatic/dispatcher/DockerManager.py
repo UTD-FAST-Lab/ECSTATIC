@@ -62,9 +62,6 @@ def start_runner(tool: str, benchmark: str, task: str, args):
         command += f' -{"".join(["v" for i in range(args.verbose)])}'
     if args.no_delta_debug:
         command += f' --no-delta-debug'
-    if 'linux' in platform.system().lower():
-        command += f' --uid {subprocess.check_output(["id", "-u"]).decode("utf-8")}'
-        command += f' --gid {subprocess.check_output(["id", "-g"]).decode("utf-8")}'
 
     print(f'Starting container with command {command}')
     Path(args.results_location).mkdir(parents=True, exist_ok=True)
