@@ -44,7 +44,7 @@ def build_image(tool: str, nocache: bool = False):
         #     image = client.build(fileobj=df, tag=get_image_name(tool))
     else:
         logger.info(f"Building image for {tool}")
-        cmd = ['docker', 'build', os.path.abspath(importlib.resources.path(f"src.resources.tools", tool)),
+        cmd = ['docker', 'build', importlib.resources.path(f"src.resources.tools", tool),
                '-t', get_image_name(tool)]
         print(f'Building docker image with command {" ".join(cmd)}')
     if nocache:

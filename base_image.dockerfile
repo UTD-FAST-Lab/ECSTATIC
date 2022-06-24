@@ -23,9 +23,9 @@ FROM python-build AS ecstatic-build
 COPY --from=dep-build /venv /venv
 ENV PATH=/venv/bin:$PATH
 WORKDIR /
-RUN git clone --depth 1 https://github.com/amordahl/ECSTATIC.git
-WORKDIR ECSTATIC
 ADD "https://api.github.com/repos/amordahl/ecstatic/commits?per_page=1&sha=jsdelta" latest_commit
+RUN git clone https://github.com/amordahl/ECSTATIC.git
+WORKDIR ECSTATIC
 RUN git pull
 RUN git checkout jsdelta
 RUN python -m pip install -e .
