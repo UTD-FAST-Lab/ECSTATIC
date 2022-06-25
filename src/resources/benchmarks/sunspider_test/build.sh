@@ -21,4 +21,8 @@ CURDIR=$(pwd)
 mkdir -p /benchmarks/sunspider
 cd /benchmarks/sunspider
 wget https://browserbench.org/JetStream1.1/sources/splay.js
+wget https://browserbench.org/JetStream/RexBench/UniPoker/poker.js
+wget https://browserbench.org/JetStream/web-tooling-benchmark/browser.js
+wget https://browserbench.org/JetStream/Octane/typescript.js
+wget https://browserbench.org/JetStream/SunSpider/tagcloud.js
 cd $CURDIR

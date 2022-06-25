@@ -2,6 +2,18 @@
   "benchmark": [
     {
       "name": "splay.js"
+    },
+    {
+      "name": "poker.js"
+    },
+    {
+      "name": "browser.js"
+    },
+    {
+      "name": "typescript.js"
+    },
+    {
+      "name": "tagcloud.js"
     }
   ]
 }
