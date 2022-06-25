@@ -67,7 +67,7 @@ class PotentialViolation:
         P.a MST P.b, it would return any T that are in the results associated with P.a but not P.b.
         """
         if self._expected_diffs is None:
-            match PotentialViolation.__get_first_partial_order():
+            match self.__get_first_partial_order():
                 case PartialOrder(_, PartialOrderType.MORE_PRECISE_THAN, _):
                     self._expected_diffs = self.job1_minus_job2
                 case PartialOrder(_, PartialOrderType.MORE_SOUND_THAN, _):
@@ -95,7 +95,7 @@ class PotentialViolation:
         """
         if self._violated is None:
             # We need to compute the violation.
-            match PotentialViolation.__get_first_partial_order():
+            match self.__get_first_partial_order():
                 case PartialOrder(_, PartialOrderType.MORE_SOUND_THAN, _, _):
                     self._violated = len(self.job2_minus_job1) > 0
                 case PartialOrder(_, PartialOrderType.MORE_PRECISE_THAN, _, _):
