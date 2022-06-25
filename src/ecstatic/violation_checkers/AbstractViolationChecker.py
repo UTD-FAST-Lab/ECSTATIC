@@ -37,7 +37,7 @@ import os.path
 import pickle
 import time
 from abc import ABC, abstractmethod
-from multiprocessing import Pool
+from multiprocessing.dummy import Pool
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import List, Tuple, Set, Iterable, TypeVar
