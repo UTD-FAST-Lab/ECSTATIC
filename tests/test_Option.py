@@ -16,7 +16,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from src.ecstatic import Option
+from src.ecstatic.models import Option
 
 
 def test_add_item():

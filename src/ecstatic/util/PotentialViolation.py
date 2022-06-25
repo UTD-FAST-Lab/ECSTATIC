@@ -46,7 +46,6 @@ class PotentialViolation:
                     'result': self.job2.results_location
                 },
                 'target': self.job1.job.target.name,
-                'differences': sorted([str(d) for d in self.differences])
                 }
 
     def get_option_under_investigation(self):

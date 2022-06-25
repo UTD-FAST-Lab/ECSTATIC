@@ -16,26 +16,8 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-###
-#
-# This file is part of ecstatic.
-#
-# ecstatic is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# ecstatic is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with ecstatic.  If not, see <https://www.gnu.org/licenses/>.
-###
 from src.ecstatic.models.Level import Level
 from src.ecstatic.models.Option import Option
-from src.ecstatic.models.Constraint import Constraint, from_dict
 
 
 class Tool:
@@ -76,19 +58,6 @@ class Tool:
             o : Option
             if o.name == name:
                 return o
-
-    def add_constraint(self, constraint: Constraint):
-        self.constraints.add(constraint)
-
-    def add_dominates(self, o1: Option, l1: str, o2: Option):
-        """
-        Adds a dominates relationship, i.e., a level of c1
-        disables every level of c2.
-        """
-        l1 = Level(o1.name, l1)
-        for l in o2.all:
-            l: Level
-            self.add_constraint(Constraint(o1, l1, o2, l))
 
     def add_subsumes(self, o1: Option, o2: Option):
         """

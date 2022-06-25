@@ -14,29 +14,32 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import pytest
+
+from src.ecstatic.fuzzing.generators.FuzzGenerator import FuzzGenerator
+
+@pytest.fixture
+def generator():
+    return FuzzGenerator()
+
+def test_empty_config(generator):
+    assert generator.process_config("") == {}
 
 
-from FuzzGenerator import process_config
+def test_single_boolean_config(generator):
+    assert generator.process_config("--testopt") == {"testopt": "TRUE"}
 
 
-def test_empty_config():
-    assert process_config("") == {}
+def test_single_numeric_config(generator):
+    assert generator.process_config("--testint 4") == {"testint": "4"}
 
 
-def test_single_boolean_config():
-    assert process_config("--testopt") == {"testopt": "TRUE"}
+def test_multiple_boolean_config(generator):
+    assert generator.process_config("--a --b") == {"a": "TRUE", "b": "TRUE"}
 
 
-def test_single_numeric_config():
-    assert process_config("--testint 4") == {"testint": "4"}
-
-
-def test_multiple_boolean_config():
-    assert process_config("--a --b") == {"a": "TRUE", "b": "TRUE"}
-
-
-def test_multiple_enum_config():
-    assert process_config("--test1 A --test2 BB") == {"test1": "A", "test2": "BB"}
+def test_multiple_enum_config(generator):
+    assert generator.process_config("--test1 A --test2 BB") == {"test1": "A", "test2": "BB"}
 
 
 def test_multiple_mixed_config():

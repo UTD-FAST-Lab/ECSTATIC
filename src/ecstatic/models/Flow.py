@@ -70,7 +70,7 @@ class Flow:
     @classmethod
     def clean(cls, stmt: str) -> str:
         c = Flow.register_regex.sub("", stmt)
-        c = re.sub(r"_ds_method_clone_[\d]*", "", c)
+        c = re.sub(r"_ds_method_clone_\d*", "", c)
         logging.debug(f"Before clean: {stmt}\nAfter clean: {c}")
         return c.strip()
 

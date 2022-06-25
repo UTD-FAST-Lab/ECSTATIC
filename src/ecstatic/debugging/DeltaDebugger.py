@@ -115,7 +115,7 @@ class DeltaDebugger:
         cmd.extend(['--timeout', '120'])
 
         print(f"Running delta debugger with cmd {' '.join(cmd)}")
-        ps = subprocess.run(cmd, stdout=sys.stdout, stderr=sys.stderr, text=True)
+        subprocess.run(cmd, stdout=sys.stdout, stderr=sys.stderr, text=True)
         print("Delta debugging completed.")
         # delta_debugging_directory = os.path.join(results_directory)
         # tarname = os.path.join(delta_debugging_directory, get_file_name(violation)) + '.tar.gz'
@@ -139,7 +139,9 @@ class DeltaDebugger:
 
         Parameters
         ----------
-        violation_location: The violation to try to recreate.
+        timeout: The timeout of the delta debugger.
+        directory: Where to put delta debugging results.
+        violation: The violation to try to recreate.
 
         Returns
         -------

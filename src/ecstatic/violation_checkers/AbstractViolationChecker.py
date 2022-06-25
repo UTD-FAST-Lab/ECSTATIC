@@ -114,7 +114,7 @@ class AbstractViolationChecker(ABC):
             print(f'Checking violations with {self.jobs} cores.')
             for result in tqdm(p.imap(self.compare_results, pairs), total=len(pairs)):
                 # Force evaluation of violated
-                var = [r for r in result if r.violated]
+                [r for r in result if r.violated]
                 finished_results.extend(result)
 
         print('Violation detection done.')
@@ -180,7 +180,7 @@ class AbstractViolationChecker(ABC):
     def read_from_input(self, file: str) -> Iterable[T]:
         return self.reader.import_file(file)
 
-    def compare_results(self, t: Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]) -> Iterable[Violation]:
+    def compare_results(self, t: Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]) -> Iterable[PotentialViolation]:
         """
 
         Parameters
@@ -201,10 +201,10 @@ class AbstractViolationChecker(ABC):
         if self.groundtruths is None:
             # In the absence of ground truths, we have to compute violations differently.
             def job1_reader():
-                set(self.postprocess(self.read_from_input(job1.results_location), job1))
+                return set(self.postprocess(self.read_from_input(job1.results_location), job1))
 
             def job2_reader():
-                set(self.postprocess(self.read_from_input(job2.results_location), job2))
+                return set(self.postprocess(self.read_from_input(job2.results_location), job2))
 
             if option_under_investigation.is_more_sound(job1.job.configuration[option_under_investigation],
                                                         job2.job.configuration[option_under_investigation]):
@@ -224,14 +224,14 @@ class AbstractViolationChecker(ABC):
                                                               job2.job.configuration[option_under_investigation]):
                     if option_under_investigation.is_more_sound(job2.job.configuration[option_under_investigation],
                                                                 job1.job.configuration[option_under_investigation]):
-                        pos: Set[PartialOrder] = {PartialOrder(job1.job.configuration[option_under_investigation],
-                                                               PartialOrderType.MORE_PRECISE_THAN,
-                                                               job2.job.configuration[option_under_investigation],
-                                                               option_under_investigation),
-                                                  PartialOrder(job2.job.configuration[option_under_investigation],
-                                                               PartialOrderType.MORE_SOUND_THAN,
-                                                               job1.job.configuration[option_under_investigation],
-                                                               option_under_investigation)}
+                        pos = (PartialOrder(job1.job.configuration[option_under_investigation],
+                                            PartialOrderType.MORE_PRECISE_THAN,
+                                            job2.job.configuration[option_under_investigation],
+                                            option_under_investigation),
+                               PartialOrder(job2.job.configuration[option_under_investigation],
+                                            PartialOrderType.MORE_SOUND_THAN,
+                                            job1.job.configuration[option_under_investigation],
+                                            option_under_investigation))
                         results.append(PotentialViolation(pos, job1, job2, job1_reader, job2_reader))
         else:
             if option_under_investigation.is_more_sound(job1.job.configuration[option_under_investigation],
@@ -273,9 +273,6 @@ class AbstractViolationChecker(ABC):
         Parameters
         ----------
         t: A tuple containing the first job to check, the second job to check, and the option under investigation.
-        job1: The first job to check.
-        job2: The second job to check.
-        option_under_investigation: The option on which the two jobs differ.
 
         Returns
         -------

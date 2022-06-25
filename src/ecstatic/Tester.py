@@ -38,6 +38,7 @@ from src.ecstatic.readers import ReaderFactory
 from src.ecstatic.runners import RunnerFactory
 from src.ecstatic.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
 from src.ecstatic.util.BenchmarkReader import BenchmarkReader
+from src.ecstatic.util.PotentialViolation import PotentialViolation
 from src.ecstatic.util.UtilClasses import FuzzingCampaign, Benchmark, \
     BenchmarkRecord
 from src.ecstatic.util.Violation import Violation
@@ -52,12 +53,6 @@ class ToolTester:
     def __init__(self, generator, runner: AbstractCommandLineToolRunner, debugger: Optional[DeltaDebugger],
                  results_location: str,
                  num_processes: int, fuzzing_timeout: int, checker: AbstractViolationChecker):
-        """
-
-        Parameters
-        ----------
-        limit : object
-        """
         self.generator: FuzzGenerator = generator
         self.runner: AbstractCommandLineToolRunner = runner
         self.debugger: DeltaDebugger = debugger
@@ -100,10 +95,10 @@ class ToolTester:
                                                  os.listdir(violations_folder) if v.endswith('.pickle')])
                 logging.info(f'Read in {len(existing_violations)} existing violations.')
             Path(violations_folder).mkdir(exist_ok=True)
-            violations: List[Violation] = self.checker.check_violations(results, violations_folder, existing_violations)
+            violations: List[PotentialViolation] = self.checker.check_violations(results, violations_folder, existing_violations)
             if self.debugger is not None:
                 with Pool(max(int(self.num_processes/2), 1)) as p:  # /2 because each delta debugging process needs 2 cores.
-                    direct_violations = [v for v in violations if not v.is_transitive()]
+                    direct_violations = [v for v in violations if v.violated and not v.is_transitive()]
                     print(f'Delta debugging {len(direct_violations)} violations with {self.num_processes} cores.')
                     p.map(partial(self.debugger.delta_debug, campaign_directory=campaign_folder,
                                   timeout=self.runner.timeout), direct_violations)

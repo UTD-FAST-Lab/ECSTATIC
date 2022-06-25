@@ -34,7 +34,7 @@
 # along with ecstatic.  If not, see <https://www.gnu.org/licenses/>.
 ###
 import logging
-from typing import Tuple, List, Set
+from typing import Tuple, Set
 
 import networkx
 from networkx import DiGraph
@@ -142,7 +142,7 @@ class Option:
             return level
         else:
             try:
-                level_as_int = int(level.level_name)
+                int(level.level_name)
                 node = Level(self.name, 'i')
                 if not graph.has_node(node):
                     raise ValueError(f'{level} is numeric, so partial order graph must contain special value i')

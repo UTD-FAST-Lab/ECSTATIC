@@ -19,7 +19,6 @@
 import importlib
 import logging
 import os
-import platform
 import subprocess
 from importlib.resources import path
 from pathlib import Path
@@ -59,7 +58,7 @@ def start_runner(tool: str, benchmark: str, task: str, args):
     if args.timeout is not None:
         command += f' --timeout {args.timeout}'
     if args.verbose > 0:
-        command += f' -{"".join(["v" for i in range(args.verbose)])}'
+        command += f' -{"".join(["v" for _ in range(args.verbose)])}'
     if args.no_delta_debug:
         command += f' --no-delta-debug'
 

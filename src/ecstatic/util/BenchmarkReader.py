@@ -48,7 +48,7 @@ def try_resolve_path(path: str, root: str = "/") -> str:
     raise FileNotFoundError(f"Could not resolve path {path}")
 
 
-def validate(b: BenchmarkRecord, root: str = "/") -> BenchmarkRecord:
+def validate(benchmark: BenchmarkRecord, root: str = "/") -> BenchmarkRecord:
     """
     Validates a benchmark, resolving each of its paths to an absolute path.
     Searches in the supplied root directory.
@@ -61,13 +61,13 @@ def validate(b: BenchmarkRecord, root: str = "/") -> BenchmarkRecord:
     -------
     A resolved benchmark
     """
-    logger.info(f'Original benchmark record is {b}')
-    b.name = try_resolve_path(b.name, root)
-    b.depends_on = [try_resolve_path(d, root) for d in b.depends_on]
-    b.sources = [try_resolve_path(s, root) for s in b.sources]
-    b.build_script = try_resolve_path(b.build_script, root)
-    logger.info(f'Resolved benchmark record to {b}')
-    return b
+    logger.info(f'Original benchmark record is {benchmark}')
+    benchmark.name = try_resolve_path(benchmark.name, root)
+    benchmark.depends_on = [try_resolve_path(d, root) for d in benchmark.depends_on]
+    benchmark.sources = [try_resolve_path(s, root) for s in benchmark.sources]
+    benchmark.build_script = try_resolve_path(benchmark.build_script, root)
+    logger.info(f'Resolved benchmark record to {benchmark}')
+    return benchmark
 
 
 class BenchmarkReader:

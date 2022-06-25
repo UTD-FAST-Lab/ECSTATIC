@@ -17,7 +17,6 @@
 from typing import Tuple, Any
 
 from src.ecstatic.readers.callgraph.AbstractCallGraphReader import AbstractCallGraphReader
-from src.ecstatic.readers.callgraph.CGNode import CGNode
 from src.ecstatic.util.CGCallSite import CGCallSite
 from src.ecstatic.util.CGTarget import CGTarget
 
