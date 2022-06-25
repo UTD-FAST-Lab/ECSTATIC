@@ -105,6 +105,54 @@
           "right": "ZEROONE_CFA"
         }
       ]
+    },
+    {
+      "name": "handleStaticInit",
+      "levels": ["TRUE", "FALSE"],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "TRUE",
+          "order": "MST",
+          "right": "FALSE"
+        }
+      ]
+    },
+    {
+      "name": "useConstantSpecificKeys",
+      "levels": ["TRUE","FALSE"],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "TRUE",
+          "order": "MPT",
+          "right": "FALSE"
+        }
+      ]
+    },
+    {
+      "name": "handleCallApply",
+      "levels": ["TRUE", "FALSE"],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "TRUE",
+          "order": "MST",
+          "right": "FALSE"
+        }
+      ]
+    },
+    {
+      "name": "enableCorrelationTracking",
+      "levels": ["TRUE","FALSE"],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "TRUE",
+          "order": "MPT",
+          "right": "FALSE"
+        }
+      ]
     }
   ]
 }

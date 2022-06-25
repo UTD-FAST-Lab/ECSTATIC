@@ -8,7 +8,11 @@
   ],
   "<option>": [
     "--cgalgo <cgalgoopts>",
-    "--reflectionSetting <reflectionopts>"
+    "--reflectionSetting <reflectionopts>",
+    "--handleStaticInit <binaryopts>",
+    "--useConstantSpecificKeys <binaryopts>",
+    "--handleCallApply <binaryOpts>",
+    "--enableCorrelationTracking <binaryOpts>"
   ],
   "<cgalgoopts>": [
         "ZEROONE_CFA",
@@ -27,5 +31,9 @@
     "NO_STRING_CONSTANTS",
     "STRING_ONLY",
     "NONE"
+  ],
+  "<binaryopts>": [
+    "TRUE",
+    "FALSE"
   ]
 }
