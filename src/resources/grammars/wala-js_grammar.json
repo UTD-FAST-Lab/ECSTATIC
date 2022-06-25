@@ -11,8 +11,8 @@
     "--reflectionSetting <reflectionopts>",
     "--handleStaticInit <binaryopts>",
     "--useConstantSpecificKeys <binaryopts>",
-    "--handleCallApply <binaryOpts>",
-    "--enableCorrelationTracking <binaryOpts>"
+    "--handleCallApply <binaryopts>",
+    "--enableCorrelationTracking <binaryopts>"
   ],
   "<cgalgoopts>": [
         "ZEROONE_CFA",
