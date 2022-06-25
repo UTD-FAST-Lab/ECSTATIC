@@ -24,7 +24,7 @@ import pickle
 import subprocess
 import time
 from functools import partial
-from multiprocessing.pool import Pool
+from multiprocessing.dummy import Pool
 from pathlib import Path
 from typing import List, Optional
 
