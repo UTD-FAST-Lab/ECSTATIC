@@ -9,25 +9,17 @@ RUN apt-get update -y && apt-get upgrade -y && \
     apt-get install -y --no-install-recommends --assume-yes build-essential libpq-dev unzip
 RUN apt-get update && apt-get install -y nodejs npm
 
-FROM python-build AS dep-build
-
-RUN python3.10 -m venv /venv
-ENV PATH=/venv/bin:$PATH
-
-WORKDIR /app
-COPY requirements.txt .
-RUN python -m pip install -r requirements.txt
-
 FROM python-build AS ecstatic-build
 
-COPY --from=dep-build /venv /venv
-ENV PATH=/venv/bin:$PATH
 WORKDIR /
+RUN python3.10 -m venv /venv
+ENV PATH=/venv/bin:$PATH
 ADD "https://api.github.com/repos/amordahl/ecstatic/commits?per_page=1&sha=jsdelta" latest_commit
 RUN git clone https://github.com/amordahl/ECSTATIC.git
 WORKDIR ECSTATIC
 RUN git pull
 RUN git checkout jsdelta
+RUN python -m pip install -r requirements.txt
 RUN python -m pip install -e .
 
 FROM python-build AS delta-debugger-build
