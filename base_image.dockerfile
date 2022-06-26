@@ -34,9 +34,9 @@ RUN cd SADeltaDebugger/ProjectLineCounter &&  mvn install && \
 
 FROM python-build
 
+RUN npm install -g jsdelta
 COPY --from=delta-debugger-build /SADeltaDebugger /SADeltaDebugger
 COPY --from=ecstatic-build /venv /venv
 COPY --from=ecstatic-build /ECSTATIC /ECSTATIC
 ENV PATH=/venv/bin:$PATH
 ENV DELTA_DEBUGGER_HOME=/SADeltaDebugger
-RUN npm install -g jsdelta
