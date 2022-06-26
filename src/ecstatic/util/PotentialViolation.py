@@ -14,6 +14,7 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+import logging
 from typing import List, Dict, Iterable, Set, TypeVar, Tuple, Callable
 
 from src.ecstatic.util.PartialOrder import PartialOrder, PartialOrderType
@@ -21,7 +22,7 @@ from src.ecstatic.util.UtilClasses import FinishedFuzzingJob
 
 T = TypeVar('T')
 
-
+logger = logging.getLogger(__name__)
 class PotentialViolation:
 
     def __eq__(self, o: object) -> bool:
@@ -116,6 +117,7 @@ class PotentialViolation:
         if self._job1_minus_job2 is None:
             job1_results = self.job1_reader()
             job2_results = self.job2_reader()
+            logger.info(f"Job1 has {len(job1_results)} results and job2 has {len(job2_results)} results.")
             self._job1_minus_job2 = job1_results.difference(job2_results)
             self._job2_minus_job1 = job2_results.difference(job1_results)
         return self._job1_minus_job2
