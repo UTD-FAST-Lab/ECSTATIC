@@ -23,6 +23,7 @@ from src.ecstatic.runners.DOOPRunner import DOOPRunner
 from src.ecstatic.runners.FlowDroidRunner import FlowDroidRunner
 from src.ecstatic.runners.SOOTRunner import SOOTRunner
 from src.ecstatic.runners.WALARunner import WALARunner
+from src.ecstatic.runners.TAJSRunner import TAJSRunner
 
 logger = logging.getLogger(__name__)
 
@@ -36,4 +37,6 @@ def get_runner_for_tool(name: str, *args) -> AbstractCommandLineToolRunner:
         return DOOPRunner(*args)
     elif name.lower() == "flowdroid":
         return FlowDroidRunner(*args)
-        raise NotImplementedError(f"No support for runner for {name}")
+    elif name.lower() == "tajs":
+        return TAJSRunner(*args)
+    raise NotImplementedError(f"No support for runner for {name}")
