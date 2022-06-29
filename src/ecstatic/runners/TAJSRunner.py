@@ -23,12 +23,13 @@ class TAJSRunner (CommmandLineToolRunner):
 
     def get_output_option(self, output_file: str) -> List[str]:
         ## output is automatically to out/callgraph.dot
+        ## need to figure out how to handle this
         return []
         
     def get_task_option(self, task: str) -> List[str]:
         ## might need to add to this
         if task == 'cg':
-            return []
+            return ["-callgraph"]
         else:
             raise NotImplementedError(f'TAJS does not support task {task}.')
 
@@ -60,5 +61,5 @@ class TAJSRunner (CommmandLineToolRunner):
             return rest_of_config
 
     def get_base_command(self) -> List[str]:
-        return "java -jar dist/tajs-all.jar -callgraph".split()
+        return "java -jar dist/tajs-all.jar".split()
         
