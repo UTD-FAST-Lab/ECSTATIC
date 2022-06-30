@@ -3,7 +3,7 @@ FROM ecstatic/base-image
 USER root
 
 RUN apt-get -y update
-RUN apt-get -y install openjdk-8-jdk git ant nodejs
+RUN apt-get -y install openjdk-8-jdk git ant nodejs npm
 
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
 
