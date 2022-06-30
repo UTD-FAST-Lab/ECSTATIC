@@ -13,7 +13,7 @@ class TAJSCallGraphReader(AbstractCallGraphReader):
         with open(file) as f:
             lines = f.readlines()
             for i in lines:
-                #print(i)
+                # print(i)
                 if "->" in i:
                     parts = i.strip().split(" -> ")
                     edges.append((parts[0], parts[1]))
@@ -34,9 +34,9 @@ class TAJSCallGraphReader(AbstractCallGraphReader):
                 call_location = nodes[callid][1]
                 target_funct = nodes[targetid][0]
                 target_location = nodes[targetid][1]
-            ## Need to change setting of callsite and target below
+            # Need to change setting of callsite and target below
             callsite = CGCallSite(call_funct, call_location, '''??context??''')
             target = CGTarget(target_funct, ''''??context??''')
             callgraph.append((callsite, target))
-            ## add tuple of CGCallsite and CGTarget to list
+            # add tuple of CGCallsite and CGTarget to list
         return callgraph

@@ -15,27 +15,28 @@ class TAJSRunner (CommmandLineToolRunner):
 
 
     def get_whole_program(self) -> List[str]:
-        ## shouldn't be necessary
+        # shouldn't be necessary
         return []
 
     def get_input_option(self, benchmark_record: BenchmarkRecord) -> List[str]:
         return f" {benchmark_record.name}".split()
 
     def get_output_option(self, output_file: str) -> List[str]:
-        ## output is automatically to out/callgraph.dot
-        ## need to figure out how to handle this
-        return []
+        # callgraph recieves file path argument
+        return f"-callgraph {output_file}"
         
     def get_task_option(self, task: str) -> List[str]:
-        ## might need to add to this
+        # might need to add to this
         if task == 'cg':
-            return ["-callgraph"]
+            return []
         else:
             raise NotImplementedError(f'TAJS does not support task {task}.')
 
     def dict_to_config_str(self, config_as_dict: Dict[Option, Level]) -> str:
         """
-        We need special handling of TAJS's options, because of unsound options.
+        We need special handling of TAJS's options, because of unsound options and commands without level value
+
+
         Parameters
         ----------
         config_as_dict: The dictionary specifying the configuration.
@@ -49,7 +50,7 @@ class TAJSRunner (CommmandLineToolRunner):
             v: Level
             for t in k.tags:
                 if t.startswith('unsound'):
-                    config_as_str = config_as_str + f"-unsound {k.name} "
+                    config_as_str = config_as_str + f"-unsound -{k.name} "
 
         # Compute string for the rest of the options which are not unsound.
         # this part may not work
