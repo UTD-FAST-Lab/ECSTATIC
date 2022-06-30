@@ -36,7 +36,7 @@ class TAJSCallGraphReader(AbstractCallGraphReader):
                 target_location = nodes[targetid][1]
             ## Need to change setting of callsite and target below
             callsite = CGCallSite(call_funct, call_location, '''??context??''')
-            target = CGTarget(target_funct, target_location, ''''??context??''')
+            target = CGTarget(target_funct, ''''??context??''')
             callgraph.append((callsite, target))
             ## add tuple of CGCallsite and CGTarget to list
         return callgraph
