@@ -24,7 +24,7 @@ ENV PATH=/venv/bin:$PATH
 WORKDIR /
 RUN git clone --depth 1 https://github.com/amordahl/ECSTATIC.git
 WORKDIR ECSTATIC
-ADD "https://api.github.com/repos/amordahl/ecstatic/branches/tajs/commits?per_page=1" latest_commit
+ADD "https://api.github.com/repos/amordahl/ecstatic/commits?per_page=1&sha=tajs" latest_commit
 RUN git pull
 RUN git checkout tajs
 RUN python -m pip install -e .
