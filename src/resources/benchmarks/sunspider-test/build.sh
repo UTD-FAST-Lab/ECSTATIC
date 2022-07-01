@@ -1,3 +1,5 @@
+#!/bin/bash
+
 CURDIR=$(pwd)
 mkdir -p /benchmarks/sunspider
 cd /benchmarks/sunspider
