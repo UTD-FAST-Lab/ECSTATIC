@@ -6,13 +6,13 @@ from src.ecstatic.models.Option import Option
 from src.ecstatic.runners.CommandLineToolRunner import CommandLineToolRunner
 from src.ecstatic.util.UtilClasses import BenchmarkRecord
 
-class TAJSRunner (CommmandLineToolRunner):
+
+class TAJSRunner (CommandLineToolRunner):
     def get_timeout_option(self) -> List[str]:
         if self.timeout is None:
             return []
         else:
             return f"-time-limit {self.timeout}".split(" ")
-
 
     def get_whole_program(self) -> List[str]:
         # shouldn't be necessary
