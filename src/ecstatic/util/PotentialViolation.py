@@ -72,9 +72,10 @@ class PotentialViolation:
         if self._expected_diffs is None:
             match self.__get_first_partial_order():
                 case PartialOrder(_, PartialOrderType.MORE_PRECISE_THAN, _):
-                    self._expected_diffs = self.job1_minus_job2
-                case PartialOrder(_, PartialOrderType.MORE_SOUND_THAN, _):
                     self._expected_diffs = self.job2_minus_job1
+                case PartialOrder(_, PartialOrderType.MORE_SOUND_THAN, _):
+                    self._expected_diffs = self.job1_minus_job2
+                case _: raise RuntimeError("Pattern matching partial order failed.")
         return self._expected_diffs
 
     def __get_first_partial_order(self):
