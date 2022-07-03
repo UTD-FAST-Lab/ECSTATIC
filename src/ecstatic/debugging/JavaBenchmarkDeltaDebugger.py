@@ -79,7 +79,7 @@ class JavaBenchmarkDeltaDebugger:
                                                                       os.path.dirname(get_file_name(potential_violation)),
                                                                       os.path.basename(potential_violation.job1.job.target.name)))
         print(f"Making delta debugging directory {delta_debugging_base_directory}")
-        for ix, edge in potential_violation.expected_diffs:
+        for ix, edge in enumerate(potential_violation.expected_diffs):
             delta_debugging_directory = os.path.join(delta_debugging_base_directory, ix)
             if os.path.exists(os.path.join(delta_debugging_directory, "log.txt")):
                 logger.critical(
