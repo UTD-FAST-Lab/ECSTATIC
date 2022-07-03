@@ -1,7 +1,7 @@
 {
   "benchmark": [
     {
-      "name": "ObjectSensitivity-1.0-SNAPSHOT-jar-with-dependencies.jar",
+      "name": "ObjectSensitivity-1.0-SNAPSHOT.jar",
       "build_script": "ObjectSensitivity/build.sh"
     }
   ]
