@@ -30,6 +30,7 @@ from typing import List, Optional
 
 from tqdm import tqdm
 
+from src.ecstatic.debugging.JavaBenchmarkDeltaDebugger import JavaBenchmarkDeltaDebugger
 from src.ecstatic.debugging.JavaViolationDeltaDebugger import JavaViolationDeltaDebugger
 from src.ecstatic.dispatcher import Sanitizer
 from src.ecstatic.fuzzing.generators import FuzzGeneratorFactory
@@ -91,8 +92,8 @@ class ToolTester:
             [print(v.expected_diffs) for v in violations if not v.violated]
             if self.debugger is not None:
                 with Pool(max(int(self.num_processes/2), 1)) as p:  # /2 because each delta debugging process needs 2 cores.
-                    direct_violations = [v for v in violations if v.violated and not v.is_transitive()]
-                    print(f'Delta debugging {len(direct_violations)} violations with {self.num_processes} cores.')
+                    direct_violations = [v for v in violations if not v.violated and not v.is_transitive() and len(v.expected_diffs) > 0]
+                    print(f'Delta debugging {len(direct_violations)} cases with {self.num_processes} cores.')
                     p.map(partial(self.debugger.delta_debug, campaign_directory=campaign_folder,
                                   timeout=self.runner.timeout), direct_violations)
             self.generator.feedback(violations)
@@ -171,7 +172,7 @@ def main():
 
     if not args.no_delta_debug:
         Path("/artifacts").mkdir(exist_ok=True)
-        debugger = JavaViolationDeltaDebugger("/artifacts", args.tool, args.task, groundtruths, runner.whole_program)
+        debugger = JavaBenchmarkDeltaDebugger("/artifacts", args.tool, args.task, groundtruths, runner.whole_program)
     else:
         debugger = None
 
