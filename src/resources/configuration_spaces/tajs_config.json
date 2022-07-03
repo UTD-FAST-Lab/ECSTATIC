@@ -95,6 +95,7 @@
       "name": "loop-unrolling",
       "minValue": "1",
       "maxValue": "999",
+      "type": "integer",
       "levels": [
         "i",
         "i-1"
