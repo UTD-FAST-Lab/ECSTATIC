@@ -23,8 +23,9 @@ cd /
 mkdir -p /benchmarks/javaobjectsens
 cd /benchmarks/javaobjectsens
 git clone https://github.com/amordahl/ObjectSensitivity.git
-echo "#!/bin/bash" > ObjectSensitivity/build.sh
-echo "mvn package" >> ObjectSensitivity/build.sh
-chmod +x ObjectSensitivity/build.sh
-./ObjectSensitivity/build.sh
+cd ObjectSensitivity
+echo "#!/bin/bash" > build.sh
+echo "mvn package" >> build.sh
+chmod +x build.sh
+./build.sh
 cd $CURDIR
