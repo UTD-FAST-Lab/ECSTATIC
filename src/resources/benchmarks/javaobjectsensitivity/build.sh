@@ -22,7 +22,7 @@ CURDIR=$(pwd)
 cd /
 mkdir -p /benchmarks/javaobjectsens
 cd /benchmarks/javaobjectsens
-git clone git@github.com:amordahl/ObjectSensitivity.git
+git clone https://github.com/amordahl/ObjectSensitivity.git
 echo "#!/bin/bash\nmvn package" >> ObjectSensitivity/build.sh
 chmod +x ObjectSensitivity/build.sh
 cd $CURDIR
