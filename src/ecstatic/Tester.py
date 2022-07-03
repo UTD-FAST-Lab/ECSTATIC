@@ -30,7 +30,7 @@ from typing import List, Optional
 
 from tqdm import tqdm
 
-from src.ecstatic.debugging.DeltaDebugger import DeltaDebugger
+from src.ecstatic.debugging.JavaViolationDeltaDebugger import JavaViolationDeltaDebugger
 from src.ecstatic.dispatcher import Sanitizer
 from src.ecstatic.fuzzing.generators import FuzzGeneratorFactory
 from src.ecstatic.fuzzing.generators.FuzzGenerator import FuzzGenerator
@@ -50,12 +50,12 @@ logger = logging.getLogger(__name__)
 
 class ToolTester:
 
-    def __init__(self, generator, runner: AbstractCommandLineToolRunner, debugger: Optional[DeltaDebugger],
+    def __init__(self, generator, runner: AbstractCommandLineToolRunner, debugger: Optional[JavaViolationDeltaDebugger],
                  results_location: str,
                  num_processes: int, fuzzing_timeout: int, checker: AbstractViolationChecker):
         self.generator: FuzzGenerator = generator
         self.runner: AbstractCommandLineToolRunner = runner
-        self.debugger: DeltaDebugger = debugger
+        self.debugger: JavaViolationDeltaDebugger = debugger
         self.results_location: str = results_location
         self.unverified_violations = list()
         self.num_processes = num_processes
@@ -171,7 +171,7 @@ def main():
 
     if not args.no_delta_debug:
         Path("/artifacts").mkdir(exist_ok=True)
-        debugger = DeltaDebugger("/artifacts", args.tool, args.task, groundtruths, runner.whole_program)
+        debugger = JavaViolationDeltaDebugger("/artifacts", args.tool, args.task, groundtruths, runner.whole_program)
     else:
         debugger = None
 

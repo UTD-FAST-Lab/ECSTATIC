@@ -23,6 +23,8 @@ from src.ecstatic.util.UtilClasses import FinishedFuzzingJob
 T = TypeVar('T')
 
 logger = logging.getLogger(__name__)
+
+
 class PotentialViolation:
 
     def __eq__(self, o: object) -> bool:

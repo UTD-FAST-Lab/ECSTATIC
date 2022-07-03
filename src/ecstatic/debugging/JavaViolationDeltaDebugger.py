@@ -44,7 +44,7 @@ class DeltaDebuggingResult:
     result: bool
     output: str
 
-class DeltaDebugger:
+class JavaViolationDeltaDebugger:
 
     def __init__(self, artifacts_folder: str, tool: str, task: str, groundtruths: str = None,
                  whole_program: bool = False):
@@ -102,8 +102,8 @@ class DeltaDebugger:
         os.chmod(script_location, 700)
 
         # Then, run the delta debugger
-        cmd : List[str]= "java -jar /SADeltaDebugger/ViolationDeltaDebugger/target/ViolationDeltaDebugger-1.0-SNAPSHOT-jar-with" \
-              "-dependencies.jar".split(' ')
+        cmd : List[str]= "java -jar /SADeltaDebugger/ViolationDeltaDebugger/target/ViolationDeltaDebugger-1.0" \
+                         "-SNAPSHOT-jar-with-dependencies.jar".split(' ')
         sources = [['--sources', s] for s in violation.job1.job.target.sources]
         [cmd.extend(s) for s in sources]
         cmd.extend(["--target", violation.job1.job.target.name])
