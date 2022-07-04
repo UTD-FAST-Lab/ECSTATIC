@@ -57,14 +57,14 @@ logger = logging.getLogger(__name__)
 T = TypeVar('T')  # Indicates the type of content in the results (e.g., call graph edges or flows)
 
 
-def get_file_name(violation: Violation) -> str:
-    filename = f'{"TRANSITIVE" if violation.is_transitive() else "DIRECT"}/' \
-               f'{AbstractCommandLineToolRunner.dict_hash(violation.job1.job.configuration)}/' \
-               f'{AbstractCommandLineToolRunner.dict_hash(violation.job2.job.configuration)}/' \
-               f'{violation.get_option_under_investigation().name}/' + \
+def get_file_name(potential_violation: PotentialViolation) -> str:
+    filename = f'{"TRANSITIVE" if potential_violation.is_transitive() else "DIRECT"}/' \
+               f'{AbstractCommandLineToolRunner.dict_hash(potential_violation.job1.job.configuration)}/' \
+               f'{AbstractCommandLineToolRunner.dict_hash(potential_violation.job2.job.configuration)}/' \
+               f'{potential_violation.get_option_under_investigation().name}/' + \
                '/'.join([f'{v.left.level_name}/{"MST" if v.type == PartialOrderType.MORE_SOUND_THAN else "MPT"}'
-                         f'/{v.right.level_name}' for v in violation.partial_orders]) + \
-               f'/{os.path.basename(violation.job1.job.target.name)}.json'
+                         f'/{v.right.level_name}' for v in potential_violation.partial_orders]) + \
+               f'/{os.path.basename(potential_violation.job1.job.target.name)}.json'
     return filename
 
 
