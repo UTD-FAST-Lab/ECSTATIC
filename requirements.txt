@@ -1,3 +1,4 @@
+z3-solver~=4.8.17.0
 fuzzingbook~=1.0.3
 setuptools~=61.2.0
 pytest~=6.2.5
