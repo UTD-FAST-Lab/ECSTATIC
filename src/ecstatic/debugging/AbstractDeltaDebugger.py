@@ -175,7 +175,7 @@ def main():
         job.violation_checker.check_violations(
             [f for f in finished_jobs if f is not None and f.results_location is not None], tmpdir.name)
     relevant_violation = [v for v in violations if v.partial_orders == job.potential_violation.partial_orders]
-    if num_violations := len(relevant_violation) > 0:
+    if (num_violations := len(relevant_violation)) > 0:
         raise RuntimeError(f"{num_violations} potential violations detected on partial order set "
                            f"{job.potential_violation.partial_orders}. "
                            f"Not sure how to proceed.")
