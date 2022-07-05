@@ -51,11 +51,19 @@ class TAJSRunner (CommandLineToolRunner):
             for t in k.tags:
                 if t.startswith('unsound'):
                     config_as_str = config_as_str + f"-unsound -{k.name} "
+        rest_of_config = ""
+        for k, v in config_as_dict.items():
+            if len([t for t in k.tags if t.startswith('unsound')]) == 0:
+                k: Option
+                v: Level
+                if isinstance(v.level_name, int) or \
+                        v.level_name.lower() not in ['false', 'true']:
+                    rest_of_config += f'-{k.name} {v.level_name} '
+                elif v.level_name.lower() == 'true':
+                    rest_of_config += f'-{k.name} '
 
         # Compute string for the rest of the options which are not unsound.
         # this part may not work
-        rest_of_config = super().dict_to_config_str({k: v for k, v in config_as_dict.items() if
-                                                        len([t for t in k.tags if t.startswith('unsound')]) == 0})
         if config_as_str != "":
             return config_as_str + rest_of_config
         else:
