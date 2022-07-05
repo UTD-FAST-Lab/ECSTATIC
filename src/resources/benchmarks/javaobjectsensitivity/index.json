@@ -2,7 +2,8 @@
   "benchmark": [
     {
       "name": "target/ObjectSensitivity-1.0-SNAPSHOT.jar",
-      "build_script": "ObjectSensitivity/build.sh"
+      "build_script": "ObjectSensitivity/build.sh",
+      "sources": ["ObjectSensitivity/src"]
     }
   ]
 }
