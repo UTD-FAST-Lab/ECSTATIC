@@ -16,30 +16,11 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
-import os.path
-import pickle
-import shutil
-import subprocess
-import sys
-import tempfile
-from dataclasses import dataclass
-from functools import partial
-from multiprocessing import Pool
-from pathlib import Path
-from typing import Iterable, Optional, List
+from typing import Iterable
 
-from src.ecstatic.debugging.AbstractDeltaDebugger import AbstractDeltaDebugger, DeltaDebuggingPredicate
+from src.ecstatic.debugging.AbstractDeltaDebugger import DeltaDebuggingPredicate
 from src.ecstatic.debugging.JavaDeltaDebugger import JavaDeltaDebugger
-from src.ecstatic.debugging.JavaViolationDeltaDebugger import JavaViolationDeltaDebugger
-from src.ecstatic.readers import ReaderFactory
-from src.ecstatic.runners import RunnerFactory
-from src.ecstatic.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
-from src.ecstatic.util.BenchmarkReader import validate
 from src.ecstatic.util.PotentialViolation import PotentialViolation
-from src.ecstatic.util.UtilClasses import FinishedFuzzingJob
-from src.ecstatic.util.Violation import Violation
-from src.ecstatic.violation_checkers import ViolationCheckerFactory
-from src.ecstatic.violation_checkers.AbstractViolationChecker import get_file_name
 
 logger = logging.getLogger(__name__)
 
