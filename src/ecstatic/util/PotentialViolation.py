@@ -140,3 +140,4 @@ class PotentialViolation:
         self._job1_minus_job2: None | Iterable[T] = None
         self._job2_minus_job1: None | Iterable[T] = None
         self._expected_diffs: None | Iterable[T] = None
+

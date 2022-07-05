@@ -16,6 +16,7 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import argparse
+import copy
 import logging
 import os
 import shutil
@@ -68,8 +69,9 @@ class AbstractDeltaDebugger(ABC):
         self.reader = reader
         self.violation_checker = violation_checker
 
-    def delta_debug(self, potential_violation: PotentialViolation, campaign_directory: str, timeout: Optional[int]):
-        for index, predicate in enumerate(self.make_predicates(potential_violation)):
+    def delta_debug(self, pv: PotentialViolation, campaign_directory: str, timeout: Optional[int]):
+        for index, predicate in enumerate(self.make_predicates(pv)):
+            potential_violation: PotentialViolation = copy.deepcopy(potential_violation)
             # First, create artifacts. We need to pickle the violation, as well as creating the script.
             directory = os.path.abspath(os.path.join(campaign_directory, 'deltadebugging',
                                                      os.path.dirname(get_file_name(potential_violation)),
