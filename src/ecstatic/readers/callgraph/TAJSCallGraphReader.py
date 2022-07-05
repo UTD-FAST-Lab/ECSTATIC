@@ -29,14 +29,14 @@ class TAJSCallGraphReader(AbstractCallGraphReader):
                     nodes[parts[0]] = node
         for j in edges:
             callid, targetid = j
-            while (nodes[callid] != ['<main>"]}']):
+            if (nodes[callid] != ['<main>"]}']):
                 call_funct = nodes[callid][0]
                 call_location = nodes[callid][1]
                 target_funct = nodes[targetid][0]
                 target_location = nodes[targetid][1]
             # Need to change setting of callsite and target below
-            callsite = CGCallSite(call_funct, call_location, '''??context??''')
-            target = CGTarget(target_funct, ''''??context??''')
+            callsite = CGCallSite(call_funct, call_location, '')
+            target = CGTarget(target_funct, '')
             callgraph.append((callsite, target))
             # add tuple of CGCallsite and CGTarget to list
         return callgraph
