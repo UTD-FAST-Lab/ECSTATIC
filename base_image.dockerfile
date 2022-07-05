@@ -19,6 +19,7 @@ RUN git clone https://github.com/amordahl/ECSTATIC.git
 WORKDIR ECSTATIC
 RUN git pull
 RUN git checkout jsdelta
+RUN python -m pip install --upgrade pip
 RUN python -m pip install -r requirements.txt
 RUN python -m pip install -e .
 

@@ -171,8 +171,7 @@ def main():
                                                                      args.jobs, groundtruths, reader)
 
     if not args.no_delta_debug:
-        Path("/artifacts").mkdir(exist_ok=True)
-        debugger = JavaBenchmarkDeltaDebugger("/artifacts", args.tool, args.task, groundtruths, runner.whole_program)
+        debugger = JavaBenchmarkDeltaDebugger(reader=reader, runner=runner, violation_checker=checker)
     else:
         debugger = None
 
