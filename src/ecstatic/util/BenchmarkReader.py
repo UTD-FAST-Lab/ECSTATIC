@@ -36,8 +36,8 @@ def try_resolve_path(path: str, root: str = "/") -> str:
     logging.info(f'Trying to resolve {path} in {root}')
     if path.startswith("/"):
         path = path[1:]
-    if os.path.exists(os.path.join(root, path)):
-        return os.path.abspath(os.path.join(root, path))
+    if os.path.exists(joined_path := os.path.join(root, path)):
+        return os.path.abspath(joined_path)
     for rootdir, dirs, _ in os.walk(os.path.join(root, "benchmarks")):
         cur = os.path.join(os.path.join(root, "benchmarks"), rootdir)
         if os.path.exists(os.path.join(cur, path)):
@@ -45,7 +45,7 @@ def try_resolve_path(path: str, root: str = "/") -> str:
         for d in dirs:
             if os.path.exists(os.path.join(os.path.join(cur, d), path)):
                 return os.path.join(os.path.join(cur, d), path)
-    raise FileNotFoundError(f"Could not resolve path {path}")
+    raise FileNotFoundError(f"Could not resolve path {path} from root {root}")
 
 
 def validate(benchmark: BenchmarkRecord, root: str = "/") -> BenchmarkRecord:
