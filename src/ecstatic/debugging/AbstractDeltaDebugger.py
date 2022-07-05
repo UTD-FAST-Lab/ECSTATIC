@@ -71,7 +71,7 @@ class AbstractDeltaDebugger(ABC):
 
     def delta_debug(self, pv: PotentialViolation, campaign_directory: str, timeout: Optional[int]):
         for index, predicate in enumerate(self.make_predicates(pv)):
-            potential_violation: PotentialViolation = copy.deepcopy(potential_violation)
+            potential_violation: PotentialViolation = copy.deepcopy(pv)
             # First, create artifacts. We need to pickle the violation, as well as creating the script.
             directory = os.path.abspath(os.path.join(campaign_directory, 'deltadebugging',
                                                      os.path.dirname(get_file_name(potential_violation)),
