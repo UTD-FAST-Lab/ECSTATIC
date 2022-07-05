@@ -6,7 +6,7 @@ from abc import ABC
 from typing import Tuple, List, Any
 
 class TAJSCallGraphReader(AbstractCallGraphReader):
-    def import_file(file):
+    def import_file(self, file):
         callgraph: List[Tuple[CGCallSite, CGTarget]] = []
         edges = []
         nodes = {}
