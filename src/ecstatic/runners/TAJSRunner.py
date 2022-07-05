@@ -23,7 +23,7 @@ class TAJSRunner (CommandLineToolRunner):
 
     def get_output_option(self, output_file: str) -> List[str]:
         # callgraph recieves file path argument
-        return f"-callgraph {output_file}"
+        return f"-callgraph {output_file}".split()
         
     def get_task_option(self, task: str) -> List[str]:
         # might need to add to this
