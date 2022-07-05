@@ -39,17 +39,17 @@ def try_resolve_path(path: str, root: str = "/") -> str:
         path = path[1:]
     if os.path.exists(joined_path := os.path.join(root, path)):
         return os.path.abspath(joined_path)
-    results = []
+    results = set()
     for rootdir, dirs, _ in os.walk(os.path.join(root, "benchmarks")):
         cur = os.path.join(os.path.join(root, "benchmarks"), rootdir)
         if os.path.exists(os.path.join(cur, path)):
-            results.append(os.path.join(cur, path))
+            results.add(os.path.join(cur, path))
         for d in dirs:
             if os.path.exists(os.path.join(os.path.join(cur, d), path)):
-                results.append(os.path.join(os.path.join(cur, d), path))
+                results.add(os.path.join(os.path.join(cur, d), path))
     match len(results):
         case 0: raise FileNotFoundError(f"Could not resolve path {path} from root {root}")
-        case 1: return results[0]
+        case 1: return results.pop()
         case _: raise RuntimeError(f"Path {path} in root {root} is ambiguous. Found the following potential results: "
                                    f"{results}. Try adding more context information to the index.json file, "
                                    f"so that the path is unique.")
