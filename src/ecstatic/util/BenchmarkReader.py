@@ -31,7 +31,6 @@ logger = logging.getLogger(__name__)
 
 
 def try_resolve_path(path: str, root: str = "/") -> str:
-    path = os.path.basename(path)
     if path is None:
         return None
     logging.info(f'Trying to resolve {path} in {root}')

@@ -43,6 +43,7 @@ from src.ecstatic.violation_checkers.AbstractViolationChecker import get_file_na
 
 logger = logging.getLogger(__name__)
 
+
 class JavaBenchmarkDeltaDebugger(JavaDeltaDebugger):
     def make_predicates(self, potential_violation: PotentialViolation) -> Iterable[DeltaDebuggingPredicate]:
         if not potential_violation.violated:
