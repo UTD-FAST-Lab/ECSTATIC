@@ -84,11 +84,11 @@ class PotentialViolation:
             return left in self.job1.job.configuration.values() and right in self.job2.job.configuration.values()
 
         match self.partial_orders:
-            case PartialOrder(left=left, right=right, _, _) if pred(left, right):
+            case PartialOrder(left=left, right=right, type=_, option=_) if pred(left, right):
                 return self.partial_orders
-            case (PartialOrder(left=left, right=right, _, _), _) if pred(left, right):
+            case (PartialOrder(left=left, right=right, type=_, option=_), _) if pred(left, right):
                 return self.partial_orders[0]
-            case (_, PartialOrder(left=left, right=right, _, _)) if pred(left, right):
+            case (_, PartialOrder(left=left, right=right, type=_, option=_)) if pred(left, right):
                 return self.partial_orders[1]
             case _:
                 raise RuntimeError(f"Unable to find partial order for potential violation "
