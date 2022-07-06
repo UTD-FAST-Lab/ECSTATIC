@@ -62,21 +62,6 @@
       ]
     },
     {
-      "name": "ignore-unreached",
-      "levels": [
-        "TRUE",
-        "FALSE"
-      ],
-      "default": "FALSE",
-      "orders": [
-        {
-          "left": "FALSE",
-          "order": "MST",
-          "right": "TRUE"
-        }
-      ]
-    },
-    {
       "name": "loop-unrolling",
       "minValue": "1",
       "maxValue": "999",
