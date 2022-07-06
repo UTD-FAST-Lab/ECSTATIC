@@ -16,18 +16,32 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import logging
-from typing import Iterable
+from typing import Iterable, Tuple
 
-from src.ecstatic.debugging.AbstractDeltaDebugger import DeltaDebuggingPredicate
+from src.ecstatic.debugging.AbstractDeltaDebugger import DeltaDebuggingPredicate, GroundTruth
 from src.ecstatic.debugging.JavaDeltaDebugger import JavaDeltaDebugger
+from src.ecstatic.util.PartialOrder import PartialOrder, PartialOrderType
 from src.ecstatic.util.PotentialViolation import PotentialViolation
 
 logger = logging.getLogger(__name__)
 
 
 class JavaBenchmarkDeltaDebugger(JavaDeltaDebugger):
-    def make_predicates(self, potential_violation: PotentialViolation) -> Iterable[DeltaDebuggingPredicate]:
+    def make_predicates(self, potential_violation: PotentialViolation) -> Iterable[Tuple[DeltaDebuggingPredicate, GroundTruth]]:
+        """
+        Returns the predicates and ground truths for a potential violation. If the potential violation's main
+        partial order (i.e., in the case that there are two potential partial order violations, we want the partial
+        order that matches the order of the jobs, such that job1 has some relationship to job2)
+        :param potential_violation:
+        :return:
+        """
         if not potential_violation.violated:
+            match potential_violation.get_main_partial_order().type:
+                case PartialOrderType.MORE_SOUND_THAN:
+                    # We
+                    def predicate(pv: PotentialViolation):
+                        return pv.expected_diffs <= potential_violation.expected_diffs
+
             for e in potential_violation.expected_diffs:
                 def predicate(pv: PotentialViolation):
                     return e in pv.expected_diffs

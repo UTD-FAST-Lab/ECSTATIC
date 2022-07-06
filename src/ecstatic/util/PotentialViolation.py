@@ -15,8 +15,9 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import logging
-from typing import List, Dict, Iterable, Set, TypeVar, Tuple, Callable
+from typing import List, Dict, Iterable, Set, TypeVar, Tuple, Callable, Sized, Container, Optional
 
+from src.ecstatic.models.Level import Level
 from src.ecstatic.util.PartialOrder import PartialOrder, PartialOrderType
 from src.ecstatic.util.UtilClasses import FinishedFuzzingJob
 
@@ -70,7 +71,7 @@ class PotentialViolation:
         P.a MST P.b, it would return any T that are in the results associated with P.a but not P.b.
         """
         if self._expected_diffs is None:
-            match self.__get_first_partial_order():
+            match self.get_main_partial_order():
                 case PartialOrder(_, PartialOrderType.MORE_PRECISE_THAN, _):
                     self._expected_diffs = self.job2_minus_job1
                 case PartialOrder(_, PartialOrderType.MORE_SOUND_THAN, _):
@@ -78,28 +79,34 @@ class PotentialViolation:
                 case _: raise RuntimeError("Pattern matching partial order failed.")
         return self._expected_diffs
 
-    def __get_first_partial_order(self):
+    def get_main_partial_order(self) -> PartialOrder:
+        def pred(left: Level, right: Level) -> bool:
+            return left in self.job1.job.configuration.values() and right in self.job2.job.configuration.values()
+
         match self.partial_orders:
-            case (p1, _):
-                return p1
-            case PartialOrder(_, _, _, _):
+            case PartialOrder(left=left, right=right, _, _) if pred(left, right):
                 return self.partial_orders
+            case (PartialOrder(left=left, right=right, _, _), _) if pred(left, right):
+                return self.partial_orders[0]
+            case (_, PartialOrder(left=left, right=right, _, _)) if pred(left, right):
+                return self.partial_orders[1]
             case _:
-                raise RuntimeError("Can only compute violations on one partial order or a tuple of partial "
-                                   "orders.")
+                raise RuntimeError(f"Unable to find partial order for potential violation "
+                                   f"with partial orders {self.partial_orders}")
+
 
     @property
     def violated(self):
         """
         We assume that, in the case of multiple partial orders, the first partial order will have the options
-        in the same order as the passed in jobs. In other words,
+        in the same order as the passed in jobs.
         Returns
         -------
 
         """
         if self._violated is None:
             # We need to compute the violation.
-            match self.__get_first_partial_order():
+            match self.get_main_partial_order():
                 case PartialOrder(_, PartialOrderType.MORE_SOUND_THAN, _, _):
                     self._violated = len(self.job2_minus_job1) > 0
                 case PartialOrder(_, PartialOrderType.MORE_PRECISE_THAN, _, _):
@@ -137,7 +144,7 @@ class PotentialViolation:
         self.job2 = job2
         self.job1_reader = job1_reader
         self.job2_reader = job2_reader
-        self._job1_minus_job2: None | Iterable[T] = None
-        self._job2_minus_job1: None | Iterable[T] = None
-        self._expected_diffs: None | Iterable[T] = None
+        self._job1_minus_job2: Container[T] = set()
+        self._job2_minus_job1: Container[T] = set()
+        self._expected_diffs: Container[T] = set()
 

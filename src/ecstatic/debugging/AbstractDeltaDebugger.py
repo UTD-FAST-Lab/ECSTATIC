@@ -17,6 +17,7 @@
 
 import argparse
 import copy
+import json
 import logging
 import os
 import shutil
@@ -28,19 +29,24 @@ from dataclasses import dataclass
 from functools import partial
 from multiprocessing.dummy import Pool
 from pathlib import Path
-from typing import Optional, Callable, TypeAlias, Iterable, List
+from typing import Optional, Callable, TypeAlias, Iterable, List, Set, Tuple
 
 import dill as pickle
 
-from src.ecstatic.readers.AbstractReader import AbstractReader
+from src.ecstatic.readers.AbstractReader import AbstractReader, T
 from src.ecstatic.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
 from src.ecstatic.util.BenchmarkReader import validate, logger
+from src.ecstatic.util.PartialOrder import PartialOrder
 from src.ecstatic.util.PotentialViolation import PotentialViolation
 from src.ecstatic.util.UtilClasses import FinishedFuzzingJob
 from src.ecstatic.violation_checkers.AbstractViolationChecker import get_file_name, AbstractViolationChecker
 
 DeltaDebuggingPredicate: TypeAlias = Callable[[PotentialViolation], bool]
-
+@dataclass
+class GroundTruth:
+    partial_order: PartialOrder
+    left_preserve: Optional[Set[T]]
+    right_preserve: Optional[Set[T]]
 
 @dataclass
 class DeltaDebuggingJob:
@@ -54,12 +60,14 @@ class DeltaDebuggingJob:
 class AbstractDeltaDebugger(ABC):
 
     @abstractmethod
-    def make_predicates(self, potential_violation: PotentialViolation) -> Iterable[DeltaDebuggingPredicate]:
+    def make_predicates(self, potential_violation: PotentialViolation) -> \
+            Iterable[Tuple[DeltaDebuggingPredicate, GroundTruth]]:
         """
         Creates the predicate(s) for the delta debugger. Each predicate returned will create a delta debugging
         job.
         @param potential_violation: The potential violation we are delta debugging on.
-        @return: The predicate that the delta debugger should check.
+        @return: A tuple consisting of: 1) The predicate that the delta debugger should check, 2) the set of true edges,
+        3) the set of false edges.
         """
         pass
 
@@ -70,7 +78,7 @@ class AbstractDeltaDebugger(ABC):
         self.violation_checker = violation_checker
 
     def delta_debug(self, pv: PotentialViolation, campaign_directory: str, timeout: Optional[int]):
-        for index, predicate in enumerate(self.make_predicates(pv)):
+        for index, predicate, ground_truth in enumerate(self.make_predicates(pv)):
             potential_violation: PotentialViolation = copy.deepcopy(pv)
             # First, create artifacts. We need to pickle the violation, as well as creating the script.
             directory = os.path.abspath(os.path.join(campaign_directory, 'deltadebugging',
@@ -86,6 +94,10 @@ class AbstractDeltaDebugger(ABC):
                 logger.info("Ignoring existing result")
                 shutil.rmtree(directory, ignore_errors=True)
             Path(directory).mkdir(exist_ok=True, parents=True)
+
+            # Make ground truth.
+            with open(os.path.join(directory, 'ground_truth.json'), 'w') as f:
+                json.dump(ground_truth)
 
             # Copy benchmarks folder so that we have our own code location.
             shutil.copytree(src="benchmarks", dst=os.path.join(directory, "benchmarks"))
