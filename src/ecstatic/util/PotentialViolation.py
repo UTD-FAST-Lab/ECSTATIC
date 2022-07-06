@@ -15,7 +15,7 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import logging
-from typing import List, Dict, Iterable, Set, TypeVar, Tuple, Callable, Sized, Container, Optional
+from typing import List, Dict, Iterable, Set, TypeVar, Tuple, Callable, Sized, Container, Optional, Collection
 
 from src.ecstatic.models.Level import Level
 from src.ecstatic.util.PartialOrder import PartialOrder, PartialOrderType
@@ -65,7 +65,7 @@ class PotentialViolation:
         return False
 
     @property
-    def expected_diffs(self) -> Iterable[T]:
+    def expected_diffs(self) -> Collection[T]:
         """
         Returns the expected differences, if any. For example, if this PotentialViolation has partial order
         P.a MST P.b, it would return any T that are in the results associated with P.a but not P.b.

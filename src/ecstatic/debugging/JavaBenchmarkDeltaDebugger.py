@@ -20,7 +20,7 @@ from typing import Iterable, Tuple
 
 from src.ecstatic.debugging.AbstractDeltaDebugger import DeltaDebuggingPredicate, GroundTruth
 from src.ecstatic.debugging.JavaDeltaDebugger import JavaDeltaDebugger
-from src.ecstatic.util.PartialOrder import PartialOrder, PartialOrderType
+from src.ecstatic.util.PartialOrder import PartialOrderType
 from src.ecstatic.util.PotentialViolation import PotentialViolation
 
 logger = logging.getLogger(__name__)
@@ -31,19 +31,31 @@ class JavaBenchmarkDeltaDebugger(JavaDeltaDebugger):
         """
         Returns the predicates and ground truths for a potential violation. If the potential violation's main
         partial order (i.e., in the case that there are two potential partial order violations, we want the partial
-        order that matches the order of the jobs, such that job1 has some relationship to job2)
-        :param potential_violation:
+        order that matches the order of the jobs, such that job1 has some relationship to job2).
+        :param potential_violation: The non-violation
         :return:
         """
-        if not potential_violation.violated:
-            match potential_violation.get_main_partial_order().type:
+        if not potential_violation.violated and len(potential_violation.expected_diffs) > 0:
+            match (mp := potential_violation.get_main_partial_order()).type:
                 case PartialOrderType.MORE_SOUND_THAN:
-                    # We
+                    # If it's a soundness partial order, then we are not sure how many of the additional edges
+                    #  produces by the more sound configuration
                     def predicate(pv: PotentialViolation):
                         return pv.expected_diffs <= potential_violation.expected_diffs
+                    ground_truth = {
+                        "partial_order": mp,
+                        "left_preserve_at_least_one": potential_violation.expected_diffs
+                    }
+                    yield predicate, ground_truth
+                case PartialOrderType.MORE_PRECISE_THAN:
+                    # If it's a precision partial order, we create a new benchmark for each of the edges missing in the
+                    #  more precise result, since we can be confident they are all false positives.
+                    for e in potential_violation.expected_diffs:
+                        def predicate(pv: PotentialViolation):
+                            return e in pv.expected_diffs
+                        ground_truth = {
+                            "partial_order": mp,
+                            "left_preserve_all": e
+                        }
+                        yield predicate, ground_truth
 
-            for e in potential_violation.expected_diffs:
-                def predicate(pv: PotentialViolation):
-                    return e in pv.expected_diffs
-                logger.info(f"Created predicate to make sure result {e} is preserved.")
-                yield predicate

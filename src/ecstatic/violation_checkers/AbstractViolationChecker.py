@@ -40,7 +40,7 @@ from abc import ABC, abstractmethod
 from multiprocessing.dummy import Pool
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import List, Tuple, Set, Iterable, TypeVar
+from typing import List, Tuple, Set, Iterable, TypeVar, Optional
 
 import deprecation as deprecation
 from tqdm import tqdm
@@ -70,7 +70,7 @@ def get_file_name(potential_violation: PotentialViolation) -> str:
 
 class AbstractViolationChecker(ABC):
 
-    def __init__(self, jobs: int, reader: AbstractReader, groundtruths: str | None = None):
+    def __init__(self, jobs: int, reader: AbstractReader, groundtruths: Optional[str] = None):
         self.output_folder = None
         self.jobs: int = jobs
         self.reader = reader
