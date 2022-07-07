@@ -35,18 +35,21 @@ import dill as pickle
 
 from src.ecstatic.readers.AbstractReader import AbstractReader, T
 from src.ecstatic.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
-from src.ecstatic.util.BenchmarkReader import validate, logger
+from src.ecstatic.util.BenchmarkReader import validate
 from src.ecstatic.util.PartialOrder import PartialOrder
 from src.ecstatic.util.PotentialViolation import PotentialViolation
 from src.ecstatic.util.UtilClasses import FinishedFuzzingJob
 from src.ecstatic.violation_checkers.AbstractViolationChecker import get_file_name, AbstractViolationChecker
 
 DeltaDebuggingPredicate: TypeAlias = Callable[[PotentialViolation], bool]
+
+
 @dataclass
 class GroundTruth:
     partial_order: PartialOrder
     left_preserve: Optional[Set[T]]
     right_preserve: Optional[Set[T]]
+
 
 @dataclass
 class DeltaDebuggingJob:
@@ -55,6 +58,9 @@ class DeltaDebuggingJob:
     runner: AbstractCommandLineToolRunner
     reader: AbstractReader
     violation_checker: AbstractViolationChecker
+
+
+logger = logging.getLogger(__name__)
 
 
 class AbstractDeltaDebugger(ABC):
@@ -78,7 +84,9 @@ class AbstractDeltaDebugger(ABC):
         self.violation_checker = violation_checker
 
     def delta_debug(self, pv: PotentialViolation, campaign_directory: str, timeout: Optional[int]):
+        logger.debug("In delta debug.")
         for index, predicate, ground_truth in enumerate(self.make_predicates(pv)):
+            logger.debug(f"Got ground truth {ground_truth} at index {index}")
             potential_violation: PotentialViolation = copy.deepcopy(pv)
             # First, create artifacts. We need to pickle the violation, as well as creating the script.
             directory = os.path.abspath(os.path.join(campaign_directory, 'deltadebugging',
@@ -102,14 +110,15 @@ class AbstractDeltaDebugger(ABC):
             # Copy benchmarks folder so that we have our own code location.
             shutil.copytree(src="benchmarks", dst=os.path.join(directory, "benchmarks"))
             potential_violation.job1.job.target = validate(potential_violation.job1.job.target, directory)
-            logging.info(f'Moved benchmark, so target is now {potential_violation.job1.job.target}')
+            logger.info(f'Moved benchmark, so target is now {potential_violation.job1.job.target}')
             potential_violation.job2.job.target = potential_violation.job1.job.target
             try:
                 if len(potential_violation.job1.job.target.sources) == 0:
-                    logging.critical(f"Cannot delta debug benchmark record {potential_violation.job1.job.target} without sources.")
+                    logger.critical(
+                        f"Cannot delta debug benchmark record {potential_violation.job1.job.target} without sources.")
                     return None
             except TypeError:
-                logging.exception(potential_violation.job1.job.target)
+                logger.exception(potential_violation.job1.job.target)
 
             # Then, create the script.
             job = DeltaDebuggingJob(predicate=predicate,
