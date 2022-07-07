@@ -131,8 +131,8 @@ class PotentialViolation:
             job1_results = self.job1_reader()
             job2_results = self.job2_reader()
             logger.info(f"Job1 has {len(job1_results)} results and job2 has {len(job2_results)} results.")
-            self._job1_minus_job2 = job1_results.difference(job2_results)
-            self._job2_minus_job1 = job2_results.difference(job1_results)
+            self._job1_minus_job2 = frozenset(job1_results.difference(job2_results))
+            self._job2_minus_job1 = frozenset(job2_results.difference(job1_results))
         return self._job1_minus_job2
 
     def __init__(self,
