@@ -147,7 +147,7 @@ class PotentialViolation:
         self.job2 = job2
         self.job1_reader = job1_reader
         self.job2_reader = job2_reader
-        self._job1_minus_job2: Container[T] = set()
-        self._job2_minus_job1: Container[T] = set()
-        self._expected_diffs: Container[T] = set()
+        self._job1_minus_job2: Container[T] = None
+        self._job2_minus_job1: Container[T] = None
+        self._expected_diffs: Container[T] = None
 
