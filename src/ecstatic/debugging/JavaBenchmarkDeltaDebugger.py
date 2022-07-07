@@ -44,7 +44,7 @@ class JavaBenchmarkDeltaDebugger(JavaDeltaDebugger):
                         return pv.expected_diffs <= potential_violation.expected_diffs
                     ground_truth = {
                         "partial_order": str(mp),
-                        "left_preserve_at_least_one": list(potential_violation.expected_diffs)
+                        "left_preserve_at_least_one": [str(e) for e in potential_violation.expected_diffs]
                     }
                     yield predicate, ground_truth
                 case PartialOrderType.MORE_PRECISE_THAN:
@@ -55,7 +55,7 @@ class JavaBenchmarkDeltaDebugger(JavaDeltaDebugger):
                             return e in pv.expected_diffs
                         ground_truth = {
                             "partial_order": mp,
-                            "left_preserve_all": [e]
+                            "left_preserve_all": [str(e)]
                         }
                         yield predicate, ground_truth
                 case _:
