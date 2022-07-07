@@ -71,10 +71,13 @@ class PotentialViolation:
         P.a MST P.b, it would return any T that are in the results associated with P.a but not P.b.
         """
         if self._expected_diffs is None:
+            logger.debug("Computing expected diffs.")
             match self.get_main_partial_order():
                 case PartialOrder(_, PartialOrderType.MORE_PRECISE_THAN, _):
+                    logger.debug("Main partial order is precision. Computing job2 minus job1")
                     self._expected_diffs = self.job2_minus_job1
                 case PartialOrder(_, PartialOrderType.MORE_SOUND_THAN, _):
+                    logger.debug("Main partial order is soundness. Computing job1 minus job2")
                     self._expected_diffs = self.job1_minus_job2
                 case _: raise RuntimeError("Pattern matching partial order failed.")
         return self._expected_diffs
