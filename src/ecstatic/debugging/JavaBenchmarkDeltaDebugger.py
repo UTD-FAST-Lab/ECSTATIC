@@ -58,4 +58,6 @@ class JavaBenchmarkDeltaDebugger(JavaDeltaDebugger):
                             "left_preserve_all": e
                         }
                         yield predicate, ground_truth
+                case _:
+                    raise RuntimeError("Pattern matching on main partial order failed.")
 
