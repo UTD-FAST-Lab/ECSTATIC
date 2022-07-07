@@ -85,7 +85,7 @@ class AbstractDeltaDebugger(ABC):
 
     def delta_debug(self, pv: PotentialViolation, campaign_directory: str, timeout: Optional[int]):
         logger.debug("In delta debug.")
-        for index, predicate, ground_truth in enumerate(self.make_predicates(pv)):
+        for index, (predicate, ground_truth) in enumerate(self.make_predicates(pv)):
             logger.debug(f"Got ground truth {ground_truth} at index {index}")
             potential_violation: PotentialViolation = copy.deepcopy(pv)
             # First, create artifacts. We need to pickle the violation, as well as creating the script.
