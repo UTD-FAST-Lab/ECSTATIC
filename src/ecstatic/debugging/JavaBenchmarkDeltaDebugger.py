@@ -54,7 +54,7 @@ class JavaBenchmarkDeltaDebugger(JavaDeltaDebugger):
                         def predicate(pv: PotentialViolation):
                             return e in pv.expected_diffs
                         ground_truth = {
-                            "partial_order": mp,
+                            "partial_order": str(mp),
                             "left_preserve_all": [str(e)]
                         }
                         yield predicate, ground_truth
