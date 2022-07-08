@@ -24,3 +24,4 @@ FROM ecstatic/base-image
 
 RUN apt-get install -y openjdk-11-jdk
 COPY --from=wala-install /WALAInterface /WALAInterface
+COPY --from=wala-install /binary_search_project /binary_search_project
