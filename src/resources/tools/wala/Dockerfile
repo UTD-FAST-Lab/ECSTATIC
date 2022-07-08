@@ -11,9 +11,14 @@ RUN apt-get update && \
 RUN apt-get update && apt-get install -y git openjdk-11-jdk maven
 
 WORKDIR /
-RUN git clone --branch wala_revert https://github.com/amordahl/WALAInterface 
+RUN git clone --branch wala_revert https://github.com/amordahl/WALAInterface
 WORKDIR /WALAInterface
 RUN mvn compile package
+WORKDIR /
+RUN mkdir /binary_search_project/
+WORKDIR /binary_search_project/
+RUN git clone https://github.com/wala/WALA.git
+WORKDIR /
 
 FROM ecstatic/base-image
 

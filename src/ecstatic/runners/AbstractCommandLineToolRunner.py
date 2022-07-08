@@ -109,20 +109,22 @@ class AbstractCommandLineToolRunner(ABC):
         num_runs = 0
 
         try:
-            if os.path.exists(self.get_output(output_folder, job)):
-                logging.info(f'{self.get_output(output_folder, job)} already exists. Returning that.')
-                with open(self.get_time_file(output_folder, job), 'r') as f:
-                    execution_time = float(f.read().strip())
+            print("")
+            #if os.path.exists(self.get_output(output_folder, job)):
+                #logging.info(f'{self.get_output(output_folder, job)} already exists. Returning that.')
+                #with open(self.get_time_file(output_folder, job), 'r') as f:
+                    #execution_time = float(f.read().strip())
 
-                return FinishedFuzzingJob(job, execution_time, self.get_output(output_folder, job))
+                #return FinishedFuzzingJob(job, execution_time, self.get_output(output_folder, job))
         except Exception:
             logging.exception("Time file was not created, so starting over.")
             os.remove(self.get_output(output_folder, job))
 
-        while num_runs < num_retries and not os.path.exists(
-                self.get_output(output_folder, job) + '.error'):
+        while num_runs < num_retries:
             # noinspection PyBroadException
             try:
+                #have to just remove and overwrite the results each time.
+                os.remove(self.get_output(output_folder,job));
                 start = time.time()
                 result = self.try_run_job(job, output_folder)
                 logging.info(f'Successfully ran job! Result is in {result}')

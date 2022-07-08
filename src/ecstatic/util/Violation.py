@@ -32,6 +32,9 @@ class Violation:
                frozenset([self.job1.results_location, self.job2.results_location]) == \
                frozenset([o.job1.results_location, o.job2.results_location])
 
+    def othereq(self, o:object) -> bool:
+        return isinstance(o,Violation) and self.violated == o.violated and self.partial_orders == o.partial_orders
+
     def __hash__(self) -> int:
         return hash((self.violated, self.partial_orders,
                      frozenset([self.job1.results_location, self.job2.results_location])))

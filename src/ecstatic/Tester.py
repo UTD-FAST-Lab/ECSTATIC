@@ -37,6 +37,8 @@ from src.ecstatic.fuzzing.generators.FuzzGenerator import FuzzGenerator
 from src.ecstatic.readers import ReaderFactory
 from src.ecstatic.runners import RunnerFactory
 from src.ecstatic.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
+from src.ecstatic.toolreverter.BinarySearch import BinarySearch
+from src.ecstatic.toolreverter.Reverter import ReverterFactory, Reverter
 from src.ecstatic.util.BenchmarkReader import BenchmarkReader
 from src.ecstatic.util.UtilClasses import FuzzingCampaign, Benchmark, \
     BenchmarkRecord
@@ -52,7 +54,7 @@ class ToolTester:
     def __init__(self, generator, runner: AbstractCommandLineToolRunner, debugger: Optional[DeltaDebugger],
                  results_location: str,
                  num_processes: int, fuzzing_timeout: int, checker: AbstractViolationChecker,
-                 uid: int = None, gid: int = None):
+                 reverter: Reverter, uid: int = None, gid: int = None):
         """
 
         Parameters
@@ -69,6 +71,7 @@ class ToolTester:
         self.checker = checker
         self.uid = uid
         self.gid = gid
+        self.reverter=reverter;
 
     def read_violation_from_file(self, file: str) -> Violation:
         with open(file, 'rb') as f:
@@ -104,6 +107,16 @@ class ToolTester:
                 logging.info(f'Read in {len(existing_violations)} existing violations.')
             Path(violations_folder).mkdir(exist_ok=True)
             violations: List[Violation] = self.checker.check_violations(results, violations_folder, existing_violations)
+
+
+            #Perform binary search on things
+
+            search = BinarySearch(self.reverter.GITREPO,self.reverter.FROM_TAG,self.reverter.TO_TAG,violations,self.runner,self.reverter)
+            search_results = search.performsearch();
+            with open("/results/search_results.txt",'w') as f:
+                for x in search_results:
+                    f.write(str(x)+"\n");
+
             if self.debugger is not None:
                 with Pool(max(int(self.num_processes/2), 1)) as p:  # /2 because each delta debugging process needs 2 cores.
                     direct_violations = [v for v in violations if not v.is_transitive()]
@@ -145,6 +158,8 @@ def main():
     p.add_argument('--fuzzing-timeout', help='Fuzzing timeout in minutes.', type=int, default=0)
     p.add_argument('--uid', help='If passed, change artifacts to be owned by the user after each step.')
     p.add_argument('--gid', help='If passed, change artifacts to be owned by the user after each step.')
+    p.add_argument('--to_tag',help="If passed, enables binary search this project in the range from_tag -> to_tag, requires both to_tag and from_tag to be passed",type=str)
+    p.add_argument('--from_tag',help="If passed, enables binary search this project in the range from_tag -> to_tag, requires both to_tag and from_tag to be passed",type=str)
     args = p.parse_args()
 
     if args.verbose > 1:
@@ -192,6 +207,16 @@ def main():
     checker = ViolationCheckerFactory.get_violation_checker_for_task(args.task, args.tool,
                                                                      args.jobs, groundtruths, reader)
 
+    tool_reverter = None;
+    if args.to_tag is None and args.from_tag is not None:
+        print("Please add both to_tag and from_tag");
+        exit(0)
+    if args.to_tag is not None and args.from_tag is None:
+        print("please add both to_tag and from_tag");
+        exit(0)
+    if args.to_tag is not None:
+        tool_reverter=ReverterFactory().get_reverter(args.tool,args.from_tag,args.to_tag);
+
     if not args.no_delta_debug:
         Path("/artifacts").mkdir(exist_ok=True)
         debugger = DeltaDebugger("/artifacts", args.tool, args.task, groundtruths, runner.whole_program)
@@ -200,7 +225,7 @@ def main():
 
     t = ToolTester(generator, runner, debugger, results_location,
                    num_processes=args.jobs, fuzzing_timeout=args.fuzzing_timeout,
-                   checker=checker, uid=args.uid, gid=args.gid)
+                   checker=checker, uid=args.uid, gid=args.gid,reverter=tool_reverter)
     t.main()
 
 
