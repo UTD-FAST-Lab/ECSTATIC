@@ -100,6 +100,12 @@ def parse_args():
         help='Location to write results.',
         default='./results'
     )
+    parser.add_argument('--to_tag',
+                        help="If passed, enables binary search this project in the range from_tag -> to_tag, requires both to_tag and from_tag to be passed",
+                        type=str)
+    parser.add_argument('--from_tag',
+                        help="If passed, enables binary search this project in the range from_tag -> to_tag, requires both to_tag and from_tag to be passed",
+                        type=str)
     return parser.parse_args()
 
 
