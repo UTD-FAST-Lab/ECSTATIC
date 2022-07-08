@@ -71,7 +71,7 @@ class ToolTester:
         self.checker = checker
         self.uid = uid
         self.gid = gid
-        self.reverter=reverter;
+        self.reverter = reverter;
 
     def read_violation_from_file(self, file: str) -> Violation:
         with open(file, 'rb') as f:
@@ -108,17 +108,18 @@ class ToolTester:
             Path(violations_folder).mkdir(exist_ok=True)
             violations: List[Violation] = self.checker.check_violations(results, violations_folder, existing_violations)
 
+            # Perform binary search on things
 
-            #Perform binary search on things
-
-            search = BinarySearch(self.reverter.GITREPO,self.reverter.FROM_TAG,self.reverter.TO_TAG,violations,self.runner,self.reverter)
+            search = BinarySearch(self.reverter.GITREPO, self.reverter.FROM_TAG, self.reverter.TO_TAG, violations,
+                                  self.runner, self.reverter)
             search_results = search.performsearch();
-            with open("/results/search_results.txt",'w') as f:
+            with open("/results/search_results.txt", 'w') as f:
                 for x in search_results:
-                    f.write(str(x)+"\n");
+                    f.write(str(x) + "\n");
 
             if self.debugger is not None:
-                with Pool(max(int(self.num_processes/2), 1)) as p:  # /2 because each delta debugging process needs 2 cores.
+                with Pool(max(int(self.num_processes / 2),
+                              1)) as p:  # /2 because each delta debugging process needs 2 cores.
                     direct_violations = [v for v in violations if not v.is_transitive()]
                     print(f'Delta debugging {len(direct_violations)} violations with {self.num_processes} cores.')
                     p.map(partial(self.debugger.delta_debug, campaign_directory=campaign_folder,
@@ -126,12 +127,6 @@ class ToolTester:
             self.generator.feedback(violations)
             print(f'Done with campaign {campaign_index}!')
             campaign_index += 1
-            if self.uid is not None and self.gid is not None:
-                logger.info("Changing permissions of folder.")
-                os.chown(campaign_folder, int(self.uid), int(self.gid))
-                for root, dirs, files in os.walk(campaign_folder):
-                    files = map(lambda x: os.path.join(root, x), files)
-                    map(lambda x: os.chown(x, int(self.uid), self.gid), files)
             if time.time() - start_time > self.fuzzing_timeout * 60:
                 break
         print('Testing done!')
@@ -158,8 +153,12 @@ def main():
     p.add_argument('--fuzzing-timeout', help='Fuzzing timeout in minutes.', type=int, default=0)
     p.add_argument('--uid', help='If passed, change artifacts to be owned by the user after each step.')
     p.add_argument('--gid', help='If passed, change artifacts to be owned by the user after each step.')
-    p.add_argument('--to_tag',help="If passed, enables binary search this project in the range from_tag -> to_tag, requires both to_tag and from_tag to be passed",type=str)
-    p.add_argument('--from_tag',help="If passed, enables binary search this project in the range from_tag -> to_tag, requires both to_tag and from_tag to be passed",type=str)
+    p.add_argument('--to_tag',
+                   help="If passed, enables binary search this project in the range from_tag -> to_tag, requires both to_tag and from_tag to be passed",
+                   type=str)
+    p.add_argument('--from_tag',
+                   help="If passed, enables binary search this project in the range from_tag -> to_tag, requires both to_tag and from_tag to be passed",
+                   type=str)
     args = p.parse_args()
 
     if args.verbose > 1:
@@ -215,7 +214,7 @@ def main():
         print("please add both to_tag and from_tag");
         exit(0)
     if args.to_tag is not None:
-        tool_reverter=ReverterFactory().get_reverter(args.tool,args.from_tag,args.to_tag);
+        tool_reverter = ReverterFactory().get_reverter(args.tool, args.from_tag, args.to_tag);
 
     if not args.no_delta_debug:
         Path("/artifacts").mkdir(exist_ok=True)
@@ -225,7 +224,7 @@ def main():
 
     t = ToolTester(generator, runner, debugger, results_location,
                    num_processes=args.jobs, fuzzing_timeout=args.fuzzing_timeout,
-                   checker=checker, uid=args.uid, gid=args.gid,reverter=tool_reverter)
+                   checker=checker, uid=args.uid, gid=args.gid, reverter=tool_reverter)
     t.main()
 
 
@@ -237,7 +236,8 @@ def build_benchmark(benchmark: str) -> Benchmark:
         logging.info(f"Building benchmark....")
         subprocess.run(build)
     if os.path.exists(importlib.resources.path(f"src.resources.benchmarks.{benchmark}", "index.json")):
-        return BenchmarkReader().read_benchmark(importlib.resources.path(f"src.resources.benchmarks.{benchmark}", "index.json"))
+        return BenchmarkReader().read_benchmark(
+            importlib.resources.path(f"src.resources.benchmarks.{benchmark}", "index.json"))
     else:
         benchmark_list = []
         for root, dirs, files in os.walk("/benchmarks"):
