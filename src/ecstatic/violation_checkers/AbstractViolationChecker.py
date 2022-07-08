@@ -114,7 +114,7 @@ class AbstractViolationChecker(ABC):
             print(f'Checking violations with {self.jobs} cores.')
             for result in tqdm(p.imap(self.compare_results, pairs), total=len(pairs)):
                 # Force evaluation of violated
-                [r for r in result if r.violated]
+                # [r for r in result if r.violated]
                 finished_results.extend(result)
 
         print('Violation detection done.')
