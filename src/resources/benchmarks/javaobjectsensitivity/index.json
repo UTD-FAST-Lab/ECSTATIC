@@ -4,6 +4,11 @@
       "name": "target/ObjectSensitivity-1.0-SNAPSHOT.jar",
       "build_script": "ObjectSensitivity/build.sh",
       "sources": ["ObjectSensitivity/src"]
+    },
+    {
+      "name": "target/Reflection-1.0-SNAPSHOT.jar",
+      "build_script": "Reflection/build.sh",
+      "sources": ["Reflection/src"]
     }
   ]
 }
