@@ -17,6 +17,7 @@
 
 
 import logging
+import re
 from typing import Tuple
 
 from src.ecstatic.readers.callgraph.AbstractCallGraphReader import AbstractCallGraphReader
@@ -39,9 +40,11 @@ class WALACallGraphReader(AbstractCallGraphReader):
         -------
 
         """
+        if not line.startswith("< Application"):
+            return None
         tokens = line.split("\t")
         cs = CGCallSite(clazz=f"{tokens[0].split(',')[1].strip()[1:].replace('/', '.')}.{tokens[0].split(',')[2].strip(' <>')}",
-                        stmt = tokens[1], context=tokens[2])
+                        stmt = re.sub(r"@[\d*]$", "", tokens[1]), context=tokens[2])
         tar = CGTarget(target=tokens[3], context=tokens[4])
         logging.debug(f"Processed {line} to {(cs, tar)}")
         return (cs, tar)
