@@ -23,7 +23,13 @@ cd /
 mkdir -p /benchmarks/javaobjectsens
 cd /benchmarks/javaobjectsens
 git clone https://github.com/amordahl/ObjectSensitivity.git
+git clone https://github.com/amordahl/ReflectionBenchmark.git
 cd ObjectSensitivity
+echo "#!/bin/bash" > build.sh
+echo "mvn package" >> build.sh
+chmod +x build.sh
+./build.sh
+cd ../ReflectionBenchmark
 echo "#!/bin/bash" > build.sh
 echo "mvn package" >> build.sh
 chmod +x build.sh
