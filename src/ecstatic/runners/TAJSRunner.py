@@ -12,7 +12,7 @@ class TAJSRunner (CommandLineToolRunner):
         if self.timeout is None:
             return []
         else:
-            return f"-time-limit {self.timeout}".split(" ")
+            return f"-time-limit {self.timeout * 60}".split(" ")
 
     def get_whole_program(self) -> List[str]:
         # shouldn't be necessary
