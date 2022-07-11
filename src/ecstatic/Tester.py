@@ -149,6 +149,8 @@ def main():
     p.add_argument('--verbose', '-v', action='count', default=0)
     p.add_argument('--no-delta-debug', help='Do not delta debug.', action='store_true')
     p.add_argument('--fuzzing-timeout', help='Fuzzing timeout in minutes.', type=int, default=0)
+    p.add_argument('--uid', help='If passed, change artifacts to be owned by the user after each step.')
+    p.add_argument('--gid', help='If passed, change artifacts to be owned by the user after each step.')
     p.add_argument('--to_tag',
                    help="If passed, enables binary search this project in the range from_tag -> to_tag, requires both to_tag and from_tag to be passed",
                    type=str)
