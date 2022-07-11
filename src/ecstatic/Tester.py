@@ -109,7 +109,7 @@ class ToolTester:
             # Perform binary search on things
 
             search = BinarySearch(self.reverter.GITREPO, self.reverter.FROM_TAG, self.reverter.TO_TAG, violations,
-                                  self.runner, self.reverter)
+                                  self.runner, self.reverter,checker=self.checker)
             search_results = search.performsearch();
             with open("/results/search_results.txt", 'w') as f:
                 for x in search_results:
