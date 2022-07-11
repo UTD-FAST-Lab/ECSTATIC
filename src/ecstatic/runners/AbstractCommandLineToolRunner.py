@@ -105,6 +105,7 @@ class AbstractCommandLineToolRunner(ABC):
             with open(configuration_file, 'w') as f:
                 f.write(self.dict_to_config_str(job.configuration))
 
+        start= 0;
         exception = None
         num_runs = 0
 
