@@ -54,7 +54,7 @@ class ToolTester:
     def __init__(self, generator, runner: AbstractCommandLineToolRunner, debugger: Optional[DeltaDebugger],
                  results_location: str,
                  num_processes: int, fuzzing_timeout: int, checker: AbstractViolationChecker,
-                 reverter: Reverter, uid: int = None, gid: int = None):
+                 reverter: Reverter):
         """
 
         Parameters
@@ -69,8 +69,6 @@ class ToolTester:
         self.num_processes = num_processes
         self.fuzzing_timeout = fuzzing_timeout
         self.checker = checker
-        self.uid = uid
-        self.gid = gid
         self.reverter = reverter;
 
     def read_violation_from_file(self, file: str) -> Violation:
@@ -151,8 +149,6 @@ def main():
     p.add_argument('--verbose', '-v', action='count', default=0)
     p.add_argument('--no-delta-debug', help='Do not delta debug.', action='store_true')
     p.add_argument('--fuzzing-timeout', help='Fuzzing timeout in minutes.', type=int, default=0)
-    p.add_argument('--uid', help='If passed, change artifacts to be owned by the user after each step.')
-    p.add_argument('--gid', help='If passed, change artifacts to be owned by the user after each step.')
     p.add_argument('--to_tag',
                    help="If passed, enables binary search this project in the range from_tag -> to_tag, requires both to_tag and from_tag to be passed",
                    type=str)
@@ -224,7 +220,7 @@ def main():
 
     t = ToolTester(generator, runner, debugger, results_location,
                    num_processes=args.jobs, fuzzing_timeout=args.fuzzing_timeout,
-                   checker=checker, uid=args.uid, gid=args.gid, reverter=tool_reverter)
+                   checker=checker, reverter=tool_reverter)
     t.main()
 
 
