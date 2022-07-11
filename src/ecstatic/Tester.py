@@ -204,15 +204,13 @@ def main():
     checker = ViolationCheckerFactory.get_violation_checker_for_task(args.task, args.tool,
                                                                      args.jobs, groundtruths, reader)
 
-    tool_reverter = None;
     if args.to_tag is None and args.from_tag is not None:
         print("Please add both to_tag and from_tag");
         exit(0)
     if args.to_tag is not None and args.from_tag is None:
         print("please add both to_tag and from_tag");
         exit(0)
-    if args.to_tag is not None:
-        tool_reverter = ReverterFactory().get_reverter(args.tool, args.from_tag, args.to_tag);
+    tool_reverter = ReverterFactory().get_reverter(args.tool.lower(), args.from_tag, args.to_tag);
 
     if not args.no_delta_debug:
         Path("/artifacts").mkdir(exist_ok=True)
