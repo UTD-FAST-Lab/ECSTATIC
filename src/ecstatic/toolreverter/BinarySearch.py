@@ -50,7 +50,8 @@ class BinarySearch():
     def performsearch(self) -> [SearchResult]:
         results = []
         #TODO::This needs to be based on the tool, for now we will just get Wala
-        os.mkdir("/bsearch_results")
+        if not os.path.exists("/bsearch_results"):
+            os.mkdir("/bsearch_results")
         failedbuilds = []
         for violation in self.violations:
             if(not violation.violated):

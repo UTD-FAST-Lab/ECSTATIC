@@ -3,4 +3,13 @@ import os
 
 from src.ecstatic.toolreverter.Reverter import ReverterFactory
 
-print(ReverterFactory().get_reverter("wala","1.5.5","1.5.7").GITREPO);
+reverter = ReverterFactory().get_reverter("wala","v1.5.5","v1.5.7")
+
+class B:
+    def __init__(self):
+        self.violated="true"
+
+b=B();
+
+BinarySearch(reverter.GITREPO,reverter.FROM_TAG,reverter.TO_TAG,[b],"","","").performsearch()
+
