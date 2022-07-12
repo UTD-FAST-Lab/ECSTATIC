@@ -79,7 +79,8 @@ class AbstractCommandLineToolRunner(ABC):
     def get_error_file(self, output_folder: str, job):
         return os.path.abspath(self.get_output(output_folder, job) + '.error')
 
-    def run_job(self, job: FuzzingJob, output_folder: str, num_retries: int = 1) -> FinishedFuzzingJob | None:
+    def run_job(self, job: FuzzingJob, output_folder: str, num_retries: int = 1,
+                entrypoint_s=False) -> FinishedFuzzingJob | None:
         """
         Runs the job, producing outputs in output_folder. Can try to rerun the job if the execution fails
         (i.e., if try_run_job throws an exception). If we cannot run the job within num_retries tries,
@@ -105,18 +106,18 @@ class AbstractCommandLineToolRunner(ABC):
             with open(configuration_file, 'w') as f:
                 f.write(self.dict_to_config_str(job.configuration))
 
-        start= 0;
+        start = 0;
         exception = None
         num_runs = 0
 
         try:
-            print("")
-            #if os.path.exists(self.get_output(output_folder, job)):
-                #logging.info(f'{self.get_output(output_folder, job)} already exists. Returning that.')
-                #with open(self.get_time_file(output_folder, job), 'r') as f:
-                    #execution_time = float(f.read().strip())
+            if entrypoint_s == False:
+                if os.path.exists(self.get_output(output_folder, job)):
+                    logging.info(f'{self.get_output(output_folder, job)} already exists. Returning that.')
+                    with open(self.get_time_file(output_folder, job), 'r') as f:
+                        execution_time = float(f.read().strip())
 
-                #return FinishedFuzzingJob(job, execution_time, self.get_output(output_folder, job))
+                    return FinishedFuzzingJob(job, execution_time, self.get_output(output_folder, job))
         except Exception:
             logging.exception("Time file was not created, so starting over.")
             os.remove(self.get_output(output_folder, job))
@@ -124,8 +125,8 @@ class AbstractCommandLineToolRunner(ABC):
         while num_runs < num_retries:
             # noinspection PyBroadException
             try:
-                #have to just remove and overwrite the results each time.
-                os.remove(self.get_output(output_folder,job));
+                # have to just remove and overwrite the results each time.
+                os.remove(self.get_output(output_folder, job));
                 start = time.time()
                 result = self.try_run_job(job, output_folder)
                 logging.info(f'Successfully ran job! Result is in {result}')

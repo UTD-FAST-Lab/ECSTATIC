@@ -81,8 +81,8 @@ class BinarySearch():
                 job1: FuzzingJob = violation.job1.job;
                 job2: FuzzingJob = violation.job2.job;
 
-                fjob1 = self.toolrunner.run_job(job1,"/bsearch_results")
-                fjob2 = self.toolrunner.run_job(job2,"/bsearch_results")
+                fjob1 = self.toolrunner.run_job(job1,"/bsearch_results",entrypoint_s=True)
+                fjob2 = self.toolrunner.run_job(job2,"/bsearch_results",entrypoint_s=True)
                 if fjob1 is None or fjob2 is None:
                     failedbuilds.append(commit.hash);
                     all_commits.remove(commit);
