@@ -16,6 +16,7 @@ RUN git clone --branch wala_reverts https://github.com/amordahl/ECSTATIC.git
 RUN python3.10 -m venv /venv
 ENV PATH=/venv/bin:$PATH
 ADD "https://api.github.com/repos/amordahl/ecstatic/commits?per_page=1&sha=jsdelta" latest_commit
+ADD "https://api.github.com/repos/amordahl/ecstatic/commits?per_page=1" latest_commit
 WORKDIR ECSTATIC
 RUN git pull
 RUN python -m pip install --upgrade pip
