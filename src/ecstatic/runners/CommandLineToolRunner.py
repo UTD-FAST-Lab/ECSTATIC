@@ -19,12 +19,11 @@
 import logging
 import os
 import subprocess
-import time
 from abc import ABC, abstractmethod
-from typing import List, Tuple
+from typing import List
 
 from src.ecstatic.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
-from src.ecstatic.util.UtilClasses import FinishedFuzzingJob, BenchmarkRecord, FuzzingJob
+from src.ecstatic.util.UtilClasses import BenchmarkRecord, FuzzingJob
 
 logger = logging.getLogger(__name__)
 

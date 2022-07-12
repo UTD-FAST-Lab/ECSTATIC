@@ -66,7 +66,7 @@ class DOOPRunner(CommandLineToolRunner):
                 break
         try:
             intermediate_file = os.path.join(output_dir, "CallGraphEdge.csv")
-        except UnboundLocalError as ule:
+        except UnboundLocalError:
             raise RuntimeError(ps.stdout)
         shutil.move(intermediate_file, output_file)
         logging.info(f'Moved {intermediate_file} to {output_file}')

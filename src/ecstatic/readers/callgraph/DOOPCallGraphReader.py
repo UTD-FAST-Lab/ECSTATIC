@@ -17,7 +17,7 @@
 
 
 import logging
-from typing import Tuple, Any
+from typing import Tuple
 
 from src.ecstatic.readers.callgraph.AbstractCallGraphReader import AbstractCallGraphReader
 from src.ecstatic.util.CGCallSite import CGCallSite

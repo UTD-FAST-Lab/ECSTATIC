@@ -62,7 +62,7 @@ def main():
         model : Tool = pickle.load(f)
     logging.debug("Checking model constraints now.")
     p = partial(compute_violations, records)
-    results = list()
+    list()
     with Pool(args.jobs) as pool:
         results = pool.map(p, model.options)
     all_results = list()
@@ -124,7 +124,7 @@ def compute_violations(records, o) -> List:
                         except ValueError as ve:
                             logging.warning(ve)
                             continue
-                        except KeyError as ke:
+                        except KeyError:
                             logging.debug(f'Option {o.name} is not in this result set.')
                             continue
             else: # test
@@ -153,7 +153,7 @@ def compute_violations(records, o) -> List:
                         except ValueError as ve:
                             logging.warning(ve)
                             continue
-                        except KeyError as ke:
+                        except KeyError:
                             logging.debug(f'Option {o.name} is not in this result set.')
                             continue
 

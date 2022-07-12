@@ -18,8 +18,8 @@ from src.ecstatic.toolreverter.Reverter import Reverter, ReverterFactory
 # there are some potential edge cases but this is alright for now.
 
 # we have to modify pom.xml of the WalaInterface Project but that is fine (just change version of the wala artifact in the pom.xml)
+from src.ecstatic.util.PotentialViolation import PotentialViolation
 from src.ecstatic.util.UtilClasses import FuzzingJob
-from src.ecstatic.util.Violation import Violation
 from src.ecstatic.violation_checkers.AbstractViolationChecker import AbstractViolationChecker
 
 
@@ -35,7 +35,7 @@ class SearchResult:
 
 class BinarySearch():
 
-    def __init__(self, gitrepo: str, from_tag, to_tag, violations: [Violation], toolrunner:AbstractCommandLineToolRunner, revert_tool: Reverter, checker: AbstractViolationChecker):
+    def __init__(self, gitrepo: str, from_tag, to_tag, violations: [PotentialViolation], toolrunner:AbstractCommandLineToolRunner, revert_tool: Reverter, checker: AbstractViolationChecker):
         self.gitrepo = gitrepo;
         self.from_tag = from_tag;
         self.to_tag = to_tag;

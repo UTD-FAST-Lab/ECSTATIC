@@ -14,16 +14,18 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from typing import List
+
+from src.ecstatic.runners.WALARunner import WALARunner
+from src.ecstatic.util.UtilClasses import BenchmarkRecord
 
 
-def fix_file_output(file: str) -> None:
-    content = ""
-    with open(file) as f:
-        for l in f:
-            content += l
+class WALAJSRunner(WALARunner):
+    def get_input_option(self, benchmark_record: BenchmarkRecord) -> List[str]:
+        return f"--scripts {benchmark_record.name}".split(" ")
 
-    content = content.replace('soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow',
-                              'soot.jimple.infoflow.Infoflow')
+    def get_output_option(self, output_file: str) -> List[str]:
+        return f"--cgoutput {output_file}".split(" ")
 
-    with open(args.file, 'w') as f:
-        f.write(content)
+    def get_base_command(self) -> List[str]:
+        return "java -jar /WalaJSCallgraph/target/jscallgraph-0.0.1-SNAPSHOT-jar-with-dependencies.jar".split(" ")

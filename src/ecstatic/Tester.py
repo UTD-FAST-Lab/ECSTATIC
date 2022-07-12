@@ -24,13 +24,14 @@ import pickle
 import subprocess
 import time
 from functools import partial
-from multiprocessing.pool import Pool
+from multiprocessing.dummy import Pool
 from pathlib import Path
 from typing import List, Optional
 
 from tqdm import tqdm
 
-from src.ecstatic.debugging.DeltaDebugger import DeltaDebugger
+from src.ecstatic.debugging.JavaBenchmarkDeltaDebugger import JavaBenchmarkDeltaDebugger
+from src.ecstatic.debugging.JavaViolationDeltaDebugger import JavaViolationDeltaDebugger
 from src.ecstatic.dispatcher import Sanitizer
 from src.ecstatic.fuzzing.generators import FuzzGeneratorFactory
 from src.ecstatic.fuzzing.generators.FuzzGenerator import FuzzGenerator
@@ -40,6 +41,7 @@ from src.ecstatic.runners.AbstractCommandLineToolRunner import AbstractCommandLi
 from src.ecstatic.toolreverter.BinarySearch import BinarySearch
 from src.ecstatic.toolreverter.Reverter import ReverterFactory, Reverter
 from src.ecstatic.util.BenchmarkReader import BenchmarkReader
+from src.ecstatic.util.PotentialViolation import PotentialViolation
 from src.ecstatic.util.UtilClasses import FuzzingCampaign, Benchmark, \
     BenchmarkRecord
 from src.ecstatic.util.Violation import Violation
@@ -51,19 +53,13 @@ logger = logging.getLogger(__name__)
 
 class ToolTester:
 
-    def __init__(self, generator, runner: AbstractCommandLineToolRunner, debugger: Optional[DeltaDebugger],
+    def __init__(self, generator, runner: AbstractCommandLineToolRunner, debugger: Optional[JavaViolationDeltaDebugger],
                  results_location: str,
                  num_processes: int, fuzzing_timeout: int, checker: AbstractViolationChecker,
                  reverter: Reverter):
-        """
-
-        Parameters
-        ----------
-        limit : object
-        """
         self.generator: FuzzGenerator = generator
         self.runner: AbstractCommandLineToolRunner = runner
-        self.debugger: DeltaDebugger = debugger
+        self.debugger: JavaViolationDeltaDebugger = debugger
         self.results_location: str = results_location
         self.unverified_violations = list()
         self.num_processes = num_processes
@@ -94,18 +90,8 @@ class ToolTester:
             print(f'Campaign {campaign_index} finished (time {time.time() - campaign_start_time} seconds)')
             violations_folder = os.path.join(campaign_folder, 'violations')
             print(f'Now checking for violations.')
-            existing_violations = []
-            if os.path.exists(violations_folder):
-                logging.warning(f"{violations_folder} exists, so reading existing pickled violations. Please remove "
-                                f"{violations_folder} if you want violations to be recomputed.")
-                with Pool(self.num_processes) as p:
-                    existing_violations = p.map(self.read_violation_from_file,
-                                                [os.path.join(violations_folder, v) for v in
-                                                 os.listdir(violations_folder) if v.endswith('.pickle')])
-                logging.info(f'Read in {len(existing_violations)} existing violations.')
             Path(violations_folder).mkdir(exist_ok=True)
-            violations: List[Violation] = self.checker.check_violations(results, violations_folder, existing_violations)
-
+            violations: List[PotentialViolation] = self.checker.check_violations(results, violations_folder)
             # Perform binary search on things
 
             search = BinarySearch(self.reverter.GITREPO, self.reverter.FROM_TAG, self.reverter.TO_TAG, violations, self.runner, self.reverter,self.checker)
@@ -119,6 +105,11 @@ class ToolTester:
                               1)) as p:  # /2 because each delta debugging process needs 2 cores.
                     direct_violations = [v for v in violations if not v.is_transitive()]
                     print(f'Delta debugging {len(direct_violations)} violations with {self.num_processes} cores.')
+
+            if self.debugger is not None:
+                with Pool(max(int(self.num_processes/2), 1)) as p:  # /2 because each delta debugging process needs 2 cores.
+                    direct_violations = [v for v in violations if not v.violated and not v.is_transitive() and len(v.expected_diffs) > 0]
+                    print(f'Delta debugging {len(direct_violations)} cases with {self.num_processes} cores.')
                     p.map(partial(self.debugger.delta_debug, campaign_directory=campaign_folder,
                                   timeout=self.runner.timeout), direct_violations)
             self.generator.feedback(violations)
@@ -212,14 +203,12 @@ def main():
     tool_reverter = ReverterFactory().get_reverter(args.tool.lower(), args.from_tag, args.to_tag);
 
     if not args.no_delta_debug:
-        Path("/artifacts").mkdir(exist_ok=True)
-        debugger = DeltaDebugger("/artifacts", args.tool, args.task, groundtruths, runner.whole_program)
+        debugger = JavaBenchmarkDeltaDebugger(reader=reader, runner=runner, violation_checker=checker)
     else:
         debugger = None
 
     t = ToolTester(generator, runner, debugger, results_location,
-                   num_processes=args.jobs, fuzzing_timeout=args.fuzzing_timeout,
-                   checker=checker, reverter=tool_reverter)
+                   num_processes=args.jobs, fuzzing_timeout=args.fuzzing_timeout,checker=checker, reverter=tool_reverter)
     t.main()
 
 
@@ -237,7 +226,7 @@ def build_benchmark(benchmark: str) -> Benchmark:
         benchmark_list = []
         for root, dirs, files in os.walk("/benchmarks"):
             benchmark_list.extend([os.path.abspath(os.path.join(root, f)) for f in files if
-                                   (f.endswith(".jar") or f.endswith(".apk"))])  # TODO more dynamic extensions?
+                                   (f.endswith(".jar") or f.endswith(".apk") or f.endswith(".js"))])  # TODO more dynamic extensions?
         return Benchmark([BenchmarkRecord(b) for b in benchmark_list])
 
 

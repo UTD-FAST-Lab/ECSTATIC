@@ -16,8 +16,8 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from fuzzingbook.Grammars import crange, srange, convert_ebnf_grammar, extend_grammar, is_valid_grammar
-from fuzzingbook.Grammars import START_SYMBOL, new_symbol, Grammar
+from fuzzingbook.Grammars import Grammar
+from fuzzingbook.Grammars import is_valid_grammar
 
 FLOWDROID_EBNF_GRAMMAR: Grammar = {
     '<start>': ['<options>'],
