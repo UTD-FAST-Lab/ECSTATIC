@@ -17,9 +17,6 @@
 
 
 import logging
-import os
-import pickle
-from abc import ABC
 from typing import Tuple, List, Any
 
 from src.ecstatic.readers.AbstractReader import AbstractReader
@@ -41,7 +38,7 @@ class AbstractCallGraphReader(AbstractReader):
                 callgraph.append(self.process_line(l))
             except IndexError:
                 logging.critical(f"Could not read line: {l}")
-        return callgraph
+        return list(filter(lambda x: x is not None, callgraph))
 
     def process_line(self, line: str) -> Tuple[Any, Any]:
         """

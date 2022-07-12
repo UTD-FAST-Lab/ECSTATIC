@@ -17,11 +17,8 @@
 
 
 import logging
-import os
-import pickle
-from typing import Any, Set, List, Tuple, Iterable, Dict
+from typing import Iterable, Dict
 
-from src.ecstatic.readers.callgraph.AbstractCallGraphReader import AbstractCallGraphReader
 from src.ecstatic.util.UtilClasses import FinishedFuzzingJob
 from src.ecstatic.violation_checkers.AbstractViolationChecker import AbstractViolationChecker, T
 

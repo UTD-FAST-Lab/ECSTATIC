@@ -18,12 +18,16 @@
 
 from typing import List, Dict, Iterable, Set, TypeVar, Tuple
 
+import deprecation
+
 from src.ecstatic.util.PartialOrder import PartialOrder
 from src.ecstatic.util.UtilClasses import FinishedFuzzingJob
 
 T = TypeVar('T')
 
 
+@deprecation.deprecated(details="Violation checkers should now produce PotentialViolations, which do "
+                                "the job of figuring out if they are violations on their own.")
 class Violation:
 
     def __eq__(self, o: object) -> bool:
@@ -62,8 +66,11 @@ class Violation:
             if p.is_transitive():
                 return True
         return False
-    def __init__(self, violated: bool, partial_orders: Set[PartialOrder],
-                 job1: FinishedFuzzingJob, job2: FinishedFuzzingJob,
+
+    def __init__(self, violated: bool,
+                 partial_orders: Set[PartialOrder],
+                 job1: FinishedFuzzingJob,
+                 job2: FinishedFuzzingJob,
                  differences: Iterable[T]):
         self.violated = violated
         self.partial_orders = frozenset(partial_orders)

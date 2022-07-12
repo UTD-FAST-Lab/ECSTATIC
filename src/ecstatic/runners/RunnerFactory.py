@@ -22,18 +22,17 @@ from src.ecstatic.runners.AbstractCommandLineToolRunner import AbstractCommandLi
 from src.ecstatic.runners.DOOPRunner import DOOPRunner
 from src.ecstatic.runners.FlowDroidRunner import FlowDroidRunner
 from src.ecstatic.runners.SOOTRunner import SOOTRunner
+from src.ecstatic.runners.WALAJSRunner import WALAJSRunner
 from src.ecstatic.runners.WALARunner import WALARunner
 
 logger = logging.getLogger(__name__)
 
 
 def get_runner_for_tool(name: str, *args) -> AbstractCommandLineToolRunner:
-    if name.lower() == "soot":
-        return SOOTRunner(*args)
-    elif name.lower() == "wala":
-        return WALARunner(*args)
-    elif name.lower() == "doop":
-        return DOOPRunner(*args)
-    elif name.lower() == "flowdroid":
-        return FlowDroidRunner(*args)
-        raise NotImplementedError(f"No support for runner for {name}")
+    match name.lower():
+        case "soot": return SOOTRunner(*args)
+        case "wala": return WALARunner(*args)
+        case "doop": return DOOPRunner(*args)
+        case "flowdroid": return FlowDroidRunner(*args)
+        case "wala-js": return WALAJSRunner(*args)
+        case _ : raise NotImplementedError(f"No support for runner for {name}")

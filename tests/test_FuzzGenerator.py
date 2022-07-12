@@ -53,7 +53,7 @@ def test_FuzzGenerator_exclusion(tool: str, excluded_level: Level):
         b) if tool != "soot" else SOOTFuzzGenerator(
         importlib.resources.path("src.resources.configuration_spaces", f"{tool}_config.json"),
         importlib.resources.path("src.resources.grammars", f"{tool}_grammar.json"), b)
-    campaign: FuzzingCampaign = fg.generate_campaign()
+    fg.generate_campaign()
     fg.exclusions.append(excluded_level)
     campaign: FuzzingCampaign = fg.generate_campaign()
     for c in campaign.jobs:

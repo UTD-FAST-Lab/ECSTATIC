@@ -22,7 +22,6 @@ from networkx import DiGraph
 
 from src.ecstatic.readers.callgraph.AbstractCallGraphReader import AbstractCallGraphReader
 from src.ecstatic.readers.callgraph.DOOPCallGraphReader import DOOPCallGraphReader
-from src.ecstatic.transformers.callgraphs import CallgraphTransformations
 
 
 def test_wala_contextins():
