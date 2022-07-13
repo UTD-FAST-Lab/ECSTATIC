@@ -36,19 +36,25 @@ def try_resolve_path(path: str, root: str = "/") -> str:
     logging.info(f'Trying to resolve {path} in {root}')
     if path.startswith("/"):
         path = path[1:]
-    if os.path.exists(os.path.join(root, path)):
-        return os.path.abspath(os.path.join(root, path))
+    if os.path.exists(joined_path := os.path.join(root, path)):
+        return os.path.abspath(joined_path)
+    results = set()
     for rootdir, dirs, _ in os.walk(os.path.join(root, "benchmarks")):
         cur = os.path.join(os.path.join(root, "benchmarks"), rootdir)
         if os.path.exists(os.path.join(cur, path)):
-            return os.path.join(cur, path)
+            results.add(os.path.join(cur, path))
         for d in dirs:
             if os.path.exists(os.path.join(os.path.join(cur, d), path)):
-                return os.path.join(os.path.join(cur, d), path)
-    raise FileNotFoundError(f"Could not resolve path {path}")
+                results.add(os.path.join(os.path.join(cur, d), path))
+    match len(results):
+        case 0: raise FileNotFoundError(f"Could not resolve path {path} from root {root}")
+        case 1: return results.pop()
+        case _: raise RuntimeError(f"Path {path} in root {root} is ambiguous. Found the following potential results: "
+                                   f"{results}. Try adding more context information to the index.json file, "
+                                   f"so that the path is unique.")
 
 
-def validate(b: BenchmarkRecord, root: str = "/") -> BenchmarkRecord:
+def validate(benchmark: BenchmarkRecord, root: str = "/") -> BenchmarkRecord:
     """
     Validates a benchmark, resolving each of its paths to an absolute path.
     Searches in the supplied root directory.
@@ -61,13 +67,13 @@ def validate(b: BenchmarkRecord, root: str = "/") -> BenchmarkRecord:
     -------
     A resolved benchmark
     """
-    logger.info(f'Original benchmark record is {b}')
-    b.name = try_resolve_path(b.name, root)
-    b.depends_on = [try_resolve_path(d, root) for d in b.depends_on]
-    b.sources = [try_resolve_path(s, root) for s in b.sources]
-    b.build_script = try_resolve_path(b.build_script, root)
-    logger.info(f'Resolved benchmark record to {b}')
-    return b
+    logger.info(f'Original benchmark record is {benchmark}')
+    benchmark.name = try_resolve_path(benchmark.name, root)
+    benchmark.depends_on = [try_resolve_path(d, root) for d in benchmark.depends_on]
+    benchmark.sources = [try_resolve_path(s, root) for s in benchmark.sources]
+    benchmark.build_script = try_resolve_path(benchmark.build_script, root)
+    logger.info(f'Resolved benchmark record to {benchmark}')
+    return benchmark
 
 
 class BenchmarkReader:

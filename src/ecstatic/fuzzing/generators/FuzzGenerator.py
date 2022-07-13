@@ -21,8 +21,7 @@ import json
 import logging
 import os
 import random
-from enum import Enum, auto
-from typing import List, Dict, Iterable, Tuple
+from typing import List, Dict, Tuple
 
 from frozendict import frozendict
 from fuzzingbook.GrammarCoverageFuzzer import GrammarCoverageFuzzer
