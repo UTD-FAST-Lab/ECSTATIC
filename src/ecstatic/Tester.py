@@ -97,12 +97,12 @@ class ToolTester:
             self.generator.feedback(violations)
             print(f'Done with campaign {campaign_index}!')
             campaign_index += 1
-            if self.uid is not None and self.gid is not None:
-                logger.info("Changing permissions of folder.")
-                os.chown(campaign_folder, int(self.uid), int(self.gid))
-                for root, dirs, files in os.walk(campaign_folder):
-                    files = map(lambda x: os.path.join(root, x), files)
-                    map(lambda x: os.chown(x, int(self.uid), self.gid), files)
+            # if self.uid is not None and self.gid is not None:
+            #    logger.info("Changing permissions of folder.")
+            #    os.chown(campaign_folder, int(self.uid), int(self.gid))
+            #    for root, dirs, files in os.walk(campaign_folder):
+            #        files = map(lambda x: os.path.join(root, x), files)
+            #        map(lambda x: os.chown(x, int(self.uid), self.gid), files)
             if time.time() - start_time > self.fuzzing_timeout * 60:
                 break
         print('Testing done!')
