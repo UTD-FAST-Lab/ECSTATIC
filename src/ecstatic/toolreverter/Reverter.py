@@ -54,7 +54,7 @@ class WalaReverter(Reverter):
         # build them both
         cdir = os.getcwd();
         try:
-            command_run = self.GITREPO+"/gradlew"+"clean publishToMavenLocal -x test -x javadoc -x testClasses -x " \
+            command_run = self.GITREPO+"/gradlew"+" clean publishToMavenLocal -x test -x javadoc -x testClasses -x " \
                                                   "testFixturesJavadoc -p C:/binary_search_project/WALA/ "
             output = subprocess.check_output(command_run, shell=True);
             command_run2 = "mvn clean package"
