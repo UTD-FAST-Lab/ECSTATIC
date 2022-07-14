@@ -111,7 +111,7 @@ class AbstractCommandLineToolRunner(ABC):
         num_runs = 0
 
         try:
-            if entrypoint_s == False:
+            if not entrypoint_s:
                 if os.path.exists(self.get_output(output_folder, job)):
                     logging.info(f'{self.get_output(output_folder, job)} already exists. Returning that.')
                     with open(self.get_time_file(output_folder, job), 'r') as f:
@@ -126,7 +126,8 @@ class AbstractCommandLineToolRunner(ABC):
             # noinspection PyBroadException
             try:
                 # have to just remove and overwrite the results each time.
-                os.remove(self.get_output(output_folder, job));
+                if entrypoint_s:
+                    os.remove(self.get_output(output_folder, job));
                 start = time.time()
                 result = self.try_run_job(job, output_folder)
                 logging.info(f'Successfully ran job! Result is in {result}')
