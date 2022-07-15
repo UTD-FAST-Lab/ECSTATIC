@@ -19,7 +19,7 @@ class TAJSRunner (CommandLineToolRunner):
         return []
 
     def get_input_option(self, benchmark_record: BenchmarkRecord) -> List[str]:
-        return f" {benchmark_record.name}".split()
+        return f"{benchmark_record.name}".split()
 
     def get_output_option(self, output_file: str) -> List[str]:
         # callgraph recieves file path argument
