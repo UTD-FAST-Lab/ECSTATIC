@@ -67,5 +67,5 @@ class TAJSRunner (CommandLineToolRunner):
         return config_as_str + rest_of_config
 
     def get_base_command(self) -> List[str]:
-        return "java -jar dist/tajs-all.jar".split()
+        return "java -jar /TAJS/dist/tajs-all.jar".split()
         
