@@ -97,6 +97,12 @@ class ToolTester:
             self.generator.feedback(violations)
             print(f'Done with campaign {campaign_index}!')
             campaign_index += 1
+            # if self.uid is not None and self.gid is not None:
+            #    logger.info("Changing permissions of folder.")
+            #    os.chown(campaign_folder, int(self.uid), int(self.gid))
+            #    for root, dirs, files in os.walk(campaign_folder):
+            #        files = map(lambda x: os.path.join(root, x), files)
+            #        map(lambda x: os.chown(x, int(self.uid), self.gid), files)
             if time.time() - start_time > self.fuzzing_timeout * 60:
                 break
         print('Testing done!')
@@ -121,6 +127,8 @@ def main():
     p.add_argument('--verbose', '-v', action='count', default=0)
     p.add_argument('--no-delta-debug', help='Do not delta debug.', action='store_true')
     p.add_argument('--fuzzing-timeout', help='Fuzzing timeout in minutes.', type=int, default=0)
+    p.add_argument('--uid', help='If passed, change artifacts to be owned by the user after each step.')
+    p.add_argument('--gid', help='If passed, change artifacts to be owned by the user after each step.')
     args = p.parse_args()
 
     if args.verbose > 1:
@@ -190,7 +198,7 @@ def build_benchmark(benchmark: str) -> Benchmark:
         return BenchmarkReader().read_benchmark(importlib.resources.path(f"src.resources.benchmarks.{benchmark}", "index.json"))
     else:
         benchmark_list = []
-        for root, dirs, files in os.walk("/benchmarks"):Jsdelta
+        for root, dirs, files in os.walk("/benchmarks"):
             benchmark_list.extend([os.path.abspath(os.path.join(root, f)) for f in files if
                                    (f.endswith(".jar") or f.endswith(".apk") or f.endswith(".js"))])  # TODO more dynamic extensions?
         return Benchmark([BenchmarkRecord(b) for b in benchmark_list])
