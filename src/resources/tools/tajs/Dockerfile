@@ -10,3 +10,4 @@ WORKDIR /
 RUN git clone https://github.com/egsch/TAJS.git
 WORKDIR /TAJS/
 RUN git submodule update --init --recursive && ant
+WORKDIR /
