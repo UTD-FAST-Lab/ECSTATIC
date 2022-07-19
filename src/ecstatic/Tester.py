@@ -169,7 +169,8 @@ def main():
                                                                      args.jobs, groundtruths, reader)
 
     if not args.no_delta_debug:
-        debugger = JavaBenchmarkDeltaDebugger(reader=reader, runner=runner, violation_checker=checker)
+        # Need to fix this
+        debugger = JSBenchmarkDeltaDebugger(reader=reader, runner=runner, violation_checker=checker)
     else:
         debugger = None
 
