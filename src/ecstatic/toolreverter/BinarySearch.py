@@ -90,7 +90,7 @@ class BinarySearch():
                     continue;
 
                 new_violation = self.checker.check_for_violation(t=(fjob1,fjob2,job1.option_under_investigation));
-                if len(new_violation)==0:
+                if len(*new_violation)==0:
                     right=inx;
                 else:
                     found= False;

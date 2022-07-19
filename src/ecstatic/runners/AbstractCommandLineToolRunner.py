@@ -127,7 +127,8 @@ class AbstractCommandLineToolRunner(ABC):
             try:
                 # have to just remove and overwrite the results each time.
                 if entrypoint_s:
-                    os.remove(self.get_output(output_folder, job));
+                    if os.path.exists(self.get_output(output_folder,job)):
+                        os.remove(self.get_output(output_folder, job));
                 start = time.time()
                 result = self.try_run_job(job, output_folder)
                 logging.info(f'Successfully ran job! Result is in {result}')
