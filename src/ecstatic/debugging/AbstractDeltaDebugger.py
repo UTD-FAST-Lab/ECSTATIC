@@ -108,7 +108,7 @@ class AbstractDeltaDebugger(ABC):
                 json.dump(ground_truth, f)
 
             # Copy benchmarks folder so that we have our own code location.
-            shutil.copytree(src="benchmarks", dst=os.path.join(directory, "benchmarks"))
+            shutil.copytree(src="/benchmarks", dst=os.path.join(directory, "benchmarks"))
             potential_violation.job1.job.target = validate(potential_violation.job1.job.target, directory)
             logger.info(f'Moved benchmark, so target is now {potential_violation.job1.job.target}')
             potential_violation.job2.job.target = potential_violation.job1.job.target
