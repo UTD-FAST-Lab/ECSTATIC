@@ -80,7 +80,7 @@ class AbstractCommandLineToolRunner(ABC):
         return os.path.abspath(self.get_output(output_folder, job) + '.error')
 
     def run_job(self, job: FuzzingJob, output_folder: str, num_retries: int = 1,
-                entrypoint_s=False) -> FinishedFuzzingJob | None:
+                entrypoint_s: bool = False) -> FinishedFuzzingJob | None:
         """
         Runs the job, producing outputs in output_folder. Can try to rerun the job if the execution fails
         (i.e., if try_run_job throws an exception). If we cannot run the job within num_retries tries,
