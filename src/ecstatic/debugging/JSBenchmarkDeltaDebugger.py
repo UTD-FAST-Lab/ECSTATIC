@@ -1,3 +1,9 @@
+import os
+from abc import ABC
+from typing import List
+
+from src.ecstatic.debugging.JavaBenchmarkDeltaDebugger import JavaBenchmarkDeltaDebugger
+
 class JSBenchmarkDeltaDebugger(JavaBenchmarkDeltaDebugger, ABC):
 
     def get_delta_debugger_cmd(self, build_script, directory, potential_violation, script_location):
