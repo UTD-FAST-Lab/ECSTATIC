@@ -4,6 +4,14 @@ from typing import List
 
 from src.ecstatic.debugging.JavaBenchmarkDeltaDebugger import JavaBenchmarkDeltaDebugger
 
+@dataclass
+class DeltaDebuggingJob:
+    predicate: DeltaDebuggingPredicate
+    potential_violation: PotentialViolation
+    runner: AbstractCommandLineToolRunner
+    reader: AbstractReader
+    violation_checker: AbstractViolationChecker
+
 class JSBenchmarkDeltaDebugger(JavaBenchmarkDeltaDebugger, ABC):
 
     def get_delta_debugger_cmd(self, build_script, directory, potential_violation, script_location):
