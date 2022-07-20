@@ -3,14 +3,7 @@ from abc import ABC
 from typing import List
 
 from src.ecstatic.debugging.JavaBenchmarkDeltaDebugger import JavaBenchmarkDeltaDebugger
-
-@dataclass
-class DeltaDebuggingJob:
-    predicate: DeltaDebuggingPredicate
-    potential_violation: PotentialViolation
-    runner: AbstractCommandLineToolRunner
-    reader: AbstractReader
-    violation_checker: AbstractViolationChecker
+from src.ecstatic.debugging.AbstractDeltaDebugger import DeltaDebuggingJob
 
 class JSBenchmarkDeltaDebugger(JavaBenchmarkDeltaDebugger, ABC):
 
