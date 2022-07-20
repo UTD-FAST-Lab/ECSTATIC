@@ -11,7 +11,6 @@ class JSBenchmarkDeltaDebugger(JavaBenchmarkDeltaDebugger, ABC):
         # Then, run the delta debugger
         cmd: List[str] = "jsdelta ".split(' ')
         cmd.extend(["--cmd", script_location])
-        cmd.extend(["--msg", "Wrote cmd"])
         # cmd.extend(["--out", ""])
         cmd.extend([potential_violation.job1.job.target.name])
         
@@ -40,6 +39,7 @@ class JSBenchmarkDeltaDebugger(JavaBenchmarkDeltaDebugger, ABC):
             f.write("#!/bin/bash\n")
             cmd = f"deltadebugger {job_tmp.name}"
             f.write(cmd + "\n")
+            f.write("exit (echo !$?)\n")
             result = f.name
             logger.info(f"Wrote cmd {cmd} to delta debugging script.")
         return result
