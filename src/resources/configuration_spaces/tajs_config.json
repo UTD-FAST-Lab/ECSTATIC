@@ -88,9 +88,9 @@
       "default": "FALSE",
       "orders": [
         {
-          "left": "FALSE",
+          "left": "TRUE",
           "order": "MPT",
-          "right": "TRUE"
+          "right": "FALSE"
         }
       ]
     },
