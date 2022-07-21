@@ -77,6 +77,7 @@ class PotentialViolation:
             match self.get_main_partial_order():
                 case PartialOrder(_, PartialOrderType.MORE_PRECISE_THAN, _):
                     logger.debug("Main partial order is precision. Computing job2 minus job1")
+                    logger.debug("Option under investigation is: " + str(self.job2.job.option_under_investigation) + str(self.job1.job.option_under_investigation))
                     self._expected_diffs = self.job2_minus_job1
                 case PartialOrder(_, PartialOrderType.MORE_SOUND_THAN, _):
                     logger.debug("Main partial order is soundness. Computing job1 minus job2")
