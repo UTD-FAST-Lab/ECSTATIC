@@ -118,7 +118,7 @@ class AbstractViolationChecker(ABC):
                 finished_results.extend(result)
 
         print('Violation detection done.')
-        print(f'Finished checking violations. {len([v for v in finished_results if v.violated])} violations detected.')
+        print(f'Finished checking violations. {len(finished_results)} violations detected.')
         print(f'Campaign value processing done (took {time.time() - start_time} seconds).')
         self.summarize([f for f in finished_results if f.violated])
         return finished_results
