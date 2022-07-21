@@ -120,6 +120,7 @@ class PotentialViolation:
                 case _:
                     raise RuntimeError(f"Trying to compute violation with invalid partial order set "
                                        f"{self.partial_orders}")
+        logging.debug("Violated:" + str(self._violated))
         return self._violated
 
     @property
