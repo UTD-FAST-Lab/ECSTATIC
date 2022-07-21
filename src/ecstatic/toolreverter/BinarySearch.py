@@ -1,6 +1,6 @@
 import json
 
-from pydriller import Repository, Git;
+from pydriller import Repository, Git, Commit;
 import os
 
 from src.ecstatic.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
@@ -24,12 +24,12 @@ from src.ecstatic.violation_checkers.AbstractViolationChecker import AbstractVio
 
 class SearchResult:
 
-    def __init__(self, commit, violation):
+    def __init__(self, commit: Commit, violation):
         self.found_commit = commit;
         self.violation = violation.as_dict();
 
     def __str__(self):
-        return json.dumps({'fix_commit': self.found_commit, 'violation': self.violation});
+        return json.dumps({'fix_commit': self.found_commit.hash, 'violation': self.violation});
 
 
 class BinarySearch():
@@ -67,7 +67,7 @@ class BinarySearch():
             all_commits.sort(key=lambda x: x.committer_date.date());
 
             left = 0;
-            right = len(all_commits);
+            right = len(all_commits)-1;
             while left < right:
                 inx = (int)((left + right) / 2)
                 commit = all_commits[inx];
