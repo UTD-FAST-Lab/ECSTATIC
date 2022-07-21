@@ -54,8 +54,10 @@ class PotentialViolation:
 
     def get_option_under_investigation(self):
         if self.job1.job.option_under_investigation is None:
+            logger.debug("Option under investigation is: "+ str(self.job2.job.option_under_investigation))
             return self.job2.job.option_under_investigation
         else:
+            logger.debug("Option under investigation is: " + str(self.job1.job.option_under_investigation))
             return self.job1.job.option_under_investigation
 
     def is_transitive(self) -> bool:
