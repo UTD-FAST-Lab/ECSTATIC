@@ -2,6 +2,7 @@ import os
 from abc import ABC
 from typing import List
 import tempfile
+import dill as pickle
 
 from src.ecstatic.debugging.JavaBenchmarkDeltaDebugger import JavaBenchmarkDeltaDebugger
 from src.ecstatic.debugging.AbstractDeltaDebugger import DeltaDebuggingJob
