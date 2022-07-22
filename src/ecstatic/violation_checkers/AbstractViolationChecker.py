@@ -117,7 +117,7 @@ class AbstractViolationChecker(ABC):
                 # [r for r in result if r.violated]
                 finished_results.extend(result)
 
-        logger.debug("finished results" + str(finished_results))
+        print("finished results" + str(finished_results))
         print('Violation detection done.')
         print(f'Finished checking violations. {len([v for v in finished_results if v.violated])} violations detected.')
         print(f'Campaign value processing done (took {time.time() - start_time} seconds).')
