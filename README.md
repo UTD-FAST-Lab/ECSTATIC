@@ -10,9 +10,8 @@ applications using FlowDroid.
 This application is written for Python version >= 3.10.0. Furthermore, 
 ECSTATIC runs its analyses in Docker containers in order to maintain consistent
 environments across runs, so you must have a working Docker installation.
-We know ECSTATIC can successfully build on Ubuntu and Windows hosts, and cannot successfully 
-build on M1 Macs as of April 2022 (specifically, the build process hangs when trying to build Z3 for Python.
-If you know how to fix this, feel free to make a pull request!)
+We know ECSTATIC can successfully build on Ubuntu, Windows, and Mac (as of 2022-07-22, building on M1 Mac takes
+a long time, as it has to compile Z3 from scratch).
 
 # Usage
 
