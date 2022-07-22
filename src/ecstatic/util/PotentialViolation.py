@@ -79,9 +79,11 @@ class PotentialViolation:
                     logger.debug("Main partial order is precision. Computing job2 minus job1")
                     logger.debug("Option under investigation is: " + str(self.job2.job.option_under_investigation) + str(self.job1.job.option_under_investigation))
                     self._expected_diffs = self.job2_minus_job1
+                    logger.debug("Expected diffs: " + str(self._expected_diffs))
                 case PartialOrder(_, PartialOrderType.MORE_SOUND_THAN, _):
                     logger.debug("Main partial order is soundness. Computing job1 minus job2")
                     self._expected_diffs = self.job1_minus_job2
+                    logger.debug("Expected diffs: " + str(self._expected_diffs))
                 case _: raise RuntimeError("Pattern matching partial order failed.")
         return self._expected_diffs
 
