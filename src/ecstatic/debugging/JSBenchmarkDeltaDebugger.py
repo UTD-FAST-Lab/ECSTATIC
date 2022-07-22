@@ -3,9 +3,12 @@ from abc import ABC
 from typing import List
 import tempfile
 import dill as pickle
+import logging
 
 from src.ecstatic.debugging.JavaBenchmarkDeltaDebugger import JavaBenchmarkDeltaDebugger
 from src.ecstatic.debugging.AbstractDeltaDebugger import DeltaDebuggingJob
+
+logger = logging.getLogger(__name__)
 
 class JSBenchmarkDeltaDebugger(JavaBenchmarkDeltaDebugger, ABC):
 
