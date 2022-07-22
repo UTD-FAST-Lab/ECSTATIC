@@ -32,7 +32,7 @@ class CallgraphViolationChecker(AbstractViolationChecker):
     def postprocess(self, results: Iterable[T], job: FinishedFuzzingJob) -> Iterable[T]:
         orig_length = len(results)
         if len(job.job.target.packages) > 0:
-            # results = list(filter(lambda x: True in [x[0].clazz.startswith(p) for p in job.job.target.packages], results))
+            results = list(filter(lambda x: True in [x[0].clazz.startswith(p) for p in job.job.target.packages], results))
             logging.info(f"Postprocessed result from {orig_length} to {len(results)} edges.")
         return results
 

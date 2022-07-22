@@ -23,7 +23,6 @@ class TAJSCallGraphReader(AbstractCallGraphReader):
                     try:
                         parts = i.strip().split(" ")
                         node = parts[2].strip(" label=").strip('"]').split("\\n")
-                        print(node)
                     except:
                         parts = i.strip().split(" ")
                     nodes[parts[0]] = node
@@ -37,6 +36,7 @@ class TAJSCallGraphReader(AbstractCallGraphReader):
                 # Need to change setting of callsite and target below
                 callsite = CGCallSite(call_funct, call_location, '')
                 target = CGTarget(target_funct, '')
+                print(call_funct, call_location, target_funct)
                 callgraph.append((callsite, target))
                 # add tuple of CGCallsite and CGTarget to list
         return callgraph
