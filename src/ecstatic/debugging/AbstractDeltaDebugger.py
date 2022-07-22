@@ -130,7 +130,8 @@ class AbstractDeltaDebugger(ABC):
 
             script_location = self.create_script(job, directory)
             build_script = potential_violation.job1.job.target.build_script
-            os.chmod(build_script, 700)
+            if build_script is not None:
+                os.chmod(build_script, 700)
             os.chmod(script_location, 700)
 
             cmd = self.get_delta_debugger_cmd(build_script, directory, potential_violation, script_location)
