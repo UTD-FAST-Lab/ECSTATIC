@@ -85,9 +85,9 @@ def parse_args():
         default=0
     ),
     parser.add_argument(
-        '--no-delta-debug',
-        help='Disable delta debugging.',
-        action='store_true'
+        '-d', '--delta-debugging-mode',
+        choices=['none', 'violation', 'benchmark'],
+        default='none'
     )
     parser.add_argument(
         '--fuzzing-timeout',

@@ -54,13 +54,12 @@ def build_image(tool: str, nocache: bool = False):
 def start_runner(tool: str, benchmark: str, task: str, args):
     # PYTHONENV=/ecstatic
     # run build benchmark script
-    command = f'tester {tool} {benchmark} -t {task} -j {args.jobs} --fuzzing-timeout {args.fuzzing_timeout}'
+    command = f'tester {tool} {benchmark} -t {task} -j {args.jobs} --fuzzing-timeout {args.fuzzing_timeout} ' \
+              f'--delta-debugging-mode {args.delta_debugging_mode}'
     if args.timeout is not None:
         command += f' --timeout {args.timeout}'
     if args.verbose > 0:
         command += f' -{"".join(["v" for _ in range(args.verbose)])}'
-    if args.no_delta_debug:
-        command += f' --no-delta-debug'
 
     print(f'Starting container with command {command}')
     Path(args.results_location).mkdir(parents=True, exist_ok=True)

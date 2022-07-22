@@ -7,7 +7,7 @@ call graph analyses on WALA, SOOT, and DOOP, as well as taint analysis on Androi
 applications using FlowDroid.
 
 # Prerequisites
-This application is written for Python version >= 3.8.0. Furthermore, 
+This application is written for Python version >= 3.10.0. Furthermore, 
 ECSTATIC runs its analyses in Docker containers in order to maintain consistent
 environments across runs, so you must have a working Docker installation.
 We know ECSTATIC can successfully build on Ubuntu and Windows hosts, and cannot successfully 

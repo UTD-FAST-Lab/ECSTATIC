@@ -31,6 +31,7 @@ from typing import List, Optional
 from tqdm import tqdm
 
 from src.ecstatic.debugging.JavaBenchmarkDeltaDebugger import JavaBenchmarkDeltaDebugger
+from src.ecstatic.debugging.JSBenchmarkDeltaDebugger import JSBenchmarkDeltaDebugger
 from src.ecstatic.debugging.JavaViolationDeltaDebugger import JavaViolationDeltaDebugger
 from src.ecstatic.dispatcher import Sanitizer
 from src.ecstatic.fuzzing.generators import FuzzGeneratorFactory
@@ -88,6 +89,7 @@ class ToolTester:
             print(f'Now checking for violations.')
             Path(violations_folder).mkdir(exist_ok=True)
             violations: List[PotentialViolation] = self.checker.check_violations(results, violations_folder)
+            print(f"Total potential violations: {len(violations)}")
             if self.debugger is not None:
                 with Pool(max(int(self.num_processes/2), 1)) as p:  # /2 because each delta debugging process needs 2 cores.
                     direct_violations = [v for v in violations if not v.violated and not v.is_transitive() and len(v.expected_diffs) > 0]
@@ -127,8 +129,12 @@ def main():
     p.add_argument('--verbose', '-v', action='count', default=0)
     p.add_argument('--no-delta-debug', help='Do not delta debug.', action='store_true')
     p.add_argument('--fuzzing-timeout', help='Fuzzing timeout in minutes.', type=int, default=0)
-    p.add_argument('--uid', help='If passed, change artifacts to be owned by the user after each step.')
-    p.add_argument('--gid', help='If passed, change artifacts to be owned by the user after each step.')
+    p.add_argument(
+        '-d', '--delta-debugging-mode',
+        choices=['none', 'violation', 'benchmark'],
+        default='none'
+    )
+
     args = p.parse_args()
 
     if args.verbose > 1:
@@ -176,10 +182,10 @@ def main():
     checker = ViolationCheckerFactory.get_violation_checker_for_task(args.task, args.tool,
                                                                      args.jobs, groundtruths, reader)
 
-    if not args.no_delta_debug:
-        debugger = JavaBenchmarkDeltaDebugger(reader=reader, runner=runner, violation_checker=checker)
-    else:
-        debugger = None
+    match args.delta_debugging_mode.lower():
+        case 'violation': debugger = JavaViolationDeltaDebugger(runner, reader, checker)
+        case 'benchmark': debugger = JavaBenchmarkDeltaDebugger(runner, reader, checker)
+        case _: debugger = None
 
     t = ToolTester(generator, runner, debugger, results_location,
                    num_processes=args.jobs, fuzzing_timeout=args.fuzzing_timeout,

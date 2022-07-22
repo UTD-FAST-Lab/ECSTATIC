@@ -117,6 +117,7 @@ class AbstractViolationChecker(ABC):
                 # [r for r in result if r.violated]
                 finished_results.extend(result)
 
+        print("finished results" + str(finished_results))
         print('Violation detection done.')
         print(f'Finished checking violations. {len([v for v in finished_results if v.violated])} violations detected.')
         print(f'Campaign value processing done (took {time.time() - start_time} seconds).')
@@ -295,6 +296,7 @@ class AbstractViolationChecker(ABC):
                     # partial orders.
                     job1_input = set(self.postprocess(self.read_from_input(job1.results_location), job1))
                     job2_input = set(self.postprocess(self.read_from_input(job2.results_location), job2))
+                    print(f"Job1: {str(job1_input)}, Job2: {str(job2_input)}")
                     differences: Set[T] = job2_input.difference(job1_input)
                     logger.info(f'Found {len(differences)} differences between '
                                 f'{job2.results_location} ({len(job2_input)}) and '

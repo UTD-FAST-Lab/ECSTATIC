@@ -54,8 +54,10 @@ class PotentialViolation:
 
     def get_option_under_investigation(self):
         if self.job1.job.option_under_investigation is None:
+            logger.debug("Option under investigation is: "+ str(self.job2.job.option_under_investigation))
             return self.job2.job.option_under_investigation
         else:
+            logger.debug("Option under investigation is: " + str(self.job1.job.option_under_investigation))
             return self.job1.job.option_under_investigation
 
     def is_transitive(self) -> bool:
@@ -75,10 +77,13 @@ class PotentialViolation:
             match self.get_main_partial_order():
                 case PartialOrder(_, PartialOrderType.MORE_PRECISE_THAN, _):
                     logger.debug("Main partial order is precision. Computing job2 minus job1")
+                    logger.debug("Option under investigation is: " + str(self.job2.job.option_under_investigation) + str(self.job1.job.option_under_investigation))
                     self._expected_diffs = self.job2_minus_job1
+                    logger.debug("Expected diffs: " + str(self._expected_diffs))
                 case PartialOrder(_, PartialOrderType.MORE_SOUND_THAN, _):
                     logger.debug("Main partial order is soundness. Computing job1 minus job2")
                     self._expected_diffs = self.job1_minus_job2
+                    logger.debug("Expected diffs: " + str(self._expected_diffs))
                 case _: raise RuntimeError("Pattern matching partial order failed.")
         return self._expected_diffs
 
@@ -117,6 +122,7 @@ class PotentialViolation:
                 case _:
                     raise RuntimeError(f"Trying to compute violation with invalid partial order set "
                                        f"{self.partial_orders}")
+        logging.debug("Violated:" + str(self._violated))
         return self._violated
 
     @property

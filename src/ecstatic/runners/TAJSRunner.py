@@ -64,7 +64,7 @@ class TAJSRunner (CommandLineToolRunner):
 
         # Compute string for the rest of the options which are not unsound.
         # this part may not work
-        return config_as_str + rest_of_config
+        return rest_of_config + config_as_str
 
     def get_base_command(self) -> List[str]:
         return "java -jar /TAJS/dist/tajs-all.jar".split()
