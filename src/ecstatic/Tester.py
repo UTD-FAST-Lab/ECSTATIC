@@ -129,8 +129,12 @@ def main():
     p.add_argument('--verbose', '-v', action='count', default=0)
     p.add_argument('--no-delta-debug', help='Do not delta debug.', action='store_true')
     p.add_argument('--fuzzing-timeout', help='Fuzzing timeout in minutes.', type=int, default=0)
-    p.add_argument('--uid', help='If passed, change artifacts to be owned by the user after each step.')
-    p.add_argument('--gid', help='If passed, change artifacts to be owned by the user after each step.')
+    p.add_argument(
+        '-d', '--delta-debugging-mode',
+        choices=['none', 'violation', 'benchmark'],
+        default='none'
+    )
+
     args = p.parse_args()
 
     if args.verbose > 1:
@@ -178,11 +182,10 @@ def main():
     checker = ViolationCheckerFactory.get_violation_checker_for_task(args.task, args.tool,
                                                                      args.jobs, groundtruths, reader)
 
-    if not args.no_delta_debug:
-        # Need to fix this
-        debugger = JSBenchmarkDeltaDebugger(reader=reader, runner=runner, violation_checker=checker)
-    else:
-        debugger = None
+    match args.delta_debugging_mode.lower():
+        case 'violation': debugger = JavaViolationDeltaDebugger(runner, reader, checker)
+        case 'benchmark': debugger = JavaBenchmarkDeltaDebugger(runner, reader, checker)
+        case _: debugger = None
 
     t = ToolTester(generator, runner, debugger, results_location,
                    num_processes=args.jobs, fuzzing_timeout=args.fuzzing_timeout,
