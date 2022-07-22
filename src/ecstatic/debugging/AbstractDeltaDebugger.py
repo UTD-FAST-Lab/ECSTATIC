@@ -113,10 +113,11 @@ class AbstractDeltaDebugger(ABC):
             logger.info(f'Moved benchmark, so target is now {potential_violation.job1.job.target}')
             potential_violation.job2.job.target = potential_violation.job1.job.target
             try:
-                if len(potential_violation.job1.job.target.sources) == 0:
-                    logger.critical(
-                        f"Cannot delta debug benchmark record {potential_violation.job1.job.target} without sources.")
-                    return None
+                pass
+                # if len(potential_violation.job1.job.target.sources) == 0:
+                #    logger.critical(
+                #        f"Cannot delta debug benchmark record {potential_violation.job1.job.target} without sources.")
+                #    return None
             except TypeError:
                 logger.exception(potential_violation.job1.job.target)
 
