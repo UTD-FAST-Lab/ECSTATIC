@@ -1,6 +1,7 @@
 import os
 from abc import ABC
 from typing import List
+import tempfile
 
 from src.ecstatic.debugging.JavaBenchmarkDeltaDebugger import JavaBenchmarkDeltaDebugger
 from src.ecstatic.debugging.AbstractDeltaDebugger import DeltaDebuggingJob
