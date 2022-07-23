@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # ECSTATIC: Extensible, Customizable STatic Analysis Tester Informed by Configuration
 #
