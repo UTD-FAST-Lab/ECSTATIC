@@ -177,8 +177,6 @@ class AbstractDeltaDebugger(ABC):
 
 
 def main():
-    logging.basicConfig(level=logging.INFO)
-    logger = logging.getLogger(__name__)
     parser = argparse.ArgumentParser()
     parser.add_argument("job", help="The location of the pickled job.")
     args = parser.parse_args()
