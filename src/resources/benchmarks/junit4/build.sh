@@ -21,6 +21,7 @@
 CURDIR=$(pwd)
 cd /
 mkdir -p benchmarks
+cd benchmarks
 git clone https://github.com/junit-team/junit4
 cd junit4
 echo "#!/bin/bash" > build.sh
