@@ -32,7 +32,6 @@ from tqdm import tqdm
 
 from src.ecstatic.debugging.JavaBenchmarkDeltaDebugger import JavaBenchmarkDeltaDebugger
 from src.ecstatic.debugging.JavaViolationDeltaDebugger import JavaViolationDeltaDebugger
-from src.ecstatic.dispatcher import Sanitizer
 from src.ecstatic.fuzzing.generators import FuzzGeneratorFactory
 from src.ecstatic.fuzzing.generators.FuzzGenerator import FuzzGenerator
 from src.ecstatic.readers import ReaderFactory
@@ -111,12 +110,9 @@ class ToolTester:
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("tool", choices=Sanitizer.tools,
-                   help="Tool to run.")
-    p.add_argument("benchmark", choices=Sanitizer.benchmarks,
-                   help="Benchmark to download and evaluate on.")
-    p.add_argument("-t", "--task", choices=Sanitizer.tasks, default="cg",
-                   help="Task to run.")
+    p.add_argument("tool", help="Tool to run.")
+    p.add_argument("benchmark", help="Benchmark to download and evaluate on.")
+    p.add_argument("-t", "--task", help="Task to run.", default="cg")
     p.add_argument("-c", "--campaigns", type=int, default=5,
                    help="Number of fuzzing campaigns (i.e., one seed, all of its mutants, and violation detection)")
     p.add_argument("-j", "--jobs", type=int, default=32,
