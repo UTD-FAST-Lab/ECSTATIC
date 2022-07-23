@@ -1,0 +1,9 @@
+{
+  "benchmark": [
+    {
+      "name": "junit4",
+      "build_script": "junit4/build.sh",
+      "sources": ["junit4/src"]
+    }
+  ]
+}
