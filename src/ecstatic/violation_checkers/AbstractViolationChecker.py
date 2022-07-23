@@ -65,9 +65,9 @@ def get_file_name(potential_violation: PotentialViolation) -> pathlib.Path:
         f'{AbstractCommandLineToolRunner.dict_hash(potential_violation.job1.job.configuration)}',
         f'{AbstractCommandLineToolRunner.dict_hash(potential_violation.job2.job.configuration)}',
         f'{potential_violation.get_option_under_investigation().name}',
-        *[Path.joinpath(f'{v.left.level_name},'
-                        f'{"MST" if v.type == PartialOrderType.MORE_SOUND_THAN else "MPT"}',
-                        f'{v.right.level_name}') for v in potential_violation.partial_orders],
+        *[Path(f'{v.left.level_name}',
+               f'{"MST" if v.type == PartialOrderType.MORE_SOUND_THAN else "MPT"}',
+               f'{v.right.level_name}') for v in potential_violation.partial_orders],
         f'{os.path.basename(potential_violation.job1.job.target.name)}.json'])
     return filename
 
