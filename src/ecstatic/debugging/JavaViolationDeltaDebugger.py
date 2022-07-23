@@ -48,5 +48,8 @@ class JavaViolationDeltaDebugger(JavaDeltaDebugger):
         if potential_violation.is_violation:
             def predicate(pv: PotentialViolation):
                 return pv.is_violation and pv.partial_orders == potential_violation.partial_orders
-            return [predicate]
+            gt = {"sample":"sample"}
+            return [(predicate, gt)]
+        else:
+            return []
 
