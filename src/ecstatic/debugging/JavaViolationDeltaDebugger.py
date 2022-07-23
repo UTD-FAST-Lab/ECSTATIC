@@ -45,8 +45,8 @@ logger = logging.getLogger(__name__)
 
 class JavaViolationDeltaDebugger(JavaDeltaDebugger):
     def make_predicates(self, potential_violation: PotentialViolation) -> Iterable[DeltaDebuggingPredicate]:
-        if potential_violation.violated:
+        if potential_violation.is_violation:
             def predicate(pv: PotentialViolation):
-                return pv.violated and pv.partial_orders == potential_violation.partial_orders
+                return pv.is_violation and pv.partial_orders == potential_violation.partial_orders
             return [predicate]
 

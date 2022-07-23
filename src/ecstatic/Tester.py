@@ -83,7 +83,8 @@ class ToolTester:
                     results.append(r)
             results = [r for r in results if r is not None and r.results_location is not None]
             print(f'Campaign {campaign_index} finished (time {time.time() - campaign_start_time} seconds)')
-            violations_folder = os.path.join(campaign_folder, 'violations')
+            violations_folder = Path(campaign_folder) / 'violations'
+            self.checker.output_folder = violations_folder
             print(f'Now checking for violations.')
             Path(violations_folder).mkdir(exist_ok=True)
             violations: List[PotentialViolation] = self.checker.check_violations(results)
