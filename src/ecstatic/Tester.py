@@ -184,7 +184,7 @@ def main():
 
     match args.delta_debugging_mode.lower():
         case 'violation': debugger = JavaViolationDeltaDebugger(runner, reader, checker)
-        case 'benchmark': debugger = JavaBenchmarkDeltaDebugger(runner, reader, checker)
+        case 'benchmark': debugger = JSBenchmarkDeltaDebugger(runner, reader, checker)
         case _: debugger = None
 
     t = ToolTester(generator, runner, debugger, results_location,
