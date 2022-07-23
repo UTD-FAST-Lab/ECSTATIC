@@ -24,7 +24,7 @@ mkdir -p benchmarks
 git clone https://github.com/junit-team/junit4
 cd junit4
 echo "#!/bin/bash" > build.sh
-echo "mvn package" >> build.sh
+echo "mvn package -DskipTests" >> build.sh
 chmod +x build.sh
 ./build.sh
 cd $CURDIR
