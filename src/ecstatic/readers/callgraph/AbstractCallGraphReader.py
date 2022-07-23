@@ -17,6 +17,7 @@
 
 
 import logging
+from pathlib import Path
 from typing import Tuple, List, Any
 
 from src.ecstatic.readers.AbstractReader import AbstractReader
@@ -28,16 +29,16 @@ logger = logging.getLogger(__name__)
 
 class AbstractCallGraphReader(AbstractReader):
 
-    def import_file(self, file: str) -> Any:
+    def import_file(self, file: Path) -> Any:
         logger.info(f'Reading callgraph from {file}')
         callgraph: List[Tuple[CGCallSite, CGTarget]] = []
         with open(file) as f:
             lines = f.readlines()
-        for l in lines:
+        for line in lines:
             try:
-                callgraph.append(self.process_line(l))
+                callgraph.append(self.process_line(line))
             except IndexError:
-                logging.critical(f"Could not read line: {l}")
+                logging.critical(f"Could not read line: {line}")
         return list(filter(lambda x: x is not None, callgraph))
 
     def process_line(self, line: str) -> Tuple[Any, Any]:

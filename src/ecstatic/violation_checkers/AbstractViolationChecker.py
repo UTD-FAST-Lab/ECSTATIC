@@ -66,23 +66,41 @@ def get_file_name(potential_violation: PotentialViolation) -> pathlib.Path:
         f'{AbstractCommandLineToolRunner.dict_hash(potential_violation.job2.job.configuration)}',
         f'{potential_violation.get_option_under_investigation().name}',
         *[Path.joinpath(f'{v.left.level_name},'
-                                f'{"MST" if v.type == PartialOrderType.MORE_SOUND_THAN else "MPT"}',
-                                f'{v.right.level_name}') for v in potential_violation.partial_orders],
-        f'/{os.path.basename(potential_violation.job1.job.target.name)}.json'])
+                        f'{"MST" if v.type == PartialOrderType.MORE_SOUND_THAN else "MPT"}',
+                        f'{v.right.level_name}') for v in potential_violation.partial_orders],
+        f'{os.path.basename(potential_violation.job1.job.target.name)}.json'])
     return filename
+
+
+def summarize(violations: Iterable[PotentialViolation]):
+    """
+    Print a summary of the run.
+    @param violations:
+    @return: None
+    """
+    summary_struct = {}
+    for v in violations:
+        if v.get_option_under_investigation() not in summary_struct:
+            summary_struct[v.get_option_under_investigation()] = 0
+        summary_struct[v.get_option_under_investigation()] += 1
+    keys = sorted(summary_struct.keys())
+    print("Campaign Summary")
+    print("------------------------")
+    print("Option (Number of Violations)")
+    for k in keys:
+        print(f'{k} ({summary_struct[k]})')
 
 
 class AbstractViolationChecker(ABC):
 
-    def __init__(self, jobs: int, reader: AbstractReader, groundtruths: Optional[str] = None):
-        self.output_folder = None
+    def __init__(self, jobs: int, reader: AbstractReader, output_folder: Path, groundtruths: Optional[Path] = None):
+        self.output_folder = output_folder
         self.jobs: int = jobs
         self.reader = reader
-        self.groundtruths = groundtruths
-        logger.debug(f'Groundtruths are {self.groundtruths}')
+        self.ground_truths: Path = groundtruths
+        logger.debug(f'Ground truths are {self.ground_truths}')
 
-    def check_violations(self, results: List[FinishedFuzzingJob], output_folder: str) -> List[PotentialViolation]:
-        self.output_folder = output_folder
+    def check_violations(self, results: List[FinishedFuzzingJob]) -> List[PotentialViolation]:
         start_time = time.time()
         pairs: List[Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]] = []
         for finished_run in [r for r in results if r is not None]:
@@ -125,64 +143,42 @@ class AbstractViolationChecker(ABC):
         print('Violation detection done.')
         print(f'Finished checking violations. {len([v for v in finished_results if v.violated])} violations detected.')
         print(f'Campaign value processing done (took {time.time() - start_time} seconds).')
-        self.summarize([f for f in finished_results if f.violated])
+        summarize([f for f in finished_results if f.violated])
         return finished_results
         # results_queue.task_done()
 
-    def summarize(self, violations: Iterable[PotentialViolation]):
-        """
-        Print a summary of the run.
-        @param violations:
-        @return: None
-        """
-        summary_struct = {}
-        for v in violations:
-            if v.get_option_under_investigation() not in summary_struct:
-                summary_struct[v.get_option_under_investigation()] = 0
-            summary_struct[v.get_option_under_investigation()] += 1
-        keys = sorted(summary_struct.keys())
-        print("Campaign Summary")
-        print("------------------------")
-        print("Option (Number of Violations)")
-        for k in keys:
-            print(f'{k} ({summary_struct[k]})')
-
     @abstractmethod
-    def is_true_positive(self, input: T) -> bool:
+    def is_true_positive(self, raw_result: T) -> bool:
         pass
 
     @abstractmethod
-    def is_false_positive(self, input: T) -> bool:
+    def is_false_positive(self, raw_result: T) -> bool:
         pass
 
-    def get_true_positives(self, input: Iterable[T]) -> Set[T]:
-        tps = [t for t in self.read_from_input(self.groundtruths) if self.is_true_positive(t)]
+    def get_true_positives(self, raw_results: Iterable[T]) -> Set[T]:
+        tps = [t for t in self.read_from_input(self.ground_truths) if self.is_true_positive(t)]
         logger.info(f'{len(tps)} true positives in groundtruths.')
-        result = {i for i in input if i in tps}
-        logger.info(f'Out of {len(input)} flows, {len(result)} were true positives.')
-        return {i for i in input if i in tps}
+        result = {i for i in raw_results if i in tps}
+        logger.info(f'{len(result)} results were true positives.')
+        return {i for i in raw_results if i in tps}
 
-    def get_false_positives(self, input: Iterable[T]) -> Set[T]:
-        fps = [t for t in self.read_from_input(self.groundtruths) if self.is_false_positive(t)]
+    def get_false_positives(self, raw_results: Iterable[T]) -> Set[T]:
+        fps = [t for t in self.read_from_input(self.ground_truths) if self.is_false_positive(t)]
         logger.info(f'{len(fps)} false positives in groundtruths.')
-        result = {i for i in input if i in fps}
-        logger.info(f'Out of {len(input)} flows, {len(result)} were true positives.')
-        return {i for i in input if i in fps}
+        result = {i for i in raw_results if i in fps}
+        logger.info(f'{len(result)} results were false positives.')
+        return {i for i in raw_results if i in fps}
 
     def postprocess(self, results: Iterable[T], job: FinishedFuzzingJob) -> Iterable[T]:
         """
         Allows postprocessing of results. By default, does no postprocessing.
-        Parameters
-        ----------
-        results: The results to postprocess.
-
-        Returns
-        -------
-        The postprocessed result.
+        :param results: The results to postprocess.
+        :param job: The finished fuzzing job associated with the results.
+        :return: The postprocessed result
         """
         return results
 
-    def read_from_input(self, file: str) -> Iterable[T]:
+    def read_from_input(self, file: Path) -> Iterable[T]:
         return self.reader.import_file(file)
 
     def compare_results(self, t: Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]) -> Iterable[PotentialViolation]:
@@ -203,7 +199,7 @@ class AbstractViolationChecker(ABC):
         results = []
         if job1.job.configuration[option_under_investigation] == job2.job.configuration[option_under_investigation]:
             return results
-        if self.groundtruths is None:
+        if self.ground_truths is None:
             # In the absence of ground truths, we have to compute violations differently.
             def job1_reader():
                 return set(self.postprocess(self.read_from_input(job1.results_location), job1))
@@ -267,14 +263,13 @@ class AbstractViolationChecker(ABC):
                                                                option_under_investigation),
                                                   job1, job2, job1_reader, job2_reader))
         for violation in results:
-            filename = get_file_name(violation)
-            dirname = os.path.dirname(filename)
-            Path(os.path.join(self.output_folder, "json", dirname)).mkdir(exist_ok=True, parents=True)
+            filename = self.output_folder / get_file_name(violation)
+            filename.mkdir(exist_ok=True, parents=True)
             logging.info(f'Writing violation to file {filename}')
-            with open(os.path.join(self.output_folder, "json", filename), 'w') as f:
+            with open(filename, 'w') as f:
                 json.dump(violation.as_dict(), f, indent=4)
-            with NamedTemporaryFile(dir=self.output_folder, delete=False, suffix='.pickle') as f:
-                pickle.dump(violation, f)
+            # with NamedTemporaryFile(dir=self.output_folder, delete=False, suffix='.pickle') as f:
+            #     pickle.dump(violation, f)
         return results
 
     @deprecation.deprecated(details="We have passed the functionality of checking for violations to "
@@ -299,7 +294,7 @@ class AbstractViolationChecker(ABC):
         results = []
         if job1.job.configuration[option_under_investigation] == job2.job.configuration[option_under_investigation]:
             return results
-        if self.groundtruths is None:
+        if self.ground_truths is None:
             # In the absence of ground truths, we have to compute violations differently.
             if option_under_investigation.is_more_sound(job1.job.configuration[option_under_investigation],
                                                         job2.job.configuration[option_under_investigation]):
@@ -377,11 +372,11 @@ class AbstractViolationChecker(ABC):
 
         Path(self.output_folder).mkdir(exist_ok=True, parents=True)
         for violation in filter(lambda v: v.violated, results):
-            filename = get_file_name(violation)
-            dirname = os.path.dirname(filename)
+            output_file = get_file_name(violation)
+            dirname = os.path.dirname(output_file)
             Path(os.path.join(self.output_folder, "json", dirname)).mkdir(exist_ok=True, parents=True)
-            logging.info(f'Writing violation to file {filename}')
-            with open(os.path.join(self.output_folder, "json", filename), 'w') as f:
+            logging.info(f'Writing violation to file {output_file}')
+            with open(os.path.join(self.output_folder, "json", output_file), 'w') as f:
                 json.dump(violation.as_dict(), f, indent=4)
             with NamedTemporaryFile(dir=self.output_folder, delete=False, suffix='.pickle') as f:
                 pickle.dump(violation, f)

@@ -29,17 +29,17 @@ logger = logging.getLogger(__name__)
 class PotentialViolation:
 
     def __eq__(self, o: object) -> bool:
-        return isinstance(o, PotentialViolation) and self.violated == o.violated \
+        return isinstance(o, PotentialViolation) and self.is_violation == o.is_violation \
                and self.partial_orders == o.partial_orders and \
                frozenset([self.job1.results_location, self.job2.results_location]) == \
                frozenset([o.job1.results_location, o.job2.results_location])
 
     def __hash__(self) -> int:
-        return hash((self.violated, self.partial_orders,
+        return hash((self.is_violation, self.partial_orders,
                      frozenset([self.job1.results_location, self.job2.results_location])))
 
     def as_dict(self) -> Dict[str, str | List[str] | List[Tuple[str]]]:
-        return {'violated': self.violated,
+        return {'violated': self.is_violation,
                 'partial_orders': [str(v) for v in self.partial_orders],
                 'job1': {
                     'config': [(str(k), str(v)) for k, v in self.job1.job.configuration.items()],
@@ -50,6 +50,8 @@ class PotentialViolation:
                     'result': self.job2.results_location
                 },
                 'target': self.job1.job.target.name,
+                'expected_diffs': self.expected_diffs,
+                'unexpected_diffs': self.unexpected_diffs
                 }
 
     def get_option_under_investigation(self):
@@ -102,9 +104,12 @@ class PotentialViolation:
                 raise RuntimeError(f"Unable to find partial order for potential violation "
                                    f"with partial orders {self.partial_orders}")
 
+    @property
+    def is_violation(self):
+        return len(self.unexpected_diffs) > 0
 
     @property
-    def violated(self):
+    def unexpected_diffs(self):
         """
         We assume that, in the case of multiple partial orders, the first partial order will have the options
         in the same order as the passed in jobs.
@@ -112,18 +117,14 @@ class PotentialViolation:
         -------
 
         """
-        if self._violated is None:
-            # We need to compute the violation.
-            match self.get_main_partial_order():
-                case PartialOrder(_, PartialOrderType.MORE_SOUND_THAN, _, _):
-                    self._violated = len(self.job2_minus_job1) > 0
-                case PartialOrder(_, PartialOrderType.MORE_PRECISE_THAN, _, _):
-                    self._violated = len(self.job1_minus_job2) > 0
-                case _:
-                    raise RuntimeError(f"Trying to compute violation with invalid partial order set "
-                                       f"{self.partial_orders}")
-        logging.debug("Violated:" + str(self._violated))
-        return self._violated
+        match self.get_main_partial_order():
+            case PartialOrder(_, PartialOrderType.MORE_SOUND_THAN, _, _):
+                return self.job2_minus_job1
+            case PartialOrder(_, PartialOrderType.MORE_PRECISE_THAN, _, _):
+                return self.job1_minus_job2
+            case _:
+                raise RuntimeError(f"Trying to compute violation with invalid partial order set "
+                                   f"{self.partial_orders}")
 
     @property
     def job2_minus_job1(self):
@@ -153,7 +154,7 @@ class PotentialViolation:
         self.job2 = job2
         self.job1_reader = job1_reader
         self.job2_reader = job2_reader
-        self._job1_minus_job2: Container[T] = None
-        self._job2_minus_job1: Container[T] = None
-        self._expected_diffs: Container[T] = None
+        self._job1_minus_job2: Sized[T] = None
+        self._job2_minus_job1: Sized[T] = None
+        self._expected_diffs: Sized[T] = None
 
