@@ -30,6 +30,7 @@ from typing import Iterable, Optional, List
 
 from src.ecstatic.debugging.AbstractDeltaDebugger import AbstractDeltaDebugger, DeltaDebuggingPredicate
 from src.ecstatic.debugging.JavaDeltaDebugger import JavaDeltaDebugger
+from src.ecstatic.debugging.ViolationDeltaDebugger import ViolationDeltaDebugger
 from src.ecstatic.readers import ReaderFactory
 from src.ecstatic.runners import RunnerFactory
 from src.ecstatic.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
@@ -43,7 +44,7 @@ from src.ecstatic.violation_checkers.AbstractViolationChecker import get_file_na
 logger = logging.getLogger(__name__)
 
 
-class JavaViolationDeltaDebugger(JavaDeltaDebugger):
+class JavaViolationDeltaDebugger(ViolationDeltaDebugger, JavaDeltaDebugger):
     def make_predicates(self, potential_violation: PotentialViolation) -> Iterable[DeltaDebuggingPredicate]:
         if potential_violation.is_violation:
             def predicate(pv: PotentialViolation):
