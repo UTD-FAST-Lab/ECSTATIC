@@ -62,6 +62,7 @@ class PotentialViolation:
             logger.debug("Option under investigation is: " + str(self.job1.job.option_under_investigation))
             return self.job1.job.option_under_investigation
 
+    @property
     def is_transitive(self) -> bool:
         for p in self.partial_orders:
             if p.is_transitive():
