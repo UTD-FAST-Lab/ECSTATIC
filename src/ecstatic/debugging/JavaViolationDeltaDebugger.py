@@ -51,5 +51,5 @@ class JavaViolationDeltaDebugger(JavaDeltaDebugger):
             gt = {"sample":"sample"}
             yield predicate, gt
         else:
-            yield
+            return []
 
