@@ -17,7 +17,7 @@ class JSBenchmarkDeltaDebugger(JavaBenchmarkDeltaDebugger, ABC):
         cmd: List[str] = "jsdelta ".split(' ')
         cmd.extend(["--cmd", script_location])
         cmd.extend(["--out", directory + "/os.js"])
-        cmd.extend(["--msg", "NonError: Ran Successfully"])
+        cmd.extend(["--msg", "\"NonError: Ran Successfully\""])
         cmd.extend([potential_violation.job1.job.target.name])
         
         '''sources = [['--sources', s] for s in potential_violation.job1.job.target.sources]
