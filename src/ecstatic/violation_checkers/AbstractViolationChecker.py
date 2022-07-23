@@ -264,7 +264,7 @@ class AbstractViolationChecker(ABC):
                                                   job1, job2, job1_reader, job2_reader))
         for violation in results:
             filename = self.output_folder / get_file_name(violation)
-            filename.mkdir(exist_ok=True, parents=True)
+            filename.parent.mkdir(exist_ok=True, parents=True)
             logging.info(f'Writing violation to file {filename}')
             with open(filename, 'w') as f:
                 json.dump(violation.as_dict(), f, indent=4)
