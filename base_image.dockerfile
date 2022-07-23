@@ -25,7 +25,7 @@ RUN python -m pip install -r requirements.txt
 RUN python -m pip install -e .
 
 FROM python-build AS delta-debugger-build
-_
+
 WORKDIR /
 RUN git config --global core.eol lf && \
  git config --global core.autocrlf input
