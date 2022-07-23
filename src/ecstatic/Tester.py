@@ -160,7 +160,7 @@ def main():
     if groundtruths is not None:
         logger.info(f'Using {groundtruths} as groundtruths.')
 
-    results_location = f'/results/{args.tool}/{args.benchmark}'
+    results_location = Path('/results') / args.tool / args.benchmark
 
     Path(results_location).mkdir(exist_ok=True, parents=True)
     runner = RunnerFactory.get_runner_for_tool(args.tool)
@@ -175,7 +175,10 @@ def main():
                                                                  benchmark)
     reader = ReaderFactory.get_reader_for_task_and_tool(args.task, args.tool)
     checker = ViolationCheckerFactory.get_violation_checker_for_task(args.task, args.tool,
-                                                                     args.jobs, groundtruths, reader)
+                                                                     jobs=args.jobs,
+                                                                     ground_truths=groundtruths,
+                                                                     reader=reader,
+                                                                     output_folder = results_location / "violations")
 
     match args.delta_debugging_mode.lower():
         case 'violation': debugger = JavaViolationDeltaDebugger(runner, reader, checker)

@@ -21,11 +21,10 @@ from src.ecstatic.violation_checkers.CallgraphViolationChecker import CallgraphV
 from src.ecstatic.violation_checkers.FlowDroidFlowViolationChecker import FlowDroidFlowViolationChecker
 
 
-def get_violation_checker_for_task(task: str, tool: str, jobs: int,
-                                   groundtruths: str, reader: AbstractReader) -> AbstractViolationChecker:
+def get_violation_checker_for_task(task: str, tool: str, **kwargs) -> AbstractViolationChecker:
     if task.lower() == "cg":
-        return CallgraphViolationChecker(jobs, reader, groundtruths)
+        return CallgraphViolationChecker(**kwargs)
     elif task.lower() == "taint" and tool.lower() == "flowdroid":
-        return FlowDroidFlowViolationChecker(jobs, reader, groundtruths)
+        return FlowDroidFlowViolationChecker(**kwargs)
     else:
         raise ValueError(f"No violation checker exists for task {task} on tool {tool}.")
