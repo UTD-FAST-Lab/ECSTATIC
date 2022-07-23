@@ -50,8 +50,8 @@ class PotentialViolation:
                     'result': self.job2.results_location
                 },
                 'target': self.job1.job.target.name,
-                'expected_diffs': self.expected_diffs,
-                'unexpected_diffs': self.unexpected_diffs
+                'expected_diffs': [str(s) for s in self.expected_diffs],
+                'unexpected_diffs': [str(s) for s in self.unexpected_diffs]
                 }
 
     def get_option_under_investigation(self):
