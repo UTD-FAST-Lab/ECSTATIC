@@ -23,6 +23,7 @@ RUN python -m pip install --upgrade pip
 RUN python -m pip install -r requirements.txt
 RUN python -m pip install -e .
 ADD "https://api.github.com/repos/amordahl/ecstatic/commits?per_page=1&sha=path_improvements" latest_commit
+RUN git pull
 RUN git checkout path_improvements
 
 FROM python-build AS delta-debugger-build
