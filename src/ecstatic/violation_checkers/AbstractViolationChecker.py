@@ -60,8 +60,8 @@ T = TypeVar('T')  # Indicates the type of content in the results (e.g., call gra
 
 def get_file_name(potential_violation: PotentialViolation) -> pathlib.Path:
     filename = Path(*[
-        f'{"VIOLATION" if potential_violation.violated else "NON-VIOLATION"}',
-        f'{"TRANSITIVE" if potential_violation.is_transitive() else "DIRECT"}',
+        f'{"VIOLATION" if potential_violation.is_violation else "NON-VIOLATION"}',
+        f'{"TRANSITIVE" if potential_violation.is_transitive else "DIRECT"}',
         f'{AbstractCommandLineToolRunner.dict_hash(potential_violation.job1.job.configuration)}',
         f'{AbstractCommandLineToolRunner.dict_hash(potential_violation.job2.job.configuration)}',
         f'{potential_violation.get_option_under_investigation().name}',
@@ -141,9 +141,9 @@ class AbstractViolationChecker(ABC):
 
         print("finished results" + str(finished_results))
         print('Violation detection done.')
-        print(f'Finished checking violations. {len([v for v in finished_results if v.violated])} violations detected.')
+        print(f'Finished checking violations. {len([v for v in finished_results if v.is_violation])} violations detected.')
         print(f'Campaign value processing done (took {time.time() - start_time} seconds).')
-        summarize([f for f in finished_results if f.violated])
+        summarize([f for f in finished_results if f.is_violation])
         return finished_results
         # results_queue.task_done()
 
