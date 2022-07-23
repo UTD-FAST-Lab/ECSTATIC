@@ -93,11 +93,11 @@ def summarize(violations: Iterable[PotentialViolation]):
 
 class AbstractViolationChecker(ABC):
 
-    def __init__(self, jobs: int, reader: AbstractReader, output_folder: Path, groundtruths: Optional[Path] = None):
+    def __init__(self, jobs: int, reader: AbstractReader, output_folder: Path, ground_truths: Optional[Path] = None):
         self.output_folder = output_folder
         self.jobs: int = jobs
         self.reader = reader
-        self.ground_truths: Path = groundtruths
+        self.ground_truths: Path = ground_truths
         logger.debug(f'Ground truths are {self.ground_truths}')
 
     def check_violations(self, results: List[FinishedFuzzingJob]) -> List[PotentialViolation]:
