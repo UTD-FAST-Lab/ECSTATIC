@@ -45,7 +45,7 @@ class JSBenchmarkDeltaDebugger(JavaBenchmarkDeltaDebugger, ABC):
             f.write("#!/bin/bash\n")
             cmd = f"deltadebugger {job_tmp.name}"
             f.write(cmd + "\n")
-            f.write("error_status = $?\n")
+            # f.write("error_status = $?\n")
             # f.write('if [error_status == 0]; then echo "NonError: Ran Successfully"; fi\n')
             result = f.name
             logger.info(f"Wrote cmd {cmd} to delta debugging script.")
