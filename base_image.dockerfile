@@ -14,7 +14,7 @@ FROM python-build AS ecstatic-build
 WORKDIR /
 RUN python3.10 -m venv /venv
 ENV PATH=/venv/bin:$PATH
-ADD "https://api.github.com/repos/amordahl/ecstatic/commits?per_page=1?sha=path_improvements" latest_commit
+ADD "https://api.github.com/repos/amordahl/ecstatic/commits?per_page=1&sha=path_improvements" latest_commit
 RUN git clone https://github.com/amordahl/ECSTATIC.git
 WORKDIR ECSTATIC
 RUN git pull
