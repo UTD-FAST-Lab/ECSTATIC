@@ -196,7 +196,6 @@ def build_benchmark(benchmark: str) -> Benchmark:
     # TODO: Check that benchmarks are loaded. If not, load from git.
     if not os.path.exists("/benchmarks"):
         build = importlib.resources.path(f"src.resources.benchmarks.{benchmark}", "build.sh")
-        os.chmod(build, 555)
         logging.info(f"Building benchmark....")
         subprocess.run(build)
     if os.path.exists(importlib.resources.path(f"src.resources.benchmarks.{benchmark}", "index.json")):
