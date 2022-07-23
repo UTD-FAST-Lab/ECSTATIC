@@ -86,11 +86,11 @@ class ToolTester:
             violations_folder = os.path.join(campaign_folder, 'violations')
             print(f'Now checking for violations.')
             Path(violations_folder).mkdir(exist_ok=True)
-            violations: List[PotentialViolation] = self.checker.check_violations(results, violations_folder)
+            violations: List[PotentialViolation] = self.checker.check_violations(results)
             print(f"Total potential violations: {len(violations)}")
             if self.debugger is not None:
                 with Pool(max(int(self.num_processes/2), 1)) as p:  # /2 because each delta debugging process needs 2 cores.
-                    direct_violations = [v for v in violations if not v.is_violation and not v.is_transitive() and len(v.expected_diffs) > 0]
+                    direct_violations = [v for v in violations if not v.is_violation and not v.is_transitive and len(v.expected_diffs) > 0]
                     print(f'Delta debugging {len(direct_violations)} cases with {self.num_processes} cores.')
                     p.map(partial(self.debugger.delta_debug, campaign_directory=campaign_folder,
                                   timeout=self.runner.timeout), direct_violations)
