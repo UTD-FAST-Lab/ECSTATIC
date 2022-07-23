@@ -34,6 +34,7 @@
 import json
 import logging
 import os.path
+import pathlib
 import pickle
 import time
 from abc import ABC, abstractmethod
@@ -57,14 +58,17 @@ logger = logging.getLogger(__name__)
 T = TypeVar('T')  # Indicates the type of content in the results (e.g., call graph edges or flows)
 
 
-def get_file_name(potential_violation: PotentialViolation) -> str:
-    filename = f'{"TRANSITIVE" if potential_violation.is_transitive() else "DIRECT"}/' \
-               f'{AbstractCommandLineToolRunner.dict_hash(potential_violation.job1.job.configuration)}/' \
-               f'{AbstractCommandLineToolRunner.dict_hash(potential_violation.job2.job.configuration)}/' \
-               f'{potential_violation.get_option_under_investigation().name}/' + \
-               '/'.join([f'{v.left.level_name}/{"MST" if v.type == PartialOrderType.MORE_SOUND_THAN else "MPT"}'
-                         f'/{v.right.level_name}' for v in potential_violation.partial_orders]) + \
-               f'/{os.path.basename(potential_violation.job1.job.target.name)}.json'
+def get_file_name(potential_violation: PotentialViolation) -> pathlib.Path:
+    filename = Path(*[
+        f'{"VIOLATION" if potential_violation.violated else "NON-VIOLATION"}',
+        f'{"TRANSITIVE" if potential_violation.is_transitive() else "DIRECT"}',
+        f'{AbstractCommandLineToolRunner.dict_hash(potential_violation.job1.job.configuration)}',
+        f'{AbstractCommandLineToolRunner.dict_hash(potential_violation.job2.job.configuration)}',
+        f'{potential_violation.get_option_under_investigation().name}',
+        *[Path.joinpath(f'{v.left.level_name},'
+                                f'{"MST" if v.type == PartialOrderType.MORE_SOUND_THAN else "MPT"}',
+                                f'{v.right.level_name}') for v in potential_violation.partial_orders],
+        f'/{os.path.basename(potential_violation.job1.job.target.name)}.json'])
     return filename
 
 
@@ -262,6 +266,15 @@ class AbstractViolationChecker(ABC):
                                                                job2.job.configuration[option_under_investigation],
                                                                option_under_investigation),
                                                   job1, job2, job1_reader, job2_reader))
+        for violation in results:
+            filename = get_file_name(violation)
+            dirname = os.path.dirname(filename)
+            Path(os.path.join(self.output_folder, "json", dirname)).mkdir(exist_ok=True, parents=True)
+            logging.info(f'Writing violation to file {filename}')
+            with open(os.path.join(self.output_folder, "json", filename), 'w') as f:
+                json.dump(violation.as_dict(), f, indent=4)
+            with NamedTemporaryFile(dir=self.output_folder, delete=False, suffix='.pickle') as f:
+                pickle.dump(violation, f)
         return results
 
     @deprecation.deprecated(details="We have passed the functionality of checking for violations to "
