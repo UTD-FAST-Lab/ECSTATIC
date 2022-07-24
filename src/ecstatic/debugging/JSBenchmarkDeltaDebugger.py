@@ -14,9 +14,8 @@ class JSBenchmarkDeltaDebugger(JavaBenchmarkDeltaDebugger, ABC):
 
     def get_delta_debugger_cmd(self, build_script, directory, potential_violation, script_location):
         # Then, run the delta debugger
-        cmd: List[str] = "jsdelta ".split(' ')
+        cmd: List[str] = "jsdelta".split(' ')
         cmd.extend(["--cmd", script_location])
-        cmd.extend(["--out", directory])
         cmd.extend([potential_violation.job1.job.target.name])
         
         '''sources = [['--sources', s] for s in potential_violation.job1.job.target.sources]
