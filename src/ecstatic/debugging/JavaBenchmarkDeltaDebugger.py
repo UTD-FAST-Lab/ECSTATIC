@@ -51,7 +51,6 @@ class JavaBenchmarkDeltaDebugger(JavaDeltaDebugger):
                     # If it's a precision partial order, we create a new benchmark for each of the edges missing in the
                     #  more precise result, since we can be confident they are all false positives.
                     for e in potential_violation.expected_diffs:
-                        print("Predicate expected diffs:", str(potential_violation.expected_diffs))
                         def predicate(pv: PotentialViolation):
                             return e in pv.expected_diffs
                         ground_truth = {
