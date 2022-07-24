@@ -131,7 +131,7 @@ def main():
     p.add_argument('--fuzzing-timeout', help='Fuzzing timeout in minutes.', type=int, default=0)
     p.add_argument(
         '-d', '--delta-debugging-mode',
-        choices=['none', 'violation', 'benchmark'],
+        choices=['none', 'violation', 'benchmark', 'jsbenchmark'],
         default='none'
     )
 
@@ -185,6 +185,7 @@ def main():
     match args.delta_debugging_mode.lower():
         case 'violation': debugger = JavaViolationDeltaDebugger(runner, reader, checker)
         case 'benchmark': debugger = JavaBenchmarkDeltaDebugger(runner, reader, checker)
+        case 'jsbenchmark': debugger = JSBenchmarkDeltaDebugger(runner, reader, checker)
         case _: debugger = None
 
     t = ToolTester(generator, runner, debugger, results_location,

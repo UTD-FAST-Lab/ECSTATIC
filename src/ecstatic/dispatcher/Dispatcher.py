@@ -86,7 +86,7 @@ def parse_args():
     ),
     parser.add_argument(
         '-d', '--delta-debugging-mode',
-        choices=['none', 'violation', 'benchmark'],
+        choices=['none', 'violation', 'benchmark', 'jsbenchmark'],
         default='none'
     )
     parser.add_argument(
