@@ -45,7 +45,7 @@ class JSBenchmarkDeltaDebugger(JavaBenchmarkDeltaDebugger, ABC):
             f.write("\\cp $1 {job.potential_violation.job1.job.target.name}\n")
             cmd = f"deltadebugger {job_tmp.name}"
             f.write(cmd + "\n")
-            f.write("exit (echo !$?)\n")
+            f.write("exit (!$?)\n")
             result = f.name
             logger.info(f"Wrote cmd {cmd} to delta debugging script.")
         return result
