@@ -40,6 +40,7 @@ class JavaBenchmarkDeltaDebugger(JavaDeltaDebugger):
                 case PartialOrderType.MORE_SOUND_THAN:
                     # If it's a soundness partial order, then we are not sure how many of the additional edges
                     #  produces by the more sound configuration
+                    print("Predicate expected diffs:", str(potential_violation.expected_diffs))
                     def predicate(pv: PotentialViolation):
                         return pv.expected_diffs <= potential_violation.expected_diffs
                     ground_truth = {
