@@ -38,7 +38,7 @@ class TAJSCallGraphReader(AbstractCallGraphReader):
             target_path_array = nodes[targetid][1].split("/")
             target_location = target_path_array[-1]
             # add tuple of CGCallsite and CGTarget to list
-            callsite = CGCallSite(call_funct, call_location, '')
-            target = CGTarget(target_location, '')
+            callsite = CGCallSite(call_funct, callid, '')
+            target = CGTarget(targetid, '')
             callgraph.append((callsite, target))
         return callgraph
