@@ -42,7 +42,7 @@ class JSBenchmarkDeltaDebugger(JavaBenchmarkDeltaDebugger, ABC):
         with tempfile.NamedTemporaryFile(mode='w', dir=directory, delete=False) as f:
             f.write("#!/bin/bash\n")
             # f.write("echo $1 > /home/delta_filename.txt\n")
-            # f.write("\\cp $1 {job.potential_violation.job1.job.target.name}\n")
+            f.write("\\cp $1 {job.potential_violation.job1.job.target.name}\n")
             cmd = f"deltadebugger {job_tmp.name}"
             f.write(cmd + "\n")
             f.write("if (( $? )); then exit 0; else exit 1; fi\n")
