@@ -36,7 +36,7 @@ class JavaBenchmarkDeltaDebugger(BenchmarkDeltaDebugger, JavaDeltaDebugger):
         :param potential_violation: The non-violation
         :return:
         """
-        if not potential_violation.violated and len(potential_violation.expected_diffs) > 0:
+        if not potential_violation.is_violation and len(potential_violation.expected_diffs) > 0:
             match (mp := potential_violation.get_main_partial_order()).type:
                 case PartialOrderType.MORE_SOUND_THAN:
                     # If it's a soundness partial order, then we are not sure how many of the additional edges
