@@ -14,17 +14,14 @@ FROM python-build AS ecstatic-build
 WORKDIR /
 RUN python3.10 -m venv /venv
 ENV PATH=/venv/bin:$PATH
-ADD "https://api.github.com/repos/amordahl/ecstatic/commits?per_page=1&path=requirements.txt&sha=path_improvements" latest_requirements
+ADD "https://api.github.com/repos/amordahl/ecstatic/commits?per_page=1&path=requirements.txt" latest_requirements
 RUN git clone https://github.com/amordahl/ECSTATIC.git
 WORKDIR ECSTATIC
-RUN git pull
-RUN git checkout path_improvements
 RUN python -m pip install --upgrade pip
 RUN python -m pip install -r requirements.txt
 RUN python -m pip install -e .
-ADD "https://api.github.com/repos/amordahl/ecstatic/commits?per_page=1&sha=path_improvements" latest_commit
+ADD "https://api.github.com/repos/amordahl/ecstatic/commits?per_page=1" latest_commit
 RUN git pull
-RUN git checkout path_improvements
 
 FROM python-build AS delta-debugger-build
 
