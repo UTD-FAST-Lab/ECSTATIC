@@ -30,11 +30,11 @@ class TAJSCallGraphReader(AbstractCallGraphReader):
             callid, targetid = j
             call_funct = nodes[callid][0]
             if (nodes[callid] != ['<main>']):
-                call_location = nodes[callid][1]
+                call_location = nodes[callid][1].split("/ObjectSensitivity.js:")[1]
             else:
                 call_location = ''
             target_funct = nodes[targetid][0]
-            target_location = nodes[targetid][1]
+            target_location = nodes[targetid][1].split("/ObjectSensitivity.js:")[1]
             # add tuple of CGCallsite and CGTarget to list
             callsite = CGCallSite(call_funct, call_location, '')
             target = CGTarget(target_location, '')
