@@ -17,16 +17,20 @@
 
 
 import argparse
+import importlib
 import logging
+import os
+import pathlib
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p')
 
-from src.ecstatic.dispatcher.Sanitizer import sanity_check, tools, benchmarks, tasks
 from src.ecstatic.dispatcher import DockerManager
 
 
 def parse_args():
+    tools_dir = importlib.resources.path('src.resources', 'tools')
+    benchmarks_dir = importlib.resources.path('src.resources', 'benchmarks')
     parser = argparse.ArgumentParser(description='Just a fuzzing benchmark for static analyzers')
     parser.add_argument('-t',
                         '--tools',
@@ -34,24 +38,23 @@ def parse_args():
                               'all tools by default'),
                         nargs='+',
                         required=True,
-                        default=tools,
-                        choices=tools)
+                        choices=list(filter(lambda x: not x.startswith('__'), os.listdir(tools_dir))))
     parser.add_argument('-b',
                         '--benchmarks',
                         help=('benchmark programs to run, incompatible tool and benchmark pairs will be skipped'
                               'all benchmarks by default'),
                         nargs='+',
                         required=True,
-                        default=benchmarks,
-                        choices=benchmarks)
+                        choices=list(filter(lambda x: not x.startswith('__'), os.listdir(benchmarks_dir))))
     parser.add_argument(
         '--tasks',
-        help=('tasks to run, incompatible tool and task pairs will be skipped'
-              'all tasks by default'),
+        help="Currently a useless option as all tools only support one task. However, this is meant to provide support "
+             "for tools that might allow multiple tasks.",
         nargs='+',
         required=True,
-        default=tasks,
-        choices=tasks)
+        default='cg',
+        choices=['cg', 'taint']
+    )
     parser.add_argument(
         '--no-cache',
         '-n',
@@ -113,12 +116,7 @@ def main():
     for t in args.tools:
         for b in args.benchmarks:
             for task in args.tasks:
-                # TODO: Add sanity check back in
                 DockerManager.start_runner(t, b, task, args)
-
-        # comp_benchmarks, comp_tasks = sanity_check(t, args.benchmarks, args.tasks)
-        # DockerManager.start_runner(t, args.benchmarks, args.tasks)
-
 
 if __name__ == '__main__':
     main()

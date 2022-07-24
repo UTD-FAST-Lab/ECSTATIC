@@ -10,7 +10,8 @@ from src.ecstatic.debugging.AbstractDeltaDebugger import DeltaDebuggingJob
 
 logger = logging.getLogger(__name__)
 
-class JSBenchmarkDeltaDebugger(JavaBenchmarkDeltaDebugger, ABC):
+
+class JSBenchmarkDeltaDebugger(JavaBenchmarkDeltaDebugger):
 
     def get_delta_debugger_cmd(self, build_script, directory, potential_violation, script_location):
         # Then, run the delta debugger
@@ -18,7 +19,7 @@ class JSBenchmarkDeltaDebugger(JavaBenchmarkDeltaDebugger, ABC):
         cmd.extend(["--cmd", script_location])
         cmd.extend(["--out", directory + "/os.js"])
         cmd.extend([potential_violation.job1.job.target.name])
-        
+
         '''sources = [['--sources', s] for s in potential_violation.job1.job.target.sources]
         [cmd.extend(s) for s in sources]
         cmd.extend(["--target", potential_violation.job1.job.target.name])

@@ -177,8 +177,6 @@ class AbstractDeltaDebugger(ABC):
 
 
 def main():
-    logging.basicConfig(level=logging.INFO)
-    logger = logging.getLogger(__name__)
     parser = argparse.ArgumentParser()
     parser.add_argument("job", help="The location of the pickled job.")
     args = parser.parse_args()
@@ -194,9 +192,10 @@ def main():
     with Pool(2) as p:
         finished_jobs: Iterable[FinishedFuzzingJob] = p.map(partial_function, [job.potential_violation.job1.job,
                                                                                job.potential_violation.job2.job])
-    violations: Iterable[PotentialViolation] = \
+    job.violation_checker.output_folder = tmpdir.name
+    violations: Iterable[PotentialViolation] =\
         job.violation_checker.check_violations(
-            [f for f in finished_jobs if f is not None and f.results_location is not None], tmpdir.name)
+            [f for f in finished_jobs if f is not None and f.results_location is not None])
     relevant_violation = [v for v in violations if v.partial_orders == job.potential_violation.partial_orders]
     if (num_violations := len(relevant_violation)) > 1:
         raise RuntimeError(f"{num_violations} potential violations detected on partial order set "

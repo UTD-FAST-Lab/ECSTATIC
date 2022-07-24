@@ -19,6 +19,7 @@ import logging
 from typing import Iterable, Tuple
 
 from src.ecstatic.debugging.AbstractDeltaDebugger import DeltaDebuggingPredicate, GroundTruth
+from src.ecstatic.debugging.BenchmarkDeltaDebugger import BenchmarkDeltaDebugger
 from src.ecstatic.debugging.JavaDeltaDebugger import JavaDeltaDebugger
 from src.ecstatic.util.PartialOrder import PartialOrderType
 from src.ecstatic.util.PotentialViolation import PotentialViolation
@@ -26,7 +27,7 @@ from src.ecstatic.util.PotentialViolation import PotentialViolation
 logger = logging.getLogger(__name__)
 
 
-class JavaBenchmarkDeltaDebugger(JavaDeltaDebugger):
+class JavaBenchmarkDeltaDebugger(BenchmarkDeltaDebugger, JavaDeltaDebugger):
     def make_predicates(self, potential_violation: PotentialViolation) -> Iterable[Tuple[DeltaDebuggingPredicate, GroundTruth]]:
         """
         Returns the predicates and ground truths for a potential violation. If the potential violation's main
@@ -35,7 +36,7 @@ class JavaBenchmarkDeltaDebugger(JavaDeltaDebugger):
         :param potential_violation: The non-violation
         :return:
         """
-        if not potential_violation.violated and len(potential_violation.expected_diffs) > 0:
+        if not potential_violation.is_violation and len(potential_violation.expected_diffs) > 0:
             match (mp := potential_violation.get_main_partial_order()).type:
                 case PartialOrderType.MORE_SOUND_THAN:
                     # If it's a soundness partial order, then we are not sure how many of the additional edges

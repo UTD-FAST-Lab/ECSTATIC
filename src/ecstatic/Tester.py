@@ -31,9 +31,7 @@ from typing import List, Optional
 from tqdm import tqdm
 
 from src.ecstatic.debugging.JavaBenchmarkDeltaDebugger import JavaBenchmarkDeltaDebugger
-from src.ecstatic.debugging.JSBenchmarkDeltaDebugger import JSBenchmarkDeltaDebugger
 from src.ecstatic.debugging.JavaViolationDeltaDebugger import JavaViolationDeltaDebugger
-from src.ecstatic.dispatcher import Sanitizer
 from src.ecstatic.fuzzing.generators import FuzzGeneratorFactory
 from src.ecstatic.fuzzing.generators.FuzzGenerator import FuzzGenerator
 from src.ecstatic.readers import ReaderFactory
@@ -85,14 +83,15 @@ class ToolTester:
                     results.append(r)
             results = [r for r in results if r is not None and r.results_location is not None]
             print(f'Campaign {campaign_index} finished (time {time.time() - campaign_start_time} seconds)')
-            violations_folder = os.path.join(campaign_folder, 'violations')
+            violations_folder = Path(campaign_folder) / 'violations'
+            self.checker.output_folder = violations_folder
             print(f'Now checking for violations.')
             Path(violations_folder).mkdir(exist_ok=True)
-            violations: List[PotentialViolation] = self.checker.check_violations(results, violations_folder)
+            violations: List[PotentialViolation] = self.checker.check_violations(results)
             print(f"Total potential violations: {len(violations)}")
             if self.debugger is not None:
                 with Pool(max(int(self.num_processes/2), 1)) as p:  # /2 because each delta debugging process needs 2 cores.
-                    direct_violations = [v for v in violations if not v.violated and not v.is_transitive() and len(v.expected_diffs) > 0]
+                    direct_violations = [v for v in violations if not v.is_transitive]
                     print(f'Delta debugging {len(direct_violations)} cases with {self.num_processes} cores.')
                     p.map(partial(self.debugger.delta_debug, campaign_directory=campaign_folder,
                                   timeout=self.runner.timeout), direct_violations)
@@ -112,12 +111,9 @@ class ToolTester:
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("tool", choices=Sanitizer.tools,
-                   help="Tool to run.")
-    p.add_argument("benchmark", choices=Sanitizer.benchmarks,
-                   help="Benchmark to download and evaluate on.")
-    p.add_argument("-t", "--task", choices=Sanitizer.tasks, default="cg",
-                   help="Task to run.")
+    p.add_argument("tool", help="Tool to run.")
+    p.add_argument("benchmark", help="Benchmark to download and evaluate on.")
+    p.add_argument("-t", "--task", help="Task to run.", default="cg")
     p.add_argument("-c", "--campaigns", type=int, default=5,
                    help="Number of fuzzing campaigns (i.e., one seed, all of its mutants, and violation detection)")
     p.add_argument("-j", "--jobs", type=int, default=32,
@@ -165,7 +161,7 @@ def main():
     if groundtruths is not None:
         logger.info(f'Using {groundtruths} as groundtruths.')
 
-    results_location = f'/results/{args.tool}/{args.benchmark}'
+    results_location = Path('/results') / args.tool / args.benchmark
 
     Path(results_location).mkdir(exist_ok=True, parents=True)
     runner = RunnerFactory.get_runner_for_tool(args.tool)
@@ -180,7 +176,10 @@ def main():
                                                                  benchmark)
     reader = ReaderFactory.get_reader_for_task_and_tool(args.task, args.tool)
     checker = ViolationCheckerFactory.get_violation_checker_for_task(args.task, args.tool,
-                                                                     args.jobs, groundtruths, reader)
+                                                                     jobs=args.jobs,
+                                                                     ground_truths=groundtruths,
+                                                                     reader=reader,
+                                                                     output_folder = results_location / "violations")
 
     match args.delta_debugging_mode.lower():
         case 'violation': debugger = JavaViolationDeltaDebugger(runner, reader, checker)
@@ -197,7 +196,6 @@ def build_benchmark(benchmark: str) -> Benchmark:
     # TODO: Check that benchmarks are loaded. If not, load from git.
     if not os.path.exists("/benchmarks"):
         build = importlib.resources.path(f"src.resources.benchmarks.{benchmark}", "build.sh")
-        os.chmod(build, 555)
         logging.info(f"Building benchmark....")
         subprocess.run(build)
     if os.path.exists(importlib.resources.path(f"src.resources.benchmarks.{benchmark}", "index.json")):

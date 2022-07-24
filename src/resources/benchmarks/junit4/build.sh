@@ -1,7 +1,6 @@
 #!/bin/bash
-
 #
-# CheckMate: A Configuration Tester for Static Analysis
+# ECSTATIC: Extensible, Customizable STatic Analysis Tester Informed by Configuration
 #
 # Copyright (c) 2022.
 #
@@ -19,12 +18,14 @@
 #     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-apt install -y parallel
 CURDIR=$(pwd)
-mkdir -p /benchmarks
-cd /benchmarks
-git clone https://github.com/secure-software-engineering/DroidBench.git
-cd DroidBench
-git checkout develop
-find . -type f -name '*.apk' | grep InterAppCommunication | parallel rm
+cd /
+mkdir -p benchmarks
+cd benchmarks
+git clone https://github.com/junit-team/junit4
+cd junit4
+echo "#!/bin/bash" > build.sh
+echo "mvn package -DskipTests" >> build.sh
+chmod +x build.sh
+./build.sh
 cd $CURDIR

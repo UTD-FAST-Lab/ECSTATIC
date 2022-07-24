@@ -41,6 +41,7 @@ class WALACallGraphReader(AbstractCallGraphReader):
 
         """
         if not line.startswith("< Application"):
+            logger.info(f"Skipping line {line}")
             return None
         tokens = line.split("\t")
         cs = CGCallSite(clazz=f"{tokens[0].split(',')[1].strip()[1:].replace('/', '.')}.{tokens[0].split(',')[2].strip(' <>')}",
@@ -48,4 +49,4 @@ class WALACallGraphReader(AbstractCallGraphReader):
         logging.info(f"Replaced {tokens[1]} with {cs.stmt}")
         tar = CGTarget(target=tokens[3], context=tokens[4])
         logging.debug(f"Processed {line} to {(cs, tar)}")
-        return (cs, tar)
+        return cs, tar

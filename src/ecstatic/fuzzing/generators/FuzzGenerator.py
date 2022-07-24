@@ -21,7 +21,7 @@ import json
 import logging
 import os
 import random
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Iterable
 
 from frozendict import frozendict
 from fuzzingbook.GrammarCoverageFuzzer import GrammarCoverageFuzzer
@@ -32,6 +32,7 @@ from src.ecstatic.models.Option import Option
 from src.ecstatic.models.Tool import Tool
 from src.ecstatic.util.ConfigurationSpaceReader import ConfigurationSpaceReader
 from src.ecstatic.util.PartialOrder import PartialOrder
+from src.ecstatic.util.PotentialViolation import PotentialViolation
 from src.ecstatic.util.UtilClasses import ConfigWithMutatedOption, FuzzingCampaign, Benchmark, BenchmarkRecord, \
     FuzzingJob
 from src.ecstatic.util.Violation import Violation
@@ -189,9 +190,9 @@ class FuzzGenerator:
         self.first_run = False
         return FuzzingCampaign(results)
 
-    def feedback(self, violations: List[Violation]):
+    def feedback(self, violations: Iterable[PotentialViolation]):
         buggy_benchmarks = set()
-        for v in [v for v in violations if v.violated and not v.is_transitive()]:
+        for v in [v for v in violations if v.is_violation and not v.is_transitive]:
             o: Option = v.get_option_under_investigation()
 
             # Don't retest levels that already exhibited violations.

@@ -14,17 +14,14 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from abc import ABC
+from pathlib import Path
+from typing import Optional
 
-from src.ecstatic.readers.AbstractReader import AbstractReader
-from src.ecstatic.violation_checkers.AbstractViolationChecker import AbstractViolationChecker
-from src.ecstatic.violation_checkers.CallgraphViolationChecker import CallgraphViolationChecker
-from src.ecstatic.violation_checkers.FlowDroidFlowViolationChecker import FlowDroidFlowViolationChecker
+from src.ecstatic.debugging.AbstractDeltaDebugger import AbstractDeltaDebugger
+from src.ecstatic.util.PotentialViolation import PotentialViolation
 
 
-def get_violation_checker_for_task(task: str, tool: str, **kwargs) -> AbstractViolationChecker:
-    if task.lower() == "cg":
-        return CallgraphViolationChecker(**kwargs)
-    elif task.lower() == "taint" and tool.lower() == "flowdroid":
-        return FlowDroidFlowViolationChecker(**kwargs)
-    else:
-        raise ValueError(f"No violation checker exists for task {task} on tool {tool}.")
+class ViolationDeltaDebugger(AbstractDeltaDebugger, ABC):
+    def delta_debug(self, pv: PotentialViolation, campaign_directory: str, timeout: Optional[int]):
+        super().delta_debug(pv, Path(campaign_directory)/'violations', timeout)
