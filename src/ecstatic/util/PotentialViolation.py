@@ -64,10 +64,13 @@ class PotentialViolation:
 
     @property
     def is_transitive(self) -> bool:
-        for p in self.partial_orders:
-            if p.is_transitive():
-                return True
-        return False
+        try:
+            for p in self.partial_orders:
+                if p.is_transitive():
+                    return True
+            return False
+        except ValueError:
+            return self.partial_orders.is_transitive()
 
     @property
     def expected_diffs(self) -> Collection[T]:
