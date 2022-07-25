@@ -119,8 +119,8 @@ class Option:
         self.precision.add_edge(o1, o2)
 
         # Implicit soundness partial orders
-        self.soundness.add_edge(o1, o2)
-        self.soundness.add_edge(o2, o1)
+        self.soundness.add_edge(o1, o2, type="implicit")
+        self.soundness.add_edge(o2, o1, type="implicit")
 
     def set_more_sound_than(self, o1, o2):
         """
@@ -135,7 +135,7 @@ class Option:
         self.soundness.add_edge(o1, o2)
 
         # Add the implicit precision order that B should be at least as precise as A.
-        self.precision.add_edge(o2, o1)
+        self.precision.add_edge(o2, o1, type="implicit")
 
     def resolve_one_node(self, graph: DiGraph, level: Level):
         if graph.has_node(level):
@@ -181,18 +181,26 @@ class Option:
         else:
             raise RuntimeError(f"Can't handle partial order type {p.type}")
 
-    def is_more_sound(self, o1: Level | str, o2: Level | str) -> bool:
+    def is_more_sound(self, o1: Level | str, o2: Level | str, allow_implicit: bool = True) -> bool:
         try:
             (node1, node2) = self.resolve_nodes(self.soundness, o1, o2)
-            return node2 in networkx.descendants(self.soundness, node1)
+            if node2 in networkx.descendants(self.soundness, node1):
+                if allow_implicit:
+                    return True
+                else:
+                    return self.soundness.edges[node1, node2]['type'].lower() != 'implicit'
         except ValueError as ve:
             logging.debug(ve)
             return False
 
-    def is_more_precise(self, o1: Level | str, o2: Level | str) -> bool:
+    def is_more_precise(self, o1: Level | str, o2: Level | str, allow_implicit: bool = True) -> bool:
         try:
             (node1, node2) = self.resolve_nodes(self.precision, o1, o2)
-            return node2 in networkx.descendants(self.precision, node1)
+            if node2 in networkx.descendants(self.precision, node1):
+                if allow_implicit:
+                    return True
+                else:
+                    return self.precision.edges[node1, node2]['type'].lower() != 'implicit'
         except ValueError as ve:
             logging.debug(ve)
             return False

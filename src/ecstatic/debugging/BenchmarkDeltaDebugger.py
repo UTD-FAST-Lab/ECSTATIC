@@ -24,4 +24,4 @@ from src.ecstatic.util.PotentialViolation import PotentialViolation
 
 class BenchmarkDeltaDebugger(AbstractDeltaDebugger, ABC):
     def delta_debug(self, pv: PotentialViolation, campaign_directory: str, timeout: Optional[int]):
-        super().delta_debug(pv, Path(campaign_directory)/'benchmarks', timeout)
+        super().delta_debug(pv, Path(campaign_directory)/'delta_debugging'/'benchmarks', timeout)
