@@ -78,7 +78,7 @@
       "sources": [
         "build_src/pmd"
       ],
-      "build_script": "build_scripts/build_chart.sh"
+      "build_script": "build_scripts/build_pmd.sh"
     }
   ]
 }

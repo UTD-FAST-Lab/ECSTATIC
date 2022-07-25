@@ -24,20 +24,21 @@ import pickle
 import subprocess
 import time
 from functools import partial
-from multiprocessing.pool import Pool
+from multiprocessing.dummy import Pool
 from pathlib import Path
 from typing import List, Optional
 
 from tqdm import tqdm
 
-from src.ecstatic.debugging.DeltaDebugger import DeltaDebugger
-from src.ecstatic.dispatcher import Sanitizer
+from src.ecstatic.debugging.JavaBenchmarkDeltaDebugger import JavaBenchmarkDeltaDebugger
+from src.ecstatic.debugging.JavaViolationDeltaDebugger import JavaViolationDeltaDebugger
 from src.ecstatic.fuzzing.generators import FuzzGeneratorFactory
 from src.ecstatic.fuzzing.generators.FuzzGenerator import FuzzGenerator
 from src.ecstatic.readers import ReaderFactory
 from src.ecstatic.runners import RunnerFactory
 from src.ecstatic.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
 from src.ecstatic.util.BenchmarkReader import BenchmarkReader
+from src.ecstatic.util.PotentialViolation import PotentialViolation
 from src.ecstatic.util.UtilClasses import FuzzingCampaign, Benchmark, \
     BenchmarkRecord
 from src.ecstatic.util.Violation import Violation
@@ -49,26 +50,17 @@ logger = logging.getLogger(__name__)
 
 class ToolTester:
 
-    def __init__(self, generator, runner: AbstractCommandLineToolRunner, debugger: Optional[DeltaDebugger],
+    def __init__(self, generator, runner: AbstractCommandLineToolRunner, debugger: Optional[JavaViolationDeltaDebugger],
                  results_location: str,
-                 num_processes: int, fuzzing_timeout: int, checker: AbstractViolationChecker,
-                 uid: int = None, gid: int = None):
-        """
-
-        Parameters
-        ----------
-        limit : object
-        """
+                 num_processes: int, fuzzing_timeout: int, checker: AbstractViolationChecker):
         self.generator: FuzzGenerator = generator
         self.runner: AbstractCommandLineToolRunner = runner
-        self.debugger: DeltaDebugger = debugger
+        self.debugger: JavaViolationDeltaDebugger = debugger
         self.results_location: str = results_location
         self.unverified_violations = list()
         self.num_processes = num_processes
         self.fuzzing_timeout = fuzzing_timeout
         self.checker = checker
-        self.uid = uid
-        self.gid = gid
 
     def read_violation_from_file(self, file: str) -> Violation:
         with open(file, 'rb') as f:
@@ -91,34 +83,27 @@ class ToolTester:
                     results.append(r)
             results = [r for r in results if r is not None and r.results_location is not None]
             print(f'Campaign {campaign_index} finished (time {time.time() - campaign_start_time} seconds)')
-            violations_folder = os.path.join(campaign_folder, 'violations')
+            violations_folder = Path(campaign_folder) / 'violations'
+            self.checker.output_folder = violations_folder
             print(f'Now checking for violations.')
-            existing_violations = []
-            if os.path.exists(violations_folder):
-                logging.warning(f"{violations_folder} exists, so reading existing pickled violations. Please remove "
-                                f"{violations_folder} if you want violations to be recomputed.")
-                with Pool(self.num_processes) as p:
-                    existing_violations = p.map(self.read_violation_from_file,
-                                                [os.path.join(violations_folder, v) for v in
-                                                 os.listdir(violations_folder) if v.endswith('.pickle')])
-                logging.info(f'Read in {len(existing_violations)} existing violations.')
             Path(violations_folder).mkdir(exist_ok=True)
-            violations: List[Violation] = self.checker.check_violations(results, violations_folder, existing_violations)
+            violations: List[PotentialViolation] = self.checker.check_violations(results)
+            print(f"Total potential violations: {len(violations)}")
             if self.debugger is not None:
                 with Pool(max(int(self.num_processes/2), 1)) as p:  # /2 because each delta debugging process needs 2 cores.
-                    direct_violations = [v for v in violations if not v.is_transitive()]
-                    print(f'Delta debugging {len(direct_violations)} violations with {self.num_processes} cores.')
+                    direct_violations = [v for v in violations if not v.is_transitive]
+                    print(f'Delta debugging {len(direct_violations)} cases with {self.num_processes} cores.')
                     p.map(partial(self.debugger.delta_debug, campaign_directory=campaign_folder,
                                   timeout=self.runner.timeout), direct_violations)
             self.generator.feedback(violations)
             print(f'Done with campaign {campaign_index}!')
             campaign_index += 1
-            if self.uid is not None and self.gid is not None:
-                logger.info("Changing permissions of folder.")
-                os.chown(campaign_folder, int(self.uid), int(self.gid))
-                for root, dirs, files in os.walk(campaign_folder):
-                    files = map(lambda x: os.path.join(root, x), files)
-                    map(lambda x: os.chown(x, int(self.uid), self.gid), files)
+            # if self.uid is not None and self.gid is not None:
+            #    logger.info("Changing permissions of folder.")
+            #    os.chown(campaign_folder, int(self.uid), int(self.gid))
+            #    for root, dirs, files in os.walk(campaign_folder):
+            #        files = map(lambda x: os.path.join(root, x), files)
+            #        map(lambda x: os.chown(x, int(self.uid), self.gid), files)
             if time.time() - start_time > self.fuzzing_timeout * 60:
                 break
         print('Testing done!')
@@ -126,12 +111,9 @@ class ToolTester:
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("tool", choices=Sanitizer.tools,
-                   help="Tool to run.")
-    p.add_argument("benchmark", choices=Sanitizer.benchmarks,
-                   help="Benchmark to download and evaluate on.")
-    p.add_argument("-t", "--task", choices=Sanitizer.tasks, default="cg",
-                   help="Task to run.")
+    p.add_argument("tool", help="Tool to run.")
+    p.add_argument("benchmark", help="Benchmark to download and evaluate on.")
+    p.add_argument("-t", "--task", help="Task to run.", default="cg")
     p.add_argument("-c", "--campaigns", type=int, default=5,
                    help="Number of fuzzing campaigns (i.e., one seed, all of its mutants, and violation detection)")
     p.add_argument("-j", "--jobs", type=int, default=32,
@@ -143,8 +125,12 @@ def main():
     p.add_argument('--verbose', '-v', action='count', default=0)
     p.add_argument('--no-delta-debug', help='Do not delta debug.', action='store_true')
     p.add_argument('--fuzzing-timeout', help='Fuzzing timeout in minutes.', type=int, default=0)
-    p.add_argument('--uid', help='If passed, change artifacts to be owned by the user after each step.')
-    p.add_argument('--gid', help='If passed, change artifacts to be owned by the user after each step.')
+    p.add_argument(
+        '-d', '--delta-debugging-mode',
+        choices=['none', 'violation', 'benchmark'],
+        default='none'
+    )
+
     args = p.parse_args()
 
     if args.verbose > 1:
@@ -175,7 +161,7 @@ def main():
     if groundtruths is not None:
         logger.info(f'Using {groundtruths} as groundtruths.')
 
-    results_location = f'/results/{args.tool}/{args.benchmark}'
+    results_location = Path('/results') / args.tool / args.benchmark
 
     Path(results_location).mkdir(exist_ok=True, parents=True)
     runner = RunnerFactory.get_runner_for_tool(args.tool)
@@ -190,17 +176,19 @@ def main():
                                                                  benchmark)
     reader = ReaderFactory.get_reader_for_task_and_tool(args.task, args.tool)
     checker = ViolationCheckerFactory.get_violation_checker_for_task(args.task, args.tool,
-                                                                     args.jobs, groundtruths, reader)
+                                                                     jobs=args.jobs,
+                                                                     ground_truths=groundtruths,
+                                                                     reader=reader,
+                                                                     output_folder = results_location / "violations")
 
-    if not args.no_delta_debug:
-        Path("/artifacts").mkdir(exist_ok=True)
-        debugger = DeltaDebugger("/artifacts", args.tool, args.task, groundtruths, runner.whole_program)
-    else:
-        debugger = None
+    match args.delta_debugging_mode.lower():
+        case 'violation': debugger = JavaViolationDeltaDebugger(runner, reader, checker)
+        case 'benchmark': debugger = JavaBenchmarkDeltaDebugger(runner, reader, checker)
+        case _: debugger = None
 
     t = ToolTester(generator, runner, debugger, results_location,
                    num_processes=args.jobs, fuzzing_timeout=args.fuzzing_timeout,
-                   checker=checker, uid=args.uid, gid=args.gid)
+                   checker=checker)
     t.main()
 
 
@@ -208,7 +196,6 @@ def build_benchmark(benchmark: str) -> Benchmark:
     # TODO: Check that benchmarks are loaded. If not, load from git.
     if not os.path.exists("/benchmarks"):
         build = importlib.resources.path(f"src.resources.benchmarks.{benchmark}", "build.sh")
-        os.chmod(build, 555)
         logging.info(f"Building benchmark....")
         subprocess.run(build)
     if os.path.exists(importlib.resources.path(f"src.resources.benchmarks.{benchmark}", "index.json")):
@@ -217,7 +204,7 @@ def build_benchmark(benchmark: str) -> Benchmark:
         benchmark_list = []
         for root, dirs, files in os.walk("/benchmarks"):
             benchmark_list.extend([os.path.abspath(os.path.join(root, f)) for f in files if
-                                   (f.endswith(".jar") or f.endswith(".apk"))])  # TODO more dynamic extensions?
+                                   (f.endswith(".jar") or f.endswith(".apk") or f.endswith(".js"))])  # TODO more dynamic extensions?
         return Benchmark([BenchmarkRecord(b) for b in benchmark_list])
 
 

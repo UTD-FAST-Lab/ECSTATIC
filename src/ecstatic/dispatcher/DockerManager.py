@@ -19,7 +19,6 @@
 import importlib
 import logging
 import os
-import platform
 import subprocess
 from importlib.resources import path
 from pathlib import Path
@@ -44,7 +43,7 @@ def build_image(tool: str, nocache: bool = False):
         #     image = client.build(fileobj=df, tag=get_image_name(tool))
     else:
         logger.info(f"Building image for {tool}")
-        cmd = ['docker', 'build', os.path.abspath(importlib.resources.path(f"src.resources.tools", tool)),
+        cmd = ['docker', 'build', str(importlib.resources.path(f"src.resources.tools", tool)),
                '-t', get_image_name(tool)]
         print(f'Building docker image with command {" ".join(cmd)}')
     if nocache:
@@ -55,16 +54,12 @@ def build_image(tool: str, nocache: bool = False):
 def start_runner(tool: str, benchmark: str, task: str, args):
     # PYTHONENV=/ecstatic
     # run build benchmark script
-    command = f'tester {tool} {benchmark} -t {task} -j {args.jobs} --fuzzing-timeout {args.fuzzing_timeout}'
+    command = f'tester {tool} {benchmark} -t {task} -j {args.jobs} --fuzzing-timeout {args.fuzzing_timeout} ' \
+              f'--delta-debugging-mode {args.delta_debugging_mode}'
     if args.timeout is not None:
         command += f' --timeout {args.timeout}'
     if args.verbose > 0:
-        command += f' -{"".join(["v" for i in range(args.verbose)])}'
-    if args.no_delta_debug:
-        command += f' --no-delta-debug'
-    if 'linux' in platform.system().lower():
-        command += f' --uid {subprocess.check_output(["id", "-u"]).decode("utf-8")}'
-        command += f' --gid {subprocess.check_output(["id", "-g"]).decode("utf-8")}'
+        command += f' -{"".join(["v" for _ in range(args.verbose)])}'
 
     print(f'Starting container with command {command}')
     Path(args.results_location).mkdir(parents=True, exist_ok=True)

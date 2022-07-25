@@ -7,26 +7,21 @@ RUN apt-get update -y && apt-get upgrade -y && \
     openjdk-8-jdk git maven wget && \
     DEBIAN_FRONTEND=noninteractive  \
     apt-get install -y --no-install-recommends --assume-yes build-essential libpq-dev unzip
-
-FROM python-build AS dep-build
-
-RUN python3.10 -m venv /venv
-ENV PATH=/venv/bin:$PATH
-
-WORKDIR /app
-COPY requirements.txt .
-RUN python -m pip install -r requirements.txt
+RUN apt-get update && apt-get install -y nodejs npm
 
 FROM python-build AS ecstatic-build
 
-COPY --from=dep-build /venv /venv
-ENV PATH=/venv/bin:$PATH
 WORKDIR /
-RUN git clone --depth 1 https://github.com/amordahl/ECSTATIC.git
+RUN python3.10 -m venv /venv
+ENV PATH=/venv/bin:$PATH
+ADD "https://api.github.com/repos/amordahl/ecstatic/commits?per_page=1&path=requirements.txt" latest_requirements
+RUN git clone https://github.com/amordahl/ECSTATIC.git
 WORKDIR ECSTATIC
+RUN python -m pip install --upgrade pip
+RUN python -m pip install -r requirements.txt
+RUN python -m pip install -e .
 ADD "https://api.github.com/repos/amordahl/ecstatic/commits?per_page=1" latest_commit
 RUN git pull
-RUN python -m pip install -e .
 
 FROM python-build AS delta-debugger-build
 
@@ -40,6 +35,7 @@ RUN cd SADeltaDebugger/ProjectLineCounter &&  mvn install && \
 
 FROM python-build
 
+RUN npm install -g jsdelta
 COPY --from=delta-debugger-build /SADeltaDebugger /SADeltaDebugger
 COPY --from=ecstatic-build /venv /venv
 COPY --from=ecstatic-build /ECSTATIC /ECSTATIC

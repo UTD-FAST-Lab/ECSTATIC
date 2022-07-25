@@ -16,9 +16,8 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from src.ecstatic import Tool
-from src.ecstatic import Option
-from src.ecstatic import Constraint
+from src.ecstatic.models import Tool
+from src.ecstatic.models import Option
 
 
 def test_constructor():
@@ -30,19 +29,3 @@ def test_add_options():
     t = Tool("")
     t.add_option(Option("aliasalgo"))
     assert Option("aliasalgo") in t.options
-
-
-def test_add_constraint():
-    t = Tool("")
-    o1 = Option("cgalgo")
-    o1.add_level("CHA")
-    o1.add_level("RTA")
-    o2 = Option("enablereflection")
-    o2.add_level("TRUE")
-    o2.add_level("FALSE")
-    t.add_option(o1)
-    t.add_option(o2)
-    c = Constraint(o1, "CHA", o2, "TRUE")
-    t.add_constraint(c)
-    assert o1 in t.options and o2 in t.options and\
-        c in t.constraints

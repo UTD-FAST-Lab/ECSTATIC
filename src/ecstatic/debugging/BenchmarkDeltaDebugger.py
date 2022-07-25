@@ -14,16 +14,14 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from abc import ABC
+from pathlib import Path
+from typing import Optional
+
+from src.ecstatic.debugging.AbstractDeltaDebugger import AbstractDeltaDebugger
+from src.ecstatic.util.PotentialViolation import PotentialViolation
 
 
-def fix_file_output(file: str) -> None:
-    content = ""
-    with open(file) as f:
-        for l in f:
-            content += l
-
-    content = content.replace('soot.jimple.infoflow.android.SetupApplication$InPlaceInfoflow',
-                              'soot.jimple.infoflow.Infoflow')
-
-    with open(args.file, 'w') as f:
-        f.write(content)
+class BenchmarkDeltaDebugger(AbstractDeltaDebugger, ABC):
+    def delta_debug(self, pv: PotentialViolation, campaign_directory: str, timeout: Optional[int]):
+        super().delta_debug(pv, Path(campaign_directory)/'benchmarks', timeout)
