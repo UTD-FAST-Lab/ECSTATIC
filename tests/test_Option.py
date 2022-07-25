@@ -14,85 +14,44 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from hypothesis import given, strategies, assume
 
+from src.ecstatic.models.Option import Option
 
-from src.ecstatic.models import Option
-
-
-def test_add_item():
-    k = Option("op1")
-    k.add_level(5)
-    assert k.get_levels() == {5}
-
-
-def test_add_items():
-    k = Option("op2")
-    k.add_level("a")
-    k.add_level("b")
-    assert k.get_levels() == {"a", "b"}
-
-
-def test_add_precision():
-    k = Option("op3")
-    k.add_level("a")
-    k.add_level("b")
-    k.set_more_precise_than("a", "b")
-    assert k.precision_compare("b", "a") == -1
-
-def test_add_multiple_precision():
-    k = Option("op3")
-    k.add_level("a")
-    k.add_level("b")
-    k.add_level("c")
-    k.set_more_precise_than("a", "b")
-    k.set_more_precise_than("b", "c")
-    assert k.precision_compare("c", "a") == -1
-
-def test_add_items_same_precision():
+@given(strategies.text(min_size=1), strategies.text(min_size=1), strategies.text(min_size=1))
+def test_implicit_precision_orders(option_name: str, level1_name: str, level2_name: str):
     """
-    Test that adding items at the same precision level
-    appropriately consolidates them into a list.
+    Test that adding a soundness partial order adds the appropriate precision partial order.
+    :param option_name:
+    :param level1_name:
+    :param level2_name:
+    :return:
     """
-    k = Option("op4")
-    k.add_level("a")
-    k.add_level("b")
-    k.add_level("c")
-    k.add_level("d")
-    k.set_more_precise_than("c", "b")
-    k.set_more_precise_than("a", "b")
-    k.set_more_precise_than("d", "a")
-    assert k.precision == ["b", {"c", "a"}, "d"]
+    assume(option_name != level1_name and option_name != level2_name and level1_name != level2_name)
+    option: Option = Option(option_name)
+    option.add_level(level1_name)
+    option.add_level(level2_name)
+    option.set_more_sound_than(level1_name, level2_name)
+    assert (not option.is_more_precise(level1_name, level2_name)) and \
+           (option.is_more_precise(level2_name, level1_name)) and \
+           (not option.is_more_precise(level2_name, level1_name, allow_implicit=False))
 
-
-def test_more_precise():
+@given(strategies.text(min_size=1), strategies.text(min_size=1), strategies.text(min_size=1))
+def test_implicit_soundness_orders(option_name: str, level1_name: str, level2_name: str):
     """
-    Test that adding items at the same precision level
-    appropriately consolidates them into a list.
+    Tests that adding a precision partial order adds two implicit soundness partial orders.
+    :param option_name:
+    :param level1_name:
+    :param level2_name:
+    :return:
     """
-    k = Option("op4")
-    k.add_level("a")
-    k.add_level("b")
-    k.add_level("c")
-    k.add_level("d")
-    k.set_more_precise_than("c", "b")
-    k.set_more_precise_than("a", "b")
-    k.set_more_precise_than("d", "a")
-    assert k.more_precise_than("b") == [{"c", "a"}, "d"] and\
-        k.more_precise_than("a") == ["d"] and\
-        k.more_precise_than("d") == []
-
-
-def test_numeric_options():
-    """
-    Test that numeric options are handled correctly.
-    """
-    k = Option("op5")
-    k.add_level(-1)
-    k.add_level("k")
-    k.add_level("k+1")
-    k.set_more_precise_than("k+1", "k")
-    k.set_more_precise_than(-1, "k+1")
-    assert k.precision_compare(6, 7) == -1 and\
-        k.precision_compare(-1, 100) == 1 and\
-        k.precision_compare(2, 2) == 0
-
+    assume(option_name != level1_name and option_name != level2_name and level1_name != level2_name)
+    option: Option = Option(option_name)
+    option.add_level(level1_name)
+    option.add_level(level2_name)
+    option.set_more_precise_than(level1_name, level2_name)
+    # Check that the implicit soundness partial orders are there but that they are implicit.
+    assert option.is_more_sound(level1_name, level2_name) and \
+           option.is_more_sound(level2_name, level1_name) and \
+           not option.is_more_sound(level1_name, level2_name, allow_implicit=False) and \
+           not option.is_more_sound(level2_name, level1_name, allow_implicit=False)
