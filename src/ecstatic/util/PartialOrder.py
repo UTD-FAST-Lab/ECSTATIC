@@ -51,3 +51,11 @@ class PartialOrder:
         else:
             return not self.option.soundness.has_edge(self.left, self.right)
 
+    def is_explicit(self) -> bool:
+        from src.ecstatic.models.Option import Option
+        match self.type:
+            case PartialOrderType.MORE_PRECISE_THAN:
+                return self.option.is_more_precise(self.left, self.right, allow_implicit=False)
+            case PartialOrderType.MORE_SOUND_THAN:
+                return self.option.is_more_sound(self.left, self.right, allow_implicit=False)
+
