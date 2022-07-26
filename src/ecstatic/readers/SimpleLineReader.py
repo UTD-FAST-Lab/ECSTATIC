@@ -30,3 +30,13 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from typing import Iterable
+
+from src.ecstatic.readers.AbstractReader import AbstractReader, T
+
+
+class SimpleLineReader(AbstractReader):
+    def import_file(self, file: str) -> Iterable[T]:
+        with open(file, 'r') as f:
+            lines = f.readlines()
+            return lines
