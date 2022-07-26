@@ -77,11 +77,13 @@ def summarize(violations: Iterable[PotentialViolation]):
 
 class AbstractViolationChecker(ABC):
 
-    def __init__(self, jobs: int, reader: AbstractReader, output_folder: Path, ground_truths: Optional[Path] = None):
+    def __init__(self, jobs: int, reader: AbstractReader, output_folder: Path, ground_truths: Optional[Path] = None,
+                 write_to_files = True):
         self.output_folder = output_folder
         self.jobs: int = jobs
         self.reader = reader
         self.ground_truths: Path = ground_truths
+        self.write_to_files = write_to_files
         logger.debug(f'Ground truths are {self.ground_truths}')
 
     def check_violations(self, results: List[FinishedFuzzingJob]) -> List[PotentialViolation]:
@@ -246,14 +248,16 @@ class AbstractViolationChecker(ABC):
                                                                job2.job.configuration[option_under_investigation],
                                                                option_under_investigation),
                                                   job1, job2, job1_reader, job2_reader))
-        for violation in results:
-            filename = self.output_folder / get_file_name(violation)
-            filename.parent.mkdir(exist_ok=True, parents=True)
-            logging.info(f'Writing violation to file {filename}')
-            with open(filename, 'w') as f:
-                json.dump(violation.as_dict(), f, indent=4)
-            # with NamedTemporaryFile(dir=self.output_folder, delete=False, suffix='.pickle') as f:
-            #     pickle.dump(violation, f)
+        if self.write_to_files:
+            for violation in results:
+                filename = Path(self.output_folder) / get_file_name(violation)
+                logging.info(f"Filename is {filename}")
+                filename.parent.mkdir(exist_ok=True, parents=True)
+                logging.info(f'Writing violation to file {filename}')
+                with open(filename, 'w') as f:
+                    json.dump(violation.as_dict(), f, indent=4)
+                # with NamedTemporaryFile(dir=self.output_folder, delete=False, suffix='.pickle') as f:
+                #     pickle.dump(violation, f)
         return results
 
     @deprecation.deprecated(details="We have passed the functionality of checking for violations to "

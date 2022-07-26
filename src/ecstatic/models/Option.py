@@ -34,7 +34,7 @@
 # along with ecstatic.  If not, see <https://www.gnu.org/licenses/>.
 ###
 import logging
-from typing import Tuple, Set
+from typing import Tuple, Set, Collection
 
 import networkx
 from networkx import DiGraph
@@ -92,7 +92,7 @@ class Option:
         else:
             self.all.add(Level(self.name, level))
 
-    def get_levels(self):
+    def get_levels(self) -> Collection[Level]:
         """Returns list of all registered levels"""
         return self.all
 
