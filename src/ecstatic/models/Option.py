@@ -116,7 +116,7 @@ class Option:
         if not isinstance(o2, Level):
             o2 = Level(self.name, o2)
         self.partial_orders.add(PartialOrder(o1, PartialOrderType.MORE_PRECISE_THAN, o2, self))
-        self.precision.add_edge(o1, o2)
+        self.precision.add_edge(o1, o2, type="explicit")
 
         # Implicit soundness partial orders
         self.soundness.add_edge(o1, o2, type="implicit")
@@ -132,7 +132,7 @@ class Option:
         if not isinstance(o2, Level):
             o2 = Level(self.name, o2)
         self.partial_orders.add(PartialOrder(o1, PartialOrderType.MORE_SOUND_THAN, o2, self))
-        self.soundness.add_edge(o1, o2)
+        self.soundness.add_edge(o1, o2, type="explicit")
 
         # Add the implicit precision order that B should be at least as precise as A.
         self.precision.add_edge(o2, o1, type="implicit")
