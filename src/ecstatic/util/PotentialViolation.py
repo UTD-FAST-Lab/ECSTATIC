@@ -95,7 +95,7 @@ class PotentialViolation:
             return left in self.job1.job.configuration.values() and right in self.job2.job.configuration.values()
 
         match self.partial_orders:
-            case PartialOrder(left=left, right=right, type=_, option=_) if pred(left, right):
+            case (PartialOrder(left=left, right=right, type=_, option=_),) if pred(left, right):
                 return self.partial_orders
             case (PartialOrder(left=left, right=right, type=_, option=_), _) if pred(left, right):
                 return self.partial_orders[0]
@@ -150,7 +150,10 @@ class PotentialViolation:
                  job1_reader: Callable[[], Set[T]],
                  job2_reader: Callable[[], Set[T]]):
         self._violated: bool | None = None
-        self.partial_orders: PartialOrder | Tuple[PartialOrder, PartialOrder] = partial_orders
+        match partial_orders:
+            case (_, _): self.partial_orders: Iterable[PartialOrder] = partial_orders
+            case PartialOrder(_, _, _, _): self.partial_orders = (partial_orders,)
+        self.partial_orders: Iterable[PartialOrder]
         self.job1 = job1
         self.job2 = job2
         self.job1_reader = job1_reader
