@@ -96,7 +96,7 @@ class PotentialViolation:
 
         match self.partial_orders:
             case (PartialOrder(left=left, right=right, type=_, option=_),) if pred(left, right):
-                return self.partial_orders
+                return self.partial_orders[0]
             case (PartialOrder(left=left, right=right, type=_, option=_), _) if pred(left, right):
                 return self.partial_orders[0]
             case (_, PartialOrder(left=left, right=right, type=_, option=_)) if pred(left, right):
