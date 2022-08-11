@@ -17,6 +17,7 @@
 
 
 import logging
+import re
 from typing import Tuple
 
 from src.ecstatic.readers.callgraph.AbstractCallGraphReader import AbstractCallGraphReader
@@ -32,11 +33,8 @@ class DOOPCallGraphReader(AbstractCallGraphReader):
 ava.lang.Object doPrivileged(java.security.PrivilegedAction)>
     """
     def process_line(self, line: str) -> Tuple[CGCallSite, CGTarget]:
-        tokens = line.split("\t")
-        if len(tokens) == 5:
-            return super().process_line(line)
+        if (ma := re.fullmatch(r"\[(.*)\]\s*<(.*?)>/(.*?)/\d\s*\[(.*?)\]\s*<(.*)>")):
+            return (CGCallSite(context=ma.group(1), clazz=ma.group(2), stmt=ma.group(3)),
+                    CGTarget(context=ma.group(4), target=ma.group(5)))
         else:
-            return (CGCallSite(clazz=tokens[1].split('/')[0].strip(' <>'),
-                               stmt='/'.join(tokens[1].split('/')[1:]),
-                               context=tokens[0]),
-                    CGTarget(tokens[3], tokens[2]))
+            raise ValueError(f"Could not read line {line}")
