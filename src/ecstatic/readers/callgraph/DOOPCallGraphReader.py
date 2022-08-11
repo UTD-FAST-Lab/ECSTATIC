@@ -38,4 +38,5 @@ ava.lang.Object doPrivileged(java.security.PrivilegedAction)>
             return (CGCallSite(context=ma.group(1), clazz=ma.group(2), stmt=ma.group(3)),
                     CGTarget(context=ma.group(4), target=ma.group(5)))
         else:
-            raise ValueError(f"DOOPReader could not read line ({line})")
+            logger.critical(f"DOOPReader could not read line ({line})")
+            return None
