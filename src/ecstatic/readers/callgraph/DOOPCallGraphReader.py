@@ -47,7 +47,7 @@ class DOOPCallGraphReader(AbstractCallGraphReader):
 ava.lang.Object doPrivileged(java.security.PrivilegedAction)>
     """
 
-    pattern = re.compile("^\[(.*?(?<!\[))\]\s*?(.*?)/((?:.|/)*?)/\d*?\s*?\[(.*?(?<!\[))\]\s*?<(.*)>")
+    pattern = re.compile("^\[(.*?(?<!\[))\]\s*?(.*?)/((?:.|/)*?)[/\d\s]*?\[(.*?(?<!\[))\]\s*?<(.*)>")
 
     def process_line(self, line: str) -> Tuple[CGCallSite, CGTarget]:
         line = line.strip()
