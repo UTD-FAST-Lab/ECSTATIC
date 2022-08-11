@@ -48,7 +48,7 @@ ava.lang.Object doPrivileged(java.security.PrivilegedAction)>
         line = line.strip()
         toks = line.split('\t')
         if len(toks) == 4:
-            return (CGCallSite(context=toks[0], clazz=toks[1].split('/')[0], stmt="/".join(toks[1].split('/')[1:])),
+            return (CGCallSite(context=toks[0], clazz=toks[1].split('/')[0].strip("<>"), stmt="/".join(toks[1].split('/')[1:])),
                               CGTarget(context=toks[2], target=toks[3]))
         else:
             logger.critical(f"DOOPReader could not read line ({line})")
