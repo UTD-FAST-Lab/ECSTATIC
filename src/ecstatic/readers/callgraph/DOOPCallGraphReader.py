@@ -17,6 +17,8 @@
 
 
 import logging
+from dataclasses import dataclass, field
+
 import regex as re
 from typing import Tuple
 
@@ -27,19 +29,33 @@ from src.ecstatic.util.CGTarget import CGTarget
 logger = logging.getLogger(__name__)
 
 
+@dataclass(unsafe_hash=True)
+class DoopCallGraphCaller:
+    caller: str
+    caller_context: str = field(default="", compare=False)
+
+
+@dataclass(unsafe_hash=True)
+class DoopCallGraphTarget:
+    target: str
+    target_context: str = field(default="", compare=False)
+
+
 class DOOPCallGraphReader(AbstractCallGraphReader):
     """
     A DOOP line is [<<immutable-context>>] <sun.security.x509.AVA: void <clinit>()>/java.security.AccessController.doPrivileged/0  [<<immutable-context>>] <java.security.AccessController: j\
 ava.lang.Object doPrivileged(java.security.PrivilegedAction)>
     """
 
-    pattern = re.compile("^\[(.*)\]\s*(.*)/(.*?){0,1}(?:/\d)?\s*\[(.*?)\]\s*<(.*)>$")
+    pattern = re.compile("^\[(.*?(?<!\[))\]\s*?(.*?)\[(.*?(?<!\[))\]\s*(.*)$")
 
-    def process_line(self, line: str) -> Tuple[CGCallSite, CGTarget]:
+    def process_line(self, line: str) -> Tuple[DoopCallGraphCaller, DoopCallGraphTarget]:
         line = line.strip()
         if ma := re.fullmatch(DOOPCallGraphReader.pattern, line):
-            return (CGCallSite(context=ma.group(1), clazz=ma.group(2), stmt=ma.group(3)),
-                    CGTarget(context=ma.group(4), target=ma.group(5)))
+            return (DoopCallGraphCaller(caller=ma.group(2), caller_context=ma.group(1)),
+                    DoopCallGraphTarget(target=ma.group(4), target_context=ma.group(3)))
         else:
             logger.critical(f"DOOPReader could not read line ({line})")
             return None
+
+
