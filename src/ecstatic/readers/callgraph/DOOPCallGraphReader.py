@@ -28,18 +28,15 @@ from src.ecstatic.util.CGTarget import CGTarget
 
 logger = logging.getLogger(__name__)
 
+@dataclass(unsafe_hash=True)
+class DoopCallgraphCaller:
+    content: str
+    context: str = field(compare=False)
 
 @dataclass(unsafe_hash=True)
-class DoopCallGraphCaller:
-    caller: str
-    caller_context: str = field(default="", compare=False)
-
-
-@dataclass(unsafe_hash=True)
-class DoopCallGraphTarget:
-    target: str
-    target_context: str = field(default="", compare=False)
-
+class DoopCallgraphTarget:
+    content: str
+    context: str = field(compare=False)
 
 class DOOPCallGraphReader(AbstractCallGraphReader):
     """
@@ -47,13 +44,12 @@ class DOOPCallGraphReader(AbstractCallGraphReader):
 ava.lang.Object doPrivileged(java.security.PrivilegedAction)>
     """
 
-    pattern = re.compile("^\[(.*?(?<!\[))\]\s*?(.*?)/((?:.|/)*?)[/\d\s]*?\[(.*?(?<!\[))\]\s*?<(.*)>")
-
     def process_line(self, line: str) -> Tuple[CGCallSite, CGTarget]:
         line = line.strip()
-        if ma := re.fullmatch(DOOPCallGraphReader.pattern, line):
-            return (CGCallSite(context=ma.group(1), clazz=ma.group(2), stmt=ma.group(3)),
-                    CGTarget(context=ma.group(4), target=ma.group(5)))
+        toks = line.split('\t')
+        if len(toks) == 4:
+            return (CGCallSite(context=toks[0], clazz=toks[1].split('/')[0], stmt="/".join(toks[1].split('/')[1:])),
+                              CGTarget(context=toks[2], target=toks[3]))
         else:
             logger.critical(f"DOOPReader could not read line ({line})")
             return None
