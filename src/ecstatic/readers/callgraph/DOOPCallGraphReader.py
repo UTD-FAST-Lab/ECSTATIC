@@ -33,7 +33,7 @@ class DOOPCallGraphReader(AbstractCallGraphReader):
 ava.lang.Object doPrivileged(java.security.PrivilegedAction)>
     """
     def process_line(self, line: str) -> Tuple[CGCallSite, CGTarget]:
-        if ma := re.fullmatch(r"\[(.*)\]\s*<(.*?)>/(.*?)/\d\s*\[(.*?)\]\s*<(.*)>", line):
+        if ma := re.fullmatch("^\[(.*)\]\s*<(.*?)>/(.*?)/\d\s*\[(.*?)\]\s*<(.*)>.*$", line):
             return (CGCallSite(context=ma.group(1), clazz=ma.group(2), stmt=ma.group(3)),
                     CGTarget(context=ma.group(4), target=ma.group(5)))
         else:
