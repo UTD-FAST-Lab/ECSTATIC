@@ -47,13 +47,13 @@ class DOOPCallGraphReader(AbstractCallGraphReader):
 ava.lang.Object doPrivileged(java.security.PrivilegedAction)>
     """
 
-    pattern = re.compile("^\[(.*?(?<!\[))\]\s*?(.*?)\[(.*?(?<!\[))\]\s*(.*)$")
+    pattern = re.compile("^\[(.*?(?<!\[))\]\s*?(.*?)/((?:.|/)*?)/\d\s*\[(.*?(?<!\[))\]\s*?<([^>]*)>")
 
-    def process_line(self, line: str) -> Tuple[DoopCallGraphCaller, DoopCallGraphTarget]:
+    def process_line(self, line: str) -> Tuple[CGCallSite, CGTarget]:
         line = line.strip()
         if ma := re.fullmatch(DOOPCallGraphReader.pattern, line):
-            return (DoopCallGraphCaller(caller=ma.group(2), caller_context=ma.group(1)),
-                    DoopCallGraphTarget(target=ma.group(4), target_context=ma.group(3)))
+            return (CGCallSite(context=ma.group(1), clazz=ma.group(2), stmt=ma.group(3)),
+                    CGTarget(context=ma.group(4), target=ma.group(5)))
         else:
             logger.critical(f"DOOPReader could not read line ({line})")
             return None
