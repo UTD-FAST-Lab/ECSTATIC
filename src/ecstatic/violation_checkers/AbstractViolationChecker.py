@@ -22,6 +22,9 @@ import pathlib
 import pickle
 import time
 from abc import ABC, abstractmethod
+
+from pathos.multiprocessing import ProcessPool
+from pathos.parallel import ParallelPool
 from pathos.pools import ThreadPool
 from pathlib import Path
 from tempfile import NamedTemporaryFile
@@ -118,7 +121,7 @@ class AbstractViolationChecker(ABC):
                 pairs.append((finished_run, candidate, option_under_investigation))
 
         finished_results: List[PotentialViolation] = []
-        with ThreadPool(self.jobs) as p:
+        with ParallelPool(self.jobs) as p:
             print(f'Checking violations with {self.jobs} cores.')
             for result in tqdm(p.imap(self.compare_results, pairs), total=len(pairs)):
                 # Force evaluation of violated
