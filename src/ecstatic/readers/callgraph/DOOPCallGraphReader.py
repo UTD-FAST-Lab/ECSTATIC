@@ -17,7 +17,7 @@
 
 
 import logging
-import re
+import regex as re
 from typing import Tuple
 
 from src.ecstatic.readers.callgraph.AbstractCallGraphReader import AbstractCallGraphReader
@@ -32,9 +32,12 @@ class DOOPCallGraphReader(AbstractCallGraphReader):
     A DOOP line is [<<immutable-context>>] <sun.security.x509.AVA: void <clinit>()>/java.security.AccessController.doPrivileged/0  [<<immutable-context>>] <java.security.AccessController: j\
 ava.lang.Object doPrivileged(java.security.PrivilegedAction)>
     """
+
+    pattern = re.compile("^\[(.*)\]\s*(.*)/(.*?){0,1}(?:/\d)?\s*\[(.*?)\]\s*<(.*)>$")
+
     def process_line(self, line: str) -> Tuple[CGCallSite, CGTarget]:
         line = line.strip()
-        if ma := re.fullmatch("^\[(.*)\]\s*(.*)/(.*?){0,1}(?:/\d)?\s*\[(.*?)\]\s*<(.*)>$", line):
+        if ma := re.fullmatch(DOOPCallGraphReader.pattern, line):
             return (CGCallSite(context=ma.group(1), clazz=ma.group(2), stmt=ma.group(3)),
                     CGTarget(context=ma.group(4), target=ma.group(5)))
         else:
