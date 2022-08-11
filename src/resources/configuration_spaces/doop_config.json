@@ -5,17 +5,52 @@
       "name": "analysis",
       "default": "context-insensitive",
       "levels": [
+        "1-call-site-sensitive",
+        "1-call-site-sensitive+heap",
+        "1-object-1-type-sensitive+heap",
         "1-object-sensitive",
         "1-object-sensitive+heap",
+        "1-type-sensitive",
+        "1-type-sensitive+heap",
+        "2-call-site-sensitive+2-heap",
+        "2-call-site-sensitive+heap",
         "2-object-sensitive+2-heap",
+        "2-object-sensitive+heap",
+        "2-type-object-sensitive+2-heap",
+        "2-type-object-sensitive+heap",
+        "2-type-sensitive+heap",
         "3-object-sensitive+3-heap",
-        "context-insensitive"
+        "3-type-sensitive+2-heap",
+        "3-type-sensitive+3-heap",
+        "adaptive-2-object-sensitive+heap",
+        "basic-only",
+        "context-insensitive",
+        "context-insensitive-plus",
+        "context-insensitive-plusplus",
+        "data-flow",
+        "dependency-analysis",
+        "fully-guided-context-sensitive",
+        "micro",
+        "partitioned-2-object-sensitive+heap",
+        "selective-2-object-sensitive+heap",
+        "sound-may-point-to",
+        "sticky-2-object-sensitive"
       ],
       "orders": [
         {
-          "left": "1-object-sensitive",
+          "left": "1-call-site-sensitive+heap",
           "order": "MPT",
-          "right": "context-insensitive"
+          "right": "1-call-site-sensitive"
+        },
+        {
+          "left": "1-object-1-type-sensitive+heap",
+          "order": "MPT",
+          "right": "1-object-sensitive+heap"
+        },
+        {
+          "left": "1-object-1-type-sensitive+heap",
+          "order": "MPT",
+          "right": "1-type-sensitive+heap"
         },
         {
           "left": "1-object-sensitive+heap",
@@ -23,14 +58,349 @@
           "right": "1-object-sensitive"
         },
         {
+          "left": "1-type-sensitive+heap",
+          "order": "MPT",
+          "right": "1-type-sensitive"
+        },
+        {
+          "left": "1-object-sensitive+heap",
+          "order": "MPT",
+          "right": "1-type-sensitive+heap"
+        },
+        {
+          "left": "1-object-sensitive",
+          "order": "MPT",
+          "right": "1-type-sensitive"
+        },
+        {
+          "left": "2-call-site-sensitive+2-heap",
+          "order": "MPT",
+          "right": "2-call-site-sensitive+heap"
+        },
+        {
+          "left": "2-call-site-sensitive+heap",
+          "order": "MPT",
+          "right": "1-call-site-sensitive+heap"
+        },
+        {
+          "left": "2-object-sensitive+heap",
+          "order": "MPT",
+          "right": "1-object-1-type-sensitive+heap"
+        },
+        {
           "left": "2-object-sensitive+2-heap",
           "order": "MPT",
-          "right": "1-object-sensitive+heap"
+          "right": "2-object-sensitive+heap"
+        },
+        {
+          "left": "2-object-sensitive+heap",
+          "order": "MPT",
+          "right": "2-type-sensitive+heap"
         },
         {
           "left": "3-object-sensitive+3-heap",
           "order": "MPT",
           "right": "2-object-sensitive+2-heap"
+        },
+        {
+          "left": "3-object-sensitive+3-heap",
+          "order": "MPT",
+          "right": "3-type-sensitive+3-heap"
+        },
+        {
+          "left": "1-call-site-sensitive",
+          "order": "MPT",
+          "right": "context-insensitive"
+        },
+        {
+          "left": "1-type-sensitive",
+          "order": "MPT",
+          "right": "context-insensitive"
+        }
+      ]
+    },
+    {
+      "name": "coarse-grained-allocation-sites",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "FALSE",
+          "order": "MPT",
+          "right": "TRUE"
+        }
+      ]
+    },
+    {
+      "name": "cs-library",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "TRUE",
+          "order": "MPT",
+          "right": "FALSE"
+        }
+      ]
+    },
+    {
+      "name": "distinguish-all-string-buffers",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "TRUE",
+          "order": "MPT",
+          "right": "FALSE"
+        }
+      ]
+    },
+    {
+      "name":"distinguish-all-string-constants",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "TRUE",
+          "order": "MPT",
+          "right": "FALSE"
+        }
+      ]
+    },
+    {
+      "name": "no-merge-library-objects",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "TRUE",
+          "order": "MPT",
+          "right": "FALSE"
+        }
+      ]
+    },
+    {
+      "name": "no-merges",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "TRUE",
+          "order": "MPT",
+          "right": "FALSE"
+        }
+      ]
+    },
+    {
+      "name": "data-flow-goto-lib",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "TRUE",
+          "order": "MST",
+          "right": "FALSE"
+        }
+      ]
+    },
+    {
+      "name": "data-flow-only-lib",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "FALSE",
+          "order": "MST",
+          "right": "TRUE"
+        }
+      ]
+    },
+    {
+      "name": "extract-more-strings",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "TRUE",
+          "order": "MPT",
+          "right": "FALSE"
+        }
+      ]
+    },
+    {
+      "name": "heapdl-nostrings",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "TRUE",
+          "order": "MPT",
+          "right": "FALSE"
+        }
+      ]
+    },
+    {
+      "name": "only-precise-native-strings",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "FALSE",
+          "order": "MST",
+          "right": "TRUE"
+        }
+      ]
+    },
+    {
+      "name": "distinguish-reflection-only-string-constants",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "TRUE",
+          "order": "MPT",
+          "right": "FALSE"
+        }
+      ]
+    },
+    {
+      "name": "distinguish-string-buffers-per-package",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "TRUE",
+          "order": "MPT",
+          "right": "FALSE"
+        }
+      ]
+    },
+    {
+      "name": "reflection",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "TRUE",
+          "order": "MST",
+          "right": "FALSE"
+        }
+      ]
+    },
+    {
+      "name": "reflection-classic",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "TRUE",
+          "order": "MST",
+          "right": "FALSE"
+        }
+      ]
+    },
+    {
+      "name": "reflection-high-soundness-mode",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "TRUE",
+          "order": "MST",
+          "right": "FALSE"
+        }
+      ]
+    },
+    {
+      "name": "Xgenerics-pre",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "TRUE",
+          "order": "MPT",
+          "right": "FALSE"
+        }
+      ]
+    },
+    {
+      "name": "Xreflection-coloring",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "TRUE",
+          "order": "MPT",
+          "right": "FALSE"
+        }
+      ]
+    },
+    {
+      "name": "Xreflection-context-sensitivity",
+      "levels": [
+        "TRUE",
+        "FALSE"
+      ],
+      "default": "FALSE",
+      "orders": [
+        {
+          "left": "TRUE",
+          "order": "MPT",
+          "right": "FALSE"
         }
       ]
     }
