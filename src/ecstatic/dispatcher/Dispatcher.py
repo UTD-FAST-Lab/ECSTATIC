@@ -22,6 +22,8 @@ import logging
 import os
 import pathlib
 
+from enum_actions import enum_action
+
 from src.ecstatic.fuzzing.generators.FuzzGenerator import FuzzOptions
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -106,8 +108,8 @@ def parse_args():
         default='./results'
     )
     parser.add_argument("--seed", help="Seed to use for the random fuzzer", type=int, default=2001)
-    parser.add_argument("--fuzzing-strategy", type=FuzzOptions.__getitem__,
-                  help=f"Which fuzzing strategy to use (pick from [{[t.name for t in FuzzOptions]}])")
+    p.add_argument("--fuzzing-strategy", action=enum_action(FuzzOptions), default="GUIDED")
+
     return parser.parse_args()
 
 

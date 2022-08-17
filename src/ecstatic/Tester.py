@@ -28,6 +28,7 @@ from functools import partial
 from multiprocessing.dummy import Pool
 from pathlib import Path
 from typing import List, Optional
+from enum_actions import enum_action
 
 from tqdm import tqdm
 
@@ -137,8 +138,7 @@ def main():
         default='none'
     )
     p.add_argument("--seed", help="Seed to use for the random fuzzer", type=int, default=2001)
-    p.add_argument("--fuzzing-strategy", type=FuzzOptions.__getitem__,
-                  help=f"Which fuzzing strategy to use (pick from [{[t.name for t in FuzzOptions]}])")
+    p.add_argument("--fuzzing-strategy", action=enum_action(FuzzOptions), default="GUIDED")
 
     args = p.parse_args()
 

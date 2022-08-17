@@ -31,7 +31,7 @@ RUN git config --global core.eol lf && \
 
 RUN git clone https://github.com/Pancax/SADeltaDebugger.git
 RUN cd SADeltaDebugger/ProjectLineCounter &&  mvn install && \
-    cd ../ViolationDeltaDebugger && mvn package
+    cd ../ViolationDeltaDebugger && mvn package -DskipTests
 
 FROM python-build
 
