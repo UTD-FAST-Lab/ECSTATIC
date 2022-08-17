@@ -106,8 +106,8 @@ def parse_args():
         default='./results'
     )
     parser.add_argument("--seed", help="Seed to use for the random fuzzer", type=int, default=2001)
-    parser.add_argument("--fuzzing-strategy", help="", type=FuzzOptions.__getitem__,
-                   choices=[t.name for t in FuzzOptions])
+    parser.add_argument("--fuzzing-strategy", type=FuzzOptions.__getitem__,
+                  help=f"Which fuzzing strategy to use (pick from [{[t.name for t in FuzzOptions]}])")
     return parser.parse_args()
 
 
