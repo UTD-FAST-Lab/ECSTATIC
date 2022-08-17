@@ -17,6 +17,9 @@
 
 
 import logging
+from dataclasses import dataclass, field
+
+import regex as re
 from typing import Tuple
 
 from src.ecstatic.readers.callgraph.AbstractCallGraphReader import AbstractCallGraphReader
@@ -25,18 +28,30 @@ from src.ecstatic.util.CGTarget import CGTarget
 
 logger = logging.getLogger(__name__)
 
+@dataclass(unsafe_hash=True)
+class DoopCallgraphCaller:
+    content: str
+    context: str = field(compare=False)
+
+@dataclass(unsafe_hash=True)
+class DoopCallgraphTarget:
+    content: str
+    context: str = field(compare=False)
 
 class DOOPCallGraphReader(AbstractCallGraphReader):
     """
     A DOOP line is [<<immutable-context>>] <sun.security.x509.AVA: void <clinit>()>/java.security.AccessController.doPrivileged/0  [<<immutable-context>>] <java.security.AccessController: j\
 ava.lang.Object doPrivileged(java.security.PrivilegedAction)>
     """
+
     def process_line(self, line: str) -> Tuple[CGCallSite, CGTarget]:
-        tokens = line.split("\t")
-        if len(tokens) == 5:
-            return super().process_line(line)
+        line = line.strip()
+        toks = line.split('\t')
+        if len(toks) == 4:
+            return (CGCallSite(context=toks[0], clazz=toks[1].split('/')[0].strip("<>"), stmt="/".join(toks[1].split('/')[1:])),
+                              CGTarget(context=toks[2], target=toks[3]))
         else:
-            return (CGCallSite(clazz=tokens[1].split('/')[0].strip(' <>'),
-                               stmt='/'.join(tokens[1].split('/')[1:]),
-                               context=tokens[0]),
-                    CGTarget(tokens[3], tokens[2]))
+            logger.critical(f"DOOPReader could not read line ({line})")
+            return None
+
+
