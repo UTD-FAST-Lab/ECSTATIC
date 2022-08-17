@@ -55,7 +55,8 @@ def start_runner(tool: str, benchmark: str, task: str, args):
     # PYTHONENV=/ecstatic
     # run build benchmark script
     command = f'tester {tool} {benchmark} -t {task} -j {args.jobs} --fuzzing-timeout {args.fuzzing_timeout} ' \
-              f'--delta-debugging-mode {args.delta_debugging_mode}'
+              f'--delta-debugging-mode {args.delta_debugging_mode} --seed {args.seed} ' \
+              f'--fuzzing-strategy {args.fuzzing_strategy.name.lower()}'
     if args.timeout is not None:
         command += f' --timeout {args.timeout}'
     if args.verbose > 0:

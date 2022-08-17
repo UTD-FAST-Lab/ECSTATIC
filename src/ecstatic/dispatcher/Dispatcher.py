@@ -108,7 +108,7 @@ def parse_args():
         default='./results'
     )
     parser.add_argument("--seed", help="Seed to use for the random fuzzer", type=int, default=2001)
-    p.add_argument("--fuzzing-strategy", action=enum_action(FuzzOptions), default="GUIDED")
+    parser.add_argument("--fuzzing-strategy", action=enum_action(FuzzOptions), default="guided")
 
     return parser.parse_args()
 

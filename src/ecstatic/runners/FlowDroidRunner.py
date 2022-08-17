@@ -22,7 +22,7 @@ import os
 import subprocess
 import xml.etree.ElementTree as ElementTree
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Tuple
 
 from src.ecstatic.models.Level import Level
 from src.ecstatic.models.Option import Option
@@ -151,15 +151,15 @@ class FlowDroidRunner(AbstractCommandLineToolRunner):
                 result += f'--{k.name} '
         return result
 
-    def try_run_job(self, job: FuzzingJob, output_folder: str) -> FinishedFuzzingJob | None:
+    def try_run_job(self, job: FuzzingJob, output_folder: str) -> Tuple[str, str]:
         try:
             result_location: str
             shell_location: str = create_shell_file(job, output_folder)
             xml_location: str = create_xml_config_file(shell_location, job.target, output_folder)
             logger.info(f'Running job with configuration {xml_location} on apk {job.target.name}')
-            result_location = self.run_aql(job, self.get_output(output_folder, job), xml_location)
+            result_location, output = self.run_aql(job, self.get_output(output_folder, job), xml_location)
             logger.info(f'Job on configuration {xml_location} on apk {job.target} done.')
-            return result_location
+            return result_location, output
         except (KeyboardInterrupt, TimeoutError, RuntimeError):
             # logger.exception(f'Failed to run configuration {xml_location} on apk {job.apk}')
             return None
@@ -167,7 +167,7 @@ class FlowDroidRunner(AbstractCommandLineToolRunner):
     def run_aql(self,
                 job: FuzzingJob,
                 output: str,
-                xml_config_file: str) -> str:
+                xml_config_file: str) -> Tuple[str, str]:
         """
         Runs Flowdroid given a config.
         The steps to running flowdroid are:
@@ -192,7 +192,7 @@ class FlowDroidRunner(AbstractCommandLineToolRunner):
                 answers = ElementTree.Element('answer')
                 tree = ElementTree.ElementTree(answers)
                 tree.write(output)
-            return output
+            return output, cp.stdout
 
         except KeyboardInterrupt:
             if os.path.exists(output):
