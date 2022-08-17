@@ -138,7 +138,7 @@ def main():
     )
     p.add_argument("--seed", help="Seed to use for the random fuzzer", type=int, default=2001)
     p.add_argument("--fuzzing-strategy", help="", type=FuzzOptions.__getitem__,
-                   options=[t.name for t in FuzzOptions])
+                   choices=[t.name for t in FuzzOptions])
 
     args = p.parse_args()
 
