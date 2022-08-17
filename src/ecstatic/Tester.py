@@ -21,6 +21,7 @@ import importlib
 import logging
 import os.path
 import pickle
+import random
 import subprocess
 import time
 from functools import partial
@@ -33,7 +34,7 @@ from tqdm import tqdm
 from src.ecstatic.debugging.JavaBenchmarkDeltaDebugger import JavaBenchmarkDeltaDebugger
 from src.ecstatic.debugging.JavaViolationDeltaDebugger import JavaViolationDeltaDebugger
 from src.ecstatic.fuzzing.generators import FuzzGeneratorFactory
-from src.ecstatic.fuzzing.generators.FuzzGenerator import FuzzGenerator
+from src.ecstatic.fuzzing.generators.FuzzGenerator import FuzzGenerator, FuzzOptions
 from src.ecstatic.readers import ReaderFactory
 from src.ecstatic.runners import RunnerFactory
 from src.ecstatic.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
@@ -52,7 +53,8 @@ class ToolTester:
 
     def __init__(self, generator, runner: AbstractCommandLineToolRunner, debugger: Optional[JavaViolationDeltaDebugger],
                  results_location: str,
-                 num_processes: int, fuzzing_timeout: int, checker: AbstractViolationChecker):
+                 num_processes: int, fuzzing_timeout: int, checker: AbstractViolationChecker,
+                 seed: int):
         self.generator: FuzzGenerator = generator
         self.runner: AbstractCommandLineToolRunner = runner
         self.debugger: JavaViolationDeltaDebugger = debugger
@@ -61,6 +63,7 @@ class ToolTester:
         self.num_processes = num_processes
         self.fuzzing_timeout = fuzzing_timeout
         self.checker = checker
+        self.seed = seed
 
     def read_violation_from_file(self, file: str) -> Violation:
         with open(file, 'rb') as f:
@@ -74,7 +77,11 @@ class ToolTester:
             print(f"Got new fuzzing campaign: {campaign_index}.")
             campaign_start_time = time.time()
             # Make campaign folder.
-            campaign_folder = os.path.join(self.results_location, f'campaign{campaign_index}')
+            if campaign_index == 0:
+                campaign_folder = os.path.join(self.results_location, f'campaign{campaign_index}')
+            else:
+                campaign_folder = Path(self.results_location) / str(self.seed) / self.generator.strategy.name / \
+                    f'campaign{campaign_index}'
             Path(campaign_folder).mkdir(exist_ok=True, parents=True)
             partial_run_job = partial(self.runner.run_job, output_folder=campaign_folder)
             with Pool(self.num_processes) as p:
@@ -123,15 +130,19 @@ def main():
                    action="store_true")
     p.add_argument('--timeout', help='Timeout in minutes', type=int)
     p.add_argument('--verbose', '-v', action='count', default=0)
-    p.add_argument('--no-delta-debug', help='Do not delta debug.', action='store_true')
     p.add_argument('--fuzzing-timeout', help='Fuzzing timeout in minutes.', type=int, default=0)
     p.add_argument(
         '-d', '--delta-debugging-mode',
         choices=['none', 'violation', 'benchmark'],
         default='none'
     )
+    p.add_argument("--seed", help="Seed to use for the random fuzzer", type=int, default=2001)
+    p.add_argument("--fuzzing-strategy", help="", type=FuzzOptions.__getitem__,
+                   options=[t.name for t in FuzzOptions])
 
     args = p.parse_args()
+
+    random.seed(args.seed)
 
     if args.verbose > 1:
         logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -173,7 +184,7 @@ def main():
         runner.timeout = args.timeout
 
     generator = FuzzGeneratorFactory.get_fuzz_generator_for_name(args.tool, model_location, grammar,
-                                                                 benchmark)
+                                                                 benchmark, args.fuzzing_strategy)
     reader = ReaderFactory.get_reader_for_task_and_tool(args.task, args.tool)
     checker = ViolationCheckerFactory.get_violation_checker_for_task(args.task, args.tool,
                                                                      jobs=args.jobs,
@@ -188,7 +199,7 @@ def main():
 
     t = ToolTester(generator, runner, debugger, results_location,
                    num_processes=args.jobs, fuzzing_timeout=args.fuzzing_timeout,
-                   checker=checker)
+                   checker=checker, seed=args.seed)
     t.main()
 
 

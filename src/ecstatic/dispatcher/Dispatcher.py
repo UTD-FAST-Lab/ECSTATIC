@@ -22,6 +22,8 @@ import logging
 import os
 import pathlib
 
+from src.ecstatic.fuzzing.generators.FuzzGenerator import FuzzOptions
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     datefmt='%m/%d/%Y %I:%M:%S %p')
 
@@ -103,6 +105,9 @@ def parse_args():
         help='Location to write results.',
         default='./results'
     )
+    parser.add_argument("--seed", help="Seed to use for the random fuzzer", type=int, default=2001)
+    parser.add_argument("--fuzzing-strategy", help="", type=FuzzOptions.__getitem__,
+                   options=[t.name for t in FuzzOptions])
     return parser.parse_args()
 
 

@@ -21,6 +21,7 @@ import json
 import logging
 import os
 import random
+from enum import Enum, auto
 from typing import List, Dict, Tuple, Iterable
 
 from frozendict import frozendict
@@ -37,7 +38,6 @@ from src.ecstatic.util.UtilClasses import ConfigWithMutatedOption, FuzzingCampai
     FuzzingJob
 from src.ecstatic.util.Violation import Violation
 
-random.seed(2001)
 logger = logging.getLogger(__name__)
 
 
@@ -58,11 +58,17 @@ def get_apks(directory: str) -> List[str]:
                 yield os.path.join(root, f)
 
 
+class FuzzOptions(Enum):
+    RANDOM = auto()
+    GUIDED = auto()
+
+
 class FuzzGenerator:
 
     def __init__(self, model_location: str,
                  grammar_location: str,
-                 benchmark: Benchmark):
+                 benchmark: Benchmark,
+                 strategy: FuzzOptions = FuzzOptions.GUIDED):
         self.first_run = True
         with open(grammar_location) as f:
             self.json_grammar = json.load(f)
@@ -70,6 +76,7 @@ class FuzzGenerator:
         self.benchmark: Dict[BenchmarkRecord, int] = {b: 1 for b in benchmark.benchmarks}
         self.fuzzer = GrammarCoverageFuzzer(self.grammar)
         self.model = ConfigurationSpaceReader().read_configuration_space(model_location)
+        self.strategy = strategy
 
         self.partial_orders: Dict[PartialOrder, int] = {}
         for o in self.model.get_options():
@@ -162,12 +169,15 @@ class FuzzGenerator:
             candidate_sample = set()
             pos = set()
             while len(pos) < min(len(self.partial_orders), 2):
-                pos.update(random.sample(self.partial_orders.keys(), 1, counts=self.partial_orders.values()))
+                pos.update(random.sample(self.partial_orders.keys(), 1,
+                                         counts=self.partial_orders.values() if self.strategy is
+                                                                                FuzzOptions.GUIDED else None))
             [candidate_sample.update(self.mutate_config(seed_config, p)) for p in pos]
             benchmarks_sample = set()
             while len(benchmarks_sample) < min(4, len(self.benchmark_population)):
                 benchmarks_sample.update(random.sample(self.benchmark_population.keys(), 1,
-                                                       counts=self.benchmark_population.values()))
+                                                       counts=self.benchmark_population.values() if
+                                                       self.strategy is FuzzOptions.GUIDED else None))
 
             # Levels not selected
             held_out = [p for p in self.partial_orders if p not in pos]
