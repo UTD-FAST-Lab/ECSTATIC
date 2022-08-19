@@ -24,15 +24,17 @@ ADD "https://api.github.com/repos/amordahl/ecstatic/commits?per_page=1" latest_c
 RUN git pull
 
 FROM python-build AS delta-debugger-build
-
+ENV DELTA_DEBUGGER_HOME=/SADeltaDebugger
 WORKDIR /
 RUN git config --global core.eol lf && \
  git config --global core.autocrlf input
 
+ADD "https://api.github.com/repos/pancax/SADeltaDebugger/commits?per_page=1" latest_debug
 RUN git clone https://github.com/Pancax/SADeltaDebugger.git
-RUN cd SADeltaDebugger/ProjectLineCounter &&  mvn install && \
-    cd ../ViolationDeltaDebugger && mvn package -DskipTests
-
+WORKDIR /SADeltaDebugger
+RUN cd ProjectLineCounter/ &&  mvn install && \
+    cd ../ViolationDeltaDebugger/ && mvn package -DskipTests
+WORKDIR /
 FROM python-build
 
 RUN npm install -g jsdelta
@@ -40,4 +42,3 @@ COPY --from=delta-debugger-build /SADeltaDebugger /SADeltaDebugger
 COPY --from=ecstatic-build /venv /venv
 COPY --from=ecstatic-build /ECSTATIC /ECSTATIC
 ENV PATH=/venv/bin:$PATH
-ENV DELTA_DEBUGGER_HOME=/SADeltaDebugger
