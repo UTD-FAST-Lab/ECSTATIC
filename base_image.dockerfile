@@ -32,7 +32,6 @@ RUN git config --global core.eol lf && \
 ADD "https://api.github.com/repos/pancax/SADeltaDebugger/commits?per_page=1" latest_debug
 RUN git clone https://github.com/Pancax/SADeltaDebugger.git
 WORKDIR /SADeltaDebugger
-RUN git pull
 RUN cd ProjectLineCounter/ &&  mvn install && \
     cd ../ViolationDeltaDebugger/ && mvn package -DskipTests
 WORKDIR /
