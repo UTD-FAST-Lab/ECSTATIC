@@ -3,3 +3,4 @@ base_image.dockerfile
 tests/**/*
 tests/
 results/
+**/venv
