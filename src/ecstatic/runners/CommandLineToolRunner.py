@@ -20,7 +20,7 @@ import logging
 import os
 import subprocess
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Tuple, Iterable
 
 from src.ecstatic.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
 from src.ecstatic.util.UtilClasses import BenchmarkRecord, FuzzingJob
@@ -73,7 +73,7 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         """Add an option to handle timeout, using self.timeout"""
         pass
 
-    def try_run_job(self, job: FuzzingJob, output_folder: str) -> str:
+    def try_run_job(self, job: FuzzingJob, output_folder: str) -> Tuple[str, str]:
         """
         Tries to run the job. Judges if a job exists by checking if the expected output file exists. Throws an exception
         if the expected output does not exist.
@@ -94,7 +94,7 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         output = self.run_from_cmd(cmd, job, output_file)
         if not os.path.exists(output_file):
             raise RuntimeError(output)
-        return output_file
+        return output_file, output
 
     def run_from_cmd(self, cmd: List[str], job: FuzzingJob, output_file: str) -> str:
         """

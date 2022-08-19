@@ -23,7 +23,7 @@ import os
 import time
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Iterable, Tuple
 
 from src.ecstatic.models.Level import Level
 from src.ecstatic.models.Option import Option
@@ -76,6 +76,10 @@ class AbstractCommandLineToolRunner(ABC):
         return os.path.join(output_folder,
                             '.' + os.path.basename(self.get_output(output_folder, job)) + '.time')
 
+    def get_log_file(self, output_folder: str, job: FuzzingJob):
+        return os.path.join(output_folder,
+                            '.' + os.path.basename(self.get_output(output_folder, job)) + '.log')
+
     def get_error_file(self, output_folder: str, job):
         return os.path.abspath(self.get_output(output_folder, job) + '.error')
 
@@ -124,11 +128,13 @@ class AbstractCommandLineToolRunner(ABC):
             # noinspection PyBroadException
             try:
                 start = time.time()
-                result = self.try_run_job(job, output_folder)
+                result, log_output = self.try_run_job(job, output_folder)
                 logging.info(f'Successfully ran job! Result is in {result}')
                 total_time = time.time() - start
                 with open(self.get_time_file(output_folder, job), 'w') as f:
                     f.write(f'{str(total_time)}\n')
+                with open(self.get_log_file(output_folder, job), 'w') as f:
+                    f.write(log_output)
                 return FinishedFuzzingJob(job, total_time, result)
             except Exception as ex:
                 exception = ex
@@ -166,7 +172,7 @@ class AbstractCommandLineToolRunner(ABC):
                             f'{self.dict_hash(job.configuration)}_{os.path.basename(job.target.name)}.raw')
 
     @abstractmethod
-    def try_run_job(self, job: FuzzingJob, output_folder: str) -> str:
+    def try_run_job(self, job: FuzzingJob, output_folder: str) -> Tuple[str, str]:
         """
         Attempt to run the job. Throw an exception if the job fails, otherwise, returns the finished fuzzing job.
         Parameters
@@ -177,7 +183,7 @@ class AbstractCommandLineToolRunner(ABC):
 
         Returns
         -------
-        The location of the output file.
+        The location of the output file, and the output itself.
         """
         pass
 
