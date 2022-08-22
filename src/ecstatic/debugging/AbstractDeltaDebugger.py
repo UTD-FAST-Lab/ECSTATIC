@@ -142,19 +142,7 @@ class AbstractDeltaDebugger(ABC):
 
     @abstractmethod
     def get_delta_debugger_cmd(self, build_script, directory, potential_violation, script_location):
-        # Then, run the delta debugger
-        cmd: List[str] = "java -jar /SADeltaDebugger/ViolationDeltaDebugger/target/ViolationDeltaDebugger-1.0" \
-                         "-SNAPSHOT-jar-with-dependencies.jar".split(' ')
-        sources = [['--sources', s] for s in potential_violation.job1.job.target.sources]
-        [cmd.extend(s) for s in sources]
-        cmd.extend(["--target", potential_violation.job1.job.target.name])
-        cmd.extend(["--bs", os.path.abspath(build_script)])
-        cmd.extend(["--vs", os.path.abspath(script_location)])
-        cmd.extend(["--logs", os.path.join(directory, "log.txt")])
-        cmd.extend(['--hdd'])
-        cmd.extend(['--class-reduction'])
-        cmd.extend(['--timeout', '120'])
-        return cmd
+        pass
 
     def create_script(self, job: DeltaDebuggingJob, directory: str) -> str:
         """

@@ -34,5 +34,5 @@ class JavaDeltaDebugger(AbstractDeltaDebugger, ABC):
         cmd.extend(["--logs", os.path.join(directory, "log.txt")])
         cmd.extend(['--hdd'])
         cmd.extend(['--class-reduction'])
-        cmd.extend(['--timeout', '120'])
+        cmd.extend(['--timeout', '360'])
         return cmd
