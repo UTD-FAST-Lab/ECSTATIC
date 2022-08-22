@@ -35,6 +35,17 @@
           "right": "i-1"
         }
       ]
+    },
+    {
+      "name": "C",
+      "levels": ["TRUE", "FALSE"],
+      "orders": [
+        {
+          "left": "TRUE",
+          "order": "MST",
+          "right": "FALSE"
+        }
+      ]
     }
   ]
 }

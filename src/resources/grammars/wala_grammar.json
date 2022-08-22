@@ -27,6 +27,7 @@
         "VANILLA_NCFA",
         "VANILLA_NOBJ",
         "RTA",
+    "ZERO_CONTAINER_CFA",
         "ZERO_CFA",
         "ZEROONE_CFA",
         "VANILLA_ZEROONECFA",

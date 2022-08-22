@@ -1,6 +1,6 @@
 {
  "<start>": ["<options>"],
-  "<options>": ["" ,"<option>", "<options> <option>"],
+  "<options>": ["<option>", "<options> <option>"],
   "<option>" : [
     "--optimize <binaryopt>",
     "--throw-analysis <throwanalysisopts>",

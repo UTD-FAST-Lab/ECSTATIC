@@ -20,6 +20,7 @@ import importlib.resources
 import json
 import logging
 import os
+from pathlib import Path
 
 from jsonschema.validators import RefResolver, Draft7Validator
 from src.ecstatic.models.Tool import Tool
@@ -46,7 +47,7 @@ class ConfigurationSpaceReader:
         self.resolver = RefResolver.from_schema(schemata[os.path.basename(master_schema)], store=schemata_store)
         self.validator = Draft7Validator(schemata[os.path.basename(master_schema)], self.resolver)
 
-    def read_configuration_space(self, file: str) -> Tool:
+    def read_configuration_space(self, file: Path) -> Tool:
         with open(file) as f:
             config_space = json.load(f)
 

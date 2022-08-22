@@ -34,14 +34,13 @@
 # along with ecstatic.  If not, see <https://www.gnu.org/licenses/>.
 ###
 import logging
-from typing import Tuple, Set, Collection
+from typing import Tuple, Set, Collection, TypeVar
 
 import networkx
 from networkx import DiGraph
 
 from src.ecstatic.models.Level import Level
 from src.ecstatic.util.PartialOrder import PartialOrder, PartialOrderType
-
 
 class Option:
     """ A single configuration option. """

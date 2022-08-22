@@ -1,0 +1,14 @@
+{
+  "<start>": ["<config>"],
+  "<config>": ["<option>", "<config> <option>"],
+  "<option>": [
+    "-A <a_setting>",
+    "-B <b_setting>",
+    "-C <c_setting>"
+  ],
+  "<a_setting>": ["A1", "A2", "A3"],
+  "<b_setting>": ["-1", "<integer>"],
+  "<integer>": ["<digit>","<integer><digit>"],
+  "<digit>": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+  "<c_setting>": ["TRUE", "FALSE"]
+}

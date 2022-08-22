@@ -18,21 +18,30 @@
 
 import importlib
 import os
+from typing import List, Dict
 
 import pytest
+from hypothesis import given, strategies
 
+from src.ecstatic.fuzzing.generators import FuzzGeneratorFactory
 from src.ecstatic.fuzzing.generators.FuzzGenerator import FuzzGenerator
 from src.ecstatic.fuzzing.generators.SOOTFuzzGenerator import SOOTFuzzGenerator
 from src.ecstatic.models.Level import Level
+from src.ecstatic.models.Option import Option
 from src.ecstatic.util.UtilClasses import Benchmark, BenchmarkRecord, FuzzingCampaign, FuzzingJob
+from tests.test_AbstractViolationChecker import option_generator
 
 b: Benchmark = Benchmark([BenchmarkRecord(
     os.path.abspath(importlib.resources.path("src.resources.benchmarks.test", "CallSiteSensitivity1.jar")))])
 
 
+@given(strategies.lists(option_generator()))
+def test_all_options_covered(options: List[Option]):
+    pass
+
 @pytest.mark.parametrize("tool", ["soot", "wala", "doop"])
 def test_FuzzGenerator_first_run(tool: str):
-    fg: FuzzGenerator = FuzzGenerator(
+    fg: FuzzGenerator = FuzzGeneratorFactory.get_fuzz_generator_for_name(tool,
         importlib.resources.path("src.resources.configuration_spaces", f"{tool}_config.json"),
         importlib.resources.path("src.resources.grammars", f"{tool}_grammar.json"),
         b)

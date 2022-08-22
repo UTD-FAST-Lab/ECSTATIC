@@ -22,12 +22,14 @@ import logging
 import os
 import random
 from enum import Enum, auto
+from pathlib import Path
 from typing import List, Dict, Tuple, Iterable
 
 from frozendict import frozendict
 from fuzzingbook.GrammarCoverageFuzzer import GrammarCoverageFuzzer
 from fuzzingbook.Grammars import convert_ebnf_grammar
 
+from src.ecstatic.fuzzing.generators.seeds.CoverageSeedGenerator import CoverageSeedGenerator
 from src.ecstatic.models.Level import Level
 from src.ecstatic.models.Option import Option
 from src.ecstatic.models.Tool import Tool
@@ -65,16 +67,12 @@ class FuzzOptions(Enum):
 
 class FuzzGenerator:
 
-    def __init__(self, model_location: str,
-                 grammar_location: str,
+    def __init__(self, model_location: Path,
+                 grammar_location: Path,
                  benchmark: Benchmark,
                  strategy: FuzzOptions = FuzzOptions.GUIDED):
         self.first_run = True
-        with open(grammar_location) as f:
-            self.json_grammar = json.load(f)
-        self.grammar = convert_ebnf_grammar(self.json_grammar)
-        self.benchmark: Dict[BenchmarkRecord, int] = {b: 1 for b in benchmark.benchmarks}
-        self.fuzzer = GrammarCoverageFuzzer(self.grammar)
+        self.seed_generator = CoverageSeedGenerator(grammar_location, model_location)
         self.model = ConfigurationSpaceReader().read_configuration_space(model_location)
         self.strategy = strategy
 
@@ -85,67 +83,6 @@ class FuzzGenerator:
 
         self.benchmark_population = {b: 1 for b in benchmark.benchmarks}
 
-    def process_config(self, config: str) -> Dict[Option, Level]:
-        """
-        Converts the string config produced by the fuzzer to a dictionary mapping options to settings.
-        """
-        logger.info(f"Fuzzed config is {config}")
-        i = 0
-        tokens: List[str] = config.split(' ')
-        result: Dict[Option, Level] = {}
-        while i < len(tokens):
-            if tokens[i].startswith('--'):
-                try:
-                    option: Option = \
-                        [o for o in self.model.get_options() if o.name.lower() == tokens[i].replace('--', '').lower()][
-                            0]
-                except IndexError:
-                    raise ValueError(
-                        f'Configuration option {tokens[i].replace("--", "")} is not in the configuration space.')
-
-                if option.type.startswith('int'):
-                    if not int(tokens[i+1]):
-                        raise ValueError(f"Expected {tokens[i+1]} to be a number.")
-                    if int(tokens[i+1]) < option.min_value or int(tokens[i+1]) > option.max_value:
-                        result[option] = option.get_level(random.randint(option.min_value, option.max_value))
-                    else:
-                        result[option] = option.get_level(int(tokens[i+1]))
-                if i == (len(tokens) - 1) or tokens[i + 1].startswith('--'):
-                    result[option] = option.get_level("TRUE")
-                    i = i + 1
-                else:
-                    result[option] = option.get_level(tokens[i + 1])
-                    i = i + 2
-            else:
-                i = i + 1  # skip
-        return result
-
-    def update_exclusions(self, violations: List[Violation]):
-        pass
-        # if not self.adaptive:
-        #     return  # Do nothing
-        # # Else....
-        # # For every violation, add the responsible option settings into the exclusion list.
-        # for v in list(filter(lambda v: v.violated, violations)):
-        #     v: Violation
-        #     option: Option = v.get_option_under_investigation()
-        #     self.exclusions.extend([v.job1.job.configuration[option], v.job2.job.configuration[option]])
-
-    def make_new_seed(self) -> Dict[Option, Level]:
-        """
-
-        Returns
-        -------
-
-        """
-        if self.first_run:
-            return dict()
-        else:
-            config = ""
-            while config == "":
-                config = self.fuzzer.fuzz()
-            return self.process_config(config)
-
     def generate_campaign(self) -> FuzzingCampaign:
         """
         This method generates the next task for the fuzzer.
@@ -153,11 +90,9 @@ class FuzzGenerator:
         if len(self.partial_orders) == 0:
             print("All out of partial orders!")
             exit(0)
-        seed_config = self.make_new_seed()
-        seed_config = fill_out_defaults(self.model, seed_config)
-        logger.info(f"Configuration is {[(str(k), str(v)) for k, v in seed_config.items()]}")
         results: List[FuzzingJob] = list()
         if self.first_run:
+            seed_config = fill_out_defaults(self.model, dict())
             candidate_sample = set()
             for o in self.model.options:
                 for p in o.partial_orders:
@@ -166,6 +101,7 @@ class FuzzGenerator:
             candidate_sample.add(ConfigWithMutatedOption(seed_config, None, None))
             benchmarks_sample = self.benchmark_population.keys()
         else:
+            seed_config = self.seed_generator.pick()
             candidate_sample = set()
             pos = set()
             while len(pos) < min(len(self.partial_orders), 2):
