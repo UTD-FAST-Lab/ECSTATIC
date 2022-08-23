@@ -31,5 +31,5 @@ class SOOTCallGraphReader(AbstractCallGraphReader):
 
     def process_line(self, line: str) -> Tuple[CGCallSite, CGTarget]:
         new_line = re.sub("\$?[a-z][0-9]+", "VAR", line)
-        logging.debug(f"Replaced {line} with {new_line}")
+        logging.info(f"Replaced {line} with {new_line}")
         return super().process_line(new_line)
