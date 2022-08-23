@@ -30,5 +30,6 @@ logger = logging.getLogger(__name__)
 class SOOTCallGraphReader(AbstractCallGraphReader):
 
     def process_line(self, line: str) -> Tuple[CGCallSite, CGTarget]:
-        line = re.sub("\$?[a-z][0-9]+", "VAR", line)
-        return super().process_line(line)
+        new_line = re.sub("\$?[a-z][0-9]+", "VAR", line)
+        print(f"Replaced {line} with {new_line}")
+        return super().process_line(new_line)
