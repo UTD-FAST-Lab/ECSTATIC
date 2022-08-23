@@ -17,11 +17,19 @@
 
 
 import logging
+import re
+from typing import Tuple, Any
 
 from src.ecstatic.readers.callgraph.AbstractCallGraphReader import AbstractCallGraphReader
+from src.ecstatic.util.CGCallSite import CGCallSite
+from src.ecstatic.util.CGTarget import CGTarget
 
 logger = logging.getLogger(__name__)
 
 
 class SOOTCallGraphReader(AbstractCallGraphReader):
-    pass
+
+    def process_line(self, line: str) -> Tuple[CGCallSite, CGTarget]:
+        new_line = re.sub("\$?[a-z][0-9]+", "VAR", line)
+        logging.info(f"Replaced {line} with {new_line}")
+        return super().process_line(new_line)
