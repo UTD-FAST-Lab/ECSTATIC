@@ -30,7 +30,7 @@ class PotentialViolation:
 
     def __eq__(self, o: object) -> bool:
         return isinstance(o, PotentialViolation) and self.is_violation == o.is_violation \
-               and self.partial_orders == o.partial_orders and \
+               and set(self.partial_orders) == set(o.partial_orders) and \
                frozenset([self.job1.results_location, self.job2.results_location]) == \
                frozenset([o.job1.results_location, o.job2.results_location])
 
