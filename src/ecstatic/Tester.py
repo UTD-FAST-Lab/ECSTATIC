@@ -139,7 +139,7 @@ def main():
     )
     p.add_argument("--seed", help="Seed to use for the random fuzzer", type=int, default=2001)
     p.add_argument("--fuzzing-strategy", action=enum_action(FuzzOptions), default="GUIDED")
-    p.add_argument("--hdd-only", help="Disable the delta debugger's CDG phase.")
+    p.add_argument("--hdd-only", help="Disable the delta debugger's CDG phase.", action='store_true')
     args = p.parse_args()
 
     random.seed(args.seed)
