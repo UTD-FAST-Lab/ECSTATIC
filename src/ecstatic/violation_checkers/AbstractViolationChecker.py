@@ -140,7 +140,7 @@ class AbstractViolationChecker(ABC):
                     json.dump(violation.as_dict(), f, indent=4)
                 # with NamedTemporaryFile(dir=self.output_folder, delete=False, suffix='.pickle') as f:
                 #     pickle.dump(violation, f)
-            for result in tqdm(p.imap(write_violation, finished_results), total=len(finished_results)):
+            for _ in tqdm(p.imap(write_violation, finished_results), total=len(finished_results)):
                 pass
 
         print("finished results" + str(finished_results))
