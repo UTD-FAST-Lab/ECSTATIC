@@ -82,7 +82,8 @@ class ToolTester:
                 campaign_folder = os.path.join(self.results_location, f'campaign{campaign_index}')
             else:
                 campaign_folder = Path(self.results_location) / str(self.seed) / self.generator.strategy.name / \
-                    f'campaign{campaign_index}'
+                                  (f'full_campaign{campaign_index}' if \
+                                  self.generator.full_campaigns else f'campaign{campaign_index}')
             Path(campaign_folder).mkdir(exist_ok=True, parents=True)
             partial_run_job = partial(self.runner.run_job, output_folder=campaign_folder)
             with Pool(self.num_processes) as p:
@@ -98,7 +99,8 @@ class ToolTester:
             violations: List[PotentialViolation] = self.checker.check_violations(results)
             print(f"Total potential violations: {len(violations)}")
             if self.debugger is not None:
-                with Pool(max(int(self.num_processes/2), 1)) as p:  # /2 because each delta debugging process needs 2 cores.
+                with Pool(max(int(self.num_processes / 2),
+                              1)) as p:  # /2 because each delta debugging process needs 2 cores.
                     direct_violations = [v for v in violations if not v.is_transitive]
                     print(f'Delta debugging {len(direct_violations)} cases with {self.num_processes} cores.')
                     p.map(partial(self.debugger.delta_debug, campaign_directory=campaign_folder,
@@ -139,7 +141,7 @@ def main():
     )
     p.add_argument("--seed", help="Seed to use for the random fuzzer", type=int, default=2001)
     p.add_argument("--fuzzing-strategy", action=enum_action(FuzzOptions), default="GUIDED")
-
+    p.add_argument("--full-campaigns", help="Do not sample at all, just do full campaigns.")
     args = p.parse_args()
 
     random.seed(args.seed)
@@ -184,18 +186,22 @@ def main():
         runner.timeout = args.timeout
 
     generator = FuzzGeneratorFactory.get_fuzz_generator_for_name(args.tool, model_location, grammar,
-                                                                 benchmark, args.fuzzing_strategy)
+                                                                 benchmark, args.fuzzing_strategy,
+                                                                 args.full_campaigns)
     reader = ReaderFactory.get_reader_for_task_and_tool(args.task, args.tool)
     checker = ViolationCheckerFactory.get_violation_checker_for_task(args.task, args.tool,
                                                                      jobs=args.jobs,
                                                                      ground_truths=groundtruths,
                                                                      reader=reader,
-                                                                     output_folder = results_location / "violations")
+                                                                     output_folder=results_location / "violations")
 
     match args.delta_debugging_mode.lower():
-        case 'violation': debugger = JavaViolationDeltaDebugger(runner, reader, checker)
-        case 'benchmark': debugger = JavaBenchmarkDeltaDebugger(runner, reader, checker)
-        case _: debugger = None
+        case 'violation':
+            debugger = JavaViolationDeltaDebugger(runner, reader, checker)
+        case 'benchmark':
+            debugger = JavaBenchmarkDeltaDebugger(runner, reader, checker)
+        case _:
+            debugger = None
 
     t = ToolTester(generator, runner, debugger, results_location,
                    num_processes=args.jobs, fuzzing_timeout=args.fuzzing_timeout,
@@ -210,12 +216,14 @@ def build_benchmark(benchmark: str) -> Benchmark:
         logging.info(f"Building benchmark....")
         subprocess.run(build)
     if os.path.exists(importlib.resources.path(f"src.resources.benchmarks.{benchmark}", "index.json")):
-        return BenchmarkReader().read_benchmark(importlib.resources.path(f"src.resources.benchmarks.{benchmark}", "index.json"))
+        return BenchmarkReader().read_benchmark(
+            importlib.resources.path(f"src.resources.benchmarks.{benchmark}", "index.json"))
     else:
         benchmark_list = []
         for root, dirs, files in os.walk("/benchmarks"):
             benchmark_list.extend([os.path.abspath(os.path.join(root, f)) for f in files if
-                                   (f.endswith(".jar") or f.endswith(".apk") or f.endswith(".js"))])  # TODO more dynamic extensions?
+                                   (f.endswith(".jar") or f.endswith(".apk") or f.endswith(
+                                       ".js"))])  # TODO more dynamic extensions?
         return Benchmark([BenchmarkRecord(b) for b in benchmark_list])
 
 
