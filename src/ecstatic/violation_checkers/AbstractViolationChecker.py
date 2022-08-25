@@ -130,7 +130,8 @@ class AbstractViolationChecker(ABC):
         finished_results = set(finished_results)
 
         if self.write_to_files:
-            for violation in finished_results:
+            print("Writing to files.")
+            def write_violation(violation: PotentialViolation):
                 filename = Path(self.output_folder) / get_file_name(violation)
                 logging.info(f"Filename is {filename}")
                 filename.parent.mkdir(exist_ok=True, parents=True)
@@ -139,6 +140,8 @@ class AbstractViolationChecker(ABC):
                     json.dump(violation.as_dict(), f, indent=4)
                 # with NamedTemporaryFile(dir=self.output_folder, delete=False, suffix='.pickle') as f:
                 #     pickle.dump(violation, f)
+            for result in tqdm(p.imap(write_violation, finished_results), total=len(finished_results)):
+                pass
 
         print("finished results" + str(finished_results))
         print('Violation detection done.')
