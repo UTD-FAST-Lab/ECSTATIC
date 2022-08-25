@@ -141,7 +141,7 @@ def main():
     )
     p.add_argument("--seed", help="Seed to use for the random fuzzer", type=int, default=2001)
     p.add_argument("--fuzzing-strategy", action=enum_action(FuzzOptions), default="GUIDED")
-    p.add_argument("--full-campaigns", help="Do not sample at all, just do full campaigns.")
+    p.add_argument("--full-campaigns", help="Do not sample at all, just do full campaigns.", action='store_true')
     args = p.parse_args()
 
     random.seed(args.seed)
