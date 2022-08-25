@@ -119,15 +119,13 @@ class AbstractViolationChecker(ABC):
                 logging.info(f"Added pair {str(finished_run)} {str(candidate)} {str(option_under_investigation)})")
                 pairs.append((finished_run, candidate, option_under_investigation))
 
-        finished_results: List[PotentialViolation] = []
+        finished_results: Set[PotentialViolation] = []
         with ProcessPool(self.jobs) as p:
             print(f'Checking violations with {self.jobs} cores.')
             for result in tqdm(p.imap(self.compare_results, pairs), total=len(pairs)):
                 # Force evaluation of violated
                 # [r for r in result if r.violated]
-                finished_results.extend(result)
-
-        finished_results = set(finished_results)
+                finished_results.update(result)
 
         if self.write_to_files:
             print("Writing to files.")
