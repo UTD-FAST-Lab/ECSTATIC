@@ -127,6 +127,19 @@ class AbstractViolationChecker(ABC):
                 # [r for r in result if r.violated]
                 finished_results.extend(result)
 
+        finished_results = set(finished_results)
+
+        if self.write_to_files:
+            for violation in finished_results:
+                filename = Path(self.output_folder) / get_file_name(violation)
+                logging.info(f"Filename is {filename}")
+                filename.parent.mkdir(exist_ok=True, parents=True)
+                logging.info(f'Writing violation to file {filename}')
+                with open(filename, 'w') as f:
+                    json.dump(violation.as_dict(), f, indent=4)
+                # with NamedTemporaryFile(dir=self.output_folder, delete=False, suffix='.pickle') as f:
+                #     pickle.dump(violation, f)
+
         print("finished results" + str(finished_results))
         print('Violation detection done.')
         print(f'Finished checking violations. {len([v for v in finished_results if v.is_violation])} violations detected.')
@@ -250,16 +263,6 @@ class AbstractViolationChecker(ABC):
                                                                job2.job.configuration[option_under_investigation],
                                                                option_under_investigation),
                                                   job1, job2, job1_reader, job2_reader))
-        if self.write_to_files:
-            for violation in set(results):
-                filename = Path(self.output_folder) / get_file_name(violation)
-                logging.info(f"Filename is {filename}")
-                filename.parent.mkdir(exist_ok=True, parents=True)
-                logging.info(f'Writing violation to file {filename}')
-                with open(filename, 'w') as f:
-                    json.dump(violation.as_dict(), f, indent=4)
-                # with NamedTemporaryFile(dir=self.output_folder, delete=False, suffix='.pickle') as f:
-                #     pickle.dump(violation, f)
         return results
 
     @deprecation.deprecated(details="We have passed the functionality of checking for violations to "
