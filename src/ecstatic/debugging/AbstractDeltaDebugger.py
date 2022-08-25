@@ -83,13 +83,16 @@ class AbstractDeltaDebugger(ABC):
         self.reader = reader
         self.violation_checker = violation_checker
 
+    def get_base_directory(self) -> Path:
+        return Path("")
+
     def delta_debug(self, pv: PotentialViolation, campaign_directory: str, timeout: Optional[int]):
         logger.debug("In delta debug.")
         for index, (predicate, ground_truth) in enumerate(self.make_predicates(pv)):
             logger.debug(f"Got ground truth {ground_truth} at index {index}")
             potential_violation: PotentialViolation = copy.deepcopy(pv)
             # First, create artifacts. We need to pickle the violation, as well as creating the script.
-            directory = os.path.abspath(os.path.join(campaign_directory, 'deltadebugging',
+            directory = os.path.abspath(os.path.join(campaign_directory, self.get_base_directory(),
                                                      os.path.dirname(get_file_name(potential_violation)),
                                                      os.path.basename(potential_violation.job1.job.target.name),
                                                      str(index)))
