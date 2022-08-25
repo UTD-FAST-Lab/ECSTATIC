@@ -119,13 +119,27 @@ class AbstractViolationChecker(ABC):
                 logging.info(f"Added pair {str(finished_run)} {str(candidate)} {str(option_under_investigation)})")
                 pairs.append((finished_run, candidate, option_under_investigation))
 
-        finished_results: List[PotentialViolation] = []
+        finished_results: Set[PotentialViolation] = set()
         with ProcessPool(self.jobs) as p:
             print(f'Checking violations with {self.jobs} cores.')
             for result in tqdm(p.imap(self.compare_results, pairs), total=len(pairs)):
                 # Force evaluation of violated
                 # [r for r in result if r.violated]
-                finished_results.extend(result)
+                finished_results.update(result)
+
+        if self.write_to_files:
+            print("Writing to files.")
+            def write_violation(violation: PotentialViolation):
+                filename = Path(self.output_folder) / get_file_name(violation)
+                logging.info(f"Filename is {filename}")
+                filename.parent.mkdir(exist_ok=True, parents=True)
+                logging.info(f'Writing violation to file {filename}')
+                with open(filename, 'w') as f:
+                    json.dump(violation.as_dict(), f, indent=4)
+                # with NamedTemporaryFile(dir=self.output_folder, delete=False, suffix='.pickle') as f:
+                #     pickle.dump(violation, f)
+            for _ in tqdm(p.imap(write_violation, finished_results), total=len(finished_results)):
+                pass
 
         print("finished results" + str(finished_results))
         print('Violation detection done.')
@@ -250,16 +264,6 @@ class AbstractViolationChecker(ABC):
                                                                job2.job.configuration[option_under_investigation],
                                                                option_under_investigation),
                                                   job1, job2, job1_reader, job2_reader))
-        if self.write_to_files:
-            for violation in results:
-                filename = Path(self.output_folder) / get_file_name(violation)
-                logging.info(f"Filename is {filename}")
-                filename.parent.mkdir(exist_ok=True, parents=True)
-                logging.info(f'Writing violation to file {filename}')
-                with open(filename, 'w') as f:
-                    json.dump(violation.as_dict(), f, indent=4)
-                # with NamedTemporaryFile(dir=self.output_folder, delete=False, suffix='.pickle') as f:
-                #     pickle.dump(violation, f)
         return results
 
     @deprecation.deprecated(details="We have passed the functionality of checking for violations to "

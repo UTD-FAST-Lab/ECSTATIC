@@ -63,6 +63,8 @@ def start_runner(tool: str, benchmark: str, task: str, args):
         command += f' -{"".join(["v" for _ in range(args.verbose)])}'
     if args.full_campaigns:
         command += f' --full-campaigns'
+    if args.hdd_only:
+        command += f' --hdd-only'
 
     print(f'Starting container with command {command}')
     Path(args.results_location).mkdir(parents=True, exist_ok=True)
