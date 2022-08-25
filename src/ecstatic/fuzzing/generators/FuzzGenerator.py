@@ -68,7 +68,8 @@ class FuzzGenerator:
     def __init__(self, model_location: str,
                  grammar_location: str,
                  benchmark: Benchmark,
-                 strategy: FuzzOptions = FuzzOptions.GUIDED):
+                 strategy: FuzzOptions = FuzzOptions.GUIDED,
+                 full_campaigns: bool = False):
         self.first_run = True
         with open(grammar_location) as f:
             self.json_grammar = json.load(f)
@@ -77,6 +78,7 @@ class FuzzGenerator:
         self.fuzzer = GrammarCoverageFuzzer(self.grammar)
         self.model = ConfigurationSpaceReader().read_configuration_space(model_location)
         self.strategy = strategy
+        self.full_campaigns = full_campaigns
 
         self.partial_orders: Dict[PartialOrder, int] = {}
         for o in self.model.get_options():
@@ -168,16 +170,24 @@ class FuzzGenerator:
         else:
             candidate_sample = set()
             pos = set()
-            while len(pos) < min(len(self.partial_orders), 2):
-                pos.update(random.sample(self.partial_orders.keys(), 1,
-                                         counts=self.partial_orders.values() if self.strategy is
-                                                                                FuzzOptions.GUIDED else None))
+            if not self.full_campaigns:
+                while len(pos) < min(len(self.partial_orders), 2):
+                    pos.update(random.sample(self.partial_orders.keys(), 1,
+                                             counts=self.partial_orders.values() if self.strategy is
+                                                                                    FuzzOptions.GUIDED else None))
+            else:
+                # Use all partial orders.
+                pos = self.partial_orders.keys()
             [candidate_sample.update(self.mutate_config(seed_config, p)) for p in pos]
             benchmarks_sample = set()
-            while len(benchmarks_sample) < min(4, len(self.benchmark_population)):
-                benchmarks_sample.update(random.sample(self.benchmark_population.keys(), 1,
-                                                       counts=self.benchmark_population.values() if
-                                                       self.strategy is FuzzOptions.GUIDED else None))
+
+            if not self.full_campaigns:
+                while len(benchmarks_sample) < min(4, len(self.benchmark_population)):
+                    benchmarks_sample.update(random.sample(self.benchmark_population.keys(), 1,
+                                                           counts=self.benchmark_population.values() if
+                                                           self.strategy is FuzzOptions.GUIDED else None))
+            else:
+                benchmarks_sample = self.benchmark_population.keys()
 
             # Levels not selected
             held_out = [p for p in self.partial_orders if p not in pos]
@@ -201,27 +211,28 @@ class FuzzGenerator:
         return FuzzingCampaign(results)
 
     def feedback(self, violations: Iterable[PotentialViolation]):
-        buggy_benchmarks = set()
-        for v in [v for v in violations if v.is_violation and not v.is_transitive]:
-            o: Option = v.get_option_under_investigation()
+        if not self.full_campaigns:
+            buggy_benchmarks = set()
+            for v in [v for v in violations if v.is_violation and not v.is_transitive]:
+                o: Option = v.get_option_under_investigation()
 
-            # Don't retest levels that already exhibited violations.
-            if o.type.lower().startswith('int'):
-                self.partial_orders = {p: w for p, w in self.partial_orders.items() if p.option != o}
+                # Don't retest levels that already exhibited violations.
+                if o.type.lower().startswith('int'):
+                    self.partial_orders = {p: w for p, w in self.partial_orders.items() if p.option != o}
 
-            else:
-                self.partial_orders = {p: w for p, w in self.partial_orders.items() if p not in v.partial_orders}
-                # %del self.levels[v.job1.job.configuration[o]]
-                # del self.levels[v.job2.job.configuration[o]]
+                else:
+                    self.partial_orders = {p: w for p, w in self.partial_orders.items() if p not in v.partial_orders}
+                    # %del self.levels[v.job1.job.configuration[o]]
+                    # del self.levels[v.job2.job.configuration[o]]
 
-            # Weigh benchmarks higher that have discovered benchmarks.
-            buggy_benchmarks.add(v.job1.job.target)
-        # Increase weight of buggy benchmarks
-        for k in self.benchmark.keys():
-            if k in buggy_benchmarks:
-                self.benchmark_population[k] += 10
-            else:
-                self.benchmark_population[k] = max(self.benchmark_population[k] - 1, 1)
+                # Weigh benchmarks higher that have discovered benchmarks.
+                buggy_benchmarks.add(v.job1.job.target)
+            # Increase weight of buggy benchmarks
+            for k in self.benchmark.keys():
+                if k in buggy_benchmarks:
+                    self.benchmark_population[k] += 10
+                else:
+                    self.benchmark_population[k] = max(self.benchmark_population[k] - 1, 1)
 
     def mutate_config(self, config: Dict[Option, Level], partial_order) -> List[Tuple[ConfigWithMutatedOption, int]]:
         """

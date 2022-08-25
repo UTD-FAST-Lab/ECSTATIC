@@ -109,6 +109,7 @@ def parse_args():
     )
     parser.add_argument("--seed", help="Seed to use for the random fuzzer", type=int, default=2001)
     parser.add_argument("--fuzzing-strategy", action=enum_action(FuzzOptions), default="guided")
+    parser.add_argument("--full-campaigns", help="Do not sample at all, just do full campaigns.", action='store_true')
     parser.add_argument("--hdd-only", help="Disable the delta debugger's CDG phase.", action='store_true')
 
     return parser.parse_args()
