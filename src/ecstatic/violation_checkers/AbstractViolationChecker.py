@@ -251,7 +251,7 @@ class AbstractViolationChecker(ABC):
                                                                option_under_investigation),
                                                   job1, job2, job1_reader, job2_reader))
         if self.write_to_files:
-            for violation in results:
+            for violation in set(results):
                 filename = Path(self.output_folder) / get_file_name(violation)
                 logging.info(f"Filename is {filename}")
                 filename.parent.mkdir(exist_ok=True, parents=True)

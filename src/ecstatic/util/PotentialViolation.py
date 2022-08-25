@@ -30,12 +30,12 @@ class PotentialViolation:
 
     def __eq__(self, o: object) -> bool:
         return isinstance(o, PotentialViolation) and self.is_violation == o.is_violation \
-               and set(self.partial_orders) == set(o.partial_orders) and \
+               and frozenset(self.partial_orders) == frozenset(o.partial_orders) and \
                frozenset([self.job1.results_location, self.job2.results_location]) == \
                frozenset([o.job1.results_location, o.job2.results_location])
 
     def __hash__(self) -> int:
-        return hash((self.is_violation, self.partial_orders,
+        return hash((self.is_violation, frozenset(self.partial_orders),
                      frozenset([self.job1.results_location, self.job2.results_location])))
 
     def as_dict(self) -> Dict[str, str | List[str] | List[Tuple[str]]]:
