@@ -106,10 +106,6 @@ class PotentialViolation:
                                    f"with partial orders {self.partial_orders}")
 
     @property
-    def is_violation(self):
-        return len(self.unexpected_diffs) > 0
-
-    @property
     def unexpected_diffs(self):
         """
         We assume that, in the case of multiple partial orders, the first partial order will have the options
@@ -161,4 +157,6 @@ class PotentialViolation:
         self._job1_minus_job2: Sized[T] = None
         self._job2_minus_job1: Sized[T] = None
         self._expected_diffs: Sized[T] = None
+        self.is_violation = len(self.unexpected_diffs) > 0
+
 
