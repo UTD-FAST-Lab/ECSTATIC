@@ -32,7 +32,7 @@ class JavaDeltaDebugger(AbstractDeltaDebugger, ABC):
         self.hdd_only = hdd_only
 
     def get_base_directory(self) -> Path:
-        return super().get_base_directory() / (Path("HDD_ONLY") if self.hdd_only else Path(""))
+        return super().get_base_directory() / (Path("HDD_ONLY") if self.hdd_only else Path("CDG+HDD"))
 
     def get_delta_debugger_cmd(self, build_script, directory, potential_violation, script_location):
         # Then, run the delta debugger
