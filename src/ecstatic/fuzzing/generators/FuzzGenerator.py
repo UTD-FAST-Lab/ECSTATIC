@@ -207,7 +207,7 @@ class FuzzGenerator:
                 results.append(FuzzingJob(choice, option_under_investigation, benchmark_record))
 
         self.first_run = False
-        state = {"seed": seed_config,
+        state = {"seed": {str(k): str(v) for k, v in seed_config.items()},
                  "first_run": self.first_run,
                  "partial_orders": {str(k): str(v) for k, v in self.partial_orders.items()},
                  "benchmarks": {str(k): str(v) for k, v in self.benchmark.items()},
