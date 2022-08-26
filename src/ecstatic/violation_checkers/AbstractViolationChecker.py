@@ -19,7 +19,7 @@ import json
 import logging
 import os.path
 import pathlib
-import pickle
+import dill as pickle
 import time
 from abc import ABC, abstractmethod
 
@@ -80,7 +80,7 @@ def summarize(violations: Iterable[PotentialViolation]):
 class AbstractViolationChecker(ABC):
 
     def __init__(self, jobs: int, reader: AbstractReader, output_folder: Path, ground_truths: Optional[Path] = None,
-                 write_to_files = True):
+                 write_to_files=True):
         self.output_folder = output_folder
         self.jobs: int = jobs
         self.reader = reader
@@ -90,60 +90,70 @@ class AbstractViolationChecker(ABC):
 
     def check_violations(self, results: List[FinishedFuzzingJob]) -> List[PotentialViolation]:
         start_time = time.time()
-        pairs: List[Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]] = []
-        for finished_run in [r for r in results if r is not None]:
-            finished_run: FinishedFuzzingJob
-            option_under_investigation: Option = finished_run.job.option_under_investigation
-            # Find configs with potential partial order relationships.
-            candidates: List[FinishedFuzzingJob]
-            if option_under_investigation is None:
-                candidates = [f for f in results if
-                              f.job.target == finished_run.job.target and
-                              f.results_location != finished_run.results_location]
-            else:
-                candidates = [f for f in results if
-                              (f.job.option_under_investigation is None or
-                               f.job.option_under_investigation == option_under_investigation) and
-                              f.job.target == finished_run.job.target and
-                              f.results_location != finished_run.results_location]
-            logger.info(f'Found {len(candidates)} candidates for job {finished_run.results_location}')
-            for candidate in candidates:
-                candidate: FinishedFuzzingJob
-                if finished_run.job.option_under_investigation is None:
-                    # switch to the other candidate's
-                    option_under_investigation = candidate.job.option_under_investigation
-                    if option_under_investigation is None:
-                        raise RuntimeError('Trying to compare two configurations with None as the option '
-                                           'under investigation. This should never happen.')
 
-                logging.info(f"Added pair {str(finished_run)} {str(candidate)} {str(option_under_investigation)})")
-                pairs.append((finished_run, candidate, option_under_investigation))
+        if (pickle_folder := (Path(self.output_folder) / "pickles")).exists():
+            finished_results = []
+            print("Loading existing violations.")
+            for f in tqdm([fil for fil in os.listdir(pickle_folder) if fil.endswith('.pickle')]):
+                with open(f, 'rb') as f:
+                    finished_results.append(pickle.load(f))
+        else:
+            pairs: List[Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]] = []
+            for finished_run in [r for r in results if r is not None]:
+                finished_run: FinishedFuzzingJob
+                option_under_investigation: Option = finished_run.job.option_under_investigation
+                # Find configs with potential partial order relationships.
+                candidates: List[FinishedFuzzingJob]
+                if option_under_investigation is None:
+                    candidates = [f for f in results if
+                                  f.job.target == finished_run.job.target and
+                                  f.results_location != finished_run.results_location]
+                else:
+                    candidates = [f for f in results if
+                                  (f.job.option_under_investigation is None or
+                                   f.job.option_under_investigation == option_under_investigation) and
+                                  f.job.target == finished_run.job.target and
+                                  f.results_location != finished_run.results_location]
+                logger.info(f'Found {len(candidates)} candidates for job {finished_run.results_location}')
+                for candidate in candidates:
+                    candidate: FinishedFuzzingJob
+                    if finished_run.job.option_under_investigation is None:
+                        # switch to the other candidate's
+                        option_under_investigation = candidate.job.option_under_investigation
+                        if option_under_investigation is None:
+                            raise RuntimeError('Trying to compare two configurations with None as the option '
+                                               'under investigation. This should never happen.')
 
-        finished_results: Set[PotentialViolation] = set()
-        with ProcessPool(self.jobs) as p:
-            print(f'Checking violations with {self.jobs} cores.')
-            for result in tqdm(p.imap(self.compare_results, pairs), total=len(pairs)):
-                # Force evaluation of violated
-                # [r for r in result if r.violated]
-                finished_results.update(result)
+                    logging.info(f"Added pair {str(finished_run)} {str(candidate)} {str(option_under_investigation)})")
+                    pairs.append((finished_run, candidate, option_under_investigation))
 
-        if self.write_to_files:
-            print("Writing to files.")
-            def write_violation(violation: PotentialViolation):
-                filename = Path(self.output_folder) / get_file_name(violation)
-                logging.info(f"Filename is {filename}")
-                filename.parent.mkdir(exist_ok=True, parents=True)
-                logging.info(f'Writing violation to file {filename}')
-                with open(filename, 'w') as f:
-                    json.dump(violation.as_dict(), f, indent=4)
-                # with NamedTemporaryFile(dir=self.output_folder, delete=False, suffix='.pickle') as f:
-                #     pickle.dump(violation, f)
-            for _ in tqdm(p.imap(write_violation, finished_results), total=len(finished_results)):
-                pass
+            finished_results: List[PotentialViolation] = []
+            with ProcessPool(self.jobs) as p:
+                print(f'Checking violations with {self.jobs} cores.')
+                for result in tqdm(p.imap(self.compare_results, pairs), total=len(pairs)):
+                    # Force evaluation of violated
+                    # [r for r in result if r.violated]
+                    finished_results.append(result)
+
+            if self.write_to_files:
+                def write_violation(violation: PotentialViolation):
+                    filename = Path(self.output_folder) / get_file_name(violation)
+                    logging.info(f"Filename is {filename}")
+                    filename.parent.mkdir(exist_ok=True, parents=True)
+                    logging.info(f'Writing violation to file {filename}')
+                    with open(filename, 'w') as f:
+                        json.dump(violation.as_dict(), f, indent=4)
+                    with NamedTemporaryFile(dir=pickle_folder, delete=False, suffix='.pickle') as f:
+                        pickle.dump(violation, f)
+
+                print("Writing to files.")
+                for _ in tqdm(p.imap(write_violation, finished_results), total=len(finished_results)):
+                    pass
 
         print("finished results" + str(finished_results))
         print('Violation detection done.')
-        print(f'Finished checking violations. {len([v for v in finished_results if v.is_violation])} violations detected.')
+        print(
+            f'Finished checking violations. {len([v for v in finished_results if v.is_violation])} violations detected.')
         print(f'Campaign value processing done (took {time.time() - start_time} seconds).')
         summarize([f for f in finished_results if f.is_violation])
         return finished_results
