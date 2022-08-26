@@ -44,7 +44,7 @@ def main():
         logging.debug(f"First po is {first_po}")
         logging.debug(f"Second po is {second_po}")
         if first_po[1] not in ['MST', 'MPT']:
-            logging.info(f"{file} only has one partial order.")
+            raise ValueError(f"{file} only has one partial order.")
         else:
             option_name = tokens[-8]
             return option_name, frozenset({'/'.join(first_po), '/'.join(second_po)}), benchmark
@@ -57,12 +57,15 @@ def main():
         return '/'.join(strs)
 
     for f in sorted(get_json_files(args.directory), key = lambda x: myjoin(str(x).split('/')[-8:])):
-        fingerprint_tuple = parse_file_name(f)
-        if fingerprint_tuple not in seen:
-            seen[fingerprint_tuple] = f.absolute()
-        else:
-            logging.critical(f"{f} is a duplicate of {seen[fingerprint_tuple]}")
-            to_delete.append(f)
+        try:
+            fingerprint_tuple = parse_file_name(f)
+            if fingerprint_tuple not in seen:
+                seen[fingerprint_tuple] = f.absolute()
+            else:
+                logging.critical(f"{f} is a duplicate of {seen[fingerprint_tuple]}")
+                to_delete.append(f)
+        except ValueError:
+            pass
 
 
 if __name__ == '__main__':
