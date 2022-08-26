@@ -33,6 +33,7 @@ def main():
         for root, dirs, files in os.walk(directory):
             for f in files:
                 if f.endswith(".json"):
+                    logging.debug(f"Found file {Path(root) / Path(f)}")
                     yield Path(root) / Path(f)
 
     def parse_file_name(file: Path) -> Tuple[str, frozenset[str], str]:
