@@ -38,13 +38,13 @@ def main():
     def parse_file_name(file: Path) -> Tuple[str, frozenset[str], str]:
         tokens = file.absolute().name.split('/')
         benchmark = tokens[-1]
-        second_po = '/'.join(tokens[-4:-1])
-        first_po = '/'.join(tokens[-7:-4])
+        second_po = tokens[-4:-1]
+        first_po = tokens[-7:-4]
         if first_po[1] not in ['MST', 'MPT']:
             logging.info(f"{file} only has one partial order.")
         else:
             option_name = tokens[-8]
-            return option_name, frozenset({first_po, second_po}), benchmark
+            return option_name, frozenset({'/'.join(first_po), '/'.join(second_po)}), benchmark
 
     seen = {}
     to_delete = []
