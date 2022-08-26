@@ -22,7 +22,7 @@ from pathlib import Path
 from typing import Iterable, Tuple, Set
 
 from src.ecstatic.util.PartialOrder import PartialOrder, PartialOrderType
-
+logging.basicConfig(level=logging.DEBUG)
 p = argparse.ArgumentParser()
 p.add_argument("directory", help="The violations directory")
 args = p.parse_args()
@@ -40,6 +40,8 @@ def main():
         benchmark = tokens[-1]
         second_po = tokens[-4:-1]
         first_po = tokens[-7:-4]
+        logging.debug(f"First po is {first_po}")
+        logging.debug(f"Second po is {second_po}")
         if first_po[1] not in ['MST', 'MPT']:
             logging.info(f"{file} only has one partial order.")
         else:
