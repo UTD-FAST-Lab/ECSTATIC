@@ -37,7 +37,7 @@ def main():
                     yield Path(root) / Path(f)
 
     def parse_file_name(file: Path) -> Tuple[str, frozenset[str], str]:
-        tokens = file.absolute().name.split('/')
+        tokens = str(file.absolute()).split('/')
         benchmark = tokens[-1]
         second_po = tokens[-4:-1]
         first_po = tokens[-7:-4]
