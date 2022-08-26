@@ -67,6 +67,10 @@ def main():
         except ValueError:
             pass
 
+    for t in to_delete:
+        t: Path
+        os.remove(t)
+
 
 if __name__ == '__main__':
     main()
