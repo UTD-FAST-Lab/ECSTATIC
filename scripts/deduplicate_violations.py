@@ -54,7 +54,7 @@ def main():
     for f in sorted(get_json_files(args.directory)):
         fingerprint_tuple = parse_file_name(f)
         if fingerprint_tuple not in seen:
-            seen[fingerprint_tuple] = f.absolute().name
+            seen[fingerprint_tuple] = f.absolute()
         else:
             logging.critical(f"{f} is a duplicate of {seen[fingerprint_tuple]}")
             to_delete.append(f)
