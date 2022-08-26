@@ -198,8 +198,8 @@ def main():
                                                                      output_folder=results_location / "violations")
 
     match args.delta_debugging_mode.lower():
-        case 'violation': debugger = JavaViolationDeltaDebugger(runner, reader, checker, hdd_only=True)
-        case 'benchmark': debugger = JavaBenchmarkDeltaDebugger(runner, reader, checker, hdd_only=True)
+        case 'violation': debugger = JavaViolationDeltaDebugger(runner, reader, checker, hdd_only=args.hdd_only)
+        case 'benchmark': debugger = JavaBenchmarkDeltaDebugger(runner, reader, checker, hdd_only=args.hdd_only)
         case _: debugger = None
 
     t = ToolTester(generator, runner, debugger, results_location,
