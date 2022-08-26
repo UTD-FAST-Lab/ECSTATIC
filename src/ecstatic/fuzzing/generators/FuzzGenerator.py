@@ -22,7 +22,7 @@ import logging
 import os
 import random
 from enum import Enum, auto
-from typing import List, Dict, Tuple, Iterable
+from typing import List, Dict, Tuple, Iterable, Any
 
 from frozendict import frozendict
 from fuzzingbook.GrammarCoverageFuzzer import GrammarCoverageFuzzer
@@ -106,12 +106,12 @@ class FuzzGenerator:
                         f'Configuration option {tokens[i].replace("--", "")} is not in the configuration space.')
 
                 if option.type.startswith('int'):
-                    if not int(tokens[i+1]):
-                        raise ValueError(f"Expected {tokens[i+1]} to be a number.")
-                    if int(tokens[i+1]) < option.min_value or int(tokens[i+1]) > option.max_value:
+                    if not int(tokens[i + 1]):
+                        raise ValueError(f"Expected {tokens[i + 1]} to be a number.")
+                    if int(tokens[i + 1]) < option.min_value or int(tokens[i + 1]) > option.max_value:
                         result[option] = option.get_level(random.randint(option.min_value, option.max_value))
                     else:
-                        result[option] = option.get_level(int(tokens[i+1]))
+                        result[option] = option.get_level(int(tokens[i + 1]))
                 if i == (len(tokens) - 1) or tokens[i + 1].startswith('--'):
                     result[option] = option.get_level("TRUE")
                     i = i + 1
@@ -148,7 +148,7 @@ class FuzzGenerator:
                 config = self.fuzzer.fuzz()
             return self.process_config(config)
 
-    def generate_campaign(self) -> FuzzingCampaign:
+    def generate_campaign(self) -> Tuple[FuzzingCampaign, Dict[Any, Any]]:
         """
         This method generates the next task for the fuzzer.
         """
@@ -201,14 +201,20 @@ class FuzzGenerator:
             # excluded = [v for k, v in choice.items() if v in self.exclusions]
             # if len(excluded) > 0:
             #     continue
-            logger.info(f"Chosen config: {choice}")
             option_under_investigation = candidate.option
             for benchmark_record in benchmarks_sample:
                 benchmark_record: BenchmarkRecord
                 results.append(FuzzingJob(choice, option_under_investigation, benchmark_record))
 
         self.first_run = False
-        return FuzzingCampaign(results)
+        state = {"seed": seed_config,
+                 "first_run": self.first_run,
+                 "partial_orders": {str(k): str(v) for k, v in self.partial_orders.items()},
+                 "benchmarks": {str(k): str(v) for k, v in self.benchmark.items()},
+                 "partial_order_sample": [str(k) for k in candidate_sample],
+                 "benchmarks_sample": [str(k) for k in benchmarks_sample]
+                 }
+        return FuzzingCampaign(results), state
 
     def feedback(self, violations: Iterable[PotentialViolation]):
         if not self.full_campaigns:

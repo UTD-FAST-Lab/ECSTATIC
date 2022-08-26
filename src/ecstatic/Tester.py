@@ -18,6 +18,7 @@
 
 import argparse
 import importlib
+import json
 import logging
 import os.path
 import pickle
@@ -74,7 +75,8 @@ class ToolTester:
         campaign_index = 0
         start_time = time.time()
         while True:
-            campaign: FuzzingCampaign = self.generator.generate_campaign()
+            campaign, generator_state = self.generator.generate_campaign()
+            campaign: FuzzingCampaign
             print(f"Got new fuzzing campaign: {campaign_index}.")
             campaign_start_time = time.time()
             # Make campaign folder.
@@ -82,8 +84,11 @@ class ToolTester:
                 campaign_folder = os.path.join(self.results_location, f'campaign{campaign_index}')
             else:
                 campaign_folder = Path(self.results_location) / str(self.seed) / self.generator.strategy.name / \
-                                  (f'full_campaign{campaign_index}' if \
-                                  self.generator.full_campaigns else f'campaign{campaign_index}')
+                                  (f'full_campaign{campaign_index}' if
+                                   self.generator.full_campaigns else f'campaign{campaign_index}')
+            with open(campaign_folder / "fuzzer_state.json", 'w') as f:
+                json.dump(generator_state, f)
+
             Path(campaign_folder).mkdir(exist_ok=True, parents=True)
             partial_run_job = partial(self.runner.run_job, output_folder=campaign_folder)
             with Pool(self.num_processes) as p:
