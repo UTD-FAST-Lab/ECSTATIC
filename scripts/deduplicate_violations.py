@@ -56,7 +56,7 @@ def main():
         logging.debug("key is {strs}")
         return '/'.join(strs)
 
-    for f in sorted(get_json_files(args.directory), key = lambda x: myjoin(x.split()[-8:])):
+    for f in sorted(get_json_files(args.directory), key = lambda x: myjoin(str(x).split()[-8:])):
         fingerprint_tuple = parse_file_name(f)
         if fingerprint_tuple not in seen:
             seen[fingerprint_tuple] = f.absolute()
