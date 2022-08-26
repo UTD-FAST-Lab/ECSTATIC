@@ -77,7 +77,10 @@ def start_runner(tool: str, benchmark: str, task: str, args):
         auto_remove=True)
     _, log_stream = cntr.exec_run(cmd=command, stream=True)
     for l in log_stream:
-        print(l.decode())
+        try:
+            print(l.decode())
+        except Exception as e:
+            logger.exception("Couldn't decode line from output.")
     print('Run finished!')
     # print('Removing container....')
     # cntr.stop()
