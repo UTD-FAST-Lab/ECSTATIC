@@ -86,7 +86,7 @@ class ToolTester:
                 campaign_folder = Path(self.results_location) / str(self.seed) / self.generator.strategy.name / \
                                   (f'full_campaign{campaign_index}' if
                                    self.generator.full_campaigns else f'campaign{campaign_index}')
-            with open(campaign_folder / "fuzzer_state.json", 'w') as f:
+            with open(Path(campaign_folder) / "fuzzer_state.json", 'w') as f:
                 json.dump(generator_state, f)
 
             Path(campaign_folder).mkdir(exist_ok=True, parents=True)
