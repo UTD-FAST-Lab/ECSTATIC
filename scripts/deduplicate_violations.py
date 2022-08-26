@@ -53,7 +53,7 @@ def main():
     to_delete = []
 
     def myjoin(strs: Iterable[str]):
-        logging.debug("key is {strs}")
+        logging.debug(f"key is {strs}")
         return '/'.join(strs)
 
     for f in sorted(get_json_files(args.directory), key = lambda x: myjoin(str(x).split()[-8:])):
