@@ -222,7 +222,8 @@ class AbstractViolationChecker(ABC):
                                       PartialOrderType.MORE_PRECISE_THAN,
                                       job1.job.configuration[option_under_investigation],
                                       option_under_investigation))
-                    results.append(PotentialViolation(pos, job1, job2, job1_reader, job2_reader))
+                    if pos[0].is_explicit():
+                        results.append(PotentialViolation(pos, job1, job2, job1_reader, job2_reader))
                 if option_under_investigation.is_more_precise(job1.job.configuration[option_under_investigation],
                                                               job2.job.configuration[option_under_investigation]):
                     if option_under_investigation.is_more_sound(job2.job.configuration[option_under_investigation],
@@ -235,7 +236,8 @@ class AbstractViolationChecker(ABC):
                                             PartialOrderType.MORE_SOUND_THAN,
                                             job1.job.configuration[option_under_investigation],
                                             option_under_investigation))
-                        results.append(PotentialViolation(pos, job1, job2, job1_reader, job2_reader))
+                        if pos[0].is_explicit():
+                            results.append(PotentialViolation(pos, job1, job2, job1_reader, job2_reader))
         else:
             if option_under_investigation.is_more_sound(job1.job.configuration[option_under_investigation],
                                                         job2.job.configuration[option_under_investigation]):
