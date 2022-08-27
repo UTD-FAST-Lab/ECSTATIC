@@ -23,18 +23,18 @@ def generate_record(line: str) -> str:
         program_timer = get_value("program_timer")
         return f"{start_line},{end_line},{total_reduction},{binary_timer},{hdd_timer},{program_timer}"
 
-    def generate_csv_row(file: Path):
-        match str(file.absolute()).split('/'):
+    def generate_csv_row(file_as_tokens: List[str]):
+        match file_as_tokens:
             case ['ECSTATIC_results', *rest]:
                 return f"{rest[0]},{rest[1]},{rest[2]},{generate_csv_row(rest[3:])}"
             case [type, *rest] if type in ['HDD_ONLY', 'CDG+HDD']:
                 return f"{type},{generate_csv_row(rest[1:])}"
             case ["DIRECT", *rest]:
-                return f"{'/'.join(rest[2:-3])},{rest[-3]},{generate_info_from_file(file)}"
+                return f"{'/'.join(rest[2:-3])},{rest[-3]}"
             case [_, *rest]:
                 return generate_csv_row(rest)
 
-    return generate_csv_row(Path(line))
+    return f"{generate_csv_row(str(Path(line).absolute()).split('/'))},{generate_info_from_file(Path(line))}"
 
 
 if __name__ == "__main__":
