@@ -34,8 +34,7 @@ def generate_record(line: str) -> str:
             case [_, *rest]:
                 return generate_csv_row(rest)
 
-    line = Path(line).absolute()
-    return generate_csv_row(str(line).split('/'))
+    return generate_csv_row(Path(line))
 
 
 if __name__ == "__main__":
