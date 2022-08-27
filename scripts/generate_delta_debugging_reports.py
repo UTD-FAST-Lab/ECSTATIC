@@ -13,7 +13,7 @@ def generate_record(line: str) -> str:
         def get_value(prefix: str) -> str:
             for l in lines:
                 if l.startswith(prefix):
-                    return l.split(' ')[-1]
+                    return l.split(' ')[-1].strip()
 
         start_line = get_value("start_line")
         end_line = get_value("end_line")
