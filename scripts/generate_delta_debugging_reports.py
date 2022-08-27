@@ -39,4 +39,4 @@ def generate_record(line: str) -> str:
 
 if __name__ == "__main__":
     for line in sys.stdin:
-        print(generate_record(line))
+        print(generate_record(line.strip()))
