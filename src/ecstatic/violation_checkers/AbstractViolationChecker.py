@@ -95,7 +95,7 @@ class AbstractViolationChecker(ABC):
             finished_results = []
             print("Loading existing violations.")
             for f in tqdm([fil for fil in os.listdir(pickle_folder) if fil.endswith('.pickle')]):
-                with open(f, 'rb') as f:
+                with open(pickle_folder/f, 'rb') as f:
                     finished_results.append(pickle.load(f))
         else:
             pairs: List[Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]] = []
