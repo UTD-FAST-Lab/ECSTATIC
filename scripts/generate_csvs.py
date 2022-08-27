@@ -33,6 +33,13 @@ def main():
 
     def generate_comma_separated_record(file: Path) -> str:
 
+        def reduce1(tokens: List[str]) -> str:
+            match tokens:
+                case ['ECSTATIC_results', *rest]:
+                    return f"{rest[0]},{rest[1]},{reduce(rest)}"
+                case [_, *rest]:
+                    return reduce1(rest)
+
         def reduce(tokens: List[str]) -> str:
             match tokens:
                 case ['violations', *rest]:
@@ -40,7 +47,7 @@ def main():
                 case [head, *rest]:
                     return reduce(rest)
 
-        return reduce(str(file).split('/'))
+        return reduce1(str(file).split('/'))
 
     for folder in args.directories:
         for file in find_all_violation_files(folder):
