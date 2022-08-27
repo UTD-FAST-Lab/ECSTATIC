@@ -27,6 +27,7 @@ def main():
 
     def find_all_violation_folders(root: Path) -> Iterable[Path]:
         for root, dirs, files in os.walk(root):
+            dirs = [d for d in dirs if 'delta_debug' not in d]
             for d in dirs:
                 if d == 'violations':
                     yield Path(root) / d
@@ -39,14 +40,14 @@ def main():
 
     def generate_comma_separated_record(file: Path) -> str:
 
-        def reduce(tokens: List[str]) -> List[str]:
+        def reduce(tokens: List[str]) -> str:
             match tokens:
                 case ['violations', *rest]:
                     return ','.join(rest)
                 case [head, *rest]:
                     return reduce(rest)
 
-        return reduce(file)
+        return reduce(str(file).split('/'))
 
     for folder in find_all_violation_folders(args.directory):
         for file in find_all_violation_files(folder):
