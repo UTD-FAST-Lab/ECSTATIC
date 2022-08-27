@@ -189,7 +189,7 @@ class Option:
                     return True
                 else:
                     return self.soundness.edges[node1, node2]['type'].lower() != 'implicit'
-        except ValueError | KeyError as ve:
+        except (ValueError, KeyError) as ve:
             logging.debug(ve)
             return False
 
@@ -201,7 +201,7 @@ class Option:
                     return True
                 else:
                     return self.precision.edges[node1, node2]['type'].lower() != 'implicit'
-        except ValueError | KeyError as ve:
+        except (ValueError, KeyError) as ve:
             logging.debug(ve)
             return False
 
