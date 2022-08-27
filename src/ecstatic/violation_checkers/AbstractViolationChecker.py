@@ -143,6 +143,7 @@ class AbstractViolationChecker(ABC):
                     logging.info(f'Writing violation to file {filename}')
                     with open(filename, 'w') as f:
                         json.dump(violation.as_dict(), f, indent=4)
+                    pickle_folder.mkdir(exist_ok=True)
                     with NamedTemporaryFile(dir=pickle_folder, delete=False, suffix='.pickle') as f:
                         pickle.dump(violation, f)
 
