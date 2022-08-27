@@ -217,7 +217,6 @@ class FuzzGenerator:
         return FuzzingCampaign(results), state
 
     def feedback(self, violations: Iterable[PotentialViolation]):
-        if not self.full_campaigns:
             buggy_benchmarks = set()
             for v in [v for v in violations if v.is_violation and not v.is_transitive]:
                 o: Option = v.get_option_under_investigation()
