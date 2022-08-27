@@ -16,14 +16,10 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import argparse
 import os
+import sys
 from pathlib import Path
 from typing import Iterable, List
-
-p = argparse.ArgumentParser()
-p.add_argument("directories", nargs='+')
-args = p.parse_args()
-
-def main():
+def main(file: str):
 
     def find_all_violation_files(root: Path) -> Iterable[Path]:
         for root, dirs, files in os.walk(root):
@@ -51,11 +47,10 @@ def main():
 
         return reduce1(str(file).split('/'))
 
-    for folder in args.directories:
-        for file in find_all_violation_files(folder):
-            print(generate_comma_separated_record(file))
+    return generate_comma_separated_record(Path(file))
 
 if __name__ == "__main__":
-    main()
+    for file in sys.stdin:
+        print(main(file))
 
 
