@@ -159,8 +159,10 @@ class FuzzGenerator:
         seed_config = fill_out_defaults(self.model, seed_config)
         logger.info(f"Configuration is {[(str(k), str(v)) for k, v in seed_config.items()]}")
         results: List[FuzzingJob] = list()
+        candidate_sample = set()
+        pos = set()
+
         if self.first_run:
-            candidate_sample = set()
             for o in self.model.options:
                 for p in o.partial_orders:
                     candidate_sample.update(self.mutate_config(seed_config, p))
@@ -168,8 +170,6 @@ class FuzzGenerator:
             candidate_sample.add(ConfigWithMutatedOption(seed_config, None, None))
             benchmarks_sample = self.benchmark_population.keys()
         else:
-            candidate_sample = set()
-            pos = set()
             if not self.full_campaigns:
                 while len(pos) < min(len(self.partial_orders), 2):
                     pos.update(random.sample(self.partial_orders.keys(), 1,
@@ -211,7 +211,7 @@ class FuzzGenerator:
                  "first_run": self.first_run,
                  "partial_orders": {str(k): str(v) for k, v in self.partial_orders.items()},
                  "benchmarks": {str(k): str(v) for k, v in self.benchmark.items()},
-                 "partial_order_sample": [str(k) for k in candidate_sample],
+                 "partial_order_sample": [str(k) for k in pos],
                  "benchmarks_sample": [str(k) for k in benchmarks_sample]
                  }
         return FuzzingCampaign(results), state
