@@ -133,7 +133,7 @@ class AbstractViolationChecker(ABC):
                 for result in tqdm(p.imap(self.compare_results, pairs), total=len(pairs)):
                     # Force evaluation of violated
                     # [r for r in result if r.violated]
-                    finished_results.append(result)
+                    finished_results.extend(result)
 
             if self.write_to_files:
                 def write_violation(violation: PotentialViolation):
