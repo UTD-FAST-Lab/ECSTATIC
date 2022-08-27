@@ -44,8 +44,7 @@ def main():
 
     for folder in args.directories:
         for file in find_all_violation_files(folder):
-            for line in generate_comma_separated_record(file):
-                print(line)
+            print(generate_comma_separated_record(file))
 
 if __name__ == "__main__":
     main()
