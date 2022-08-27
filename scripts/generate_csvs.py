@@ -28,7 +28,7 @@ def main():
     def find_all_violation_files(root: Path) -> Iterable[Path]:
         for root, dirs, files in os.walk(root):
             for f in files:
-                if f.endswith('*.json'):
+                if f.endswith('.json'):
                     yield Path(root) / f
 
     def generate_comma_separated_record(file: Path) -> str:
