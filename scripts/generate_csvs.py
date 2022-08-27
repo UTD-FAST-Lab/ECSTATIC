@@ -36,7 +36,7 @@ def main():
         def reduce(tokens: List[str]) -> str:
             match tokens:
                 case ['violations', *rest]:
-                    return ','.join(rest)
+                    return ','.join([*rest[:4], '/'.join(rest[4:-1]), rest[-1]])
                 case [head, *rest]:
                     return reduce(rest)
 
