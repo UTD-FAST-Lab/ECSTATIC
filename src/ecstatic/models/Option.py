@@ -189,7 +189,7 @@ class Option:
                     return True
                 else:
                     return self.soundness.edges[node1, node2]['type'].lower() != 'implicit'
-        except ValueError as ve:
+        except ValueError | KeyError as ve:
             logging.debug(ve)
             return False
 
@@ -201,9 +201,10 @@ class Option:
                     return True
                 else:
                     return self.precision.edges[node1, node2]['type'].lower() != 'implicit'
-        except ValueError as ve:
+        except ValueError | KeyError as ve:
             logging.debug(ve)
             return False
+
 
     # def precision_compare(self, o1: Level, o2: Level):
     #     """
