@@ -6,19 +6,36 @@ from typing import List
 
 def generate_record(line: str) -> str:
 
-    def get_filename_attributes(tokenized_filename: List[str]):
-        match tokenized_filename:
+    def generate_info_from_file(file: Path) -> str:
+        with open(file, 'r') as f:
+            lines = f.readlines()
+
+        def get_value(prefix: str) -> str:
+            for l in lines:
+                if l.startswith(prefix):
+                    return l.split(' ')[-1]
+
+        start_line = get_value("start_line")
+        end_line = get_value("end_line")
+        total_reduction = (1 - (float(end_line)/float(start_line))) * 100
+        binary_timer = get_value("binary_timer")
+        hdd_timer = get_value("hdd_timer")
+        program_timer = get_value("program_timer")
+        return f"{start_line},{end_line},{total_reduction},{binary_timer},{hdd_timer},{program_timer}"
+
+    def generate_csv_row(file: Path):
+        match str(file.absolute()).split('/'):
             case ['ECSTATIC_results', *rest]:
-                return f"{rest[0]},{rest[1]},{rest[2]},{get_filename_attributes(rest[3:])}"
+                return f"{rest[0]},{rest[1]},{rest[2]},{generate_csv_row(rest[3:])}"
             case [type, *rest] if type in ['HDD_ONLY', 'CDG+HDD']:
-                return f"{type},{get_filename_attributes(rest[1:])}"
+                return f"{type},{generate_csv_row(rest[1:])}"
             case ["DIRECT", *rest]:
-                return f"{'/'.join(rest[2:-3])},{rest[-3]}"
-            case [head, *rest]:
-                return get_filename_attributes(rest)
+                return f"{'/'.join(rest[2:-3])},{rest[-3]},{generate_info_from_file(file)}"
+            case [_, *rest]:
+                return generate_csv_row(rest)
 
     line = Path(line).absolute()
-    return get_filename_attributes(str(line).split('/'))
+    return generate_csv_row(str(line).split('/'))
 
 
 if __name__ == "__main__":
