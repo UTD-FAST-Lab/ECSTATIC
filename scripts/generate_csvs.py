@@ -20,17 +20,10 @@ from pathlib import Path
 from typing import Iterable, List
 
 p = argparse.ArgumentParser()
-p.add_argument("directory")
+p.add_argument("directories", nargs='+')
 args = p.parse_args()
 
 def main():
-
-    def find_all_violation_folders(root: Path) -> Iterable[Path]:
-        for root, dirs, files in os.walk(root):
-            dirs = [d for d in dirs if 'delta_debug' not in d]
-            for d in dirs:
-                if d == 'violations':
-                    yield Path(root) / d
 
     def find_all_violation_files(root: Path) -> Iterable[Path]:
         for root, dirs, files in os.walk(root):
@@ -49,7 +42,7 @@ def main():
 
         return reduce(str(file).split('/'))
 
-    for folder in find_all_violation_folders(args.directory):
+    for folder in args.directories:
         for file in find_all_violation_files(folder):
             for line in generate_comma_separated_record(file):
                 print(line)
