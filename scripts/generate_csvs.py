@@ -38,7 +38,7 @@ def main(file: str):
 
         def reduce(tokens: List[str]) -> str:
             match tokens:
-                case [head, *rest] if head.startswith('campaign'):
+                case [head, *rest] if 'campaign' in head:
                     return f"{head},{reduce(rest)}"
                 case ['violations', *rest]:
                     return ','.join([*rest[:4], '/'.join(rest[4:-1]), rest[-1]])
