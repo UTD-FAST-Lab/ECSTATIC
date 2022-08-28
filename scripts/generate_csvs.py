@@ -47,7 +47,7 @@ def main(file: str):
 
         return reduce1(str(file).split('/'))
 
-    return generate_comma_separated_record(Path(file).absolute())
+    return generate_comma_separated_record(Path(file).absolute()).strip()
 
 if __name__ == "__main__":
     for file in sys.stdin:
