@@ -141,9 +141,9 @@ class AbstractDeltaDebugger(ABC):
 
             print(f"Running delta debugger with cmd {' '.join(cmd)}")
             fin = subprocess.run(cmd, capture_output=True, text=True)
-            with open(Path(directory) / '.stdout') as f:
+            with open(Path(directory) / '.stdout', 'w') as f:
                 f.writelines(fin.stdout)
-            with open(Path(directory) / '.stderr') as f:
+            with open(Path(directory) / '.stderr', 'w') as f:
                 f.writelines(fin.stderr)
             print("Delta debugging completed.")
 
