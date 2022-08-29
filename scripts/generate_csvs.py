@@ -32,7 +32,10 @@ def main(file: str):
         def reduce1(tokens: List[str]) -> str:
             match tokens:
                 case ['ECSTATIC_results', *rest]:
-                    return f"{rest[0]},{rest[1]},{reduce(rest)}"
+                    try:
+                        return f"{rest[0]},{rest[1]},{int(rest[2])},{reduce(rest[3:])}"
+                    except ValueError as ve:
+                        return f"{rest[0]},{rest[1]},NONE,{reduce(rest[2:])}"
                 case [_, *rest]:
                     return reduce1(rest)
 
