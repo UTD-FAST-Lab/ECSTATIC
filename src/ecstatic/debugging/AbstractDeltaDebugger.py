@@ -103,7 +103,7 @@ class AbstractDeltaDebugger(ABC):
                 return None
             if os.path.exists(directory):
                 logger.info("Ignoring existing result")
-                shutil.rmtree(directory, ignore_errors=True)
+                shutil.rmtree(directory)
             Path(directory).mkdir(exist_ok=True, parents=True)
 
             # Make ground truth.
