@@ -181,13 +181,13 @@ def main():
 
     logger.info(f'Read delta debugging job from {args.job}')
     # Create tool runner.
-    tmpdir = tempfile.TemporaryDirectory()
+    tmpdir = tempfile.mkdtemp(suffix = str(Path(args.job).parent))
 
-    partial_function = partial(job.runner.run_job, output_folder=tmpdir.name)
+    partial_function = partial(job.runner.run_job, output_folder=tmpdir)
     with Pool(2) as p:
         finished_jobs: Iterable[FinishedFuzzingJob] = p.map(partial_function, [job.potential_violation.job1.job,
                                                                                job.potential_violation.job2.job])
-    job.violation_checker.output_folder = tmpdir.name
+    job.violation_checker.output_folder = tmpdir
     violations: Iterable[PotentialViolation] =\
         job.violation_checker.check_violations(
             [f for f in finished_jobs if f is not None and f.results_location is not None])
