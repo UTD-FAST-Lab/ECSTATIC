@@ -181,7 +181,7 @@ def main():
 
     logger.info(f'Read delta debugging job from {args.job}')
     # Create tool runner.
-    tmpdir = tempfile.mkdtemp(suffix = str(Path(args.job).parent))
+    tmpdir = tempfile.mkdtemp(dir = str(Path(args.job).parent))
 
     partial_function = partial(job.runner.run_job, output_folder=tmpdir)
     with Pool(2) as p:
