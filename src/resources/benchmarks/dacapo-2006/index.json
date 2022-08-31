@@ -69,6 +69,12 @@
         "build_src/pmd"
       ],
       "build_script": "build_scripts/build_pmd.sh"
-    }
+    },
+    {
+      "name": "deps/eclipse.jar",
+      "depends_on": [
+        "deps/eclipse-deps.jar"
+      ]
+    },
   ]
 }
