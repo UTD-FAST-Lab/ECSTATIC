@@ -31,16 +31,6 @@
       "build_script": "build_scripts/build_chart.sh"
     },
     {
-      "name": "deps/eclipse.jar",
-      "depends_on": [
-        "deps/eclipse-deps.jar"
-      ],
-      "sources": [
-        "build_src/eclipse"
-      ],
-      "build_script": "build_scripts/build_eclipse.sh"
-    },
-    {
       "name": "deps/fop.jar",
       "depends_on": [
         "deps/fop-deps.jar"
