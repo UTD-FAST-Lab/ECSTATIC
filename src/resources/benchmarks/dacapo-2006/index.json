@@ -75,6 +75,6 @@
       "depends_on": [
         "deps/eclipse-deps.jar"
       ]
-    },
+    }
   ]
 }
