@@ -90,6 +90,12 @@ class AbstractDeltaDebugger(ABC):
         logger.debug("In delta debug.")
         for index, (predicate, ground_truth) in enumerate(self.make_predicates(pv)):
             logger.debug(f"Got ground truth {ground_truth} at index {index}")
+
+            # Skip any violation for which we don't have sources
+            if len(pv.job1.job.target.sources) < 1:
+                logging.warning(f"Skipping violation on target {pv.job1.job.target.name} because it has no sources.")
+                continue
+
             potential_violation: PotentialViolation = copy.deepcopy(pv)
             # First, create artifacts. We need to pickle the violation, as well as creating the script.
             directory = os.path.abspath(os.path.join(campaign_directory, self.get_base_directory(),
