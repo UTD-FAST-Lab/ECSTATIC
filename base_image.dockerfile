@@ -21,7 +21,6 @@ RUN python -m pip install -r requirements.txt
 RUN python -m pip install -e .
 
 FROM python-build AS delta-debugger-build
-ENV DELTA_DEBUGGER_HOME=/SADeltaDebugger
 WORKDIR /
 RUN git config --global core.eol lf && \
  git config --global core.autocrlf input
@@ -33,9 +32,9 @@ RUN cd ProjectLineCounter/ &&  mvn install && \
     cd ../ViolationDeltaDebugger/ && mvn package -DskipTests
 WORKDIR /
 FROM python-build
-
 RUN npm install -g jsdelta
 COPY --from=delta-debugger-build /SADeltaDebugger /SADeltaDebugger
 COPY --from=ecstatic-build /venv /venv
 COPY --from=ecstatic-build /ECSTATIC /ECSTATIC
 ENV PATH=/venv/bin:$PATH
+ENV DELTA_DEBUGGER_HOME=/SADeltaDebugger
