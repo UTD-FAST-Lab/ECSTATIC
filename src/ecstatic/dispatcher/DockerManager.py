@@ -32,7 +32,6 @@ logger = logging.getLogger(__name__)
 
 def build_image(tool: str, nocache: bool = False):
     env = os.environ
-    env['DOCKER_BUILDKIT'] = '1'
     if tool == 'base':
         logger.info("Creating base image")
         cmd = ['docker', 'build', '.', '-f', 'base_image.dockerfile', '-t', get_image_name(tool)]

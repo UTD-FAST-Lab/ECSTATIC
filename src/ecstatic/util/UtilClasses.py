@@ -79,17 +79,29 @@ class ConfigWithMutatedOption:
         return hash((frozendict(self.config), self.option, self.level))
 
 
-@dataclass
 class FinishedFuzzingJob:
-    job: FuzzingJob
-    execution_time: float
-    results_location: str
+    def __init__(self,
+                 job: FuzzingJob,
+                 execution_time: float,
+                 results_location: str,
+                 successful: bool = True):
+        self.job = job
+        self.execution_time = execution_time
+        self.results_location = results_location
+        self.successful = successful
 
 
-@dataclass
 class FlowdroidFinishedFuzzingJob(FinishedFuzzingJob):
-    configuration_location: str
-    detected_flows: Dict[str, Set[Flow]]
+    def __init__(self,
+                 job: FuzzingJob,
+                 execution_time: float,
+                 results_location: str,
+                 configuration_location: str,
+                 detected_flows: Dict[str, Set[Flow]],
+                 successful: bool = True):
+        super().__init__(job, execution_time, results_location, successful)
+        self.configuration_location = configuration_location
+        self.detected_flows = detected_flows
 
 
 @dataclass
