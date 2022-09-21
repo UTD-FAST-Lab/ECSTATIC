@@ -28,7 +28,7 @@ import time
 from functools import partial
 from multiprocessing.dummy import Pool
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Iterable
 from enum_actions import enum_action
 
 from tqdm import tqdm
@@ -43,7 +43,7 @@ from src.ecstatic.runners.AbstractCommandLineToolRunner import AbstractCommandLi
 from src.ecstatic.util.BenchmarkReader import BenchmarkReader
 from src.ecstatic.util.PotentialViolation import PotentialViolation
 from src.ecstatic.util.UtilClasses import FuzzingCampaign, Benchmark, \
-    BenchmarkRecord
+    BenchmarkRecord, FinishedFuzzingJob
 from src.ecstatic.util.Violation import Violation
 from src.ecstatic.violation_checkers import ViolationCheckerFactory
 from src.ecstatic.violation_checkers.AbstractViolationChecker import AbstractViolationChecker
@@ -96,7 +96,7 @@ class ToolTester:
                 results = []
                 for r in tqdm(p.imap(partial_run_job, campaign.jobs), total=len(campaign.jobs)):
                     results.append(r)
-            results = [r for r in results if r is not None and r.results_location is not None]
+            results: Iterable[FinishedFuzzingJob] = [r for r in results if r is not None and r.results_location is not None]
             print(f'Campaign {campaign_index} finished (time {time.time() - campaign_start_time} seconds)')
             violations_folder = Path(campaign_folder) / 'violations'
             self.checker.output_folder = violations_folder
