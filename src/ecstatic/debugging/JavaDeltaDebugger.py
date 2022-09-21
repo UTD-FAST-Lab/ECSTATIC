@@ -19,7 +19,7 @@ from abc import ABC
 from pathlib import Path
 from typing import List
 
-from src.ecstatic.debugging.AbstractDeltaDebugger import AbstractDeltaDebugger
+from src.ecstatic.debugging.AbstractViolationBasedDeltaDebugger import AbstractDeltaDebugger
 from src.ecstatic.readers.AbstractReader import AbstractReader
 from src.ecstatic.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
 from src.ecstatic.violation_checkers.AbstractViolationChecker import AbstractViolationChecker

@@ -6,7 +6,7 @@ import dill as pickle
 import logging
 
 from src.ecstatic.debugging.JavaBenchmarkDeltaDebugger import JavaBenchmarkDeltaDebugger
-from src.ecstatic.debugging.AbstractDeltaDebugger import DeltaDebuggingJob
+from src.ecstatic.debugging.AbstractViolationBasedDeltaDebugger import DeltaDebuggingJob
 
 logger = logging.getLogger(__name__)
 

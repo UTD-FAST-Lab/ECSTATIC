@@ -81,10 +81,6 @@ def start_runner(tool: str, benchmark: str, task: str, args):
         except Exception as e:
             logger.exception("Couldn't decode line from output.")
     print('Run finished!')
-    # print('Removing container....')
-    # cntr.stop()
-    # cntr.remove()
-    # print('Container removed!')
     print(f"Results are in {args.results_location}")
 
 

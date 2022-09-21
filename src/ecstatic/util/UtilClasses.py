@@ -82,11 +82,11 @@ class ConfigWithMutatedOption:
 class FinishedFuzzingJob:
     def __init__(self,
                  job: FuzzingJob,
-                 execution_time: float,
+                 execution_time_in_ms: float,
                  results_location: str,
                  successful: bool = True):
         self.job = job
-        self.execution_time = execution_time
+        self.execution_time_in_ms = execution_time_in_ms
         self.results_location = results_location
         self.successful = successful
 
@@ -94,12 +94,12 @@ class FinishedFuzzingJob:
 class FlowdroidFinishedFuzzingJob(FinishedFuzzingJob):
     def __init__(self,
                  job: FuzzingJob,
-                 execution_time: float,
+                 execution_time_in_ms: float,
                  results_location: str,
                  configuration_location: str,
                  detected_flows: Dict[str, Set[Flow]],
                  successful: bool = True):
-        super().__init__(job, execution_time, results_location, successful)
+        super().__init__(job, execution_time_in_ms, results_location, successful)
         self.configuration_location = configuration_location
         self.detected_flows = detected_flows
 

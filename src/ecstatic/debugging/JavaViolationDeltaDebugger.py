@@ -28,7 +28,7 @@ from multiprocessing import Pool
 from pathlib import Path
 from typing import Iterable, Optional, List
 
-from src.ecstatic.debugging.AbstractDeltaDebugger import AbstractDeltaDebugger, DeltaDebuggingPredicate
+from src.ecstatic.debugging.AbstractViolationBasedDeltaDebugger import AbstractDeltaDebugger, DeltaDebuggingPredicate
 from src.ecstatic.debugging.JavaDeltaDebugger import JavaDeltaDebugger
 from src.ecstatic.debugging.ViolationDeltaDebugger import ViolationDeltaDebugger
 from src.ecstatic.readers import ReaderFactory

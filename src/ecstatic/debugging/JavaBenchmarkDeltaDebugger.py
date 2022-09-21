@@ -18,7 +18,7 @@
 import logging
 from typing import Iterable, Tuple
 
-from src.ecstatic.debugging.AbstractDeltaDebugger import DeltaDebuggingPredicate, GroundTruth
+from src.ecstatic.debugging.AbstractViolationBasedDeltaDebugger import DeltaDebuggingPredicate, GroundTruth
 from src.ecstatic.debugging.BenchmarkDeltaDebugger import BenchmarkDeltaDebugger
 from src.ecstatic.debugging.JavaDeltaDebugger import JavaDeltaDebugger
 from src.ecstatic.util.PartialOrder import PartialOrderType

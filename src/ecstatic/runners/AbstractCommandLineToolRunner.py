@@ -156,7 +156,7 @@ class AbstractCommandLineToolRunner(ABC):
             with open(self.get_time_file(output_folder, job).replace('.time', '.error.time'), 'w') as f:
                 total_time = time.time() - start
                 f.write(f'{str(total_time)}\n')
-        return FinishedFuzzingJob(job, execution_time=total_time,
+        return FinishedFuzzingJob(job, execution_time_in_ms=total_time,
                                   results_location=self.get_error_file(output_folder, job),
                                   successful=False)
 

@@ -28,9 +28,9 @@ import time
 from functools import partial
 from multiprocessing.dummy import Pool
 from pathlib import Path
-from typing import List, Optional, Iterable
-from enum_actions import enum_action
+from typing import Optional, Iterable, List
 
+from enum_actions import enum_action
 from tqdm import tqdm
 
 from src.ecstatic.debugging.JavaBenchmarkDeltaDebugger import JavaBenchmarkDeltaDebugger
@@ -41,7 +41,6 @@ from src.ecstatic.readers import ReaderFactory
 from src.ecstatic.runners import RunnerFactory
 from src.ecstatic.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
 from src.ecstatic.util.BenchmarkReader import BenchmarkReader
-from src.ecstatic.util.PotentialViolation import PotentialViolation
 from src.ecstatic.util.UtilClasses import FuzzingCampaign, Benchmark, \
     BenchmarkRecord, FinishedFuzzingJob
 from src.ecstatic.util.Violation import Violation
@@ -93,25 +92,22 @@ class ToolTester:
 
             partial_run_job = partial(self.runner.run_job, output_folder=campaign_folder)
             with Pool(self.num_processes) as p:
-                results = []
+                results: List[FinishedFuzzingJob] = []
                 for r in tqdm(p.imap(partial_run_job, campaign.jobs), total=len(campaign.jobs)):
                     results.append(r)
             results: Iterable[FinishedFuzzingJob] = [r for r in results if r is not None and r.results_location is not None]
             print(f'Campaign {campaign_index} finished (time {time.time() - campaign_start_time} seconds)')
-            violations_folder = Path(campaign_folder) / 'violations'
-            self.checker.output_folder = violations_folder
-            print(f'Now checking for violations.')
-            Path(violations_folder).mkdir(exist_ok=True)
-            violations: List[PotentialViolation] = self.checker.check_violations(results)
-            print(f"Total potential violations: {len(violations)}")
+            # violations_folder = Path(campaign_folder) / 'violations'
+            # self.checker.output_folder = violations_folder
+            # print(f'Now checking for violations.')
+            # Path(violations_folder).mkdir(exist_ok=True)
+            # violations: List[PotentialViolation] = self.checker.check_violations(results)
+            # print(f"Total potential violations: {len(violations)}")
             if self.debugger is not None:
                 with Pool(max(int(self.num_processes / 2),
                               1)) as p:  # /2 because each delta debugging process needs 2 cores.
-                    direct_violations = [v for v in violations if not v.is_transitive]
-                    print(f'Delta debugging {len(direct_violations)} cases with {self.num_processes} cores.')
                     p.map(partial(self.debugger.delta_debug, campaign_directory=campaign_folder,
-                                  timeout=self.runner.timeout), direct_violations)
-            self.generator.feedback(violations)
+                                  timeout=self.runner.timeout), (r for r in results if r.execution_time_in_ms > 5 * 60 * 1000))
             print(f'Done with campaign {campaign_index}!')
             campaign_index += 1
             # if self.uid is not None and self.gid is not None:

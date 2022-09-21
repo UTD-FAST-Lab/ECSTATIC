@@ -18,7 +18,7 @@ from abc import ABC
 from pathlib import Path
 from typing import Optional
 
-from src.ecstatic.debugging.AbstractDeltaDebugger import AbstractDeltaDebugger
+from src.ecstatic.debugging.AbstractViolationBasedDeltaDebugger import AbstractDeltaDebugger
 from src.ecstatic.util.PotentialViolation import PotentialViolation
 
 
