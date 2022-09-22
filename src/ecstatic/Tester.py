@@ -35,6 +35,7 @@ from tqdm import tqdm
 
 from src.ecstatic.debugging.JavaBenchmarkDeltaDebugger import JavaBenchmarkDeltaDebugger
 from src.ecstatic.debugging.JavaViolationDeltaDebugger import JavaViolationDeltaDebugger
+from src.ecstatic.debugging.TimeBasedDeltaDebugger import TimeBasedDeltaDebugger
 from src.ecstatic.fuzzing.generators import FuzzGeneratorFactory
 from src.ecstatic.fuzzing.generators.FuzzGenerator import FuzzGenerator, FuzzOptions
 from src.ecstatic.readers import ReaderFactory
@@ -199,10 +200,11 @@ def main():
                                                                      reader=reader,
                                                                      output_folder=results_location / "violations")
 
-    match args.delta_debugging_mode.lower():
-        case 'violation': debugger = JavaViolationDeltaDebugger(runner, reader, checker, hdd_only=args.hdd_only)
-        case 'benchmark': debugger = JavaBenchmarkDeltaDebugger(runner, reader, checker, hdd_only=args.hdd_only)
-        case _: debugger = None
+    # match args.delta_debugging_mode.lower():
+    #     case 'violation': debugger = JavaViolationDeltaDebugger(runner, reader, checker, hdd_only=args.hdd_only)
+    #     case 'benchmark': debugger = JavaBenchmarkDeltaDebugger(runner, reader, checker, hdd_only=args.hdd_only)
+    #     case _: debugger = None
+    debugger = TimeBasedDeltaDebugger(runner, reader, checker, 5 * 60)
 
     t = ToolTester(generator, runner, debugger, results_location,
                    num_processes=args.jobs, fuzzing_timeout=args.fuzzing_timeout,
