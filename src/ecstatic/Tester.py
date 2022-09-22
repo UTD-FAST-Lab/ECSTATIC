@@ -53,13 +53,13 @@ logger = logging.getLogger(__name__)
 
 class ToolTester:
 
-    def __init__(self, generator, runner: AbstractCommandLineToolRunner, debugger: Optional[JavaViolationDeltaDebugger],
+    def __init__(self, generator, runner: AbstractCommandLineToolRunner, debugger: Optional[TimeBasedDeltaDebugger],
                  results_location: str,
                  num_processes: int, fuzzing_timeout: int, checker: AbstractViolationChecker,
                  seed: int):
         self.generator: FuzzGenerator = generator
         self.runner: AbstractCommandLineToolRunner = runner
-        self.debugger: JavaViolationDeltaDebugger = debugger
+        self.debugger: TimeBasedDeltaDebugger = debugger
         self.results_location: str = results_location
         self.unverified_violations = list()
         self.num_processes = num_processes
@@ -108,7 +108,8 @@ class ToolTester:
                 with Pool(max(int(self.num_processes / 2),
                               1)) as p:  # /2 because each delta debugging process needs 2 cores.
                     p.map(partial(self.debugger.delta_debug, campaign_directory=campaign_folder,
-                                  timeout=self.runner.timeout), (r for r in results if r.execution_time_in_ms > 5 * 60 * 1000))
+                                  timeout=self.runner.timeout),
+                                  (r for r in results if r.execution_time_in_ms > self.debugger.maximum_time_in_seconds * 1000))
             print(f'Done with campaign {campaign_index}!')
             campaign_index += 1
             # if self.uid is not None and self.gid is not None:
