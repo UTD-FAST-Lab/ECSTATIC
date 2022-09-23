@@ -17,6 +17,7 @@
 
 
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Dict, Set, List, Any
 
 from frozendict import frozendict
@@ -83,7 +84,7 @@ class FinishedFuzzingJob:
     def __init__(self,
                  job: FuzzingJob,
                  execution_time_in_ms: float,
-                 results_location: str,
+                 results_location: Path,
                  successful: bool = True):
         self.job = job
         self.execution_time_in_ms = execution_time_in_ms
@@ -95,8 +96,8 @@ class FlowdroidFinishedFuzzingJob(FinishedFuzzingJob):
     def __init__(self,
                  job: FuzzingJob,
                  execution_time_in_ms: float,
-                 results_location: str,
-                 configuration_location: str,
+                 results_location: Path,
+                 configuration_location: Path,
                  detected_flows: Dict[str, Set[Flow]],
                  successful: bool = True):
         super().__init__(job, execution_time_in_ms, results_location, successful)

@@ -23,7 +23,7 @@ import os
 import time
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Dict, Iterable, Tuple
+from typing import Dict, Tuple
 
 from src.ecstatic.models.Level import Level
 from src.ecstatic.models.Option import Option
@@ -72,16 +72,17 @@ class AbstractCommandLineToolRunner(ABC):
                 result += f'--{k.name} '
         return result.strip()
 
-    def get_time_file(self, output_folder: str, job: FuzzingJob, error: bool = True):
-        return os.path.join(output_folder,
-                            '.' + os.path.basename(self.get_output(output_folder, job)) + '.time' + '.error' if error
-                            else '')
+    def get_time_file(self, output_folder: Path, job: FuzzingJob, error: bool = True):
+        res = Path(output_folder) / Path('.' + self.get_output(output_folder, job).name + '.time')
+        if error:
+            return Path(str(res) + '.error')
+        else:
+            return res
 
-    def get_log_file(self, output_folder: str, job: FuzzingJob):
-        return os.path.join(output_folder,
-                            '.' + os.path.basename(self.get_output(output_folder, job)) + '.log')
+    def get_log_file(self, output_folder: Path, job: FuzzingJob):
+        return Path(output_folder) / Path('.' + self.get_output(output_folder, job).name + '.log')
 
-    def run_job(self, job: FuzzingJob, output_folder: str, num_retries: int = 1) -> FinishedFuzzingJob | None:
+    def run_job(self, job: FuzzingJob, output_folder: Path, num_retries: int = 1) -> FinishedFuzzingJob | None:
         """
         Runs the job, producing outputs in output_folder. Can try to rerun the job if the execution fails
         (i.e., if try_run_job throws an exception). If we cannot run the job within num_retries tries,
@@ -121,11 +122,12 @@ class AbstractCommandLineToolRunner(ABC):
             logging.exception("Time file was not created, so starting over.")
             os.remove(self.get_output(output_folder, job))
 
+        start = time.time()
+
         while num_runs < num_retries and not os.path.exists(
-                self.get_output(output_folder, job) + '.error'):
+                self.get_output(output_folder, job, error=True)):
             # noinspection PyBroadException
             try:
-                start = time.time()
                 result, log_output = self.try_run_job(job, output_folder)
                 logging.info(f'Successfully ran job! Result is in {result}')
                 total_time = time.time() - start
@@ -158,24 +160,27 @@ class AbstractCommandLineToolRunner(ABC):
                                   results_location=self.get_output(output_folder, job, error=True),
                                   successful=False)
 
-    def get_output(self, output_folder: str, job: FuzzingJob, error: bool = False) -> str:
+    def get_output(self, output_folder: Path, job: FuzzingJob, error: bool = False) -> Path:
         """
         Returns the name of the output file. If this file exists, then the tool will not try to
         rerun it -- rather, it will just return this file.
-        Parameters
-        ----------
-        output_folder: Where to write results.
-        job: The job to run.
 
+        :param output_folder: Where to write results.
+        :param job: The job to run.
+        :return: The location of the file.
         Returns
         -------
         The output file name, including the output folder.
+        :param error:
         """
-        return os.path.join(output_folder,
-                            f'{self.dict_hash(job.configuration)}_{os.path.basename(job.target.name)}.raw') + ".error" if error else ""
+        res = Path(output_folder) / Path(f'{self.dict_hash(job.configuration)}_{os.path.basename(job.target.name)}.raw')
+        if error:
+            return Path(str(res) + '.error')
+        else:
+            return res
 
     @abstractmethod
-    def try_run_job(self, job: FuzzingJob, output_folder: str) -> Tuple[str, str]:
+    def try_run_job(self, job: FuzzingJob, output_folder: Path) -> Tuple[Path, str]:
         """
         Attempt to run the job. Throw an exception if the job fails, otherwise, returns the finished fuzzing job.
         Parameters

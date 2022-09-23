@@ -20,6 +20,7 @@ import logging
 import os
 import subprocess
 from abc import ABC, abstractmethod
+from pathlib import Path
 from typing import List, Tuple, Iterable
 
 from src.ecstatic.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
@@ -73,7 +74,7 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
         """Add an option to handle timeout, using self.timeout"""
         pass
 
-    def try_run_job(self, job: FuzzingJob, output_folder: str) -> Tuple[str, str]:
+    def try_run_job(self, job: FuzzingJob, output_folder: Path) -> tuple[Path, str]:
         """
         Tries to run the job. Judges if a job exists by checking if the expected output file exists. Throws an exception
         if the expected output does not exist.
@@ -84,7 +85,7 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
 
         Returns
         -------
-        The location of the result, or throws an exception if running the job failed.
+        A tuple containing the location of the result as a Path and the combined stdout and stderr as a string.
         """
         logging.info(f'Job configuration is {[(str(k), str(v)) for k, v in job.configuration.items()]}')
         config_as_str = self.dict_to_config_str(job.configuration)
@@ -96,7 +97,7 @@ class CommandLineToolRunner(AbstractCommandLineToolRunner, ABC):
             raise RuntimeError(output)
         return output_file, output
 
-    def run_from_cmd(self, cmd: List[str], job: FuzzingJob, output_file: str) -> str:
+    def run_from_cmd(self, cmd: List[str], job: FuzzingJob, output_file: Path) -> str:
         """
         Tries to run the cmd specified in cmd. Returns the output, combined from stdout and stderr.
         Parameters
