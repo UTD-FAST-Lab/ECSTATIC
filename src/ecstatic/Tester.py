@@ -104,6 +104,8 @@ class ToolTester:
             # Path(violations_folder).mkdir(exist_ok=True)
             # violations: List[PotentialViolation] = self.checker.check_violations(results)
             # print(f"Total potential violations: {len(violations)}")
+            to_delta_debug = [r for r in results if r.execution_time_in_ms > self.debugger.maximum_time_in_seconds * 1000]
+            logger.info(f"Delta debugging {len(to_delta_debug)} jobs.")
             if self.debugger is not None:
                 with Pool(max(int(self.num_processes / 2),
                               1)) as p:  # /2 because each delta debugging process needs 2 cores.
