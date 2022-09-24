@@ -135,7 +135,7 @@ class TimeBasedDeltaDebugger():
         cmd = self.get_delta_debugger_cmd(build_script, directory, finished_job, script_location)
 
         print(f"Running delta debugger with cmd {' '.join(cmd)}")
-        fin = subprocess.run(cmd, capture_output=True, text=True, shell=True)
+        fin = subprocess.run(' '.join(cmd), capture_output=True, text=True, shell=True)
         with open(Path(directory) / '.stdout', 'w') as f:
             f.writelines(fin.stdout)
         with open(Path(directory) / '.stderr', 'w') as f:
