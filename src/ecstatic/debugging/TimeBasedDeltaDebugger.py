@@ -119,7 +119,7 @@ class TimeBasedDeltaDebugger():
 
         # Then, create the script.
         def predicate(f: FinishedFuzzingJob) -> bool:
-            return f.execution_time_in_ms >= self.maximum_time_in_seconds * 1000
+            return f.execution_time_in_seconds >= self.maximum_time_in_seconds * 1000
 
         job = DeltaDebuggingJob(predicate=predicate,
                                 runner=self.runner,

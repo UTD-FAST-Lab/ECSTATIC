@@ -87,7 +87,7 @@ class FinishedFuzzingJob:
                  results_location: Path,
                  successful: bool = True):
         self.job = job
-        self.execution_time_in_ms = execution_time_in_ms
+        self.execution_time_in_seconds = execution_time_in_ms
         self.results_location = results_location
         self.successful = successful
 
