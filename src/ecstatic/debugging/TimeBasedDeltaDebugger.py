@@ -56,8 +56,8 @@ class DeltaDebuggingJob:
     reader: AbstractReader
 
 
-
 logger = logging.getLogger(__name__)
+
 
 def get_file_name(potential_violation: FinishedFuzzingJob) -> pathlib.Path:
     filename = Path(*[
@@ -135,7 +135,7 @@ class TimeBasedDeltaDebugger():
         cmd = self.get_delta_debugger_cmd(build_script, directory, finished_job, script_location)
 
         print(f"Running delta debugger with cmd {' '.join(cmd)}")
-        fin = subprocess.run(cmd, capture_output=True, text=True)
+        fin = subprocess.run(cmd, capture_output=True, text=True, shell=True)
         with open(Path(directory) / '.stdout', 'w') as f:
             f.writelines(fin.stdout)
         with open(Path(directory) / '.stderr', 'w') as f:
@@ -144,12 +144,11 @@ class TimeBasedDeltaDebugger():
 
     def get_delta_debugger_cmd(self, build_script, directory, finished_job: FinishedFuzzingJob, script_location):
         # Then, run the delta debugger
-        cmd: List[str] = "jsdelta ".split(' ')
+        cmd: List[str] = ["jsdelta"]
         cmd.extend(["--cmd", script_location])
         cmd.extend(["--out", directory + "/os.js"])
         cmd.extend([finished_job.job.target.name])
         return cmd
-
 
     def create_script(self, job: DeltaDebuggingJob, directory: str) -> str:
         """
@@ -181,7 +180,7 @@ def main():
 
     logger.info(f'Read delta debugging job from {args.job}')
     # Create tool runner.
-    tmpdir = tempfile.mkdtemp(dir = str(Path(args.job).parent))
+    tmpdir = tempfile.mkdtemp(dir=str(Path(args.job).parent))
 
     partial_function = partial(job.runner.run_job, output_folder=tmpdir)
     finished_job = partial_function(job.finished_job.job)
