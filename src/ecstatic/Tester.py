@@ -227,10 +227,10 @@ def build_benchmark(benchmark: str) -> Benchmark:
     else:
         benchmark_list = []
         for root, dirs, files in os.walk("/benchmarks"):
-            benchmark_list.extend([os.path.abspath(os.path.join(root, f)) for f in files if
+            benchmark_list.extend([{"name": (name := os.path.abspath(os.path.join(root, f))), "sources": [name]} for f in files if
                                    (f.endswith(".jar") or f.endswith(".apk") or f.endswith(
                                        ".js"))])  # TODO more dynamic extensions?
-        return Benchmark([BenchmarkRecord(b) for b in benchmark_list])
+        return Benchmark([BenchmarkRecord(**b) for b in benchmark_list])
 
 
 if __name__ == '__main__':
