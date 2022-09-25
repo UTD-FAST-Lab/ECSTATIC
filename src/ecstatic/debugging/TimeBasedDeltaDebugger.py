@@ -20,9 +20,6 @@ import copy
 import logging
 from pathlib import Path
 
-if __name__ == '__main__':
-    logging.basicConfig(filename="./deltadebugger.log", filemode="a", level=logging.DEBUG)
-
 import os
 import pathlib
 import shutil
@@ -181,6 +178,8 @@ def main():
 
     with open(args.job, 'rb') as f:
         job: DeltaDebuggingJob = pickle.load(f)
+
+    logging.basicConfig(filename=Path(job.finished_job.job.target.name).parent / Path("deltadebugger.log"), filemode="a", level=logging.DEBUG)
 
     logger.info(f'Read delta debugging job from {args.job}')
     # Create tool runner.
