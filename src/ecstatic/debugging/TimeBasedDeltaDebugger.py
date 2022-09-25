@@ -192,7 +192,7 @@ def main():
     successful = job.predicate(finished_job)
     if successful:
         logger.info("Predicate succeeded")
-        exit(0)
+        exit(-1)
     else:
         logger.info("Predicate failed.")
-        exit(-1)
+        exit(0)
