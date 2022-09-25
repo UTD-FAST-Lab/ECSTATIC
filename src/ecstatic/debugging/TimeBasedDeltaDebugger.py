@@ -18,6 +18,11 @@
 import argparse
 import copy
 import logging
+from pathlib import Path
+
+if __name__ == '__main__':
+    logging.basicConfig(filename="./deltadebugger.log", filemode="a", level=logging.DEBUG)
+
 import os
 import pathlib
 import shutil
@@ -26,7 +31,6 @@ import tempfile
 from abc import abstractmethod
 from dataclasses import dataclass
 from functools import partial
-from pathlib import Path
 from typing import Optional, Callable, TypeAlias, Set, List
 
 import dill as pickle
@@ -185,4 +189,10 @@ def main():
     partial_function = partial(job.runner.run_job, output_folder=tmpdir)
     finished_job = partial_function(job.finished_job.job)
 
-    exit(0 if job.predicate(finished_job) else 1)
+    successful = job.predicate(finished_job)
+    if successful:
+        logger.info("Predicate succeeded")
+        exit(0)
+    else:
+        logger.info("Predicate failed.")
+        exit(-1)
