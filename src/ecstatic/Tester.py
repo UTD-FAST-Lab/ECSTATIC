@@ -207,7 +207,7 @@ def main():
     #     case 'violation': debugger = JavaViolationDeltaDebugger(runner, reader, checker, hdd_only=args.hdd_only)
     #     case 'benchmark': debugger = JavaBenchmarkDeltaDebugger(runner, reader, checker, hdd_only=args.hdd_only)
     #     case _: debugger = None
-    debugger = TimeBasedDeltaDebugger(runner, reader, checker, 5 * 60)
+    debugger = TimeBasedDeltaDebugger(runner, reader, checker, 2 * 60)
 
     t = ToolTester(generator, runner, debugger, results_location,
                    num_processes=args.jobs, fuzzing_timeout=args.fuzzing_timeout,

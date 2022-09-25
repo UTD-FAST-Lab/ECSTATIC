@@ -20,9 +20,6 @@ import copy
 import logging
 from pathlib import Path
 
-if __name__ == '__main__':
-    logging.basicConfig(filename="./deltadebugger.log", filemode="a", level=logging.DEBUG)
-
 import os
 import pathlib
 import shutil
@@ -179,6 +176,7 @@ def main():
     parser.add_argument("job", help="The location of the pickled job.")
     args = parser.parse_args()
 
+    logging.basicConfig(filename=str(Path(args.job).parent / Path("deltadebugger.log")), filemode="a", level=logging.DEBUG)
     with open(args.job, 'rb') as f:
         job: DeltaDebuggingJob = pickle.load(f)
 
