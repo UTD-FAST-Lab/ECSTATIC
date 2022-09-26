@@ -166,7 +166,6 @@ class TimeBasedDeltaDebugger():
             f.write("#!/bin/bash\n")
             cmd = f"deltadebugger {job_tmp.name}"
             f.write(cmd + "\n")
-            f.write("if [ $? -eq 0 ]; then; echo ERR; fi ")
             result = f.name
             logger.info(f"Wrote cmd {cmd} to delta debugging script.")
         return result
@@ -192,7 +191,7 @@ def main():
     successful = job.predicate(finished_job)
     if successful:
         logger.info("Predicate succeeded")
-        exit(-1)
+        exit(255)
     else:
         logger.info("Predicate failed.")
         exit(0)
