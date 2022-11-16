@@ -92,16 +92,21 @@
       ]
     },
     {
-      "name": "handleStaticInit",
+      "name": "noHandleStaticInit",
       "levels": ["TRUE", "FALSE"],
       "default": "FALSE",
       "orders": [
         {
-          "left": "TRUE",
+          "left": "FALSE",
           "order": "MST",
-          "right": "FALSE"
+          "right": "TRUE"
         }
       ]
+    },
+    {
+      "name": "noHandleZeroLengthArray",
+      "levels": ["TRUE", "FALSE"],
+      "default": "FALSE"
     },
     {
       "name": "useConstantSpecificKeys",
