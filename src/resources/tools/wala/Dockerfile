@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y git openjdk-11-jdk maven
 WORKDIR /
 RUN git clone https://github.com/amordahl/WALAInterface --depth 1
 WORKDIR /WALAInterface
+RUN git checkout developer_config_space
 RUN mvn compile package
 
 FROM ecstatic/base-image
