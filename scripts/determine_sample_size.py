@@ -17,11 +17,9 @@ def main():
             record = json.load(f)
         for bs in record['benchmarks_sample']:
             san = re.search(r"name='(.*?)'", bs).group(1)
-            print(f"Sanitized {bs} to {san}")
             benchmark_sample.add(san)
         for po in record['partial_order_sample']:
             san = re.sub(r"(\d.*)", "",  po)
-            print(f"Sanitized {po} to {san}")
             partial_order_sample.add(san)
         total_benchmarks = max(total_benchmarks, len(record['benchmarks']))
         total_partial_orders = max(total_partial_orders, len(record['partial_orders'].keys()))
