@@ -1,5 +1,6 @@
 import argparse
 import json
+import re
 
 p = argparse.ArgumentParser()
 p.add_argument("files", nargs="+")
@@ -15,9 +16,9 @@ def main():
         with open(fi) as f:
             record = json.load(f)
         for bs in record['benchmarks_sample']:
-            benchmark_sample.update(bs)
+            benchmark_sample.update(re.search(r"name='(.*)'", bs).group(1))
         for po in record['partial_order_sample']:
-            partial_order_sample.update(po)
+            partial_order_sample.update(re.sub(r"(\d.*)", "",  po))
         total_benchmarks = max(total_benchmarks, len(record['benchmarks']))
         total_partial_orders = max(total_partial_orders, len(record['partial_orders'].keys()))
 
