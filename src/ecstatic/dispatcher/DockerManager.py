@@ -15,12 +15,10 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-
-import importlib
+from importlib.resources import files, as_file
 import logging
 import os
 import subprocess
-from importlib.resources import path
 from pathlib import Path
 
 import docker
@@ -36,14 +34,10 @@ def build_image(tool: str, nocache: bool = False):
         logger.info("Creating base image")
         cmd = ['docker', 'build', '.', '-f', 'base_image.dockerfile', '-t', get_image_name(tool)]
         print(f'Building docker image with command {" ".join(cmd)}')
-        # image = client.images.build(path=".", dockerfile="base_image.dockerfile", tag=get_image_name(tool), nocache=nocache)
-        # with open('base_image.dockerfile', 'rb') as df:
-        #     logging.info("Building base image.")
-        #     image = client.build(fileobj=df, tag=get_image_name(tool))
     else:
         logger.info(f"Building image for {tool}")
-        cmd = ['docker', 'build', str(importlib.resources.path(f"src.resources.tools", tool)),
-               '-t', get_image_name(tool)]
+        with as_file(files("src.resources.tools").joinpath(tool)) as tool:
+            cmd = ['docker', 'build', str(tool),'-t', get_image_name(tool)]
         print(f'Building docker image with command {" ".join(cmd)}')
     if nocache:
         cmd.append('--no-cache')
@@ -89,6 +83,8 @@ def start_runner(tool: str, benchmark: str, task: str, args):
 
 
 def get_image_name(tool: str):
+    if isinstance(tool, Path):
+        tool = tool.name
     if tool == 'base':
         return 'ecstatic/base-image'
     return f'ecstatic/tools/{tool}'

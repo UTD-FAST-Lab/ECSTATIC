@@ -32,37 +32,6 @@ from src.ecstatic.util.UtilClasses import FinishedFuzzingJob, BenchmarkRecord
 
 logger = logging.getLogger(__name__)
 
-# def num_tp_fp_fn(output_file: str, apk_name: str) -> Dict[str, Set[Flow]]:
-#     """
-#     Given an output file and the apk name, check the ground truth file.
-#     """
-#     try:
-#         output_flows = [Flow(f) for f in ElementTree.parse(output_file).getroot().find('flows').findall('flow')]
-#     except AttributeError:
-#         output_flows = []
-#
-#     logging.warning("Made a change for DroidBench -- make sure to revert if you need to do FossDroid!")
-#     gt_flows = list(
-#         filter(
-#             lambda f: category_and_apk(apk_name) == category_and_apk(f.get_full_file()),
-#             [Flow(f) for f in
-#              ElementTree.parse(config.configuration['ground_truth_location']).getroot().findall('flow')]
-#         )
-#     )
-#     tp = [f for f in gt_flows if f.get_classification() == 'TRUE']
-#     fp = [f for f in gt_flows if f.get_classification() == 'FALSE']
-#     print(f'{len(tp)} true positives and {len(fp)} false positives for this apk.')
-#     if len(set(fp)) > 0:
-#         logger.info(f'Found {len(set(fp))} false positives in {gt_flows}')
-#     result = dict()
-#     result['tp'] = (set(filter(lambda f: f in tp, output_flows)))
-#     result['fp'] = (set(filter(lambda f: f in fp, output_flows)))
-#     result['fn'] = (set(filter(lambda f: f not in tp, output_flows)))
-#     print(f'Found {len(result["tp"])} true positives.')
-#     print(f'Found {len(result["fp"])} false positives.')
-#     return result
-
-
 def create_shell_file(job: FuzzingJob, output_folder: str) -> str:
     """Create a shell script file with the configuration the fuzzer is generating."""
     config_str = FlowDroidRunner.dict_to_config_str(job.configuration)
@@ -74,7 +43,9 @@ def create_shell_file(job: FuzzingJob, output_folder: str) -> str:
                                    f"{hash_value}.sh")
     if not os.path.exists(shell_file_name):
         logger.debug(f'Creating shell file {shell_file_name}')
-        with open(importlib.resources.path("src.resources.tools.flowdroid", "flowdroid.sh"), 'r') as infile:
+        with importlib.resources.as_file(
+                importlib.resources.files("src.resources.tools.flowdroid").joinpath("flowdroid.sh")) as shell_file,\
+                open(shell_file, 'r') as infile:
             content = infile.readlines()
 
         content = map(lambda r: r.replace('%CONFIG%', config_str), content)
@@ -109,7 +80,7 @@ def create_xml_config_file(shell_file_path: str, apk: BenchmarkRecord, output_fo
     #     flowdroid_output += '.verify'
     if not os.path.exists(xml_output_file):
         logger.info(f'Creating {xml_output_file}')
-        aql_config = ElementTree.parse(importlib.resources.path("src.resources.tools.flowdroid", "template.xml"))
+        aql_config = ElementTree.parse(importlib.resources.as_file(importlib.resources.files("src.resources.tools.flowdroid").joinpath("template.xml")))
         for element in aql_config.iter():
             if element.tag == 'path':
                 element.text = os.path.abspath("/FlowDroid")
@@ -117,11 +88,11 @@ def create_xml_config_file(shell_file_path: str, apk: BenchmarkRecord, output_fo
                 element.text = f"{os.path.abspath(shell_file_path)} %MEMORY% %APP_APK% %ANDROID_PLATFORMS% " + \
                                flowdroid_output
             elif element.tag == 'runOnExit':
-                element.text = os.path.abspath(
-                    importlib.resources.path("src.resources.tools.flowdroid", "flushMemory.sh"))
+                element.text = os.path.abspath(importlib.resources.as_file(
+                    importlib.resources.files("src.resources.tools.flowdroid").joinpath("flushMemory.sh")))
             elif element.tag == 'runOnAbort':
-                element.text = os.path.abspath(
-                    f"{importlib.resources.path('src.resources.tools.flowdroid', 'killpid.sh')} %PID%")
+                element.text = f"{os.path.abspath(importlib.resources.as_file(importlib.resources.files('src.resources.tools.flowdroid').joinpath('killpid.sh')))} " \
+                               f"%PID%"
             elif element.tag == 'result':
                 element.text = flowdroid_output
             elif element.tag == 'androidPlatforms':
@@ -173,7 +144,7 @@ class FlowDroidRunner(AbstractCommandLineToolRunner):
         """
         # create output file
         try:
-            cmd = [os.path.abspath(importlib.resources.path("src.resources.tools.flowdroid", "run_aql.sh")),
+            cmd = [os.path.abspath(importlib.resources.as_file(importlib.resources.files("src.resources.tools.flowdroid").joinpath("run_aql.sh"))),
                    os.path.abspath(xml_config_file),
                    os.path.abspath(job.target.name), output]
             if self.timeout is not None:
