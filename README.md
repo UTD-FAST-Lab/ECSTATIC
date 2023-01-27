@@ -88,19 +88,40 @@ dispatcher -t flowdroid -b fossdroid --tasks taint --timeout 30 -d violation --h
 
 ## Smaller Experiments for Artifact Reviewers
 
+Please follow the instructions in INSTALL.md before trying the experiments in this section.
+
 We suggest artifact reviewers use FlowDroid, SOOT, or WALA, as these tools are much faster relative to DOOP, which 
 is slow to build and takes a lot of system memory.
 
 We have provided small versions of the CATS Microbenchmark, Droidbench, and DaCapo-2006 under the names `cats-small`. 
-`droidbench-small`, and `dacapo-small`, respectively.
+`droidbench-small`, and `dacapo-small`, respectively. These benchmarks each contain one program which exhibited a violation:
 
-We describe running a single experiment with FlowDroid in order to find the bug described in Figure 1 below:  
+- `cats-small` contains *Ser1.jar*, which exhibits a violation on WALA, and *Unsafe1.jar*, which exhibits a violation on SOOT.
+- `droidbench-small` contains *ActivityLifecycle1.apk*, on which we detected the bug in FlowDroid's *codeelimination* option as described in Figure 1.
+- `dacapo-small` contains *hsqldb.jar*, which exhibits a violation on WALA and can be reduced by 99% in the delta debugging phase.
 
-```#TODO```
+For example, to run FlowDroid on `droidbench-small`, run the following command:
+
+```commandline
+dispatcher -t flowdroid -b droidbench-small --tasks taint
+```
 
 ## How to Read ECSTATIC's Output
 
-```#TODO```
+By default, ECSTATIC creates a *results* folder for its results, but the location of the results can be controlled with the `--results-location` option.
+
+We explain the results of ECSTATIC through the example above, where we run FlowDroid on the `droidbench-small` benchmark.
+
+```commandline
+results
+|- flowdroid
+|  |- droidbench-small
+|     |- campaign0
+|     |  |- configurations
+|     |  |-
+|     |- <seed>
+```
+
 
 ## Extending with New Tools
 

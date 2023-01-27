@@ -80,25 +80,26 @@ def create_xml_config_file(shell_file_path: str, apk: BenchmarkRecord, output_fo
     #     flowdroid_output += '.verify'
     if not os.path.exists(xml_output_file):
         logger.info(f'Creating {xml_output_file}')
-        aql_config = ElementTree.parse(importlib.resources.as_file(importlib.resources.files("src.resources.tools.flowdroid").joinpath("template.xml")))
-        for element in aql_config.iter():
-            if element.tag == 'path':
-                element.text = os.path.abspath("/FlowDroid")
-            elif element.tag == 'run':
-                element.text = f"{os.path.abspath(shell_file_path)} %MEMORY% %APP_APK% %ANDROID_PLATFORMS% " + \
-                               flowdroid_output
-            elif element.tag == 'runOnExit':
-                element.text = os.path.abspath(importlib.resources.as_file(
-                    importlib.resources.files("src.resources.tools.flowdroid").joinpath("flushMemory.sh")))
-            elif element.tag == 'runOnAbort':
-                element.text = f"{os.path.abspath(importlib.resources.as_file(importlib.resources.files('src.resources.tools.flowdroid').joinpath('killpid.sh')))} " \
-                               f"%PID%"
-            elif element.tag == 'result':
-                element.text = flowdroid_output
-            elif element.tag == 'androidPlatforms':
-                element.text = "/lib/android-sdk/platforms"
+        with importlib.resources.as_file(importlib.resources.files("src.resources.tools.flowdroid").joinpath("template.xml")) as template:
+            aql_config = ElementTree.parse(template)
+            for element in aql_config.iter():
+                if element.tag == 'path':
+                    element.text = os.path.abspath("/FlowDroid")
+                elif element.tag == 'run':
+                    element.text = f"{os.path.abspath(shell_file_path)} %MEMORY% %APP_APK% %ANDROID_PLATFORMS% " + \
+                                   flowdroid_output
+                elif element.tag == 'runOnExit':
+                    with importlib.resources.as_file(importlib.resources.files("src.resources.tools.flowdroid").joinpath("flushMemory.sh")) as flushMemory:
+                        element.text = os.path.abspath(flushMemory)
+                elif element.tag == 'runOnAbort':
+                    with importlib.resources.as_file(importlib.resources.files('src.resources.tools.flowdroid').joinpath('killpid.sh')) as killPid:
+                        element.text = f"{os.path.abspath(killPid)} %PID%"
+                elif element.tag == 'result':
+                    element.text = flowdroid_output
+                elif element.tag == 'androidPlatforms':
+                    element.text = "/lib/android-sdk/platforms"
 
-        aql_config.write(xml_output_file)
+            aql_config.write(xml_output_file)
     else:
         logger.info(f'AQL config file {xml_output_file} already exists. Returning')
     return xml_output_file
@@ -144,23 +145,24 @@ class FlowDroidRunner(AbstractCommandLineToolRunner):
         """
         # create output file
         try:
-            cmd = [os.path.abspath(importlib.resources.as_file(importlib.resources.files("src.resources.tools.flowdroid").joinpath("run_aql.sh"))),
-                   os.path.abspath(xml_config_file),
-                   os.path.abspath(job.target.name), output]
-            if self.timeout is not None:
-                cmd.append(str(self.timeout))
-            curdir = os.path.abspath(os.curdir)
-            os.chdir("/AQL-System/target/build")
-            logger.info(f'Cmd is {" ".join(cmd)}')
-            cp = subprocess.run(cmd, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, text=True)
-            if 'FlowDroid successfully executed' not in cp.stdout:
-                raise RuntimeError(cp.stdout)
-            os.chdir(curdir)
-            if not os.path.exists(output):
-                answers = ElementTree.Element('answer')
-                tree = ElementTree.ElementTree(answers)
-                tree.write(output)
-            return output, cp.stdout
+            with importlib.resources.as_file(importlib.resources.files("src.resources.tools.flowdroid").joinpath("run_aql.sh")) as run_aql:
+                cmd = [os.path.abspath(run_aql),
+                       os.path.abspath(xml_config_file),
+                       os.path.abspath(job.target.name), output]
+                if self.timeout is not None:
+                    cmd.append(str(self.timeout))
+                curdir = os.path.abspath(os.curdir)
+                os.chdir("/AQL-System/target/build")
+                logger.info(f'Cmd is {" ".join(cmd)}')
+                cp = subprocess.run(cmd, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, text=True)
+                if 'FlowDroid successfully executed' not in cp.stdout:
+                    raise RuntimeError(cp.stdout)
+                os.chdir(curdir)
+                if not os.path.exists(output):
+                    answers = ElementTree.Element('answer')
+                    tree = ElementTree.ElementTree(answers)
+                    tree.write(output)
+                return output, cp.stdout
 
         except KeyboardInterrupt:
             if os.path.exists(output):
