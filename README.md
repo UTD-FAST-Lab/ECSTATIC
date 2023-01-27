@@ -94,7 +94,13 @@ is slow to build and takes a lot of system memory.
 We have provided small versions of the CATS Microbenchmark, Droidbench, and DaCapo-2006 under the names `cats-small`. 
 `droidbench-small`, and `dacapo-small`, respectively.
 
-We describe running 
+We describe running a single experiment with FlowDroid in order to find the bug described in Figure 1 below:  
+
+```#TODO```
+
+## How to Read ECSTATIC's Output
+
+```#TODO```
 
 ## Extending with New Tools
 
