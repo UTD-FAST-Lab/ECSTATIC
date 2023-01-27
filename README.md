@@ -150,7 +150,7 @@ to just check equality between records. However, if you need to determine ground
 [ViolationCheckerFactory.py](src/ecstatic/violation_checkers/ViolationCheckerFactory.py).
 8. That's it!
 
-# Extending with New Benchmarks
+## Extending with New Input Programs
 Adding a new benchmark is relatively simple.
 1. Add a new folder to [src/resources/benchmarks](src/resources/benchmarks), with the name of your benchmark.
 2. In that folder, create a `build.sh` script that will pull the benchmark code, build it, and put it under 
