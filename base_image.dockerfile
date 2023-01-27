@@ -32,7 +32,6 @@ RUN cd ProjectLineCounter/ &&  mvn install && \
     cd ../ViolationDeltaDebugger/ && mvn package -DskipTests
 WORKDIR /
 FROM python-build
-RUN npm install -g jsdelta
 COPY --from=delta-debugger-build /SADeltaDebugger /SADeltaDebugger
 COPY --from=ecstatic-build /venv /venv
 COPY --from=ecstatic-build /ECSTATIC /ECSTATIC

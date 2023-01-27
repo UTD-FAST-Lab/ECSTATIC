@@ -1,50 +1,102 @@
 # ECSTATIC
 
+## What This Artifact Does
 ECSTATIC (Extensible, Customizable Static Analysis Tester Informed by Configuration) is a flexible tool that can be used to test configurable 
 static analyses on a variety of benchmarks.
-ECSTATIC can be extended to use alternative analyses, but currently, it can run 
+ECSTATIC can be extended to use alternative analyses and benchmarks, but currently, it can run 
 call graph analyses on WALA, SOOT, and DOOP, as well as taint analysis on Android
 applications using FlowDroid.
 
-# Prerequisites
-This application is written for Python version >= 3.10.0. Furthermore, 
-ECSTATIC runs its analyses in Docker containers in order to maintain consistent
-environments across runs, so you must have a working Docker installation.
-We know ECSTATIC can successfully build on Ubuntu, Windows, and Mac (as of 2022-07-22, building on M1 Mac takes
-a long time, as it has to compile Z3 from scratch).
+## How To Replicate the Experiments From the Paper
 
-# Usage
+Please follow the instructions in INSTALL.md before trying the instructions in this section.
 
-We recommend creating a virtual environment for ECSTATIC. To do so, run
+***For artifact reviewers:*** These experiments took thousands of hours of machine time to perform. We provide smaller experiments to verify the functionality of the artifact in the next section.
+### Base Testing Phase Only
+The following eight commands will run the base testing phase for all tool/benchmark combinations, without delta debugging or random testing. The results from these experiments correspond to the left half of each numerical cell in Table 1.
+```commandline
+dispatcher -t soot -b cats-microbenchmark --tasks cg --timeout 15
+dispatcher -t soot -b dacapo-2006 --tasks cg --timeout 30
+dispatcher -t doop -b cats-microbenchmark --tasks cg --timeout 30
+dispatcher -t doop -b dacapo-2006 --tasks cg --timeout 45
+dispatcher -t wala -b cats-microbenchmark --tasks cg --timeout 15
+dispatcher -t wala -b dacapo-2006 --tasks cg --timeout 30
+dispatcher -t flowdroid -b droidbench --tasks taint --timeout 15
+dispatcher -t flowdroid -b fossdroid --tasks taint --timeout 30
+```
 
-`python -m venv <name_of_virtual_environment>`
+### Random Testing
 
-where 'python' points to a python 3.8 or higher installation. This will create a new folder. If, for example, you named your folder 'venv', then
-you can activate it as follows:
+Random testing is controlled through the following command line parameters:
 
-`source ./venv/bin/activate`
+-`--fuzzing-timeout`: Timeout in minutes. For our experiments, this should be (24*60)=1440. By default, this is 0, which tells ECSTATIC to stop after baseline testing.
 
-In order to install ECSTATIC's dependencies, from the root directory of the repository, run
+-`--full-campaigns`: Passing this option performs exhaustive testing. Otherwise, non-exhaustive testing is performed.
 
-`python -m pip install -r requirements.txt`
+-`--seed`: The random seed that is used for random testing. For our experiments, we used the seeds 18331 and 3213.
 
-Where `python` points to a Python executable of at least version 3.8.0. 
-This will install all of the Python dependencies required. Then, in order to install
-the application, run
+To perform the random testing experiments, run the following commands.
 
-`python -m pip install -e .`
+```commandline
+# Exhaustive Testing
+dispatcher -t soot -b cats-microbenchmark --tasks cg --timeout 15 --fuzzing-timeout 1440 --full-campaigns
+dispatcher -t soot -b dacapo-2006 --tasks cg --timeout 30 --fuzzing-timeout 1440 --full-campaigns
+dispatcher -t wala -b cats-microbenchmark --tasks cg --timeout 15 --fuzzing-timeout 1440 --full-campaigns
+dispatcher -t wala -b dacapo-2006 --tasks cg --timeout 30 --fuzzing-timeout 1440 --full-campaigns
+dispatcher -t flowdroid -b droidbench --tasks taint --timeout 15 --fuzzing-timeout 1440 --full-campaigns
+dispatcher -t flowdroid -b fossdroid --tasks taint --timeout 30 --fuzzing-timeout 1440 --full-campaigns
 
-We require the `-e` to build in-place. Currently, omitting this option will cause the Dockerfile resolution to fail when we try to build tool-specific images.
+# Non-Exhaustive Testing
+dispatcher -t soot -b cats-microbenchmark --tasks cg --timeout 15 --fuzzing-timeout 1440
+dispatcher -t soot -b dacapo-2006 --tasks cg --timeout 30 --fuzzing-timeout 1440
+dispatcher -t wala -b cats-microbenchmark --tasks cg --timeout 15 --fuzzing-timeout 1440
+dispatcher -t wala -b dacapo-2006 --tasks cg --timeout 30 --fuzzing-timeout 1440
+dispatcher -t flowdroid -b droidbench --tasks taint --timeout 15 --fuzzing-timeout 1440
+dispatcher -t flowdroid -b fossdroid --tasks taint --timeout 30 --fuzzing-timeout 1440
+```
 
-This installation will put three executables on your system PATH: `dispatcher`, `tester`, and `deltadebugger`.
-`dispatcher` is the command you run from your host, while `tester` is the command you run from inside the Docker container (under normal usage, a user
-will never invoke `tester` themselves, but it can be useful for debugging to skip
-container creation.)
+*Note that we ran our experiments with 4 cores each. Running with a different number of cores may result in a drastically different number of testing iterations, in addition to differences caused by hardware differences, system workload, etc.*
 
-Simply run `dispatcher --help` from anywhere in order to see the helpdoc on how to
-invoke ECSTATIC.
+### Delta Debugging
 
-# Extending with New Tools
+Delta debugging is controlled through two command-line parameters:
+
+-`-d {none,violation}` Controls whether to perform delta debugging. Setting `-d` to `none` (default) performs no delta debugging. Setting `-d` to `violation` performs violation-aware delta debugging after testing.
+
+-`--hdd-only` Passing this will only do hierarchical delta debugging, as opposed to the two-phase delta debugging described in Section III.C.
+'
+
+To replicate our delta debugging experiments (RQ2), run the following commands:
+
+```commandline
+# Base Testing With Two-Phase Delta Debugging
+dispatcher -t soot -b cats-microbenchmark --tasks cg --timeout 15 -d violation
+dispatcher -t soot -b dacapo-2006 --tasks cg --timeout 30 -d violation
+dispatcher -t wala -b cats-microbenchmark --tasks cg --timeout 15 -d violation
+dispatcher -t wala -b dacapo-2006 --tasks cg --timeout 30 -d violation
+dispatcher -t flowdroid -b droidbench --tasks taint --timeout 15 -d violation
+dispatcher -t flowdroid -b fossdroid --tasks taint --timeout 30 -d violation
+
+# Base Testing With HDD-Only Delta Debugging
+dispatcher -t soot -b cats-microbenchmark --tasks cg --timeout 15 -d violation --hdd-only
+dispatcher -t soot -b dacapo-2006 --tasks cg --timeout 30 -d violation --hdd-only
+dispatcher -t wala -b cats-microbenchmark --tasks cg --timeout 15 -d violation --hdd-only
+dispatcher -t wala -b dacapo-2006 --tasks cg --timeout 30 -d violation --hdd-only
+dispatcher -t flowdroid -b droidbench --tasks taint --timeout 15 -d violation --hdd-only
+dispatcher -t flowdroid -b fossdroid --tasks taint --timeout 30 -d violation --hdd-only
+```
+
+## Smaller Experiments for Artifact Reviewers
+
+We suggest artifact reviewers use FlowDroid, SOOT, or WALA, as these tools are much faster relative to DOOP, which 
+is slow to build and takes a lot of system memory.
+
+We have provided small versions of the CATS Microbenchmark, Droidbench, and DaCapo-2006 under the names `cats-small`. 
+`droidbench-small`, and `dacapo-small`, respectively.
+
+We describe running 
+
+## Extending with New Tools
 
 To add a new tool to ECSTATIC, you must take the following steps:
 1. Create a new Dockerfile for your tool under `src/resources/tools/<tool_name>`.

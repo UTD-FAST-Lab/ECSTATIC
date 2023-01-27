@@ -174,9 +174,9 @@ def main():
 
     # Check for groundtruths
     from importlib.resources import files
-    with as_file(files("src.resources.configuration_spaces"), f"{args.tool}_config.json") as model_location,\
-         as_file(files("src.resources.grammars"), f"{args.tool}_grammar.json") as grammar,\
-         as_file(files("src.resources.tools"), f"{args.tool}") as tool_dir:
+    with as_file(files("src.resources.configuration_spaces").joinpath(f"{args.tool}_config.json")) as model_location,\
+         as_file(files("src.resources.grammars").joinpath(f"{args.tool}_grammar.json")) as grammar,\
+         as_file(files("src.resources.tools").joinpath(f"{args.tool}")) as tool_dir:
 
         files = os.listdir(tool_dir)
         groundtruths = None
