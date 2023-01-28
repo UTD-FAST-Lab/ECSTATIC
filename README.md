@@ -55,7 +55,7 @@ dispatcher -t flowdroid -b droidbench --tasks taint --timeout 15 --fuzzing-timeo
 dispatcher -t flowdroid -b fossdroid --tasks taint --timeout 30 --fuzzing-timeout 1440
 ```
 
-*Note that we ran our experiments with 4 cores each. Running with a different number of cores may result in a drastically different number of testing iterations, in addition to differences caused by hardware differences, system workload, etc.*
+*Note that we ran our random testing experiments with 4 cores each. Running with a different number of cores may result in a drastically different number of testing iterations, in addition to differences caused by hardware differences, system workload, etc.*
 
 ### Delta Debugging
 
@@ -167,7 +167,7 @@ Both of these scripts work the same way, in that they proces a list of results f
 
 ```commandline
 # RQ1
-find . -type f -wholename '*/VIOLATION/DIRECT/*.json' | python scripts/generate_csvs.py > /violation/report/location.csv
+find . -type f -wholename '*/VIOLATION/DIRECT/*.json' | grep -v "delta_debugging" | python scripts/generate_csvs.py > /violation/report/location.csv
 
 # RQ2
 find . -type f -name 'log.txt' | python scripts/generate_delta_debugging_reports.py > /delta/debugging/report/location.csv
