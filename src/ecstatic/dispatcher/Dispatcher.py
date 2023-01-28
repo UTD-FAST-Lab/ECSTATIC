@@ -38,22 +38,20 @@ def parse_args():
         parser = argparse.ArgumentParser(description='A metamorphic tester for configurable static analyzers')
         parser.add_argument('-t',
                             '--tools',
-                            help=('static analysis tools to run'
-                                  'all tools by default'),
+                            help=('Static analysis tools to run.'),
                             nargs='+',
                             required=True,
                             choices=list(filter(lambda x: not x.startswith('__'), os.listdir(tools_dir))))
         parser.add_argument('-b',
                             '--benchmarks',
-                            help=('benchmark programs to run, incompatible tool and benchmark pairs will be skipped'
-                                  'all benchmarks by default'),
+                            help=('Input programs to run'),
                             nargs='+',
                             required=True,
                             choices=list(filter(lambda x: not x.startswith('__'), os.listdir(benchmarks_dir))))
         parser.add_argument(
             '--tasks',
-            help="Currently a useless option as all tools only support one task. However, this is meant to provide support "
-                 "for tools that might allow multiple tasks.",
+            help="Whether the tool computes call graphs or taint analysis results. Currently kinda useless, but built-in in case we ever have tools"
+                 " that have multiple client analyses implemented.",
             nargs='+',
             required=True,
             default='cg',
