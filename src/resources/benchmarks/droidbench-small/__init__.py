@@ -14,17 +14,4 @@
 #
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from typing import Tuple, Any
 
-from src.ecstatic.readers.callgraph.AbstractCallGraphReader import AbstractCallGraphReader
-from src.ecstatic.util.CGCallSite import CGCallSite
-from src.ecstatic.util.CGTarget import CGTarget
-
-
-class WALAJSCallGraphReader(AbstractCallGraphReader):
-
-    def process_line(self, line: str) -> Tuple[Any, Any]:
-        match line.split("\t"):
-            case [caller_function, caller_line, caller_context, callee_target, callee_context]:
-                return CGCallSite(caller_function, caller_line, caller_context), CGTarget(callee_target, callee_context)
-            case _: raise ValueError(f"Could not read line {line}")

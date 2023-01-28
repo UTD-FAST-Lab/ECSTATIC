@@ -112,10 +112,6 @@ class AbstractDeltaDebugger(ABC):
                 shutil.rmtree(directory, ignore_errors=True)
             Path(directory).mkdir(exist_ok=True, parents=True)
 
-            # Make ground truth.
-            with open(os.path.join(directory, 'ground_truth.json'), 'w') as f:
-                json.dump(ground_truth, f)
-
             # Copy benchmarks folder so that we have our own code location.
             shutil.copytree(src="/benchmarks", dst=os.path.join(directory, "benchmarks"))
             potential_violation.job1.job.target = validate(potential_violation.job1.job.target, directory)

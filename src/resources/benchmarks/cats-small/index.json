@@ -1,0 +1,11 @@
+{
+  "benchmark": [
+    {
+      "name": "Serialization/Ser1/target/Ser1.jar",
+      "sources": [
+        "Serialization/Ser1/src"
+      ],
+      "build_script": "Serialization/Ser1/build.sh"
+    }
+  ]
+}

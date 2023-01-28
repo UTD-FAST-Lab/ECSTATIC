@@ -226,9 +226,9 @@ to just check equality between records. However, if you need to determine ground
 8. That's it!
 
 ## Extending with New Input Programs
-Adding a new benchmark is relatively simple.
-1. Add a new folder to [src/resources/benchmarks](src/resources/benchmarks), with the name of your benchmark.
-2. In that folder, create a `build.sh` script that will pull the benchmark code, build it, and put it under 
+Adding a new input program is relatively simple.
+1. Add a new folder to [src/resources/benchmarks](src/resources/benchmarks), with the name of your input program (or set of input programs).
+2. In that folder, create a `build.sh` script that will pull the code, build it, and put it under 
 `/benchmarks/<benchmark_name>` in the Docker container. Add an `index.json` file specifying the programs you want to 
 run. The resolver for this file will automatically resolve paths so long as they are unique in the `/benchmarks`
 directory.  

@@ -1,0 +1,11 @@
+{
+  "benchmark": [
+    {
+      "name": "ActivityLifecycle1/ActivityLifecycle1/build/outputs/apk/debug/ActivityLifecycle1.apk",
+      "sources": [
+        "ActivityLifecycle1/ActivityLifecycle1"
+      ],
+      "build_script": "ActivityLifecycle1/build.sh"
+    }
+  ]
+}

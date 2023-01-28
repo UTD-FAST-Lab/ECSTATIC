@@ -33,7 +33,6 @@ from enum_actions import enum_action
 
 from tqdm import tqdm
 
-from src.ecstatic.debugging.JavaBenchmarkDeltaDebugger import JavaBenchmarkDeltaDebugger
 from src.ecstatic.debugging.JavaViolationDeltaDebugger import JavaViolationDeltaDebugger
 from src.ecstatic.fuzzing.generators import FuzzGeneratorFactory
 from src.ecstatic.fuzzing.generators.FuzzGenerator import FuzzGenerator, FuzzOptions
