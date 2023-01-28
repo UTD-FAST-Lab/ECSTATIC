@@ -155,7 +155,7 @@ The results of violation detection and delta debugging are in the `violation` an
 
 In our example, one such directory is: `4f9b34cf1904a0ff769463243bdcfe18/3c2c6c9d6e896c028463ca607b7fce7a/codeelimination/REMOVECODE/MST/DEFAULT`, which should be read as containing all the violations obtained by comparing configurations `4f9b...` and `3c26...` on the partial order *codeelimination.REMOVECODE* is at least as sound as *codeelimination.DEFAULT* (precision partial orders will use `MPT` rather than `MST`).
 
-Within these directories are JSON files that contain violation records. Each input program with which a violation is detected will produce a JSON file. The JSON file lists the two configurations that were compared and the differences that resulted in the violation being detected.
+Within these directories are JSON files that contain violation records. Each input program with which a violation is detected will produce a JSON file. The JSON file lists the two configurations that were compared and the differences that resulted in the violation being detected. In the above example, `ActivityLifecycle1.apk.json` is the violation we use as an example in Figure 1 of our paper.
 
 Delta debugging results use a similar directory structure as violations, with the input program as an additional folder. If delta debugging was successful, this folder will contain a `log.txt` containing the statistics for the delta debugging run. `benchmarks` will contain a full copy of the input programs, so navigate to the location of the input being delta debugged to view the reduced source code.  
 
