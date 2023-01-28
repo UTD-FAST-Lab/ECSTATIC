@@ -14,10 +14,11 @@ FROM python-build AS ecstatic-build
 WORKDIR /
 RUN python3.10 -m venv /venv
 ENV PATH=/venv/bin:$PATH
-ADD . /ECSTATIC
-WORKDIR ECSTATIC
+ADD requirements.txt /requirements.txt
 RUN python -m pip install --upgrade pip
 RUN python -m pip install -r requirements.txt
+ADD . /ECSTATIC
+WORKDIR ECSTATIC
 RUN python -m pip install -e .
 
 FROM python-build AS delta-debugger-build
