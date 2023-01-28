@@ -1,18 +1,23 @@
 # Prerequisites
-This application is written for Python versions >=3.9.0. Furthermore, 
+This application is written for Python versions >=3.10.0. (Make sure in addition to the base python you have development packages and venv -- on Ubuntu 22.04 this is accomplished like:
+
+```commandline
+sudo apt install python3.11 python3.11-dev python3.11-venv
+```
+Furthermore, 
 ECSTATIC runs its analyses in Docker containers in order to maintain consistent
 environments across runs, so you must have a working Docker installation.
-We know ECSTATIC can successfully build on Ubuntu, Windows, and Mac.
 
-Note that, if you are running on an M1 Mac, building the initial Docker image takes a long time due to Z3 having to be built from scratch.
+Note that, if you are running on ARM architecture (e.g., Apple Silicon), Python will have to build Z3 from scratch, meaning your system must have CMake and a C compiler (e.g., gcc).
+Building the initial Docker image takes a long time due to Z3 having to be built from scratch.
 
 # Usage
 
 First, create a virtual environment for ECSTATIC. From the ECSTATIC directory, type
 
-`python -m venv .`
+`python -m venv .venv`
 
-where 'python' points to a python 3.9 or higher installation.
+where 'python' points to a python 3.10 or higher installation.
 We recommend using  [PyEnv](https://github.com/pyenv/pyenv) to manage
 multiple Python versions on a single system.
 
@@ -20,7 +25,7 @@ Running this command will create a new folder, `.venv`, in your ECSTATIC directo
 
 `source ./venv/bin/activate`
 
-You should see your shell prompt preceded with (.venv) or something similar, which indicates that you have activated the virtual environment.
+You should see your shell prompt preceded with (.venv), which indicates that you have activated the virtual environment.
 
 In order to install ECSTATIC's dependencies, run
 

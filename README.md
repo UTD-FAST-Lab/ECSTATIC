@@ -103,7 +103,7 @@ We have provided small versions of the CATS Microbenchmark, Droidbench, and DaCa
 For example, to run FlowDroid on `droidbench-small`, run the following command:
 
 ```commandline
-dispatcher -t flowdroid -b droidbench-small --tasks taint
+dispatcher -t flowdroid -b droidbench-small --tasks taint -d violation
 ```
 
 ## How to Read ECSTATIC's Output
