@@ -1,11 +1,11 @@
 {
   "benchmark": [
     {
-      "name": "Serialization/Ser1/target/Ser1.jar",
+      "name": "Unsafe/Unsafe1/target/Unsafe1.jar",
       "sources": [
-        "Serialization/Ser1/src"
+        "Unsafe/Unsafe1/src"
       ],
-      "build_script": "Serialization/Ser1/build.sh"
+      "build_script": "Unsafe/Unsafe1/build.sh"
     }
   ]
 }
