@@ -1,5 +1,5 @@
 # Prerequisites
-This application is written for Python versions >=3.10.0. (Make sure in addition to the base python you have development packages and venv -- on Ubuntu 22.04 this is accomplished like:
+This application is written for Python versions >=3.10.0. (Make sure in addition to the base python you have development packages and venv). For example, on Ubuntu 22.04 this is accomplished like:
 
 ```commandline
 sudo apt install python3.11 python3.11-dev python3.11-venv g++ gcc make
