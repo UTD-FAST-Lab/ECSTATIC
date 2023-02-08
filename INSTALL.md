@@ -17,7 +17,7 @@ First, create a virtual environment for ECSTATIC. From the ECSTATIC directory, t
 
 `python -m venv .venv`
 
-where 'python' points to a python 3.10 or higher installation.
+*where 'python' points to a python 3.10 or higher installation.*
 We recommend using  [PyEnv](https://github.com/pyenv/pyenv) to manage
 multiple Python versions on a single system.
 
