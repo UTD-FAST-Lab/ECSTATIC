@@ -23,7 +23,7 @@ multiple Python versions on a single system.
 
 Running this command will create a new folder, `.venv`, in your ECSTATIC directory. We next have to activate the virtual environment:
 
-`source ./venv/bin/activate`
+`source ./.venv/bin/activate`
 
 You should see your shell prompt preceded with (.venv), which indicates that you have activated the virtual environment.
 
