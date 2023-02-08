@@ -36,7 +36,7 @@ the application, run
 
 `python -m pip install -e .`
 
-We require the `-e` to build in-place. Currently, omitting this option will cause the Dockerfile resolution to fail when we try to build tool-specific images.
+We require the `-e .` to build in-place. Currently, omitting this option will cause the Dockerfile resolution to fail when we try to build tool-specific images.
 
 This installation will put three executables in your virtual environment's `/bin/` folder (as long as you have the virtual environment enabled, this directory is on your PATH, so the commands will be accessible): `dispatcher`, `tester`, and `deltadebugger`.
 `dispatcher` is the command you run from your host, while `tester` is the command you run from inside the Docker container (under normal usage, a user
