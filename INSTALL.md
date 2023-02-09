@@ -1,17 +1,4 @@
-# Prerequisites
-This application is written for Python versions >=3.10.0. (Make sure in addition to the base python you have development packages and venv). For example, on Ubuntu 22.04 this is accomplished like:
-
-```commandline
-sudo apt install python3.11 python3.11-dev python3.11-venv g++ gcc make
-```
-Furthermore, 
-ECSTATIC runs its analyses in Docker containers in order to maintain consistent
-environments across runs, so you must have a working Docker installation.
-
-Note that, if you are running on ARM architecture (e.g., Apple Silicon), Python will have to build Z3 from scratch, meaning your system must have CMake and a C compiler (e.g., gcc).
-Building the initial Docker image takes a long time due to Z3 having to be built from scratch.
-
-# Usage
+# Installation
 
 First, create a virtual environment for ECSTATIC. From the ECSTATIC directory, type
 
