@@ -3,7 +3,7 @@ This artifact works on Windows, Intel/Apple Silicon Macs, and Linux systems runn
 We have not tested on systems with AMD processors, but have no reason to believe there would be any issues.
 
 In terms of software requirements, the user must have:
-1. A Python executable of at least version 3.10, including the venv and development packages (`python3.XX-dev` and `python3.XX-venv` on Ubuntu). Note that Mac and Windows Python installers should already have these.
+1. A Python executable of at least version 3.10, including the venv and development packages (`python3.XX-dev` and `python3.XX-venv` on Ubuntu). Note that if you installed via `brew` or the Windows installer, your Python should already have these.
 2. A C and C++ compiler, e.g., `gcc` and `g++`.
 3. GNU `Make`
 4. For ARM architectures, you may also require `CMake`.
