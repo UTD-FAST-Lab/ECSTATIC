@@ -1,3 +1,5 @@
+# Prerequisites
+
 This artifact works on Windows, Intel/Apple Silicon Macs, and Linux systems running Intel processors. Note that, if you are running on ARM architecture (e.g., Apple Silicon), Python will have to build Z3 from scratch, meaning your system must have CMake.
 
 We have not tested on systems with AMD processors, but have no reason to believe there would be any issues.
