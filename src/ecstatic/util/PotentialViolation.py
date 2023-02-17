@@ -19,7 +19,7 @@ from typing import List, Dict, Iterable, Set, TypeVar, Tuple, Callable, Sized, C
 
 from src.ecstatic.models.Level import Level
 from src.ecstatic.util.PartialOrder import PartialOrder, PartialOrderType
-from src.ecstatic.util.UtilClasses import FinishedFuzzingJob
+from src.ecstatic.util.UtilClasses import FinishedAnalysisJob
 
 T = TypeVar('T')
 
@@ -141,8 +141,8 @@ class PotentialViolation:
 
     def __init__(self,
                  partial_orders: PartialOrder | Tuple[PartialOrder, PartialOrder],
-                 job1: FinishedFuzzingJob,
-                 job2: FinishedFuzzingJob,
+                 job1: FinishedAnalysisJob,
+                 job2: FinishedAnalysisJob,
                  job1_reader: Callable[[], Set[T]],
                  job2_reader: Callable[[], Set[T]]):
         self._violated: bool | None = None

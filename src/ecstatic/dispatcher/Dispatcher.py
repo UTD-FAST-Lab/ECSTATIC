@@ -19,6 +19,7 @@
 import argparse
 import importlib
 import logging
+import multiprocessing
 import os
 import pathlib
 
@@ -70,18 +71,18 @@ def parse_args():
         '-j',
         help='number of jobs to spawn in each container',
         type=int,
-        default='1'
+        default=multiprocessing.cpu_count()
     )
     parser.add_argument(
-        '--campaigns',
-        '-c',
-        help='number of campaigns to run in each container',
+        '--iterations',
+        '-i',
+        help='Number of iterations to run',
         type=int,
         default='1'
     )
     parser.add_argument(
         '--timeout',
-        help='The timeout in minutes.',
+        help='The timeout to pass to the static analysis tool in minutes.',
         type=int
     )
     parser.add_argument(
@@ -92,26 +93,10 @@ def parse_args():
         default=0
     ),
     parser.add_argument(
-        '-d', '--delta-debugging-mode',
-        choices=['none', 'violation', 'benchmark'],
-        default='none'
-    )
-    parser.add_argument(
-        '--fuzzing-timeout',
-        help='Time in minutes to allow fuzzing to continue for.',
-        type=int,
-        default=0
-    )
-    parser.add_argument(
-        '--results-location',
+        '--results',
         help='Location to write results.',
         default='./results'
     )
-    parser.add_argument("--seed", help="Seed to use for the random fuzzer", type=int, default=2001)
-    parser.add_argument("--fuzzing-strategy", action=enum_action(FuzzOptions), default="guided")
-    parser.add_argument("--full-campaigns", help="Do not sample at all, just do full campaigns.", action='store_true')
-    parser.add_argument("--hdd-only", help="Disable the delta debugger's CDG phase.", action='store_true')
-
     return parser.parse_args()
 
 

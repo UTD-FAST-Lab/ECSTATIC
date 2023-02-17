@@ -37,7 +37,7 @@ from src.ecstatic.readers.AbstractReader import AbstractReader
 from src.ecstatic.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
 from src.ecstatic.util.PartialOrder import PartialOrder, PartialOrderType
 from src.ecstatic.util.PotentialViolation import PotentialViolation
-from src.ecstatic.util.UtilClasses import FinishedFuzzingJob
+from src.ecstatic.util.UtilClasses import FinishedAnalysisJob
 from src.ecstatic.util.Violation import Violation
 
 logger = logging.getLogger(__name__)
@@ -88,7 +88,7 @@ class AbstractViolationChecker(ABC):
         self.write_to_files = write_to_files
         logger.debug(f'Ground truths are {self.ground_truths}')
 
-    def check_violations(self, results: List[FinishedFuzzingJob]) -> List[PotentialViolation]:
+    def check_violations(self, results: List[FinishedAnalysisJob]) -> List[PotentialViolation]:
         start_time = time.time()
 
         if (pickle_folder := (Path(self.output_folder) / "pickles")).exists():
@@ -98,12 +98,12 @@ class AbstractViolationChecker(ABC):
                 with open(pickle_folder/f, 'rb') as f:
                     finished_results.append(pickle.load(f))
         else:
-            pairs: List[Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]] = []
+            pairs: List[Tuple[FinishedAnalysisJob, FinishedAnalysisJob, Option]] = []
             for finished_run in [r for r in results if r is not None]:
-                finished_run: FinishedFuzzingJob
+                finished_run: FinishedAnalysisJob
                 option_under_investigation: Option = finished_run.job.option_under_investigation
                 # Find configs with potential partial order relationships.
-                candidates: List[FinishedFuzzingJob]
+                candidates: List[FinishedAnalysisJob]
                 if option_under_investigation is None:
                     candidates = [f for f in results if
                                   f.job.target == finished_run.job.target and
@@ -116,7 +116,7 @@ class AbstractViolationChecker(ABC):
                                   f.results_location != finished_run.results_location]
                 logger.info(f'Found {len(candidates)} candidates for job {finished_run.results_location}')
                 for candidate in candidates:
-                    candidate: FinishedFuzzingJob
+                    candidate: FinishedAnalysisJob
                     if finished_run.job.option_under_investigation is None:
                         # switch to the other candidate's
                         option_under_investigation = candidate.job.option_under_investigation
@@ -182,7 +182,7 @@ class AbstractViolationChecker(ABC):
         logger.info(f'{len(result)} results were false positives.')
         return {i for i in raw_results if i in fps}
 
-    def postprocess(self, results: Iterable[T], job: FinishedFuzzingJob) -> Iterable[T]:
+    def postprocess(self, results: Iterable[T], job: FinishedAnalysisJob) -> Iterable[T]:
         """
         Allows postprocessing of results. By default, does no postprocessing.
         :param results: The results to postprocess.
@@ -194,7 +194,7 @@ class AbstractViolationChecker(ABC):
     def read_from_input(self, file: Path) -> Iterable[T]:
         return self.reader.import_file(file)
 
-    def compare_results(self, t: Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]) -> Iterable[PotentialViolation]:
+    def compare_results(self, t: Tuple[FinishedAnalysisJob, FinishedAnalysisJob, Option]) -> Iterable[PotentialViolation]:
         """
 
         Parameters
@@ -282,7 +282,7 @@ class AbstractViolationChecker(ABC):
     @deprecation.deprecated(details="We have passed the functionality of checking for violations to "
                                     "the PotentialViolation object, in order to accomodate the fact that we "
                                     "want to potentially delta debug on non-violations.")
-    def check_for_violation(self, t: Tuple[FinishedFuzzingJob, FinishedFuzzingJob, Option]) -> Iterable[Violation]:
+    def check_for_violation(self, t: Tuple[FinishedAnalysisJob, FinishedAnalysisJob, Option]) -> Iterable[Violation]:
 
         """
         Given two jobs, checks whether there are any violations.
