@@ -30,8 +30,12 @@ from multiprocessing.dummy import Pool
 from pathlib import Path
 from typing import List, Optional
 from enum_actions import enum_action
+from datetime import datetime
 
 from tqdm import tqdm
+import os
+import csv
+import shutil
 
 from src.ecstatic.debugging.JavaBenchmarkDeltaDebugger import JavaBenchmarkDeltaDebugger
 from src.ecstatic.debugging.JavaViolationDeltaDebugger import JavaViolationDeltaDebugger
@@ -63,6 +67,7 @@ class ToolTester:
                  num_iterations: int):
         self.generator = generator
         self.runner: AbstractCommandLineToolRunner = runner
+        self.reader: AbstractReader = reader
         self.results_location: str = results_location
         self.unverified_violations = list()
         self.num_processes = num_processes
@@ -71,6 +76,31 @@ class ToolTester:
     def read_violation_from_file(self, file: str) -> Violation:
         with open(file, 'rb') as f:
             return pickle.load(f)
+        
+        
+    def move_nd_files(self, file, tool, benchmark):
+        output_path = Path('/results') / 'non_determinism' / tool / benchmark
+        Path(output_path).mkdir(exist_ok=True, parents=True)
+        nd_dir_path_t = os.path.join(output_path, file)
+        if not os.path.exists(nd_dir_path_t):
+            os.mkdir(nd_dir_path_t)
+
+        for campaign_index in range(self.num_iterations):
+            nd_file_path_s = os.path.join(self.results_location, f'iteration{campaign_index}/{file}')
+            shutil.copyfile(nd_file_path_s, os.path.join(nd_dir_path_t, f'run_{campaign_index}'))
+            
+        
+    def generate_result_csv(self, results, tool, benchmark):
+        header = ['configuration', 'program', 'nondeterminism', 'error']
+
+        output_path = Path('/results') / 'out_csv'
+        Path(output_path).mkdir(exist_ok=True, parents=True)
+        uuid = datetime.now().strftime('%y%m%dT%H%M%S')
+        with open(os.path.join(output_path, f'{tool}_{benchmark}_{uuid}.csv'), 'w', encoding='UTF8') as f:
+            writer = csv.writer(f)
+            writer.writerow(header)
+            writer.writerows(results)
+                
 
     def main(self):
         start_time = time.time()
@@ -92,6 +122,40 @@ class ToolTester:
             print(f'Iteration {campaign_index} finished (time {time.time() - campaign_start_time} seconds)')
         print('Testing done!')
 
+        nd_results = []
+        locations = str(self.results_location).rsplit('/', 2)
+        tool_name = locations[len(locations) - 2]
+        benchmark_name = locations[len(locations) - 1]
+        
+        match tool_name.lower():
+            case "flowdroid":
+                for file in os.listdir(os.path.join(self.results_location, 'iteration0')):
+                    if file.endswith('.apk.raw'):
+                        nd_result_record = [file.split('_', 1)[0], file.rsplit('_', 1)[-1].replace('.apk.raw', '')]
+                        file_s = f'{self.results_location}/iteration0/{file}'
+                        flows_s = set(self.reader.import_file(file_s)) 
+                        nondeterminism = False
+                        error = False
+                        for campaign_index in range(1, self.num_iterations - 1):
+                            if not os.path.exists(f'{self.results_location}/iteration{campaign_index}/{file}'):
+                                error = True
+                            else:
+                                file_t = f'{self.results_location}/iteration{campaign_index}/{file}'
+                                flows_t = set(self.reader.import_file(file_t)) 
+
+                                if not flows_s == flows_t:
+                                    nondeterminism = True
+                                    self.move_nd_files(file, tool_name, benchmark_name)
+                                    break
+
+                        nd_result_record.append(nondeterminism)
+                        nd_result_record.append(error)
+                        nd_results.append(nd_result_record)
+            case _:
+                pass
+        
+        self.generate_result_csv(nd_results, tool_name, benchmark_name)
+        
 
 def main():
     p = argparse.ArgumentParser()
