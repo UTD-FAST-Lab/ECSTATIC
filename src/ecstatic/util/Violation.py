@@ -21,7 +21,7 @@ from typing import List, Dict, Iterable, Set, TypeVar, Tuple
 import deprecation
 
 from src.ecstatic.util.PartialOrder import PartialOrder
-from src.ecstatic.util.UtilClasses import FinishedFuzzingJob
+from src.ecstatic.util.UtilClasses import FinishedAnalysisJob
 
 T = TypeVar('T')
 
@@ -69,8 +69,8 @@ class Violation:
 
     def __init__(self, violated: bool,
                  partial_orders: Set[PartialOrder],
-                 job1: FinishedFuzzingJob,
-                 job2: FinishedFuzzingJob,
+                 job1: FinishedAnalysisJob,
+                 job2: FinishedAnalysisJob,
                  differences: Iterable[T]):
         self.violated = violated
         self.partial_orders = frozenset(partial_orders)

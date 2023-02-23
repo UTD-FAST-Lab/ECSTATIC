@@ -38,7 +38,7 @@ from src.ecstatic.runners.AbstractCommandLineToolRunner import AbstractCommandLi
 from src.ecstatic.util.BenchmarkReader import validate
 from src.ecstatic.util.PartialOrder import PartialOrder
 from src.ecstatic.util.PotentialViolation import PotentialViolation
-from src.ecstatic.util.UtilClasses import FinishedFuzzingJob
+from src.ecstatic.util.UtilClasses import FinishedAnalysisJob
 from src.ecstatic.violation_checkers.AbstractViolationChecker import get_file_name, AbstractViolationChecker
 
 DeltaDebuggingPredicate: TypeAlias = Callable[[PotentialViolation], bool]
@@ -191,8 +191,8 @@ def main():
 
     partial_function = partial(job.runner.run_job, output_folder=tmpdir)
     with Pool(2) as p:
-        finished_jobs: Iterable[FinishedFuzzingJob] = p.map(partial_function, [job.potential_violation.job1.job,
-                                                                               job.potential_violation.job2.job])
+        finished_jobs: Iterable[FinishedAnalysisJob] = p.map(partial_function, [job.potential_violation.job1.job,
+                                                                                job.potential_violation.job2.job])
     job.violation_checker.output_folder = tmpdir
     violations: Iterable[PotentialViolation] =\
         job.violation_checker.check_violations(

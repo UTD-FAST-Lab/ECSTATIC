@@ -28,7 +28,7 @@ from src.ecstatic.models.Level import Level
 from src.ecstatic.models.Option import Option
 from src.ecstatic.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
 from src.ecstatic.util import FuzzingJob
-from src.ecstatic.util.UtilClasses import FinishedFuzzingJob, BenchmarkRecord
+from src.ecstatic.util.UtilClasses import FinishedAnalysisJob, BenchmarkRecord
 
 logger = logging.getLogger(__name__)
 

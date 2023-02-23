@@ -80,18 +80,18 @@ class ConfigWithMutatedOption:
 
 
 @dataclass
-class FinishedFuzzingJob:
+class FinishedAnalysisJob:
     job: FuzzingJob
     execution_time: float
     results_location: str
 
 
 @dataclass
-class FlowdroidFinishedFuzzingJob(FinishedFuzzingJob):
+class FlowdroidFinishedAnalysisJob(FinishedAnalysisJob):
     configuration_location: str
     detected_flows: Dict[str, Set[Flow]]
 
 
 @dataclass
 class FinishedCampaign:
-    finished_jobs: List[FinishedFuzzingJob]
+    finished_jobs: List[FinishedAnalysisJob]

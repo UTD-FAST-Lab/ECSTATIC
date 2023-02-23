@@ -66,19 +66,10 @@ class FuzzOptions(Enum):
 class FuzzGenerator:
 
     def __init__(self, model_location: str,
-                 grammar_location: str,
-                 benchmark: Benchmark,
-                 strategy: FuzzOptions = FuzzOptions.GUIDED,
-                 full_campaigns: bool = False):
+                 benchmark: Benchmark):
         self.first_run = True
-        with open(grammar_location) as f:
-            self.json_grammar = json.load(f)
-        self.grammar = convert_ebnf_grammar(self.json_grammar)
         self.benchmark: Dict[BenchmarkRecord, int] = {b: 1 for b in benchmark.benchmarks}
-        self.fuzzer = GrammarCoverageFuzzer(self.grammar)
         self.model = ConfigurationSpaceReader().read_configuration_space(model_location)
-        self.strategy = strategy
-        self.full_campaigns = full_campaigns
 
         self.partial_orders: Dict[PartialOrder, int] = {}
         for o in self.model.get_options():
@@ -122,32 +113,6 @@ class FuzzGenerator:
                 i = i + 1  # skip
         return result
 
-    def update_exclusions(self, violations: List[Violation]):
-        pass
-        # if not self.adaptive:
-        #     return  # Do nothing
-        # # Else....
-        # # For every violation, add the responsible option settings into the exclusion list.
-        # for v in list(filter(lambda v: v.violated, violations)):
-        #     v: Violation
-        #     option: Option = v.get_option_under_investigation()
-        #     self.exclusions.extend([v.job1.job.configuration[option], v.job2.job.configuration[option]])
-
-    def make_new_seed(self) -> Dict[Option, Level]:
-        """
-
-        Returns
-        -------
-
-        """
-        if self.first_run:
-            return dict()
-        else:
-            config = ""
-            while config == "":
-                config = self.fuzzer.fuzz()
-            return self.process_config(config)
-
     def generate_campaign(self) -> Tuple[FuzzingCampaign, Dict[Any, Any]]:
         """
         This method generates the next task for the fuzzer.
@@ -155,46 +120,19 @@ class FuzzGenerator:
         if len(self.partial_orders) == 0:
             print("All out of partial orders!")
             exit(0)
-        seed_config = self.make_new_seed()
-        seed_config = fill_out_defaults(self.model, seed_config)
+        
+        seed_config = fill_out_defaults(self.model, dict())
         logger.info(f"Configuration is {[(str(k), str(v)) for k, v in seed_config.items()]}")
         results: List[FuzzingJob] = list()
         candidate_sample = set()
         pos = set()
 
-        if self.first_run:
-            for o in self.model.options:
-                for p in o.partial_orders:
-                    candidate_sample.update(self.mutate_config(seed_config, p))
-            # All candidates, all benchmarks
-            candidate_sample.add(ConfigWithMutatedOption(seed_config, None, None))
-            benchmarks_sample = self.benchmark_population.keys()
-        else:
-            if not self.full_campaigns:
-                while len(pos) < min(len(self.partial_orders), 2):
-                    pos.update(random.sample(self.partial_orders.keys(), 1,
-                                             counts=self.partial_orders.values() if self.strategy is
-                                                                                    FuzzOptions.GUIDED else None))
-            else:
-                # Use all partial orders.
-                pos = self.partial_orders.keys()
-            [candidate_sample.update(self.mutate_config(seed_config, p)) for p in pos]
-            benchmarks_sample = set()
-
-            if not self.full_campaigns:
-                while len(benchmarks_sample) < min(4, len(self.benchmark_population)):
-                    benchmarks_sample.update(random.sample(self.benchmark_population.keys(), 1,
-                                                           counts=self.benchmark_population.values() if
-                                                           self.strategy is FuzzOptions.GUIDED else None))
-            else:
-                benchmarks_sample = self.benchmark_population.keys()
-
-            # Levels not selected
-            held_out = [p for p in self.partial_orders if p not in pos]
-
-            # Increase weight of all levels not selected
-            for l in held_out:
-                self.partial_orders[l] += 1
+        for o in self.model.options:
+            for p in o.partial_orders:
+                candidate_sample.update(self.mutate_config(seed_config, p))
+        # All candidates, all benchmarks
+        candidate_sample.add(ConfigWithMutatedOption(seed_config, None, None))
+        benchmarks_sample = self.benchmark_population.keys()
 
         for candidate in candidate_sample:
             choice = candidate.config
@@ -206,7 +144,6 @@ class FuzzGenerator:
                 benchmark_record: BenchmarkRecord
                 results.append(FuzzingJob(choice, option_under_investigation, benchmark_record))
 
-        self.first_run = False
         state = {"seed": {str(k): str(v) for k, v in seed_config.items()},
                  "first_run": self.first_run,
                  "partial_orders": {str(k): str(v) for k, v in self.partial_orders.items()},
@@ -215,29 +152,6 @@ class FuzzGenerator:
                  "benchmarks_sample": [str(k) for k in benchmarks_sample]
                  }
         return FuzzingCampaign(results), state
-
-    def feedback(self, violations: Iterable[PotentialViolation]):
-            buggy_benchmarks = set()
-            for v in [v for v in violations if v.is_violation and not v.is_transitive]:
-                o: Option = v.get_option_under_investigation()
-
-                # Don't retest levels that already exhibited violations.
-                if o.type.lower().startswith('int'):
-                    self.partial_orders = {p: w for p, w in self.partial_orders.items() if p.option != o}
-
-                else:
-                    self.partial_orders = {p: w for p, w in self.partial_orders.items() if p not in v.partial_orders}
-                    # %del self.levels[v.job1.job.configuration[o]]
-                    # del self.levels[v.job2.job.configuration[o]]
-
-                # Weigh benchmarks higher that have discovered benchmarks.
-                buggy_benchmarks.add(v.job1.job.target)
-            # Increase weight of buggy benchmarks
-            for k in self.benchmark.keys():
-                if k in buggy_benchmarks:
-                    self.benchmark_population[k] += 10
-                else:
-                    self.benchmark_population[k] = max(self.benchmark_population[k] - 1, 1)
 
     def mutate_config(self, config: Dict[Option, Level], partial_order) -> List[Tuple[ConfigWithMutatedOption, int]]:
         """

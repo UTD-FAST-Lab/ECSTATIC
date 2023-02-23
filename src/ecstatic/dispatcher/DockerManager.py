@@ -53,26 +53,20 @@ def build_image(tool: str, nocache: bool = False):
 def start_runner(tool: str, benchmark: str, task: str, args):
     # PYTHONENV=/ecstatic
     # run build benchmark script
-    command = f'tester {tool} {benchmark} -t {task} -j {args.jobs} --fuzzing-timeout {args.fuzzing_timeout} ' \
-              f'--delta-debugging-mode {args.delta_debugging_mode} --seed {args.seed} ' \
-              f'--fuzzing-strategy {args.fuzzing_strategy.name.lower()}'
+    command = f'tester {tool} {benchmark} -t {task} -j {args.jobs} -i {args.iterations}'
     if args.timeout is not None:
         command += f' --timeout {args.timeout}'
     if args.verbose > 0:
         command += f' -{"".join(["v" for _ in range(args.verbose)])}'
-    if args.full_campaigns:
-        command += f' --full-campaigns'
-    if args.hdd_only:
-        command += f' --hdd-only'
 
     print(f'Starting container with command {command}')
-    Path(args.results_location).mkdir(parents=True, exist_ok=True)
+    Path(args.results).mkdir(parents=True, exist_ok=True)
     cntr: Container = client.containers.run(
         image=get_image_name(tool),
         command="/bin/bash",
         detach=True,
         tty=True,
-        volumes={os.path.abspath(args.results_location): {"bind": "/results", "mode": "rw"}},
+        volumes={os.path.abspath(args.results): {"bind": "/results", "mode": "rw"}},
         auto_remove=True)
     _, log_stream = cntr.exec_run(cmd=command, stream=True)
     for l in log_stream:
@@ -85,7 +79,7 @@ def start_runner(tool: str, benchmark: str, task: str, args):
     # cntr.stop()
     # cntr.remove()
     # print('Container removed!')
-    print(f"Results are in {args.results_location}")
+    print(f"Results are in {args.results}")
 
 
 def get_image_name(tool: str):

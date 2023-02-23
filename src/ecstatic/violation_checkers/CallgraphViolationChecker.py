@@ -19,7 +19,7 @@
 import logging
 from typing import Iterable, Dict
 
-from src.ecstatic.util.UtilClasses import FinishedFuzzingJob
+from src.ecstatic.util.UtilClasses import FinishedAnalysisJob
 from src.ecstatic.violation_checkers.AbstractViolationChecker import AbstractViolationChecker, T
 
 logger = logging.getLogger(__name__)
@@ -29,7 +29,7 @@ class CallgraphViolationChecker(AbstractViolationChecker):
 
     cache: Dict[str, Iterable[T]] = {}
 
-    def postprocess(self, results: Iterable[T], job: FinishedFuzzingJob) -> Iterable[T]:
+    def postprocess(self, results: Iterable[T], job: FinishedAnalysisJob) -> Iterable[T]:
         orig_length = len(results)
         if len(job.job.target.packages) > 0:
             results = list(filter(lambda x: True in [x[0].clazz.strip("<>").startswith(p) for p

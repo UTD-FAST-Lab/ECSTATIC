@@ -27,7 +27,7 @@ from typing import Dict, Iterable, Tuple
 
 from src.ecstatic.models.Level import Level
 from src.ecstatic.models.Option import Option
-from src.ecstatic.util.UtilClasses import FinishedFuzzingJob, FuzzingJob
+from src.ecstatic.util.UtilClasses import FinishedAnalysisJob, FuzzingJob
 
 logger = logging.getLogger(__name__)
 """
@@ -83,7 +83,7 @@ class AbstractCommandLineToolRunner(ABC):
     def get_error_file(self, output_folder: str, job):
         return os.path.abspath(self.get_output(output_folder, job) + '.error')
 
-    def run_job(self, job: FuzzingJob, output_folder: str, num_retries: int = 1) -> FinishedFuzzingJob | None:
+    def run_job(self, job: FuzzingJob, output_folder: str, num_retries: int = 1) -> FinishedAnalysisJob | None:
         """
         Runs the job, producing outputs in output_folder. Can try to rerun the job if the execution fails
         (i.e., if try_run_job throws an exception). If we cannot run the job within num_retries tries,
@@ -118,7 +118,7 @@ class AbstractCommandLineToolRunner(ABC):
                 with open(self.get_time_file(output_folder, job), 'r') as f:
                     execution_time = float(f.read().strip())
 
-                return FinishedFuzzingJob(job, execution_time, self.get_output(output_folder, job))
+                return FinishedAnalysisJob(job, execution_time, self.get_output(output_folder, job))
         except Exception:
             logging.exception("Time file was not created, so starting over.")
             os.remove(self.get_output(output_folder, job))
@@ -135,7 +135,7 @@ class AbstractCommandLineToolRunner(ABC):
                     f.write(f'{str(total_time)}\n')
                 with open(self.get_log_file(output_folder, job), 'w') as f:
                     f.write(log_output)
-                return FinishedFuzzingJob(job, total_time, result)
+                return FinishedAnalysisJob(job, total_time, result)
             except Exception as ex:
                 exception = ex
                 num_runs += 1

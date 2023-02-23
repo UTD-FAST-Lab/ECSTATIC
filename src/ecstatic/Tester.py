@@ -30,20 +30,25 @@ from multiprocessing.dummy import Pool
 from pathlib import Path
 from typing import List, Optional
 from enum_actions import enum_action
+from datetime import datetime
 
 from tqdm import tqdm
+import os
+import csv
+import shutil
 
 from src.ecstatic.debugging.JavaBenchmarkDeltaDebugger import JavaBenchmarkDeltaDebugger
 from src.ecstatic.debugging.JavaViolationDeltaDebugger import JavaViolationDeltaDebugger
 from src.ecstatic.fuzzing.generators import FuzzGeneratorFactory
 from src.ecstatic.fuzzing.generators.FuzzGenerator import FuzzGenerator, FuzzOptions
 from src.ecstatic.readers import ReaderFactory
+from src.ecstatic.readers.AbstractReader import AbstractReader
 from src.ecstatic.runners import RunnerFactory
 from src.ecstatic.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
 from src.ecstatic.util.BenchmarkReader import BenchmarkReader
 from src.ecstatic.util.PotentialViolation import PotentialViolation
 from src.ecstatic.util.UtilClasses import FuzzingCampaign, Benchmark, \
-    BenchmarkRecord
+    BenchmarkRecord, FinishedAnalysisJob
 from src.ecstatic.util.Violation import Violation
 from src.ecstatic.violation_checkers import ViolationCheckerFactory
 from src.ecstatic.violation_checkers.AbstractViolationChecker import AbstractViolationChecker
@@ -53,77 +58,104 @@ logger = logging.getLogger(__name__)
 
 class ToolTester:
 
-    def __init__(self, generator, runner: AbstractCommandLineToolRunner, debugger: Optional[JavaViolationDeltaDebugger],
+    def __init__(self,
+                 generator,
+                 runner: AbstractCommandLineToolRunner,
+                 reader: AbstractReader,
                  results_location: str,
-                 num_processes: int, fuzzing_timeout: int, checker: AbstractViolationChecker,
-                 seed: int):
-        self.generator: FuzzGenerator = generator
+                 num_processes: int,
+                 num_iterations: int):
+        self.generator = generator
         self.runner: AbstractCommandLineToolRunner = runner
-        self.debugger: JavaViolationDeltaDebugger = debugger
+        self.reader: AbstractReader = reader
         self.results_location: str = results_location
         self.unverified_violations = list()
         self.num_processes = num_processes
-        self.fuzzing_timeout = fuzzing_timeout
-        self.checker = checker
-        self.seed = seed
+        self.num_iterations = num_iterations
 
     def read_violation_from_file(self, file: str) -> Violation:
         with open(file, 'rb') as f:
             return pickle.load(f)
+        
+        
+    def move_nd_files(self, file, tool, benchmark):
+        output_path = Path('/results') / 'non_determinism' / tool / benchmark
+        Path(output_path).mkdir(exist_ok=True, parents=True)
+        nd_dir_path_t = os.path.join(output_path, file)
+        if not os.path.exists(nd_dir_path_t):
+            os.mkdir(nd_dir_path_t)
+
+        for campaign_index in range(self.num_iterations):
+            nd_file_path_s = os.path.join(self.results_location, f'iteration{campaign_index}/{file}')
+            shutil.copyfile(nd_file_path_s, os.path.join(nd_dir_path_t, f'run_{campaign_index}'))
+            
+        
+    def generate_result_csv(self, results, tool, benchmark):
+        header = ['configuration', 'program', 'nondeterminism', 'error']
+
+        output_path = Path('/results') / 'out_csv'
+        Path(output_path).mkdir(exist_ok=True, parents=True)
+        uuid = datetime.now().strftime('%y%m%dT%H%M%S')
+        with open(os.path.join(output_path, f'{tool}_{benchmark}_{uuid}.csv'), 'w', encoding='UTF8') as f:
+            writer = csv.writer(f)
+            writer.writerow(header)
+            writer.writerows(results)
+                
 
     def main(self):
-        campaign_index = 0
         start_time = time.time()
-        while True:
+        for campaign_index in range(self.num_iterations):
             campaign, generator_state = self.generator.generate_campaign()
             campaign: FuzzingCampaign
-            print(f"Got new fuzzing campaign: {campaign_index}.")
+            print(f"Running iteration: {campaign_index}.")
             campaign_start_time = time.time()
             # Make campaign folder.
-            if campaign_index == 0:
-                campaign_folder = os.path.join(self.results_location, f'campaign{campaign_index}')
-            else:
-                campaign_folder = Path(self.results_location) / str(self.seed) / self.generator.strategy.name / \
-                                  (f'full_campaign{campaign_index}' if
-                                   self.generator.full_campaigns else f'campaign{campaign_index}')
+            campaign_folder = os.path.join(self.results_location, f'iteration{campaign_index}')
             Path(campaign_folder).mkdir(exist_ok=True, parents=True)
 
-            with open(Path(campaign_folder) / "fuzzer_state.json", 'w') as f:
-                json.dump(generator_state, f)
-
+            # Run all jobs.
             partial_run_job = partial(self.runner.run_job, output_folder=campaign_folder)
+            results: List[FinishedAnalysisJob] = []
             with Pool(self.num_processes) as p:
-                results = []
                 for r in tqdm(p.imap(partial_run_job, campaign.jobs), total=len(campaign.jobs)):
                     results.append(r)
-            results = [r for r in results if r is not None and r.results_location is not None]
-            print(f'Campaign {campaign_index} finished (time {time.time() - campaign_start_time} seconds)')
-            violations_folder = Path(campaign_folder) / 'violations'
-            self.checker.output_folder = violations_folder
-            print(f'Now checking for violations.')
-            Path(violations_folder).mkdir(exist_ok=True)
-            violations: List[PotentialViolation] = self.checker.check_violations(results)
-            print(f"Total potential violations: {len(violations)}")
-            if self.debugger is not None:
-                with Pool(max(int(self.num_processes / 2),
-                              1)) as p:  # /2 because each delta debugging process needs 2 cores.
-                    direct_violations = [v for v in violations if not v.is_transitive]
-                    print(f'Delta debugging {len(direct_violations)} cases with {self.num_processes} cores.')
-                    p.map(partial(self.debugger.delta_debug, campaign_directory=campaign_folder,
-                                  timeout=self.runner.timeout), direct_violations)
-            self.generator.feedback(violations)
-            print(f'Done with campaign {campaign_index}!')
-            campaign_index += 1
-            # if self.uid is not None and self.gid is not None:
-            #    logger.info("Changing permissions of folder.")
-            #    os.chown(campaign_folder, int(self.uid), int(self.gid))
-            #    for root, dirs, files in os.walk(campaign_folder):
-            #        files = map(lambda x: os.path.join(root, x), files)
-            #        map(lambda x: os.chown(x, int(self.uid), self.gid), files)
-            if time.time() - start_time > self.fuzzing_timeout * 60:
-                break
+            print(f'Iteration {campaign_index} finished (time {time.time() - campaign_start_time} seconds)')
         print('Testing done!')
 
+        nd_results = []
+        locations = str(self.results_location).rsplit('/', 2)
+        tool_name = locations[len(locations) - 2]
+        benchmark_name = locations[len(locations) - 1]
+        
+        match tool_name.lower():
+            case "flowdroid":
+                for file in os.listdir(os.path.join(self.results_location, 'iteration0')):
+                    if file.endswith('.apk.raw'):
+                        nd_result_record = [file.split('_', 1)[0], file.rsplit('_', 1)[-1].replace('.apk.raw', '')]
+                        file_s = f'{self.results_location}/iteration0/{file}'
+                        flows_s = set(self.reader.import_file(file_s)) 
+                        nondeterminism = False
+                        error = False
+                        for campaign_index in range(1, self.num_iterations - 1):
+                            if not os.path.exists(f'{self.results_location}/iteration{campaign_index}/{file}'):
+                                error = True
+                            else:
+                                file_t = f'{self.results_location}/iteration{campaign_index}/{file}'
+                                flows_t = set(self.reader.import_file(file_t)) 
+
+                                if not flows_s == flows_t:
+                                    nondeterminism = True
+                                    self.move_nd_files(file, tool_name, benchmark_name)
+                                    break
+
+                        nd_result_record.append(nondeterminism)
+                        nd_result_record.append(error)
+                        nd_results.append(nd_result_record)
+            case _:
+                pass
+        
+        self.generate_result_csv(nd_results, tool_name, benchmark_name)
+        
 
 def main():
     p = argparse.ArgumentParser()
@@ -134,25 +166,11 @@ def main():
                    help="Number of fuzzing campaigns (i.e., one seed, all of its mutants, and violation detection)")
     p.add_argument("-j", "--jobs", type=int, default=32,
                    help="Number of parallel jobs to do at once.")
-    p.add_argument("--adaptive", help="Remove configuration option settings that have already "
-                                      "exhibited violations from future fuzzing campaigns.",
-                   action="store_true")
     p.add_argument('--timeout', help='Timeout in minutes', type=int)
     p.add_argument('--verbose', '-v', action='count', default=0)
-    p.add_argument('--fuzzing-timeout', help='Fuzzing timeout in minutes.', type=int, default=0)
-    p.add_argument(
-        '-d', '--delta-debugging-mode',
-        choices=['none', 'violation', 'benchmark'],
-        default='none'
-    )
-    p.add_argument("--seed", help="Seed to use for the random fuzzer", type=int, default=2001)
-    p.add_argument("--fuzzing-strategy", action=enum_action(FuzzOptions), default="GUIDED")
-    p.add_argument("--full-campaigns", help="Do not sample at all, just do full campaigns.", action='store_true')
-    p.add_argument("--hdd-only", help="Disable the delta debugger's CDG phase.", action='store_true')
+    p.add_argument('--iterations', '-i', type=int, default=1)
 
     args = p.parse_args()
-
-    random.seed(args.seed)
 
     if args.verbose > 1:
         logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -165,7 +183,6 @@ def main():
                             datefmt='%m/%d/%Y %I:%M:%S %p')
 
     model_location = importlib.resources.path("src.resources.configuration_spaces", f"{args.tool}_config.json")
-    grammar = importlib.resources.path("src.resources.grammars", f"{args.tool}_grammar.json")
 
     benchmark: Benchmark = build_benchmark(args.benchmark)
     logger.info(f'Benchmark is {benchmark}')
@@ -193,24 +210,10 @@ def main():
     if args.timeout is not None:
         runner.timeout = args.timeout
 
-    generator = FuzzGeneratorFactory.get_fuzz_generator_for_name(args.tool, model_location, grammar,
-                                                                 benchmark, args.fuzzing_strategy,
-                                                                 args.full_campaigns)
+    generator = FuzzGeneratorFactory.get_fuzz_generator_for_name(args.tool, model_location, benchmark)
     reader = ReaderFactory.get_reader_for_task_and_tool(args.task, args.tool)
-    checker = ViolationCheckerFactory.get_violation_checker_for_task(args.task, args.tool,
-                                                                     jobs=args.jobs,
-                                                                     ground_truths=groundtruths,
-                                                                     reader=reader,
-                                                                     output_folder=results_location / "violations")
 
-    match args.delta_debugging_mode.lower():
-        case 'violation': debugger = JavaViolationDeltaDebugger(runner, reader, checker, hdd_only=args.hdd_only)
-        case 'benchmark': debugger = JavaBenchmarkDeltaDebugger(runner, reader, checker, hdd_only=args.hdd_only)
-        case _: debugger = None
-
-    t = ToolTester(generator, runner, debugger, results_location,
-                   num_processes=args.jobs, fuzzing_timeout=args.fuzzing_timeout,
-                   checker=checker, seed=args.seed)
+    t = ToolTester(generator, runner, reader, results_location, args.jobs, args.iterations)
     t.main()
 
 

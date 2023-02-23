@@ -36,7 +36,7 @@ from src.ecstatic.runners import RunnerFactory
 from src.ecstatic.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
 from src.ecstatic.util.BenchmarkReader import validate
 from src.ecstatic.util.PotentialViolation import PotentialViolation
-from src.ecstatic.util.UtilClasses import FinishedFuzzingJob
+from src.ecstatic.util.UtilClasses import FinishedAnalysisJob
 from src.ecstatic.util.Violation import Violation
 from src.ecstatic.violation_checkers import ViolationCheckerFactory
 from src.ecstatic.violation_checkers.AbstractViolationChecker import get_file_name
