@@ -14,11 +14,10 @@ FROM python-build AS ecstatic-build
 WORKDIR /
 RUN python3.10 -m venv /venv
 ENV PATH=/venv/bin:$PATH
-ADD requirements.txt /requirements.txt
-RUN python -m pip install --upgrade pip
-RUN python -m pip install -r requirements.txt
 ADD . /ECSTATIC
 WORKDIR ECSTATIC
+RUN python -m pip install --upgrade pip
+RUN python -m pip install -r requirements.txt
 RUN python -m pip install -e .
 
 FROM python-build AS delta-debugger-build
@@ -33,6 +32,7 @@ RUN cd ProjectLineCounter/ &&  mvn install && \
     cd ../ViolationDeltaDebugger/ && mvn package -DskipTests
 WORKDIR /
 FROM python-build
+RUN npm install -g jsdelta
 COPY --from=delta-debugger-build /SADeltaDebugger /SADeltaDebugger
 COPY --from=ecstatic-build /venv /venv
 COPY --from=ecstatic-build /ECSTATIC /ECSTATIC

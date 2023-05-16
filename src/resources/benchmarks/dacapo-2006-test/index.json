@@ -1,0 +1,15 @@
+{
+  "benchmark": [
+    {
+      "name": "deps/antlr.jar",
+      "depends_on": [
+        "deps/antlr-deps.jar"
+      ],
+      "sources": [
+        "build_src/antlr",
+        "bmsrc/dacapo"
+      ],
+      "build_script": "build_scripts/build_antlr.sh"
+    }
+  ]
+}

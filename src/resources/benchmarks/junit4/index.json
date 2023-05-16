@@ -1,0 +1,9 @@
+{
+  "benchmark": [
+    {
+      "name": "target/junit-4.13.3-SNAPSHOT.jar",
+      "build_script": "junit4/build.sh",
+      "sources": ["junit4/src"]
+    }
+  ]
+}

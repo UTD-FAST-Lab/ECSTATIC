@@ -1,19 +1,4 @@
-#  ECSTATIC: Extensible, Customizable STatic Analysis Tester Informed by Configuration
-#
-#  Copyright (c) 2022.
-#
-#  This program is free software: you can redistribute it and/or modify
-#      it under the terms of the GNU General Public License as published by
-#      the Free Software Foundation, either version 3 of the License, or
-#      (at your option) any later version.
-#
-#      This program is distributed in the hope that it will be useful,
-#      but WITHOUT ANY WARRANTY; without even the implied warranty of
-#      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#      GNU General Public License for more details.
-#
-#      You should have received a copy of the GNU General Public License
-#      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import sys
 from pathlib import Path
 from typing import List
@@ -40,8 +25,7 @@ def generate_record(line: str) -> str:
 
     def generate_csv_row(file_as_tokens: List[str]):
         match file_as_tokens:
-            # Change 'results' to whatever your results folder is named.
-            case ['results', *rest]:
+            case ['ECSTATIC_results', *rest]:
                 return f"{rest[0]},{rest[1]},{rest[2]},{generate_csv_row(rest[3:])}"
             case [type, *rest] if type in ['HDD_ONLY', 'CDG+HDD']:
                 return f"{type},{generate_csv_row(rest[1:])}"
