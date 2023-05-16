@@ -19,6 +19,7 @@
 import logging
 from typing import Iterable, Dict
 
+from src.ecstatic.util.CGCallSite import CGCallSite
 from src.ecstatic.util.UtilClasses import FinishedFuzzingJob
 from src.ecstatic.violation_checkers.AbstractViolationChecker import AbstractViolationChecker, T
 
@@ -32,9 +33,12 @@ class CallgraphViolationChecker(AbstractViolationChecker):
     def postprocess(self, results: Iterable[T], job: FinishedFuzzingJob) -> Iterable[T]:
         orig_length = len(results)
         if len(job.job.target.packages) > 0:
-            results = list(filter(lambda x: True in [x[0].clazz.strip("<>").startswith(p) for p
-                                                     in job.job.target.packages], results))
-            logging.info(f"Postprocessed result from {orig_length} to {len(results)} edges.")
+            try:
+                results = list(filter(lambda x: True in [x[0].clazz.strip("<>").startswith(p) for p
+                                                         in job.job.target.packages], results))
+                logging.info(f"Postprocessed result from {orig_length} to {len(results)} edges.")
+            except Exception:
+                return results
         return results
 
     def is_true_positive(self, raw_result: T) -> bool:
