@@ -19,9 +19,8 @@ import os
 import sys
 from pathlib import Path
 from typing import Iterable, List
-
-
 def main(file: str):
+
     def find_all_violation_files(root: Path) -> Iterable[Path]:
         for root, dirs, files in os.walk(root):
             for f in files:
@@ -32,8 +31,7 @@ def main(file: str):
 
         def reduce1(tokens: List[str]) -> str:
             match tokens:
-                # Change 'results' to whatever your results folder is named.
-                case ['results', *rest]:
+                case ['ECSTATIC_results', *rest]:
                     try:
                         return f"{rest[0]},{rest[1]},{int(rest[2])},{reduce(rest[3:])}"
                     except ValueError as ve:
@@ -54,7 +52,8 @@ def main(file: str):
 
     return generate_comma_separated_record(Path(file).absolute()).strip()
 
-
 if __name__ == "__main__":
     for file in sys.stdin:
         print(main(file))
+
+
