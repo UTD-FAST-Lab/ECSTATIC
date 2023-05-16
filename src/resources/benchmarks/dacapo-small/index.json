@@ -1,0 +1,14 @@
+{
+  "benchmark": [
+    {
+      "name": "deps/hsqldb.jar",
+      "depends_on": [
+        "deps/hsqldb-deps.jar"
+      ],
+      "sources": [
+        "build_src/hsqldb"
+      ],
+      "build_script": "build_scripts/build_hsqldb.sh"
+    }
+  ]
+}
