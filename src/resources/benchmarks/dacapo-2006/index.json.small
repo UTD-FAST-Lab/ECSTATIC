@@ -1,0 +1,10 @@
+{
+  "benchmark": [
+    {
+      "name": "antlr.jar",
+      "depends_on": [
+        "antlr-deps.jar"
+      ]
+    }
+  ]
+}

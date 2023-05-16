@@ -1,0 +1,24 @@
+{
+  "benchmark": [
+    {
+      "name": "deps/chart.jar",
+      "depends_on": [
+        "deps/chart-deps.jar"
+      ],
+      "sources": [
+        "build_src/chart"
+      ],
+      "build_script": "build_scripts/build_chart.sh"
+    },
+    {
+      "name": "deps/pmd.jar",
+      "depends_on": [
+        "deps/pmd-deps.jar"
+      ],
+      "sources": [
+        "build_src/pmd"
+      ],
+      "build_script": "build_scripts/build_pmd.sh"
+    }
+  ]
+}
