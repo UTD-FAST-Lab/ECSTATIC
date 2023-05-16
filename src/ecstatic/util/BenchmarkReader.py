@@ -20,6 +20,7 @@ import importlib
 import json
 import logging
 import os.path
+from pathlib import Path
 
 from jsonschema.validators import RefResolver, Draft7Validator
 
@@ -87,7 +88,7 @@ class BenchmarkReader:
         self.validator = Draft7Validator(self.schema, self.resolver)
         self.application_code_filter = application_code_filter
 
-    def read_benchmark(self, file: str) -> Benchmark:
+    def read_benchmark(self, file: Path) -> Benchmark:
         with open(file, 'r') as f:
             index = json.load(f)
         self.validator.validate(index)

@@ -33,86 +33,84 @@ from src.ecstatic.dispatcher import DockerManager
 
 
 def parse_args():
-    tools_dir = importlib.resources.path('src.resources', 'tools')
-    benchmarks_dir = importlib.resources.path('src.resources', 'benchmarks')
-    parser = argparse.ArgumentParser(description='Just a fuzzing benchmark for static analyzers')
-    parser.add_argument('-t',
-                        '--tools',
-                        help=('static analysis tools to run'
-                              'all tools by default'),
-                        nargs='+',
-                        required=True,
-                        choices=list(filter(lambda x: not x.startswith('__'), os.listdir(tools_dir))))
-    parser.add_argument('-b',
-                        '--benchmarks',
-                        help=('benchmark programs to run, incompatible tool and benchmark pairs will be skipped'
-                              'all benchmarks by default'),
-                        nargs='+',
-                        required=True,
-                        choices=list(filter(lambda x: not x.startswith('__'), os.listdir(benchmarks_dir))))
-    parser.add_argument(
-        '--tasks',
-        help="Currently a useless option as all tools only support one task. However, this is meant to provide support "
-             "for tools that might allow multiple tasks.",
-        nargs='+',
-        required=True,
-        default='cg',
-        choices=['cg', 'taint']
-    )
-    parser.add_argument(
-        '--no-cache',
-        '-n',
-        action='store_true',
-        help='Build images without cache'
-    )
-    parser.add_argument(
-        '--jobs',
-        '-j',
-        help='number of jobs to spawn in each container',
-        type=int,
-        default='1'
-    )
-    parser.add_argument(
-        '--campaigns',
-        '-c',
-        help='number of campaigns to run in each container',
-        type=int,
-        default='1'
-    )
-    parser.add_argument(
-        '--timeout',
-        help='The timeout in minutes.',
-        type=int
-    )
-    parser.add_argument(
-        '--verbose',
-        '-v',
-        help="Level of verbosity (more v's gives more output)",
-        action='count',
-        default=0
-    ),
-    parser.add_argument(
-        '-d', '--delta-debugging-mode',
-        choices=['none', 'violation', 'benchmark'],
-        default='none'
-    )
-    parser.add_argument(
-        '--fuzzing-timeout',
-        help='Time in minutes to allow fuzzing to continue for.',
-        type=int,
-        default=0
-    )
-    parser.add_argument(
-        '--results-location',
-        help='Location to write results.',
-        default='./results'
-    )
-    parser.add_argument("--seed", help="Seed to use for the random fuzzer", type=int, default=2001)
-    parser.add_argument("--fuzzing-strategy", action=enum_action(FuzzOptions), default="guided")
-    parser.add_argument("--full-campaigns", help="Do not sample at all, just do full campaigns.", action='store_true')
-    parser.add_argument("--hdd-only", help="Disable the delta debugger's CDG phase.", action='store_true')
+    with importlib.resources.files("src.resources.tools") as tools_dir,\
+         importlib.resources.files("src.resources.benchmarks") as benchmarks_dir:
+        parser = argparse.ArgumentParser(description='A metamorphic tester for configurable static analyzers')
+        parser.add_argument('-t',
+                            '--tools',
+                            help=('Static analysis tools to run.'),
+                            nargs='+',
+                            required=True,
+                            choices=list(filter(lambda x: not x.startswith('__'), os.listdir(tools_dir))))
+        parser.add_argument('-b',
+                            '--benchmarks',
+                            help=('Input programs to run'),
+                            nargs='+',
+                            required=True,
+                            choices=list(filter(lambda x: not x.startswith('__'), os.listdir(benchmarks_dir))))
+        parser.add_argument(
+            '--tasks',
+            help="Whether the tool computes call graphs or taint analysis results. Currently kinda useless, but built-in in case we ever have tools"
+                 " that have multiple client analyses implemented.",
+            nargs='+',
+            required=True,
+            default='cg',
+            choices=['cg', 'taint']
+        )
+        parser.add_argument(
+            '--no-cache',
+            '-n',
+            action='store_true',
+            help='Build images without cache'
+        )
+        parser.add_argument(
+            '--jobs',
+            '-j',
+            help='number of jobs to spawn in each container',
+            type=int,
+            default='1'
+        )
+        parser.add_argument(
+            '--campaigns',
+            '-c',
+            help='number of campaigns to run in each container',
+            type=int,
+            default='1'
+        )
+        parser.add_argument(
+            '--timeout',
+            help='The timeout in minutes.',
+            type=int
+        )
+        parser.add_argument(
+            '--verbose',
+            '-v',
+            help="Level of verbosity (more v's gives more output)",
+            action='count',
+            default=0
+        ),
+        parser.add_argument(
+            '-d', '--delta-debugging-mode',
+            choices=['none', 'violation', 'benchmark'],
+            default='none'
+        )
+        parser.add_argument(
+            '--fuzzing-timeout',
+            help='Time in minutes to allow fuzzing to continue for.',
+            type=int,
+            default=0
+        )
+        parser.add_argument(
+            '--results-location',
+            help='Location to write results.',
+            default='./results'
+        )
+        parser.add_argument("--seed", help="Seed to use for the random fuzzer", type=int, default=2001)
+        parser.add_argument("--fuzzing-strategy", action=enum_action(FuzzOptions), default="guided")
+        parser.add_argument("--full-campaigns", help="Do not sample at all, just do full campaigns.", action='store_true')
+        parser.add_argument("--hdd-only", help="Disable the delta debugger's CDG phase.", action='store_true')
 
-    return parser.parse_args()
+        return parser.parse_args()
 
 
 def main():
