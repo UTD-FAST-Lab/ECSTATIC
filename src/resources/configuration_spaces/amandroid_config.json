@@ -1,0 +1,20 @@
+{
+    "name": "AmanDroid",
+    "options": [
+      {
+        "name": "static_init",
+        "levels": [
+            "FALSE",
+            "TRUE"
+        ],
+        "default": "FALSE",
+        "orders": [
+          {
+            "left": "TRUE",
+            "order": "MPT",
+            "right": "FALSE"
+          }
+        ]
+      }
+    ]
+  }
