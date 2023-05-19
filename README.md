@@ -1,3 +1,6 @@
+# Important Note
+This branch is deprecated as of 2023-05-19. Please use the "master" branch for the latest stable release, and the "develop" branch for any in-progress changes.
+
 # ECSTATIC
 
 ## What This Artifact Does
