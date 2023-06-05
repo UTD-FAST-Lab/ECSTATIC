@@ -1,0 +1,33 @@
+{
+    "<start>": ["<options>"],
+    "<options>": ["<option>", "<options> <option>"],
+    "<option>": ["--analyzestrings_unfiltered <bool>",
+                 "--apicalldepth <apicalldepthopts>",
+                 "--filetransforms <bool>",
+                 "--ignoreexceptionflows <bool>",
+                 "--ignorenocontextflows <bool>",
+                 "--implicitflow <bool>",
+                 "--imprecisestrings <bool>",
+                 "--kobjsens <kobjsensopts>",
+                 "--limitcontextforcomplex <bool>",
+                 "--limitcontextforgui <bool>",
+                 "--limitcontextforstrings <bool>",
+                 "--multipassfb <bool>",
+                 "--noarrayindex <bool>",
+                 "--noclinitcontext <bool>",
+                 "--noclonestatics <bool>",
+                 "--nofallback <bool>",
+                 "--nojsa <bool>",
+                 "--noscalaropts <bool>",
+                 "--nova <bool>",
+                 "--pta <ptaopts>",
+                 "--preciseinfoflow <bool>",
+                 "--transfertaintfield <ptaopts>",
+                 "--typesforcontext <ptaopts>"
+                 ],
+    "<bool>": ["TRUE", "FALSE"],
+    "<apicalldepthopts>" : ["0", "1", "50", "80", "90", "100", "110", "120", "150", "200", "600"],
+    "<kobjsensopts>": ["1", "2", "3", "4", "5", "6", "18"],
+    "<ptaopts>": ["spark", "paddle", "geo"]
+}
+

@@ -42,42 +42,42 @@ class TAJSRunner (CommandLineToolRunner):
         -------
         The corresponding command-line string.
         """
-        #config_as_str = ""
-        #for k, v in config_as_dict.items():
-        #    k: Option
-        #    v: Level
-        #    for t in k.tags:
-        #        if t.startswith('unsound'):
-        #            config_as_str = config_as_str + f"-unsound -{k.name} "
-        #rest_of_config = ""
-        #for k, v in config_as_dict.items():
-        #    if len([t for t in k.tags if t.startswith('unsound')]) == 0:
-        #        k: Option
-        #        v: Level
-        #        if isinstance(v.level_name, int) or \
-       #                 v.level_name.lower() not in ['false', 'true']:
-        #            rest_of_config += f'-{k.name} {v.level_name} '
-        #        elif v.level_name.lower() == 'true':
-        #            rest_of_config += f'-{k.name} '
+        config_as_str = ""
+        for k, v in config_as_dict.items():
+            k: Option
+            v: Level
+            for t in k.tags:
+                if t.startswith('unsound'):
+                    config_as_str = config_as_str + f"-unsound -{k.name} "
+        rest_of_config = ""
+        for k, v in config_as_dict.items():
+            if len([t for t in k.tags if t.startswith('unsound')]) == 0:
+                k: Option
+                v: Level
+                if isinstance(v.level_name, int) or \
+                        v.level_name.lower() not in ['false', 'true']:
+                    rest_of_config += f'-{k.name} {v.level_name} '
+                elif v.level_name.lower() == 'true':
+                    rest_of_config += f'-{k.name} '
 #
         # Compute string for the rest of the options which are not unsound.
         # this part may not work
-        #return rest_of_config + config_as_str
-        config_as_str = "";
-        for key in config_as_dict:
-            if key.startswith('isunsound_'):
-                #phase option, append like this -p 'phase' 'key':'value'
+        return rest_of_config + config_as_str
+        #config_as_str = "";
+        #for key in config_as_dict:
+        #    if key.startswith('isunsound_'):
+        #        #phase option, append like this -p 'phase' 'key':'value'
                 #format is "phase_'phase'_'key'" = VALUE
-                config_as_str = config_as_str + f"-unsound -{key[key.find('_')+1:]} "
-            else:
-                if(config_as_dict[key] == 'true'):
-                    config_as_str = config_as_str + f"-{key} "
-                elif(config_as_dict[key] == 'false'):
-                    config_as_str = config_as_str; #dumb options that are turned off by not giving them?
-                else:
-                    config_as_str = config_as_str + f"-{key} {config_as_dict[key]} "
-            
-        return config_as_str;
+        #        config_as_str = config_as_str + f"-unsound -{key[key.find('_')+1:]} "
+        #    else:
+        #        if(config_as_dict[key] == 'true'):
+        #            config_as_str = config_as_str + f"-{key} "
+        #        elif(config_as_dict[key] == 'false'):
+        #            config_as_str = config_as_str; #dumb options that are turned off by not giving them?
+        #        else:
+        #            config_as_str = config_as_str + f"-{key} {config_as_dict[key]} "
+        #    
+        #return config_as_str;
 
     def get_base_command(self) -> List[str]:
         return "java -jar /TAJS/dist/tajs-all.jar".split()
