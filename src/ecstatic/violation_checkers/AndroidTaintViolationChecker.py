@@ -15,18 +15,21 @@
 #      You should have received a copy of the GNU General Public License
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from src.ecstatic.readers.AbstractReader import AbstractReader
+import logging
+
+from src.ecstatic.models.Flow import Flow
 from src.ecstatic.violation_checkers.AbstractViolationChecker import AbstractViolationChecker
-from src.ecstatic.violation_checkers.CallgraphViolationChecker import CallgraphViolationChecker
-from src.ecstatic.violation_checkers.FlowDroidFlowViolationChecker import FlowDroidFlowViolationChecker
 
+logger = logging.getLogger(__name__)
 
-def get_violation_checker_for_task(task: str, tool: str, **kwargs) -> AbstractViolationChecker:
-    if task.lower() == "cg":
-        return CallgraphViolationChecker(**kwargs)
-    elif task.lower() == "taint" and tool.lower() == "flowdroid":
-        return FlowDroidFlowViolationChecker(**kwargs)
-    elif "droidsafe" or "amandroid":
-        return AndroidTaintViolationChecker(**kwargs)
-    else:
-        raise ValueError(f"No violation checker exists for task {task} on tool {tool}.")
+class FlowDroidFlowViolationChecker(AbstractViolationChecker):
+
+    def __init__(self, jobs: int, reader: AbstractReader, output_folder: Path, ground_truths: Optional[Path] = None,
+                 write_to_files=True):
+        self.output_folder = output_folder
+        self.jobs: int = jobs
+        self.reader = reader
+        self.ground_truths: Path = None
+        self.write_to_files = write_to_files
+        logger.debug(f'Ground truths are {self.ground_truths}')
+
