@@ -19,10 +19,13 @@ import logging
 
 from src.ecstatic.models.Flow import Flow
 from src.ecstatic.violation_checkers.AbstractViolationChecker import AbstractViolationChecker
+from src.ecstatic.readers.AbstractReader import AbstractReader
+from pathlib import Path
+from typing import Optional, TypeVar
 
 logger = logging.getLogger(__name__)
-
-class FlowDroidFlowViolationChecker(AbstractViolationChecker):
+T = TypeVar('T')  # Indicates the type of content in the results (e.g., call graph edges or flows)
+class AndroidTaintViolationChecker(AbstractViolationChecker):
 
     def __init__(self, jobs: int, reader: AbstractReader, output_folder: Path, ground_truths: Optional[Path] = None,
                  write_to_files=True):
@@ -33,3 +36,8 @@ class FlowDroidFlowViolationChecker(AbstractViolationChecker):
         self.write_to_files = write_to_files
         logger.debug(f'Ground truths are {self.ground_truths}')
 
+    def is_true_positive(self, raw_result: T) -> bool:
+        raise NotImplementedError("AndroidTaint Tools do not support ground truths yet.")
+
+    def is_false_positive(self, raw_result: T) -> bool:
+        raise NotImplementedError("AndroidTaint Tools do not support ground truths yet.")

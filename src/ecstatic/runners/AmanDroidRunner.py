@@ -34,6 +34,8 @@ logger = logging.getLogger(__name__)
 class AmanDroidRunner (CommandLineToolRunner):
     
     def get_timeout_option(self) -> List[str]:
+        print("Amandroid does not support the timeout option. Sorry!")
+        exit(-1)
         return []
 
     def get_input_option(self, benchmark_record: BenchmarkRecord) -> List[str]:

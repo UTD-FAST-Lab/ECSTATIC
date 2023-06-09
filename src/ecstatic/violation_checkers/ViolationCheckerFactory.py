@@ -19,6 +19,7 @@ from src.ecstatic.readers.AbstractReader import AbstractReader
 from src.ecstatic.violation_checkers.AbstractViolationChecker import AbstractViolationChecker
 from src.ecstatic.violation_checkers.CallgraphViolationChecker import CallgraphViolationChecker
 from src.ecstatic.violation_checkers.FlowDroidFlowViolationChecker import FlowDroidFlowViolationChecker
+from src.ecstatic.violation_checkers.AndroidTaintViolationChecker import AndroidTaintViolationChecker
 
 
 def get_violation_checker_for_task(task: str, tool: str, **kwargs) -> AbstractViolationChecker:

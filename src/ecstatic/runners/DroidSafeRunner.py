@@ -33,6 +33,11 @@ logger = logging.getLogger(__name__)
 
 class DroidSafeRunner(AbstractCommandLineToolRunner):
 
+    def get_timeout_option(self) -> List[str]:
+        print("Droidsafe does not support the timeout option. Sorry!")
+        exit(-1)
+        return []
+
     def try_run_job(self, job: FuzzingJob, output_folder: str) -> Tuple[str, str]:
         target_basedir = os.path.join(os.getenv('DROIDSAFE_SRC_HOME'), 'runs')
         app_name = os.path.basename(job.target.name).replace('.apk', '')
