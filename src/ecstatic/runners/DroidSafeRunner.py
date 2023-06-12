@@ -22,7 +22,7 @@ import os
 import shutil
 import subprocess
 import uuid
-from typing import Tuple
+from typing import Tuple, List
 
 from src.ecstatic.runners.AbstractCommandLineToolRunner import AbstractCommandLineToolRunner
 from src.ecstatic.util import FuzzingJob
