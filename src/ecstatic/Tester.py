@@ -103,7 +103,6 @@ class ToolTester:
             print(f'Now checking for violations.')
             Path(violations_folder).mkdir(exist_ok=True)
             violations: List[PotentialViolation] = self.checker.check_violations(results)
-            print(f"Total potential violations: {len(violations)}")
             if self.debugger is not None:
                 with Pool(max(int(self.num_processes / 2),
                               1)) as p:  # /2 because each delta debugging process needs 2 cores.
