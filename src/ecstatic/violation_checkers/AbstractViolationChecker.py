@@ -151,7 +151,6 @@ class AbstractViolationChecker(ABC):
                 for _ in tqdm(p.imap(write_violation, finished_results), total=len(finished_results)):
                     pass
 
-        print("finished results" + str(finished_results))
         print('Violation detection done.')
         print(
             f'Finished checking violations. {len([v for v in finished_results if v.is_violation])} violations detected.')
