@@ -1,6 +1,5 @@
 # ECSTATIC
 
-## What This Artifact Does
 ECSTATIC (Extensible, Customizable Static Analysis Tester Informed by Configuration) is a flexible tool that can be used to test configurable 
 static analyses on a variety of benchmarks.
 ECSTATIC can be extended to use alternative analyses and benchmarks, but currently, it can run 
