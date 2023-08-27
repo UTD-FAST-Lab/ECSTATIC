@@ -6,7 +6,7 @@ RUN apt-get update -y && apt-get upgrade -y && \
     apt-get install -y cmake z3 python3.10 python3.10-dev python3-distutils python3-pip python3-apt python3.10-venv pkg-config libcairo2-dev libjpeg-dev libgif-dev \
     openjdk-8-jdk git maven wget && \
     DEBIAN_FRONTEND=noninteractive  \
-    apt-get install -y --no-install-recommends --assume-yes build-essential libpq-dev unzip
+    apt-get install -y --no-install-recommends --assume-yes build-essential libpq-dev unzip libcairo2-dev pkg-config python3.10-dev
 RUN apt-get update && apt-get install -y nodejs npm
 
 FROM python-build AS ecstatic-build

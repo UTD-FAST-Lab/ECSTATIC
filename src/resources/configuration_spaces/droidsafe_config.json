@@ -1,0 +1,50 @@
+{
+    "name": "DroidSafe",
+    "options": [
+      {
+        "name": "analyzestrings_unfiltered",
+        "levels": [
+            "FALSE",
+            "TRUE"
+        ],
+        "default": "FALSE",
+        "orders": [
+          {
+            "left": "TRUE",
+            "order": "MPT",
+            "right": "FALSE"
+          }
+        ]
+      },
+      {
+        "name": "filetransforms",
+        "levels": [
+            "FALSE",
+            "TRUE"
+        ],
+        "default": "FALSE",
+        "orders": [
+          {
+            "left": "TRUE",
+            "order": "MST",
+            "right": "FALSE"
+          }
+        ]
+      },
+      {
+        "name": "ignorenocontextflows",
+        "levels": [
+          "TRUE",
+          "FALSE"
+        ],
+        "default": "FALSE",
+        "orders": [
+          {
+            "left": "TRUE",
+            "order": "MST",
+            "right": "FALSE"
+          }
+        ]
+      }
+    ]
+  }
